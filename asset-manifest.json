@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/skillra-frontend/static/css/main.e6c13ad2.css",
+    "main.js": "/skillra-frontend/static/js/main.4441792a.js",
+    "static/js/453.0face2e6.chunk.js": "/skillra-frontend/static/js/453.0face2e6.chunk.js",
+    "index.html": "/skillra-frontend/index.html",
+    "main.e6c13ad2.css.map": "/skillra-frontend/static/css/main.e6c13ad2.css.map",
+    "main.4441792a.js.map": "/skillra-frontend/static/js/main.4441792a.js.map",
+    "453.0face2e6.chunk.js.map": "/skillra-frontend/static/js/453.0face2e6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.4441792a.js"
+  ]
+}
