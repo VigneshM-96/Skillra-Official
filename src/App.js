@@ -14,7 +14,7 @@ import CareerPage     from "./Pages/CareerPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Skillra-Official">
       <Routes>
         <Route path="/"          element={<HomePage />} />
         <Route path="/about"     element={<AboutUsPage />} />
