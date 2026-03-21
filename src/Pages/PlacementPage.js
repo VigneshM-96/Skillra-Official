@@ -1,665 +1,717 @@
-import { useState, useEffect, useRef } from "react";
-import NavBar from "./NavBar";
+import { useEffect, useRef, useState } from "react";
+import Navbar from "./NavBar";
+import Footer from "./Footer";
 
-/* ─────────────────────────────────────────
-   DATA
-───────────────────────────────────────── */
-const STATS = [
-  { value: 500,  suffix: "+", label: "Students Placed",    decimal: false },
-  { value: 98,   suffix: "%", label: "Placement Rate",     decimal: false },
-  { value: 120,  suffix: "+", label: "Hiring Partners",    decimal: false },
-  { value: 4.2,  suffix: "L", label: "Avg. Package (CTC)", decimal: true  },
-];
+const PUB = process.env.PUBLIC_URL || "";
 
-const COMPANIES = [
-  "Apollo Hospitals","Fortis Healthcare","Max Healthcare","Medanta",
-  "Manipal Hospitals","Narayana Health","KIMS Hospitals","Care Hospitals",
-  "Infosys BPM","Cognizant","Wipro","HCL Technologies",
-  "Omega Healthcare","Acuity Knowledge","eClinicalWorks","Nthrive",
-  "TCS Healthcare","Mphasis","Hexaware","Sutherland Global",
-];
-
-const PLACED_STUDENTS = [
-  { name:"Priya Sharma",    role:"Medical Coder",        company:"Apollo Hospitals",  course:"AI Medical Coding",  package:"3.8 LPA", avatar:"abtimg1.jpg", location:"Chennai"    },
-  { name:"Rahul Menon",     role:"Full Stack Developer", company:"Infosys BPM",       course:"Full Stack Dev",     package:"5.2 LPA", avatar:"abtimg2.jpg", location:"Bangalore"  },
-  { name:"Ananya Krishnan", role:"Data Analyst",         company:"Cognizant",         course:"Data Analytics",     package:"4.5 LPA", avatar:"abtimg3.jpg", location:"Hyderabad"  },
-  { name:"Karthik Rajan",   role:"Medical Biller",       company:"Omega Healthcare",  course:"AI Medical Billing", package:"3.5 LPA", avatar:"abtimg1.jpg", location:"Coimbatore" },
-  { name:"Deepa Nair",      role:"UI/UX Designer",       company:"Wipro",             course:"UI/UX Design",       package:"4.8 LPA", avatar:"abtimg2.jpg", location:"Pune"       },
-  { name:"Mohammed Irfan",  role:"SAP Consultant",       company:"HCL Technologies",  course:"SAP Development",    package:"6.0 LPA", avatar:"abtimg3.jpg", location:"Mumbai"     },
-];
-
-const PROCESS_STEPS = [
-  { step:"01", title:"Enroll & Learn",      desc:"Join your chosen course with expert-led live and recorded sessions.", color:"#7c3aed" },
-  { step:"02", title:"Build Projects",      desc:"Work on real-world case studies and build a job-ready portfolio.",    color:"#0ea5e9" },
-  { step:"03", title:"Resume & Interview",  desc:"Professional resume crafting and unlimited mock interview sessions.", color:"#10b981" },
-  { step:"04", title:"Get Placed",          desc:"Connect with 120+ hiring partners and land your dream job.",          color:"#f59e0b" },
-];
-
-const COURSE_PLACEMENT = [
-  { course:"AI Medical Coding",  rate:98, placed:142, avg:"3.8 LPA", color:"#7c3aed" },
-  { course:"Full Stack Dev",     rate:96, placed:118, avg:"5.2 LPA", color:"#0ea5e9" },
-  { course:"Data Analytics",     rate:94, placed:95,  avg:"4.5 LPA", color:"#10b981" },
-  { course:"AI Medical Billing", rate:97, placed:88,  avg:"3.5 LPA", color:"#f59e0b" },
-  { course:"UI/UX Design",       rate:92, placed:74,  avg:"4.8 LPA", color:"#ec4899" },
-  { course:"SAP Development",    rate:95, placed:61,  avg:"6.0 LPA", color:"#14b8a6" },
-];
-
-const GUARANTEES = [
-  { title:"100% Placement Assistance", desc:"Dedicated team works until you're placed." },
-  { title:"Unlimited Mock Interviews",  desc:"Practice until you ace every round."       },
-  { title:"Professional Resume Build",  desc:"ATS-ready resumes by career experts."      },
-  { title:"Global Job Network",         desc:"Access to national & international openings." },
-];
-
-/* ─────────────────────────────────────────
-   SVG ICONS — no emojis anywhere
-───────────────────────────────────────── */
-const IcoStar      = ({s=13,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill={c}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>);
-const IcoArrow     = ({s=16,c="#fff"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>);
-const IcoPin       = ({s=13,c="#9270c0"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>);
-const IcoBuilding  = ({s=14,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9M15 21V9"/></svg>);
-const IcoUsers     = ({s=14,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>);
-const IcoTrend     = ({s=14,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>);
-const IcoBriefcase = ({s=14,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/></svg>);
-const IcoBook      = ({s=20,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>);
-const IcoTool      = ({s=20,c="#0ea5e9"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>);
-const IcoFile      = ({s=20,c="#10b981"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>);
-const IcoRocket    = ({s=20,c="#f59e0b"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>);
-const IcoShield    = ({s=18,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>);
-const IcoRepeat    = ({s=18,c="#0ea5e9"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>);
-const IcoClip      = ({s=18,c="#10b981"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>);
-const IcoGlobe     = ({s=18,c="#f59e0b"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>);
-const IcoHandshake = ({s=22,c="white"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>);
-const IcoCheck     = ({s=16,c="#7c3aed"})=>(<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>);
-
-const STEP_ICONS = [IcoBook, IcoTool, IcoFile, IcoRocket];
-const GUARANTEE_ICONS = [IcoShield, IcoRepeat, IcoClip, IcoGlobe];
-
-/* ─────────────────────────────────────────
-   HOOKS
-───────────────────────────────────────── */
-function useInView(threshold = 0.2) {
+function useInView(threshold = 0.12) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold }
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
   return [ref, inView];
 }
 
-function useCountUp(target, duration = 1800, start = false, decimal = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime = null;
-    const step = (ts) => {
-      if (!startTime) startTime = ts;
-      const progress = Math.min((ts - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(decimal ? parseFloat((eased * target).toFixed(1)) : Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [start, target, duration, decimal]);
-  return count;
+/* ═══════════════════════════════════════════════════
+   FLOATING BADGES
+═══════════════════════════════════════════════════ */
+function FloatingBadge({ icon, label, style, delay = 0 }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t); }, [delay]);
+  return (
+    <div style={{
+      position: "absolute", display: "flex", alignItems: "center", gap: "10px",
+      background: "rgba(255,255,255,0.95)", backdropFilter: "blur(18px) saturate(1.6)",
+      WebkitBackdropFilter: "blur(18px) saturate(1.6)",
+      border: "1.5px solid rgba(255,255,255,0.98)", borderRadius: "14px", padding: "10px 18px",
+      boxShadow: "0 8px 32px rgba(109,40,217,0.14), 0 1px 0 rgba(255,255,255,0.9) inset",
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)",
+      transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`,
+      zIndex: 20, ...style,
+    }}>
+      <div style={{ width: "34px", height: "34px", borderRadius: "10px", background: "linear-gradient(135deg,rgba(124,58,237,0.10),rgba(167,139,250,0.18))", border: "1px solid rgba(124,58,237,0.18)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
+      <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a0640", lineHeight: 1.2, fontFamily: "'Outfit',sans-serif", whiteSpace: "nowrap" }}>{label}</div>
+    </div>
+  );
 }
 
-/* ─────────────────────────────────────────
-   SUB-COMPONENTS
-───────────────────────────────────────── */
-function StatCard({ value, suffix, label, decimal, delay, Icon }) {
-  const [ref, inView] = useInView(0.3);
-  const count = useCountUp(value, 1800, inView, decimal);
-  const [hovered, setHovered] = useState(false);
+function ActiveStudentsBadge({ style, delay = 0 }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t); }, [delay]);
   return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        flex:1, minWidth:"150px",
-        background: hovered ? "linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%)" : "#fff",
-        border: hovered ? "1.5px solid transparent" : "1.5px solid #e4d9ff",
-        borderRadius:"20px", padding:"28px 20px", textAlign:"center",
-        cursor:"default",
-        transition:"all 0.35s cubic-bezier(.4,0,.2,1)",
-        boxShadow: hovered ? "0 20px 50px rgba(124,58,237,0.28)" : "0 4px 16px rgba(124,58,237,0.07)",
-        transform: hovered ? "translateY(-8px) scale(1.04)" : inView ? "translateY(0)" : "translateY(20px)",
-        opacity: inView ? 1 : 0,
-        transitionDelay: delay,
-      }}
-    >
-      <div style={{ display:"flex", justifyContent:"center", marginBottom:"10px" }}>
-        <Icon s={22} c={hovered ? "rgba(255,255,255,0.85)" : "#7c3aed"} />
+    <div style={{ position: "absolute", display: "flex", alignItems: "center", gap: "10px", background: "#1a1035", borderRadius: "50px", padding: "8px 16px 8px 8px", boxShadow: "0 8px 28px rgba(20,8,56,0.35)", opacity: visible ? 1 : 0, transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)", transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`, zIndex: 20, ...style }}>
+      <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="white" strokeWidth="1.8" /><path d="M3 17c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" /></svg>
       </div>
-      <div style={{ fontSize:"clamp(1.9rem,3vw,2.5rem)", fontWeight:900, color: hovered?"#fff":"#7c3aed", fontFamily:"'Outfit',sans-serif", lineHeight:1, letterSpacing:"-1px", transition:"color 0.3s" }}>
-        {count}{suffix}
-      </div>
-      <div style={{ fontSize:"12px", color: hovered?"rgba(255,255,255,0.75)":"#9270c0", marginTop:"6px", fontWeight:600, letterSpacing:"0.04em", fontFamily:"'Outfit',sans-serif", transition:"color 0.3s" }}>
-        {label}
+      <div>
+        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit',sans-serif" }}>1k</div>
+        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>Active Students</div>
       </div>
     </div>
   );
 }
 
-function PlacementBar({ course, rate, placed, avg, color, delay, inView }) {
-  const [hovered, setHovered] = useState(false);
+function PlacedBadge({ style, delay = 0 }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t); }, [delay]);
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: hovered ? "#fff" : "#faf8ff",
-        border:`1.5px solid ${hovered ? color : "#e4d9ff"}`,
-        borderRadius:"16px", padding:"18px 22px",
-        transition:"all 0.28s ease",
-        transform: hovered ? "translateX(6px)" : inView ? "translateX(0)" : "translateX(-30px)",
-        opacity: inView ? 1 : 0, transitionDelay: delay, cursor:"default",
-        boxShadow: hovered ? `0 8px 28px ${color}22` : "none",
-      }}
-    >
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"10px" }}>
-        <span style={{ fontSize:"13.5px", fontWeight:700, color:"#1a0640", fontFamily:"'Outfit',sans-serif" }}>{course}</span>
-        <div style={{ display:"flex", gap:"12px", alignItems:"center" }}>
-          <span style={{ fontSize:"11.5px", color:"#9270c0", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>{placed} placed · {avg}</span>
-          <span style={{ fontSize:"15px", fontWeight:900, color, fontFamily:"'Outfit',sans-serif" }}>{rate}%</span>
-        </div>
-      </div>
-      <div style={{ height:"7px", background:"#ede8ff", borderRadius:"99px", overflow:"hidden" }}>
-        <div style={{ height:"100%", width: inView ? `${rate}%` : "0%", background:`linear-gradient(90deg,${color},${color}cc)`, borderRadius:"99px", transition:`width 1.2s cubic-bezier(.4,0,.2,1) ${delay}`, boxShadow:`0 2px 8px ${color}44` }} />
-      </div>
+    <div style={{ position: "absolute", background: "#f5c518", borderRadius: "12px", padding: "10px 20px", boxShadow: "0 8px 28px rgba(245,197,24,0.40)", opacity: visible ? 1 : 0, transform: visible ? "rotate(-2deg) scale(1)" : "rotate(-2deg) scale(0.88) translateY(10px)", transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`, zIndex: 20, ...style }}>
+      <div style={{ fontSize: "15px", fontWeight: 900, color: "#1a0640", fontFamily: "'Outfit',sans-serif", letterSpacing: "0.3px" }}>Placed ✓</div>
     </div>
   );
 }
 
-function StudentCard({ student, delay, inView }) {
-  const [hovered, setHovered] = useState(false);
-  const [imgErr, setImgErr] = useState(false);
+function DiamondPattern() {
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background:"#fff", border: hovered ? "1.5px solid #c4b5fd" : "1.5px solid #e4d9ff",
-        borderRadius:"20px", padding:"22px",
-        transition:"all 0.30s cubic-bezier(.4,0,.2,1)",
-        transform: hovered ? "translateY(-6px)" : inView ? "translateY(0)" : "translateY(30px)",
-        opacity: inView ? 1 : 0, transitionDelay: delay,
-        boxShadow: hovered ? "0 16px 48px rgba(124,58,237,0.14)" : "0 3px 14px rgba(124,58,237,0.06)",
-        cursor:"default", position:"relative", overflow:"hidden",
-      }}
-    >
-      {/* Top shimmer bar */}
-      <div style={{ position:"absolute", top:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#7c3aed,#a78bfa)", transform: hovered?"scaleX(1)":"scaleX(0)", transformOrigin:"left", transition:"transform 0.38s ease" }} />
-
-      <div style={{ display:"flex", alignItems:"center", gap:"14px", marginBottom:"14px" }}>
-        <div style={{ width:50, height:50, borderRadius:"50%", overflow:"hidden", flexShrink:0, border:"2.5px solid #c4b5fd", boxShadow:"0 4px 14px rgba(124,58,237,0.18)", background:"linear-gradient(135deg,#7c3aed,#a78bfa)" }}>
-          {imgErr ? (
-            <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"16px", fontWeight:900, color:"#fff", fontFamily:"'Outfit',sans-serif" }}>
-              {student.name[0]}
-            </div>
-          ) : (
-            <img src={student.avatar} alt={student.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={() => setImgErr(true)} />
-          )}
-        </div>
-        <div>
-          <div style={{ fontSize:"15px", fontWeight:800, color:"#1a0640", fontFamily:"'Outfit',sans-serif", lineHeight:1.2 }}>{student.name}</div>
-          <div style={{ fontSize:"12px", color:"#9270c0", fontWeight:600, marginTop:"2px", fontFamily:"'Outfit',sans-serif" }}>{student.role}</div>
-        </div>
-      </div>
-
-      <div style={{ background:"rgba(124,58,237,0.05)", borderRadius:"12px", padding:"12px 14px", marginBottom:"12px", border:"1px solid rgba(124,58,237,0.09)" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"6px", marginBottom:"3px" }}>
-          <IcoBuilding s={13} c="#7c3aed" />
-          <span style={{ fontSize:"13px", fontWeight:700, color:"#7c3aed", fontFamily:"'Outfit',sans-serif" }}>{student.company}</span>
-        </div>
-        <div style={{ fontSize:"11.5px", color:"#9270c0", fontFamily:"'Outfit',sans-serif" }}>{student.course}</div>
-      </div>
-
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-        <div style={{ background:"linear-gradient(135deg,#7c3aed,#5b21b6)", borderRadius:"8px", padding:"5px 12px", fontSize:"12px", fontWeight:800, color:"#fff", fontFamily:"'Outfit',sans-serif", boxShadow:"0 4px 12px rgba(124,58,237,0.28)" }}>
-          {student.package}
-        </div>
-        <div style={{ display:"flex", alignItems:"center", gap:"4px" }}>
-          <IcoPin s={12} c="#b0a0d8" />
-          <span style={{ fontSize:"11.5px", color:"#b0a0d8", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>{student.location}</span>
-        </div>
-      </div>
+    <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "min(490px, 90%)", aspectRatio: "490/530", borderRadius: "50% 50% 0 0 / 48% 48% 0 0", background: "rgba(195,180,255,0.25)", overflow: "hidden", zIndex: 1 }}>
+      <svg viewBox="0 0 490 530" style={{ width: "100%", height: "100%" }}>
+        <defs><pattern id="diamondPat" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><rect x="14" y="2" width="11" height="11" rx="1.5" transform="rotate(45 14 7.5)" fill="none" stroke="rgba(124,58,237,0.26)" strokeWidth="1.5" /></pattern></defs>
+        <rect x="0" y="0" width="490" height="530" fill="url(#diamondPat)" />
+      </svg>
     </div>
   );
 }
 
-function ProcessStep({ step, title, desc, color, delay, inView, isLast, StepIcon }) {
-  const [hovered, setHovered] = useState(false);
+/* ═══════════════════════════════════════════════════
+   SECTION 1 — HERO
+   Order on mobile: 1. Title+arc  2. Image  3. Desc+button
+═══════════════════════════════════════════════════ */
+function AboutHero({ onCtaClick }) {
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", flex:1, position:"relative" }}>
-      {!isLast && (
-        <div style={{ position:"absolute", top:"44px", left:"calc(50% + 44px)", width:"calc(100% - 88px)", height:"1.5px", background:`linear-gradient(90deg,${color}44,#e4d9ff)`, zIndex:0 }} />
-      )}
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          width:"88px", height:"88px", borderRadius:"50%",
-          background: hovered ? `linear-gradient(135deg,${color},${color}cc)` : "#fff",
-          border:`2px solid ${hovered ? "transparent" : color+"33"}`,
-          display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"4px",
-          boxShadow: hovered ? `0 12px 36px ${color}33` : `0 4px 18px ${color}18`,
-          transition:"all 0.32s cubic-bezier(.4,0,.2,1)",
-          transform: hovered ? "scale(1.12)" : inView ? "scale(1)" : "scale(0.7)",
-          opacity: inView ? 1 : 0, transitionDelay: delay,
-          zIndex:1, position:"relative", cursor:"default",
-        }}
-      >
-        <StepIcon s={22} c={hovered ? "#fff" : color} />
-        <div style={{ fontSize:"9px", fontWeight:800, color: hovered?"rgba(255,255,255,0.75)":color, fontFamily:"'Outfit',sans-serif", letterSpacing:"0.05em", transition:"color 0.3s" }}>{step}</div>
-      </div>
-      <div style={{ marginTop:"16px", textAlign:"center", padding:"0 8px", opacity: inView?1:0, transform: inView?"translateY(0)":"translateY(10px)", transition:`all 0.6s ease ${delay}` }}>
-        <div style={{ fontSize:"14px", fontWeight:800, color:"#1a0640", marginBottom:"6px", fontFamily:"'Outfit',sans-serif" }}>{title}</div>
-        <div style={{ fontSize:"12.5px", color:"#9270c0", lineHeight:1.6, fontFamily:"'Outfit',sans-serif" }}>{desc}</div>
-      </div>
-    </div>
-  );
-}
+    <section id="about-home" style={{
+      background: "radial-gradient(ellipse 110% 110% at 15% 50%,rgba(210,195,255,0.55) 0%,rgba(220,210,255,0.40) 40%,#ede8f8 100%)",
+      minHeight: "100vh", display: "flex", alignItems: "center",
+      position: "relative", overflow: "hidden",
+    }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, backgroundImage: `radial-gradient(rgba(124,58,237,0.08) 1px,transparent 1px)`, backgroundSize: "28px 28px" }} />
 
-function CompanyMarquee() {
-  return (
-    <div style={{ overflow:"hidden", position:"relative" }}>
-      <style>{`
-        @keyframes marqueeScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-        .marquee-track { display:flex; gap:12px; width:max-content; animation:marqueeScroll 40s linear infinite; }
-      `}</style>
-      <div style={{ position:"absolute", left:0, top:0, bottom:0, width:"80px", background:"linear-gradient(to right,#faf8ff,transparent)", zIndex:2, pointerEvents:"none" }} />
-      <div style={{ position:"absolute", right:0, top:0, bottom:0, width:"80px", background:"linear-gradient(to left,#faf8ff,transparent)", zIndex:2, pointerEvents:"none" }} />
-      <div className="marquee-track">
-        {[...COMPANIES, ...COMPANIES].map((c, i) => (
-          <div key={i} style={{
-            background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"50px",
-            padding:"10px 22px", whiteSpace:"nowrap", fontSize:"13px", fontWeight:600,
-            color:"#3b1f7a", fontFamily:"'Outfit',sans-serif",
-            boxShadow:"0 2px 10px rgba(124,58,237,0.06)",
-            display:"flex", alignItems:"center", gap:"8px",
-            transition:"all 0.22s", cursor:"default",
-          }}
-          onMouseEnter={e=>{ e.currentTarget.style.background="linear-gradient(135deg,#7c3aed,#5b21b6)"; e.currentTarget.style.color="#fff"; e.currentTarget.style.boxShadow="0 6px 20px rgba(124,58,237,0.26)"; e.currentTarget.style.borderColor="transparent"; }}
-          onMouseLeave={e=>{ e.currentTarget.style.background="#fff"; e.currentTarget.style.color="#3b1f7a"; e.currentTarget.style.boxShadow="0 2px 10px rgba(124,58,237,0.06)"; e.currentTarget.style.borderColor="#e4d9ff"; }}
-          >
-            <IcoBriefcase s={13} c="currentColor" />
-            {c}
+      <div className="about-inner" style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        flexWrap: "wrap",
+        padding: "0 5%", width: "100%", gap: "16px",
+        position: "relative", zIndex: 1, maxWidth: "1280px", margin: "0 auto",
+      }}>
+
+        {/* ── 1st on mobile: Title + arc ── */}
+        <div className="about-left" style={{ flex: "0 0 auto", width: "500px", maxWidth: "100%" }}>
+          <h1 className="cr-v1 about-title" style={{
+            fontSize: "clamp(2rem,4vw,3.5rem)", fontWeight: 900,
+            lineHeight: 1.08, letterSpacing: "-1.5px",
+            marginBottom: "12px", fontFamily: "'Outfit', sans-serif",
+          }}>
+            <span style={{ color: "#7c3aed" }}>Your </span>
+            <span style={{ color: "#ff6b35" }}>Skills Deserve</span><br />
+            <span style={{ color: "#ff6b35" }}>the Right</span><br />
+            <span style={{ color: "#16a34a" }}>Opportunity</span>
+          </h1>
+          <div className="ab-v1" style={{ marginBottom: "24px" }}>
+            <svg viewBox="0 0 320 20" style={{ width: "min(320px,100%)", height: "14px", overflow: "visible" }} preserveAspectRatio="none">
+              <path className="about-arc" d="M 4 14 C 60 2, 200 0, 316 12" fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
+            </svg>
           </div>
-        ))}
+
+          {/* Desktop — desc + button */}
+          <p className="ab-v2 about-desc-desktop" style={{ color: "#5c4a80", fontSize: "clamp(13px,1.5vw,14.5px)", lineHeight: 1.8, marginBottom: "34px", maxWidth: "420px", fontFamily: "'Outfit',sans-serif", fontWeight: 400 }}>
+            At Skillra, we don't just teach skills — we help you turn them into real careers. Our Placement Assistance Program is designed to help students land internships and jobs with confidence.
+          </p>
+          <div className="ab-v3 about-btn-desktop">
+            <button className="about-cta-btn" onClick={onCtaClick}
+              style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(124,58,237,0.38)"; }}>
+              Get Placement Assistance
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+          </div>
+        </div>
+
+        {/* ── 2nd on mobile: Image ── */}
+        <div className="about-right ab-vR" style={{
+          flex: 1, display: "flex", justifyContent: "center", alignItems: "flex-end",
+          position: "relative", minWidth: 0,
+          height: "clamp(300px, 60vw, 700px)",
+        }}>
+          <DiamondPattern />
+          <img src={`${PUB}/aboutusgirl.png`} alt="About Us"
+            style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.18))" }}
+          />
+          <FloatingBadge
+            icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2C6.13 2 3 5.13 3 9c0 2.38 1.19 4.47 3 5.74V17h8v-2.26C15.81 13.47 17 11.38 17 9c0-3.87-3.13-7-7-7z" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 17h4" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" /></svg>}
+            label="Lifetime Support" style={{ top: "21%", right: "3%" }} delay={600}
+          />
+          <ActiveStudentsBadge style={{ bottom: "42%", left: "4%" }} delay={800} />
+          <PlacedBadge style={{ bottom: "34%", right: "6%" }} delay={700} />
+          <FloatingBadge
+            icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>}
+            label="4+ offers" style={{ bottom: "16%", right: "73%" }} delay={1000}
+          />
+        </div>
+
+        {/* ── 3rd on mobile: Desc + button (mobile only) ── */}
+        <div className="about-bottom" style={{
+          display: "flex", flexDirection: "column",
+          alignItems: "center", gap: "24px", width: "100%",
+        }}>
+          <p style={{ color: "#5c4a80", fontSize: "14.5px", lineHeight: 1.8, maxWidth: "380px", fontFamily: "'Outfit',sans-serif", fontWeight: 400, textAlign: "center" }}>
+            At Skillra, we don't just teach skills — we help you turn them into real careers. Our Placement Assistance Program is designed to help students land internships and jobs with confidence.
+          </p>
+          <button className="about-cta-btn" onClick={onCtaClick}
+            style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", transition: "all 0.22s", position: "relative", overflow: "hidden" }}>
+            Get Placement Assistance
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+        </div>
+
       </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   WHY STUDENTS TRUST SKILLRA
+═══════════════════════════════════════════════════ */
+const TRUST_TOP = [
+  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>, title: "Practical skill training", desc: "Learn skills that are actually used in real jobs, not just theory from textbooks. Our training focuses on hands-on practice so you can confidently apply what you learn." },
+  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>, title: "Career-focused learning", desc: "Every program at Skillra is designed with career outcomes in mind. You learn the exact skills companies expect from freshers and job seekers." },
+];
+const TRUST_BOTTOM = [
+  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>, title: "Real industry projects", desc: "Work on projects that simulate real company tasks. Build a portfolio that proves your practical abilities to recruiters." },
+  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>, title: "Interview preparation", desc: "Prepare for both HR and technical interviews with expert guidance. Practice with mock interviews to improve confidence." },
+  { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>, title: "Continuous mentorship", desc: "Get ongoing support from industry mentors who guide you through your learning journey and career decisions." },
+];
+
+function VerticalZigzag() {
+  return (
+    <div style={{ width: "1px", flexShrink: 0, position: "relative", background: "#e5e7eb" }}>
+      <svg viewBox="0 0 16 140" style={{ width: "16px", height: "140px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} preserveAspectRatio="none">
+        <polyline points="8,0 2,17.5 14,35 2,52.5 14,70 2,87.5 14,105 2,122.5 8,140" fill="none" stroke="#c4b5fd" strokeWidth="2" strokeLinejoin="round" />
+      </svg>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────
-   MAIN PAGE
-───────────────────────────────────────── */
-export default function PlacementPage() {
-  const [heroVisible,   setHeroVisible]   = useState(false);
-  const [statsRef,      statsInView]      = useInView(0.2);
-  const [processRef,    processInView]    = useInView(0.15);
-  const [studentsRef,   studentsInView]   = useInView(0.1);
-  const [barsRef,       barsInView]       = useInView(0.2);
-  const [companiesRef,  companiesInView]  = useInView(0.2);
-  const [ctaRef,        ctaInView]        = useInView(0.3);
-
-  useEffect(() => { const t = setTimeout(() => setHeroVisible(true), 80); return () => clearTimeout(t); }, []);
-
-  const STAT_ICONS = [IcoUsers, IcoTrend, IcoHandshake, IcoBriefcase];
-
+function TrustCard({ feat }) {
+  const [hovered, setHovered] = useState(false);
   return (
-    <>
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      className="trust-card"
+      style={{ flex: 1, padding: "32px 28px", background: hovered ? "#faf8ff" : "#fff", transition: "background 0.2s", cursor: "default", minWidth: 0 }}>
+      <div style={{ marginBottom: "14px" }}>{feat.icon}</div>
+      <h3 style={{ fontSize: "clamp(13px,1.4vw,14.5px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "8px", lineHeight: 1.3 }}>{feat.title}</h3>
+      <p style={{ fontSize: "clamp(12px,1.2vw,13px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.75, fontWeight: 400 }}>{feat.desc}</p>
+    </div>
+  );
+}
+
+function WhyTrustSection() {
+  const [ref, inView] = useInView(0.08);
+  return (
+    <section ref={ref} style={{ background: "#fff", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden", padding: "clamp(48px,8vw,80px) 0 clamp(48px,8vw,90px)" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.035) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
+      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", marginBottom: "52px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem,3.2vw,2.5rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "14px" }}>Why Students Trust Skillra</h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", fontWeight: 400 }}>We focus on career outcomes, not just courses.</p>
+        </div>
+        <div className="trust-top" style={{ border: "1px solid #e5e7eb", borderRadius: "16px 16px 0 0", overflow: "hidden", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)", transition: "all 0.65s ease 0.1s" }}>
+          {TRUST_TOP.map((feat, i) => (
+            <div key={i} style={{ display: "flex", flex: 1, minWidth: 0 }}>
+              <TrustCard feat={feat} />
+              {i < TRUST_TOP.length - 1 && <VerticalZigzag />}
+            </div>
+          ))}
+        </div>
+        <div style={{ width: "100%", borderLeft: "1px solid #e5e7eb", borderRight: "1px solid #e5e7eb", opacity: inView ? 1 : 0, transition: "opacity 0.65s ease 0.2s" }}>
+          <svg viewBox="0 0 1100 28" preserveAspectRatio="none" style={{ width: "100%", height: "28px", display: "block" }}>
+            <rect x="0" y="0" width="1100" height="28" fill="#fff" />
+            <polyline points="0,14 27.5,4 55,24 82.5,4 110,24 137.5,4 165,24 192.5,4 220,24 247.5,4 275,24 302.5,4 330,24 357.5,4 385,24 412.5,4 440,24 467.5,4 495,24 522.5,4 550,24 577.5,4 605,24 632.5,4 660,24 687.5,4 715,24 742.5,4 770,24 797.5,4 825,24 852.5,4 880,24 907.5,4 935,24 962.5,4 990,24 1017.5,4 1045,24 1072.5,4 1100,14" fill="none" stroke="#c4b5fd" strokeWidth="2" strokeLinejoin="round" />
+          </svg>
+        </div>
+        <div className="trust-bottom" style={{ border: "1px solid #e5e7eb", borderTop: "none", borderRadius: "0 0 16px 16px", overflow: "hidden", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)", transition: "all 0.65s ease 0.25s" }}>
+          {TRUST_BOTTOM.map((feat, i) => (
+            <div key={i} style={{ display: "flex", flex: 1, minWidth: 0 }}>
+              <TrustCard feat={feat} />
+              {i < TRUST_BOTTOM.length - 1 && <VerticalZigzag />}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   HOW WE HELP — STEPS
+═══════════════════════════════════════════════════ */
+const PLACEMENT_STEPS = [
+  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>, title: "Build In-Demand Skills", desc: "Learn practical skills that companies are hiring for.", position: "bottom" },
+  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2H3v16h5l3 3 3-3h7V2z" /><path d="M7 8h10M7 12h6" /></svg>, title: "Create Your Professional Profile", desc: "Build your resume, portfolio, and LinkedIn presence.", position: "top" },
+  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>, title: "Prepare for Interviews", desc: "Practice with mock interviews and expert feedback.", position: "bottom" },
+  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>, title: "Apply for Opportunities", desc: "Access internships and job openings through Skillra.", position: "top" },
+  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>, title: "Get Hired", desc: "Land the job with full placement support.", position: "bottom" },
+];
+
+function StepNode({ step, index, inView }) {
+  const [hovered, setHovered] = useState(false);
+  const isTop = step.position === "top";
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative", opacity: inView ? 1 : 0, transform: inView ? "translateY(0) scale(1)" : "translateY(32px) scale(0.9)", transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s` }}>
+      {isTop && (
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <p style={{ fontSize: "clamp(11px,1.2vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "6px", lineHeight: 1.3 }}>{step.title}</p>
+          <p style={{ fontSize: "clamp(10px,1vw,12px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, maxWidth: "140px" }}>{step.desc}</p>
+        </div>
+      )}
+      <div style={{ width: "clamp(52px,6vw,72px)", height: "clamp(52px,6vw,72px)", borderRadius: "50%", background: hovered ? "linear-gradient(135deg,#4c1d95,#6d28d9)" : "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: hovered ? "0 12px 40px rgba(109,40,217,0.55),0 0 0 6px rgba(124,58,237,0.15)" : "0 8px 28px rgba(109,40,217,0.30),0 0 0 6px rgba(124,58,237,0.10)", transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)", transform: hovered ? "scale(1.14)" : "scale(1)", cursor: "default", flexShrink: 0, zIndex: 2, position: "relative" }}>
+        {step.icon}
+      </div>
+      {!isTop && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <p style={{ fontSize: "clamp(11px,1.2vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "6px", lineHeight: 1.3 }}>{step.title}</p>
+          <p style={{ fontSize: "clamp(10px,1vw,12px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, maxWidth: "140px" }}>{step.desc}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HowWeHelpSection() {
+  const [ref, inView] = useInView(0.08);
+  return (
+    <section ref={ref} style={{ background: "linear-gradient(160deg,#f3eeff 0%,#ede8f8 50%,#e8e0f8 100%)", padding: "clamp(48px,8vw,88px) 0 clamp(56px,10vw,100px)", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.07) 1px,transparent 1px)`, backgroundSize: "30px 30px" }} />
+      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", marginBottom: "72px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>How We Help You Get Placed</h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>Powerful natural language processing capabilities, that can understand and respond to customer inquiries in real-time &amp; improve customer satisfaction.</p>
+        </div>
+        {/* Desktop S-curve */}
+        <div className="steps-desktop" style={{ position: "relative" }}>
+          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" style={{ position: "absolute", top: "50%", left: 0, width: "100%", height: "120px", transform: "translateY(-50%)", zIndex: 0, opacity: inView ? 1 : 0, transition: "opacity 0.8s ease 0.3s" }}>
+            <defs><linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#a78bfa" stopOpacity="0.5" /><stop offset="50%" stopColor="#7c3aed" stopOpacity="0.8" /><stop offset="100%" stopColor="#a78bfa" stopOpacity="0.5" /></linearGradient></defs>
+            <path d="M 100 60 C 160 60, 190 10, 250 10 C 310 10, 340 110, 400 110 C 460 110, 490 10, 550 10 C 610 10, 640 110, 700 110 C 760 110, 830 60, 900 60" fill="none" stroke="url(#pathGrad)" strokeWidth="2.5" strokeDasharray="6 5" strokeLinecap="round" />
+          </svg>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 1, minHeight: "260px" }}>
+            {PLACEMENT_STEPS.map((step, i) => <StepNode key={i} step={step} index={i} inView={inView} />)}
+          </div>
+        </div>
+        {/* Mobile vertical */}
+        <div className="steps-mobile" style={{ flexDirection: "column", gap: "24px" }}>
+          {PLACEMENT_STEPS.map((step, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "16px", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-20px)", transition: `opacity 0.5s ease ${0.1 + i * 0.1}s, transform 0.5s ease ${0.1 + i * 0.1}s` }}>
+              <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 6px 20px rgba(109,40,217,0.30)" }}>{step.icon}</div>
+              <div style={{ paddingTop: "4px" }}>
+                <p style={{ fontSize: "14px", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px" }}>{step.title}</p>
+                <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6 }}>{step.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   CAMPUS CARDS SECTION
+═══════════════════════════════════════════════════ */
+const CAMPUS_CARDS = [
+  { heading: "Heading", body: "Skillra Campus brings together education, industry insight, and student leadership to create meaningful opportunities within college campuses." },
+  { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
+  { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
+];
+
+function CampusCard({ heading, body, delay, inView }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: hovered ? "linear-gradient(145deg,#6d28d9,#4c1d95)" : "#fff", border: hovered ? "1.5px solid transparent" : "1.5px solid #e5e7eb", borderRadius: "20px", padding: "32px 26px", boxShadow: hovered ? "0 20px 52px rgba(109,40,217,0.38)" : "0 4px 20px rgba(124,58,237,0.06)", opacity: inView ? 1 : 0, transform: inView ? (hovered ? "translateY(-10px) scale(1.02)" : "translateY(0) scale(1)") : "translateY(30px)", transition: [`opacity 0.65s ease ${delay}s`, "transform 0.30s cubic-bezier(0.34,1.56,0.64,1)", "background 0.28s ease", "border-color 0.28s ease", "box-shadow 0.28s ease"].join(", "), cursor: "default" }}>
+      <h3 style={{ fontSize: "clamp(15px,1.6vw,18px)", fontWeight: 800, color: hovered ? "#fff" : "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "14px", transition: "color 0.28s ease" }}>{heading}</h3>
+      <p style={{ fontSize: "clamp(12.5px,1.3vw,13.5px)", color: hovered ? "rgba(255,255,255,0.85)" : "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.8, fontWeight: 400, transition: "color 0.28s ease" }}>{body}</p>
+    </div>
+  );
+}
+
+function AboutCampusSection() {
+  const [ref, inView] = useInView(0.08);
+  return (
+    <section ref={ref} id="campus" style={{ background: "#fff", padding: "clamp(48px,8vw,88px) 0", borderTop: "1px solid #f0ebff", position: "relative" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
+      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", marginBottom: "52px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem,3.2vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>About Skillra Campus</h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "560px", margin: "0 auto", lineHeight: 1.7 }}>Powerful natural language processing capabilities, that can understand and respond to customer inquiries in real-time &amp; improve customer satisfaction.</p>
+        </div>
+        <div className="campus-grid">
+          {CAMPUS_CARDS.map((card, i) => <CampusCard key={i} heading={card.heading} body={card.body} delay={0.1 + i * 0.1} inView={inView} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   OPPORTUNITIES
+═══════════════════════════════════════════════════ */
+function OpportunitiesSection() {
+  const [ref, inView] = useInView(0.08);
+  return (
+    <section ref={ref} style={{ background: "#0e0e0e", position: "relative", overflow: "hidden" }}>
+      <div className="opp-row" style={{ display: "flex", minHeight: "480px", alignItems: "stretch" }}>
+        <div className="opp-left" style={{ flex: "0 0 42%", position: "relative", overflow: "hidden", padding: "clamp(40px,6vw,72px) clamp(24px,4%,52px)", display: "flex", flexDirection: "column", justifyContent: "center", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-30px)", transition: "all 0.7s ease 0.1s" }}>
+          <div className="opp-bg-design" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "220px", overflow: "hidden" }}>
+            <svg viewBox="0 0 500 220" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
+              {Array.from({ length: 14 }).map((_, row) => (
+                <polyline key={row} points={Array.from({ length: 28 }).map((_, i) => `${i * 19},${row * 16 + (i % 2 === 0 ? 0 : 10)}`).join(" ")} fill="none" stroke={row % 2 === 0 ? "#b8962a" : "#d4aa40"} strokeWidth="2.2" strokeLinejoin="round" opacity={0.55 + row * 0.03} />
+              ))}
+            </svg>
+          </div>
+          <h2 style={{ fontSize: "clamp(1.6rem,3.5vw,3rem)", fontWeight: 900, color: "#fff", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", lineHeight: 1.1, position: "relative", zIndex: 2, marginBottom: "auto", paddingBottom: "clamp(60px,10vw,120px)" }}>
+            Opportunities<br />Through Skillra<br />Campus
+          </h2>
+        </div>
+        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", padding: "clamp(40px,6vw,72px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,44px)", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s" }}>
+          {[
+            { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
+            { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions." },
+          ].map((item, i) => (
+            <div key={i}>
+              <h3 style={{ fontSize: "clamp(14px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit',sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
+              <p style={{ fontSize: "clamp(12.5px,1.3vw,13.5px)", color: "rgba(255,255,255,0.6)", fontFamily: "'Outfit',sans-serif", lineHeight: 1.85, fontWeight: 400 }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   STUDENTS PLACED
+═══════════════════════════════════════════════════ */
+const PLACED_STUDENTS = [
+  { name: "Ezhil N", company: "cognizant", companyColor: "#1a77d4", img: "student1.png" },
+  { name: "Ezhil N", company: "Optum", companyColor: "#ff6600", img: "student2.png" },
+  { name: "Ezhil N", company: "Optum", companyColor: "#ff6600", img: "student3.png" },
+  { name: "Ezhil N", company: "Optum", companyColor: "#ff6600", img: "student4.png" },
+];
+
+function StudentCard({ student, index, inView }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(36px)", transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s`, cursor: "default" }}>
+      <div style={{ width: "clamp(120px,15vw,180px)", height: "clamp(150px,18vw,220px)", borderRadius: "90px 90px 12px 12px", background: hovered ? "linear-gradient(180deg,#c4b5fd 0%,#ddd6fe 100%)" : "linear-gradient(180deg,#e9e3ff 0%,#f3f0ff 100%)", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center", boxShadow: hovered ? "0 20px 48px rgba(109,40,217,0.22)" : "0 8px 32px rgba(109,40,217,0.10)", transition: "all 0.30s cubic-bezier(0.34,1.56,0.64,1)", transform: hovered ? "translateY(-8px) scale(1.03)" : "translateY(0) scale(1)", position: "relative" }}>
+        <img src={`${PUB}/${student.img}`} alt={student.name} style={{ width: "85%", height: "95%", objectFit: "cover", objectPosition: "top center", display: "block" }}
+          onError={e => { e.target.style.display = "none"; }} />
+      </div>
+      <p style={{ marginTop: "14px", fontSize: "clamp(12px,1.3vw,14.5px)", fontWeight: 600, color: "#111827", fontFamily: "'Outfit',sans-serif" }}>{student.name}</p>
+      <p style={{ marginTop: "4px", fontSize: "clamp(13px,1.4vw,16px)", fontWeight: 900, color: student.companyColor, fontFamily: "'Outfit',sans-serif" }}>{student.company}</p>
+    </div>
+  );
+}
+
+function StudentsPlacedSection() {
+  const [ref, inView] = useInView(0.08);
+  return (
+    <section ref={ref} style={{ background: "#fff", padding: "clamp(48px,8vw,88px) 0 clamp(56px,10vw,96px)", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
+      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", marginBottom: "60px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>Students Placed</h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>Our students have been placed in top companies across India. Here are some of their success stories.</p>
+        </div>
+        <div className="students-grid">
+          {PLACED_STUDENTS.map((student, i) => <StudentCard key={i} student={student} index={i} inView={inView} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   TESTIMONIALS + CONTACT FORM
+═══════════════════════════════════════════════════ */
+const TESTIMONIALS = [
+  { name: "Aria Zinario", text: "I am very helped by this E-wallet application, my days are very easy to use this application and its very helpful in my life, even I can pay a short time 😊", avatar: "AZ" },
+  { name: "Rahul Sharma", text: "Skillra transformed my career path completely. The placement support was exceptional and I got 3 offers within a month of completing the course.", avatar: "RS" },
+  { name: "Priya Nair", text: "The mentors at Skillra are incredibly supportive. Real industry experience combined with structured learning made all the difference for me.", avatar: "PN" },
+  { name: "Karthik V", text: "Best decision I ever made. The hands-on projects gave me the confidence to clear technical interviews at top product companies.", avatar: "KV" },
+];
+const AVATAR_COLORS = ["#7c3aed", "#059669", "#dc2626", "#d97706"];
+
+function TestimonialsContactSection() {
+  const [ref, inView] = useInView(0.06);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const handleSubmit = () => { if (formData.name && formData.email) setSubmitted(true); };
+  return (
+    <section ref={ref} id="contact" style={{ background: "#f8f7ff", borderTop: "1px solid #f0ebff", padding: "clamp(48px,8vw,88px) 0", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.05) 1px,transparent 1px)`, backgroundSize: "32px 32px" }} />
+      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+        <div className="tc-row" style={{ display: "flex", gap: "clamp(24px,5%,60px)", alignItems: "flex-start" }}>
+          <div className="tc-left" style={{ flex: 1, minWidth: 0, opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-24px)", transition: "all 0.7s ease 0.1s" }}>
+            <h2 style={{ fontSize: "clamp(1.5rem,3.5vw,2.8rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "8px" }}>Testimonials</h2>
+            <p style={{ fontSize: "14px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "32px", fontStyle: "italic" }}>Every Story Matters. Every Success Counts.</p>
+            <div style={{ marginBottom: "16px" }}>
+              <svg width="48" height="36" viewBox="0 0 48 36" fill="none"><path d="M0 36V22C0 14.8 2.6 9.4 7.8 5.8 13 2.2 19.2 0.4 26.4 0.4V7C23.2 7 20.4 7.8 18 9.4 15.8 11 14.6 13.2 14.4 16H22V36H0ZM26 36V22C26 14.8 28.6 9.4 33.8 5.8 39 2.2 45.2 0.4 52.4 0.4V7C49.2 7 46.4 7.8 44 9.4 41.8 11 40.6 13.2 40.4 16H48V36H26Z" fill="#7c3aed" opacity="0.15" /></svg>
+            </div>
+            <div style={{ minHeight: "100px", marginBottom: "28px" }}>
+              <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#374151", fontFamily: "'Outfit',sans-serif", lineHeight: 1.85, fontWeight: 400 }}>{TESTIMONIALS[activeIdx].text}</p>
+              <p style={{ fontSize: "13px", color: "#7c3aed", fontFamily: "'Outfit',sans-serif", fontWeight: 700, marginTop: "16px" }}>— {TESTIMONIALS[activeIdx].name}</p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              {TESTIMONIALS.map((t, i) => (
+                <div key={i} onClick={() => setActiveIdx(i)} style={{ width: "44px", height: "44px", borderRadius: "50%", background: AVATAR_COLORS[i], display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 700, color: "#fff", fontFamily: "'Outfit',sans-serif", cursor: "pointer", flexShrink: 0, border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent", boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none", transition: "all 0.2s", transform: activeIdx === i ? "scale(1.1)" : "scale(1)" }}>{t.avatar}</div>
+              ))}
+            </div>
+          </div>
+          <div className="tc-right" style={{ flex: "0 0 clamp(280px,36%,380px)", minWidth: 0, background: "#fff", borderRadius: "24px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: "0 8px 48px rgba(124,58,237,0.10)", border: "1.5px solid #e9e4ff", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(24px)", transition: "all 0.7s ease 0.2s" }}>
+            {submitted ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <div style={{ fontSize: "48px", marginBottom: "16px" }}>🎉</div>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "10px" }}>Message Sent!</h3>
+                <p style={{ fontSize: "14px", color: "#6b7280", fontFamily: "'Outfit',sans-serif" }}>We'll get back to you shortly.</p>
+                <button onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", course: "" }); }} style={{ marginTop: "24px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 28px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif" }}>Send another</button>
+              </div>
+            ) : (
+              <>
+                <h3 style={{ fontSize: "clamp(16px,1.8vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "6px" }}>We're here to help!</h3>
+                <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "24px" }}>Please contact us in case of any query.</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {[{ key: "name", placeholder: "Your name", type: "text" }, { key: "email", placeholder: "Your email address", type: "email" }, { key: "phone", placeholder: "Your phone number", type: "tel" }].map(field => (
+                    <input key={field.key} type={field.type} placeholder={field.placeholder} value={formData[field.key]} onChange={e => setFormData(p => ({ ...p, [field.key]: e.target.value }))}
+                      style={{ width: "100%", padding: "13px 16px", border: "1.5px solid #e5e7eb", borderRadius: "12px", fontSize: "13.5px", fontFamily: "'Outfit',sans-serif", color: "#374151", outline: "none", background: "#fafafa", transition: "border-color 0.2s", boxSizing: "border-box" }}
+                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.background = "#fafafa"; }} />
+                  ))}
+                  <select value={formData.course} onChange={e => setFormData(p => ({ ...p, course: e.target.value }))} style={{ width: "100%", padding: "13px 16px", border: "1.5px solid #e5e7eb", borderRadius: "12px", fontSize: "13.5px", fontFamily: "'Outfit',sans-serif", color: formData.course ? "#374151" : "#9ca3af", outline: "none", background: "#fafafa", appearance: "none", cursor: "pointer", boxSizing: "border-box" }}>
+                    <option value="">Select Course</option>
+                    <option value="medical-coding">Medical Coding</option>
+                    <option value="full-stack">Full Stack</option>
+                    <option value="data">Data Analytics</option>
+                  </select>
+                  <button onClick={handleSubmit} style={{ background: "linear-gradient(135deg,#7c3aed,#5b21b6)", color: "#fff", border: "none", borderRadius: "50px", padding: "14px 28px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: "0 6px 20px rgba(124,58,237,0.35)", transition: "all 0.22s", marginTop: "4px", width: "100%" }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.48)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)"; }}>
+                    Get in Touch
+                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   MAIN EXPORT
+═══════════════════════════════════════════════════ */
+export default function PlacementPage() {
+  const handleCtaClick = () => { const el = document.getElementById("contact"); if (el) el.scrollIntoView({ behavior: "smooth" }); };
+  return (
+    <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
-        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden; }
 
-        @keyframes shimmer    { 0%{background-position:-200% center} 100%{background-position:200% center} }
-        @keyframes floatY     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        @keyframes pulseDot   { 0%,100%{transform:scale(1);opacity:0.7} 50%{transform:scale(1.6);opacity:0.3} }
-        @keyframes heroFadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes badgePop   { from{transform:scale(0) rotate(-12deg);opacity:0} to{transform:scale(1) rotate(0deg);opacity:1} }
-        @keyframes waveBounce {
-  0%   { stroke-dashoffset: 0;    stroke-width: 3; }
-  25%  { stroke-dashoffset: -20;  stroke-width: 4; }
-  50%  { stroke-dashoffset: -40;  stroke-width: 2.5; }
-  75%  { stroke-dashoffset: -20;  stroke-width: 4; }
-  100% { stroke-dashoffset: 0;    stroke-width: 3; }
-}
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeRight { from{opacity:0;transform:translateX(-22px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes fadeScale { from{opacity:0;transform:scale(0.88)} to{opacity:1;transform:scale(1)} }
+        @keyframes shimmer   { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes drawArc   { from{stroke-dashoffset:400} to{stroke-dashoffset:0} }
 
-        .placement-page { font-family:'Outfit',sans-serif; }
+        .cr-v1  { animation:fadeRight .65s ease forwards; opacity:0; animation-delay:.10s; }
+        .ab-v1  { animation:fadeRight .6s ease forwards;  opacity:0; animation-delay:.1s;  }
+        .ab-v2  { animation:fadeUp   .65s ease forwards;  opacity:0; animation-delay:.28s; }
+        .ab-v3  { animation:fadeUp   .65s ease forwards;  opacity:0; animation-delay:.44s; }
+        .ab-vR  { animation:fadeScale 1s ease forwards;   opacity:0; animation-delay:.2s;  }
 
-        .grid-bg {
-          position:absolute; inset:0; pointer-events:none; z-index:0;
-          background-image:
-            linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),
-            linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px);
-          background-size:32px 32px;
+        .about-arc {
+          stroke-dasharray:400; stroke-dashoffset:400;
+          animation:drawArc 1.8s cubic-bezier(0.25,0.1,0.2,1) 0.6s forwards;
+        }
+        .about-cta-btn::after {
+          content:''; position:absolute; inset:0;
+          background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+          background-size:200% 100%; animation:shimmer 2.4s infinite;
         }
 
-        .section-label {
-          display:inline-flex; align-items:center; gap:8px;
-          background:#fff; border:1.5px solid #e4d9ff; border-radius:9px;
-          padding:7px 16px; font-size:11.5px; color:#3b1f7a; font-weight:700;
-          letter-spacing:0.08em; box-shadow:0 2px 12px rgba(124,58,237,0.10);
-          font-family:'Outfit',sans-serif;
+        /* ── Layout defaults (desktop) ── */
+        .campus-grid   { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+        .students-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; justify-items:center; }
+        .steps-desktop { display:block; }
+        .steps-mobile  { display:none; }
+        .opp-row       { display:flex; }
+        .opp-left      { flex:0 0 42%; }
+        .opp-right     { flex:1; }
+        .tc-row        { display:flex; }
+        .tc-left       { flex:1; min-width:0; }
+        .tc-right      { flex:0 0 clamp(280px,36%,380px); min-width:0; }
+        .trust-top     { display:flex; }
+        .trust-bottom  { display:flex; }
+
+        input::placeholder { color:#9ca3af; }
+        input:focus, select:focus { outline:none; }
+        select option { color:#374151; }
+
+        /* ════════════════════════════════
+           LARGE ≥ 1400px
+        ════════════════════════════════ */
+        @media (min-width:1400px) {
+          .about-left    { width:560px !important; }
+          .campus-grid   { gap:28px; }
+          .students-grid { gap:40px; }
         }
 
-        .cta-primary {
-          display:inline-flex; align-items:center; gap:10px;
-          background:linear-gradient(135deg,#7c3aed,#5b21b6);
-          color:#fff; border:none; border-radius:50px;
-          padding:14px 32px; font-size:14px; font-weight:700;
-          font-family:'Outfit',sans-serif; cursor:pointer;
-          transition:transform 0.22s,box-shadow 0.22s;
-          box-shadow:0 6px 22px rgba(124,58,237,0.32);
-          letter-spacing:0.2px; position:relative; overflow:hidden;
+        /* ════════════════════════════════
+           TABLET 769–1100px
+        ════════════════════════════════ */
+        @media (max-width:1100px) {
+          .about-inner { padding:0 4% !important; }
+          .about-left  { width:420px !important; }
+          .campus-grid { gap:16px; }
         }
-        .cta-primary::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent); background-size:200% 100%; animation:shimmer 2.2s infinite; }
-        .cta-primary:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 14px 36px rgba(124,58,237,0.42); }
-        .cta-primary:active { transform:scale(0.97); }
 
-        .cta-outline {
-          display:inline-flex; align-items:center; gap:8px;
-          background:transparent; color:#7c3aed;
-          border:1.5px solid #c4b5fd; border-radius:50px;
-          padding:13px 28px; font-size:14px; font-weight:700;
-          font-family:'Outfit',sans-serif; cursor:pointer;
-          transition:all 0.22s;
+        /* ════════════════════════════════
+           TABLET ≤ 900px
+        ════════════════════════════════ */
+        @media (max-width:900px) {
+          .campus-grid   { grid-template-columns:1fr 1fr !important; }
+          .opp-row       { flex-direction:column !important; }
+          .opp-left      { flex:unset !important; width:100% !important; }
+          .opp-right     { flex:unset !important; width:100% !important; }
+          .tc-row        { flex-direction:column !important; gap:36px !important; }
+          .tc-left       { width:100% !important; }
+          .tc-right      { flex:unset !important; width:100% !important; max-width:500px !important; }
+          .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:24px !important; }
+          .steps-desktop { display:none !important; }
+          .steps-mobile  { display:flex !important; }
+          .trust-top     { flex-direction:column !important; }
+          .trust-bottom  { flex-direction:column !important; }
         }
-        .cta-outline:hover { background:rgba(124,58,237,0.06); border-color:#7c3aed; transform:translateY(-2px); }
+
+        /* ════════════════════════════════
+           MOBILE ≤ 768px
+        ════════════════════════════════ */
+        @media (max-width:768px) {
+
+          /* ── Hero: 1. title+arc  2. image  3. desc+button ── */
+          .about-inner {
+            flex-direction: column !important;
+            align-items: center !important;
+            padding: 100px 20px 32px !important;
+            text-align: center !important;
+            gap: 20px !important;
+          }
+          .about-left {
+            order: 1 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .about-right {
+            order: 2 !important;
+            width: 100% !important;
+            height: 240px !important;
+          }
+          .about-right img {
+            height: 220px !important;
+            width: auto !important;
+            max-width: 100% !important;
+          }
+          .about-right > div:first-child {
+            width: 60% !important;
+            max-width: 220px !important;
+            bottom: -20px !important;
+          }
+          .about-bottom {
+            order: 3 !important;
+          }
+
+          /* Hide desktop desc+button in about-left on mobile */
+          .about-desc-desktop { display: none !important; }
+          .about-btn-desktop  { display: none !important; }
+
+          /* Hide badges on mobile */
+          .about-right > div[style*="Lifetime"],
+          .about-right > div[style*="offers"],
+          .about-right > div[style*="Active"],
+          .about-right > div[style*="Placed"] { display: none !important; }
+
+          /* Campus */
+          .campus-grid { grid-template-columns:1fr !important; gap:14px !important; }
+          .campus-grid > div { padding:24px 18px !important; border-radius:14px !important; }
+
+          /* Opportunities */
+          .opp-row   { flex-direction:column !important; }
+          .opp-left  { flex:unset !important; width:100% !important; padding:36px 20px !important; }
+          .opp-right { flex:unset !important; width:100% !important; padding:36px 20px !important; gap:24px !important; }
+          .opp-bg-design { height:80px !important; opacity:0.5 !important; }
+
+          /* Testimonials */
+          .tc-row  { flex-direction:column !important; gap:32px !important; }
+          .tc-right { flex:unset !important; width:100% !important; max-width:100% !important; }
+
+          /* Students */
+          .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:16px !important; }
+
+          /* Trust cards */
+          .trust-top    { flex-direction:column !important; }
+          .trust-bottom { flex-direction:column !important; }
+          .trust-card   { padding:24px 18px !important; }
+        }
+
+        /* Hide mobile-bottom on desktop */
+        @media (min-width:769px) {
+          .about-bottom { display:none !important; }
+        }
+
+        /* ════════════════════════════════
+           SMALL MOBILE ≤ 480px
+        ════════════════════════════════ */
+        @media (max-width:480px) {
+          .about-inner   { padding:80px 16px 28px !important; }
+          .about-right   { height:200px !important; }
+          .about-right img { height:185px !important; }
+          .about-right > div:first-child { width:55% !important; max-width:180px !important; }
+          .about-title   { font-size:1.8rem !important; }
+          .students-grid { gap:12px !important; }
+        }
+
+        /* ════════════════════════════════
+           VERY SMALL ≤ 360px
+        ════════════════════════════════ */
+        @media (max-width:360px) {
+          .about-inner { padding:70px 12px 24px !important; }
+          .about-title { font-size:1.6rem !important; }
+          .about-right { height:170px !important; }
+          .about-right img { height:155px !important; }
+          .sec-wrap { padding-left:12px !important; padding-right:12px !important; }
+        }
       `}</style>
 
-      <NavBar />
-
-      <div className="placement-page" style={{ background:"#faf8ff", minHeight:"100vh", paddingTop:"62px", position:"relative" }}>
-  {/* Grid — covers entire page */}
-  <div className="grid-bg" style={{ position:"fixed" }} />
-
-        {/* ══ HERO ══ */}
-        <section style={{ position:"relative", overflow:"hidden", background:"radial-gradient(ellipse 85% 75% at 65% 40%,rgba(167,139,250,0.18) 0%,transparent 60%),radial-gradient(ellipse 50% 55% at 5% 85%,rgba(124,58,237,0.10) 0%,transparent 60%),#faf8ff", padding:"72px 0 80px" }}>
-          <div className="grid-bg" />
-
-          {/* Floating dots */}
-          {[{t:"16%",l:"7%",s:9,d:"0s"},{t:"70%",l:"3%",s:6,d:"1.5s"},{t:"28%",l:"91%",s:8,d:"0.8s"},{t:"78%",l:"87%",s:5,d:"2s"}].map((p,i)=>(
-            <div key={i} style={{ position:"absolute", top:p.t, left:p.l, width:p.s, height:p.s, borderRadius:"50%", background:"rgba(124,58,237,0.18)", animation:`pulseDot 3s ${p.d} ease-in-out infinite`, pointerEvents:"none" }} />
-          ))}
-
-          {/* Radial blobs */}
-          <div style={{ position:"absolute", top:"-50px", right:"-60px", width:"360px", height:"360px", borderRadius:"50%", background:"radial-gradient(circle,rgba(167,139,250,0.16) 0%,transparent 70%)", pointerEvents:"none" }} />
-          <div style={{ position:"absolute", bottom:"-30px", left:"-40px", width:"280px", height:"280px", borderRadius:"50%", background:"radial-gradient(circle,rgba(124,58,237,0.09) 0%,transparent 70%)", pointerEvents:"none" }} />
-
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px", position:"relative", zIndex:1 }}>
-            <div style={{ maxWidth:"680px" }}>
-
-              {/* Badge */}
-              <div className="section-label" style={{ marginBottom:"20px", opacity:heroVisible?1:0, animation:heroVisible?"heroFadeUp 0.7s ease 0.05s both":"none" }}>
-                <IcoStar s={13} c="#7c3aed" />
-                PLACEMENT PROGRAM
-              </div>
-
-              {/* Headline */}
-              <h1 style={{ fontSize:"clamp(2.2rem,5vw,3.6rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", lineHeight:1.07, letterSpacing:"-0.03em", marginBottom:"20px", opacity:heroVisible?1:0, animation:heroVisible?"heroFadeUp 0.8s ease 0.15s both":"none" }}>
-                Your Dream Job<br />
-                <span style={{ color:"#7c3aed", position:"relative" }}>
-                  Starts Here
-                  <svg viewBox="0 0 240 20" style={{ position:"absolute", bottom:"-14px", left:0, width:"100%", height:"18px", overflow:"visible" }}>
-                    <path
-  d="M2 14 C10 6, 18 18, 28 11 C36 5, 44 17, 55 10 C64 4, 70 16, 82 9 C92 3, 100 18, 112 12 C122 7, 130 17, 142 10 C152 4, 162 16, 174 9 C184 3, 194 17, 206 11 C216 6, 226 15, 236 10"
-  stroke="#a78bfa" strokeWidth="2.5" fill="none"
-  strokeLinecap="round" strokeLinejoin="round"
-  strokeDasharray="6 3"
-  style={{ animation:"waveBounce 2.5s ease-in-out infinite" }}
-/>
-                  </svg>
-                </span>
-              </h1>
-
-              <p style={{ fontSize:"16px", color:"#5c4a8a", lineHeight:1.75, maxWidth:"540px", marginBottom:"34px", fontWeight:500, opacity:heroVisible?1:0, animation:heroVisible?"heroFadeUp 0.8s ease 0.28s both":"none" }}>
-                We don't just train you — we place you. With 100% placement assistance, 120+ hiring partners, and dedicated career coaches, Skillra turns your skills into a rewarding career.
-              </p>
-
-              <div style={{ display:"flex", gap:"14px", flexWrap:"wrap", opacity:heroVisible?1:0, animation:heroVisible?"heroFadeUp 0.8s ease 0.38s both":"none" }}>
-                <button className="cta-primary">
-                  View Placed Students
-                  <IcoArrow s={16} c="#fff" />
-                </button>
-                <button className="cta-outline">
-                  Explore Courses
-                </button>
-              </div>
-            </div>
-
-            {/* Floating 98% badge */}
-            <div style={{
-              position:"absolute", top:"-10px", right:"48px",
-              background:"linear-gradient(135deg,#7c3aed,#5b21b6)",
-              borderRadius:"20px", padding:"20px 26px", textAlign:"center",
-              boxShadow:"0 16px 48px rgba(124,58,237,0.35)",
-              animation:heroVisible?"badgePop 0.7s cubic-bezier(.4,0,.2,1) 0.5s both":"none",
-              opacity:0,
-            }}>
-              <div style={{ fontSize:"2.2rem", fontWeight:900, color:"#fff", fontFamily:"'Outfit',sans-serif", lineHeight:1 }}>98%</div>
-              <div style={{ fontSize:"11.5px", color:"rgba(255,255,255,0.78)", fontWeight:600, marginTop:"4px", fontFamily:"'Outfit',sans-serif" }}>Placement Rate</div>
-              {/* star badge */}
-              <div style={{ position:"absolute", top:"-10px", right:"-10px", width:"26px", height:"26px", background:"#fbbf24", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 12px rgba(251,191,36,0.45)" }}>
-                <IcoStar s={12} c="#fff" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ STATS ══ */}
-        <section ref={statsRef} style={{ padding:"56px 0", background:"#fff", borderTop:"1px solid #f0ebff", borderBottom:"1px solid #f0ebff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px" }}>
-            <div style={{ display:"flex", gap:"18px", flexWrap:"wrap" }}>
-              {STATS.map((s, i) => (
-                <StatCard key={i} {...s} delay={`${i*0.1}s`} Icon={STAT_ICONS[i]} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ HIRING PARTNERS ══ */}
-        <section ref={companiesRef} style={{ padding:"64px 0", background:"#faf8ff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px", marginBottom:"32px" }}>
-            <div style={{ textAlign:"center", opacity:companiesInView?1:0, transform:companiesInView?"translateY(0)":"translateY(20px)", transition:"all 0.7s ease" }}>
-              <div className="section-label" style={{ marginBottom:"14px" }}>
-                <IcoHandshake s={14} c="#7c3aed" />
-                OUR HIRING PARTNERS
-              </div>
-              <h2 style={{ fontSize:"clamp(1.5rem,3vw,2.1rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", letterSpacing:"-0.02em" }}>
-                120+ Companies <span style={{ color:"#7c3aed" }}>Hire From Skillra</span>
-              </h2>
-            </div>
-          </div>
-          <CompanyMarquee />
-        </section>
-
-        {/* ══ PLACEMENT PROCESS ══ */}
-        <section ref={processRef} style={{ padding:"68px 0", background:"#fff", borderTop:"1px solid #f0ebff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px" }}>
-            <div style={{ textAlign:"center", marginBottom:"52px", opacity:processInView?1:0, transform:processInView?"translateY(0)":"translateY(20px)", transition:"all 0.7s ease" }}>
-              <div className="section-label" style={{ marginBottom:"14px" }}>
-                <IcoRocket s={14} c="#7c3aed" />
-                HOW IT WORKS
-              </div>
-              <h2 style={{ fontSize:"clamp(1.5rem,3vw,2.1rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", letterSpacing:"-0.02em" }}>
-                Your Path to <span style={{ color:"#7c3aed" }}>Placement</span>
-              </h2>
-              <p style={{ fontSize:"14.5px", color:"#9270c0", marginTop:"10px", fontWeight:500, maxWidth:"420px", margin:"10px auto 0", fontFamily:"'Outfit',sans-serif" }}>
-                A structured 4-step journey from enrollment to your first day at work.
-              </p>
-            </div>
-            <div style={{ display:"flex", gap:"20px", alignItems:"flex-start" }}>
-              {PROCESS_STEPS.map((s, i) => (
-                <ProcessStep key={i} {...s} delay={`${i*0.14}s`} inView={processInView} isLast={i===PROCESS_STEPS.length-1} StepIcon={STEP_ICONS[i]} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ COURSE PLACEMENT STATS ══ */}
-        <section ref={barsRef} style={{ padding:"68px 0", background:"#faf8ff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px" }}>
-            <div style={{ display:"flex", gap:"56px", alignItems:"flex-start", flexWrap:"wrap" }}>
-
-              {/* Left */}
-              <div style={{ flex:"0 0 300px", opacity:barsInView?1:0, transform:barsInView?"translateX(0)":"translateX(-28px)", transition:"all 0.8s ease" }}>
-                <div className="section-label" style={{ marginBottom:"16px" }}>
-                  <IcoTrend s={13} c="#7c3aed" />
-                  PLACEMENT STATS
-                </div>
-                <h2 style={{ fontSize:"clamp(1.5rem,2.8vw,2rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", lineHeight:1.15, letterSpacing:"-0.02em", marginBottom:"14px" }}>
-                  Course-wise<br /><span style={{ color:"#7c3aed" }}>Placement Rate</span>
-                </h2>
-                <p style={{ fontSize:"13.5px", color:"#9270c0", lineHeight:1.75, fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
-                  Every course at Skillra is backed by dedicated placement cells, industry mentors, and active employer relationships built over 15+ years.
-                </p>
-                {/* Trophy */}
-                <div style={{ marginTop:"24px", display:"inline-flex", alignItems:"center", gap:"12px", background:"linear-gradient(135deg,#fef3c7,#fde68a)", border:"1.5px solid #fbbf24", borderRadius:"14px", padding:"14px 18px", boxShadow:"0 6px 20px rgba(251,191,36,0.20)" }}>
-                  <div style={{ width:36, height:36, background:"linear-gradient(135deg,#f59e0b,#d97706)", borderRadius:"10px", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-                  </div>
-                  <div>
-                    <div style={{ fontSize:"13px", fontWeight:800, color:"#92400e", fontFamily:"'Outfit',sans-serif" }}>Best Placement Record</div>
-                    <div style={{ fontSize:"11.5px", color:"#b45309", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>Consecutive 3 Years</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right bars */}
-              <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"12px" }}>
-                {COURSE_PLACEMENT.map((c, i) => (
-                  <PlacementBar key={i} {...c} delay={`${i*0.1}s`} inView={barsInView} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ PLACED STUDENTS ══ */}
-        <section ref={studentsRef} style={{ padding:"68px 0", background:"#fff", borderTop:"1px solid #f0ebff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px" }}>
-            <div style={{ textAlign:"center", marginBottom:"44px", opacity:studentsInView?1:0, transform:studentsInView?"translateY(0)":"translateY(20px)", transition:"all 0.7s ease" }}>
-              <div className="section-label" style={{ marginBottom:"14px" }}>
-                <IcoUsers s={13} c="#7c3aed" />
-                SUCCESS STORIES
-              </div>
-              <h2 style={{ fontSize:"clamp(1.5rem,3vw,2.1rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", letterSpacing:"-0.02em" }}>
-                Students Who Got <span style={{ color:"#7c3aed" }}>Placed</span>
-              </h2>
-              <p style={{ fontSize:"14.5px", color:"#9270c0", marginTop:"8px", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
-                Real students. Real jobs. Real results.
-              </p>
-            </div>
-
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"18px" }}>
-              {PLACED_STUDENTS.map((s, i) => (
-                <StudentCard key={i} student={s} delay={`${i*0.08}s`} inView={studentsInView} />
-              ))}
-            </div>
-
-            <div style={{ textAlign:"center", marginTop:"36px", opacity:studentsInView?1:0, transition:"opacity 0.7s ease 0.5s" }}>
-              <button className="cta-outline">
-                View All Success Stories
-                <IcoArrow s={15} c="#7c3aed" />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* ══ GUARANTEES ══ */}
-        <section style={{ padding:"52px 0", background:"#faf8ff", borderTop:"1px solid #f0ebff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px" }}>
-            <div style={{ display:"flex", gap:"18px", flexWrap:"wrap" }}>
-              {GUARANTEES.map((g, i) => {
-                const GIcon = GUARANTEE_ICONS[i];
-                return (
-                  <div key={i} style={{
-                    flex:1, minWidth:"200px",
-                    display:"flex", alignItems:"flex-start", gap:"14px",
-                    background:"#fff", border:"1.5px solid #e4d9ff",
-                    borderRadius:"18px", padding:"20px",
-                    boxShadow:"0 3px 14px rgba(124,58,237,0.06)",
-                    transition:"all 0.26s ease", cursor:"default",
-                  }}
-                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-5px)"; e.currentTarget.style.boxShadow="0 14px 40px rgba(124,58,237,0.13)"; e.currentTarget.style.borderColor="#c4b5fd"; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="0 3px 14px rgba(124,58,237,0.06)"; e.currentTarget.style.borderColor="#e4d9ff"; }}
-                  >
-                    <div style={{ width:38, height:38, borderRadius:"11px", background:"rgba(124,58,237,0.07)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                      <GIcon s={18} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize:"13.5px", fontWeight:800, color:"#1a0640", fontFamily:"'Outfit',sans-serif", marginBottom:"4px" }}>{g.title}</div>
-                      <div style={{ fontSize:"12px", color:"#9270c0", fontWeight:500, lineHeight:1.55, fontFamily:"'Outfit',sans-serif" }}>{g.desc}</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ══ CTA BANNER ══ */}
-        <section ref={ctaRef} style={{ padding:"72px 0", background:"#faf8ff" }}>
-          <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 48px" }}>
-            <div style={{
-              background:"linear-gradient(135deg,#6d28d9 0%,#7c3aed 50%,#4c1d95 100%)",
-              borderRadius:"28px", padding:"60px 52px",
-              position:"relative", overflow:"hidden",
-              opacity:ctaInView?1:0, transform:ctaInView?"translateY(0) scale(1)":"translateY(30px) scale(0.97)",
-              transition:"all 0.9s cubic-bezier(.4,0,.2,1)",
-            }}>
-              {/* inner blobs */}
-              <div style={{ position:"absolute", top:"-50px", right:"-50px", width:"240px", height:"240px", borderRadius:"50%", background:"rgba(255,255,255,0.06)", pointerEvents:"none" }} />
-              <div style={{ position:"absolute", bottom:"-40px", left:"-40px", width:"200px", height:"200px", borderRadius:"50%", background:"rgba(255,255,255,0.04)", pointerEvents:"none" }} />
-              {/* dot grid */}
-              <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.09) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
-              {/* shimmer bottom line */}
-              <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#7c3aed,#a78bfa,#7c3aed)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
-
-              <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"28px" }}>
-                <div style={{ maxWidth:"500px" }}>
-                  <div style={{ fontSize:"11px", fontWeight:800, color:"rgba(255,255,255,0.58)", letterSpacing:"0.12em", marginBottom:"14px", fontFamily:"'Outfit',sans-serif" }}>
-                    START YOUR JOURNEY TODAY
-                  </div>
-                  <h2 style={{ fontSize:"clamp(1.6rem,3.5vw,2.4rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"12px" }}>
-                    Ready to Land Your<br />Dream Job?
-                  </h2>
-                  <p style={{ fontSize:"14px", color:"rgba(255,255,255,0.72)", lineHeight:1.7, fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
-                    Join thousands of students who turned their passion into profession with Skillra's 100% placement guarantee.
-                  </p>
-                </div>
-
-                <div style={{ display:"flex", flexDirection:"column", gap:"12px", alignItems:"flex-start" }}>
-                  <button style={{ background:"#fff", color:"#7c3aed", border:"none", borderRadius:"50px", padding:"15px 34px", fontSize:"14px", fontWeight:800, fontFamily:"'Outfit',sans-serif", cursor:"pointer", display:"flex", alignItems:"center", gap:"10px", boxShadow:"0 8px 28px rgba(0,0,0,0.18)", transition:"all 0.22s", whiteSpace:"nowrap" }}
-                    onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px) scale(1.04)"; e.currentTarget.style.boxShadow="0 16px 40px rgba(0,0,0,0.25)"; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0) scale(1)"; e.currentTarget.style.boxShadow="0 8px 28px rgba(0,0,0,0.18)"; }}
-                  >
-                    Enroll Now — Get Placed
-                    <IcoArrow s={16} c="#7c3aed" />
-                  </button>
-
-                  {/* Star rating */}
-                  <div style={{ display:"flex", alignItems:"center", gap:"6px", paddingLeft:"8px" }}>
-                    {[0,1,2,3,4].map(i=>(
-                      <svg key={i} width="13" height="13" viewBox="0 0 14 14" fill="none">
-                        <path d="M7 1l1.4 2.8 3.1.5-2.25 2.2.53 3.1L7 8.1 4.22 9.6l.53-3.1L2.5 4.3l3.1-.5L7 1z" fill="#fbbf24"/>
-                      </svg>
-                    ))}
-                    <span style={{ fontSize:"12px", color:"rgba(255,255,255,0.72)", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>4.9 · 500+ reviews</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </>
+      <Navbar />
+      <AboutHero onCtaClick={handleCtaClick} />
+      <WhyTrustSection />
+      <HowWeHelpSection />
+      <StudentsPlacedSection />
+      <AboutCampusSection />
+      <OpportunitiesSection />
+      <TestimonialsContactSection />
+      <Footer />
+    </div>
   );
 }

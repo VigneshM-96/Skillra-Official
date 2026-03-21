@@ -1,488 +1,574 @@
-import { useState, useEffect } from "react";
-import NavBar from "./NavBar";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
-/*
-  ═══════════════════════════════════════════════════════════════
-  HOW THIS WORKS:
-  1. Place  Skillra_College_TieUps.xlsx  inside your /public/ folder
-  2. Place all college logo images       inside your /public/ folder
-  3. The page auto-loads the Excel on mount using SheetJS (CDN)
-  4. Reads columns: S.No | College Name | Location | Stream | college_logo
-  5. To update colleges: just edit the Excel — no code changes needed!
-  ═══════════════════════════════════════════════════════════════
-*/
+const PUB = process.env.PUBLIC_URL || "";
 
-const EXCEL_FILE = "/Skillra_College_TieUps.xlsx"; // file in /public/
-const FILTERS    = ["All", "University", "Engineering", "Arts & Science", "Government"];
-
-const TYPE_COLORS = {
-  "University":    { bg:"#ede9ff", border:"#c4b5fd", text:"#5b21b6", dot:"#7c3aed" },
-  "Engineering":   { bg:"#fff7ed", border:"#fed7aa", text:"#c2410c", dot:"#ea580c" },
-  "Arts & Science":{ bg:"#f0fdf4", border:"#bbf7d0", text:"#166534", dot:"#16a34a" },
-  "Government":    { bg:"#eff6ff", border:"#bfdbfe", text:"#1d4ed8", dot:"#3b82f6" },
-};
-
-const GRAD_PALETTE = [
-  "linear-gradient(135deg,#7c3aed,#a78bfa)",
-  "linear-gradient(135deg,#0ea5e9,#38bdf8)",
-  "linear-gradient(135deg,#16a34a,#4ade80)",
-  "linear-gradient(135deg,#ea580c,#fb923c)",
-  "linear-gradient(135deg,#db2777,#f472b6)",
-  "linear-gradient(135deg,#0891b2,#67e8f9)",
-];
-
-const getGrad = (sno) => GRAD_PALETTE[((sno || 1) - 1) % GRAD_PALETTE.length];
-const getAbbr = (name = "") =>
-  name.split(" ").filter(w => w.length > 2).map(w => w[0]).join("").slice(0, 3).toUpperCase() || "CLG";
-
-/* ── Load SheetJS from CDN ── */
-function loadSheetJS() {
-  return new Promise((resolve, reject) => {
-    if (window.XLSX) { resolve(window.XLSX); return; }
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
-    script.onload  = () => resolve(window.XLSX);
-    script.onerror = () => reject(new Error("Failed to load SheetJS"));
-    document.head.appendChild(script);
-  });
+function useInView(threshold = 0.12) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, inView];
 }
 
-/* ── Parse Excel → college array ── */
-async function loadCollegesFromExcel(url) {
-  const XLSX = await loadSheetJS();
-  const res  = await fetch(url);
-  if (!res.ok) throw new Error(`Cannot fetch ${url} — status ${res.status}`);
-  const buf  = await res.arrayBuffer();
-  const wb   = XLSX.read(buf, { type: "array" });
-
-  const sheetName = wb.SheetNames.find(n => !n.toLowerCase().includes("legend")) || wb.SheetNames[0];
-  const ws = wb.Sheets[sheetName];
-
-  /* Read as 2D array to find the real header row (skips title/instruction rows) */
-  const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
-
-  const headerRowIdx = raw.findIndex(row =>
-    row.some(cell => String(cell).toLowerCase().includes("college name") || String(cell).toLowerCase() === "s.no")
-  );
-
-  if (headerRowIdx === -1) throw new Error("Could not find header row. Make sure Excel has S.No and College Name columns.");
-
-  const headers  = raw[headerRowIdx].map(h => String(h).trim());
-  const dataRows = raw.slice(headerRowIdx + 1);
-
-  const col = (row, ...keys) => {
-    for (const key of keys) {
-      const idx = headers.findIndex(h => h.toLowerCase() === key.toLowerCase());
-      if (idx !== -1 && row[idx] !== undefined && String(row[idx]).trim() !== "") {
-        return String(row[idx]).trim();
-      }
-    }
-    return "";
-  };
-
-  return dataRows
-    .filter(row => col(row, "College Name", "college name", "College_Name").length > 0)
-    .map((row, i) => ({
-      sno:          Number(col(row, "S.No", "S No", "sno", "SNO")) || i + 1,
-      name:         col(row, "College Name", "college name", "College_Name"),
-      location:     col(row, "Location", "location", "City", "city"),
-      stream:       col(row, "Stream", "stream", "Type", "type"),
-      college_logo: col(row, "college_logo", "College Logo", "Logo", "logo"),
-    }));
-}
-
-/* ── SVG Icons ── */
-const IconBuilding   = ({ size=16, color="#7c3aed" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9M15 21V9"/></svg>);
-const IconPin        = ({ size=13, color="#9270c0" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>);
-const IconUsers      = ({ size=16, color="#7c3aed" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>);
-const IconMap        = ({ size=16, color="#7c3aed" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>);
-const IconSearch     = ({ size=16, color="#b9a8d4" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>);
-const IconStar       = ({ size=13, color="#7c3aed" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill={color} stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>);
-const IconArrowRight = ({ size=16, color="#7c3aed" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>);
-const IconHandshake  = ({ size=18, color="white"   }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>);
-const IconRefresh    = ({ size=16, color="#7c3aed" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>);
-
-function TickerLogo({ college }) {
-  const [err, setErr] = useState(false);
-  return (
-    <div style={{
-      width:44, height:44, borderRadius:"10px",
-      background: "transparent",          // ← transparent
-      display:"flex", alignItems:"center", justifyContent:"center",
-      flexShrink:0, overflow:"hidden",
-    }}>
-      {err ? (
-  <span style={{ fontSize:"8px", fontWeight:900, color:"#9270c0", letterSpacing:"-0.5px" }}>
-    {getAbbr(college.name)}
-  </span>
-) : (
-        <img src={`/${college.college_logo}`} alt={college.name} style={{ width:"100%", height:"100%", objectFit:"contain", padding:"3px" }} onError={() => setErr(true)} />
-      )}
-    </div>
-  );
-}
-
-/* ── College Card ── */
-function CollegeCard({ college, delay }) {
-  const [hovered,  setHovered]  = useState(false);
-  const [visible,  setVisible]  = useState(false);
-  const [imgError, setImgError] = useState(false);
-
-  const c    = TYPE_COLORS[college.stream] || TYPE_COLORS["University"];
-  const abbr = getAbbr(college.name);
-  const grad = getGrad(college.sno);
-
+/* ═══════════════════════════════════════════════════
+   FLOATING BADGE
+═══════════════════════════════════════════════════ */
+function FloatingBadge({ icon, label, style, delay = 0 }) {
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), delay);
     return () => clearTimeout(t);
   }, [delay]);
+  return (
+    <div style={{
+      position: "absolute", display: "flex", alignItems: "center", gap: "10px",
+      background: "rgba(255,255,255,0.95)",
+      backdropFilter: "blur(18px) saturate(1.6)", WebkitBackdropFilter: "blur(18px) saturate(1.6)",
+      border: "1.5px solid rgba(255,255,255,0.98)", borderRadius: "14px", padding: "10px 18px",
+      boxShadow: "0 8px 32px rgba(109,40,217,0.14), 0 1px 0 rgba(255,255,255,0.9) inset",
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)",
+      transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`,
+      zIndex: 20, ...style,
+    }}>
+      <div style={{
+        width: "34px", height: "34px", borderRadius: "10px",
+        background: "linear-gradient(135deg, rgba(124,58,237,0.10), rgba(167,139,250,0.18))",
+        border: "1px solid rgba(124,58,237,0.18)",
+        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+      }}>{icon}</div>
+      <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a0640", lineHeight: 1.2, fontFamily: "'Outfit', sans-serif", whiteSpace: "nowrap" }}>{label}</div>
+    </div>
+  );
+}
 
+function ActiveStudentsBadge({ style, delay = 0 }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+  return (
+    <div style={{
+      position: "absolute", display: "flex", alignItems: "center", gap: "10px",
+      background: "#1a1035", borderRadius: "50px", padding: "8px 16px 8px 8px",
+      boxShadow: "0 8px 28px rgba(20,8,56,0.35)",
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)",
+      transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`,
+      zIndex: 20, ...style,
+    }}>
+      <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg, #7c3aed, #a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="7" r="3.5" stroke="white" strokeWidth="1.8" />
+          <path d="M3 17c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
+        </svg>
+      </div>
+      <div>
+        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>1k</div>
+        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit', sans-serif" }}>Active Students</div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION 1 — CAMPUS HERO
+═══════════════════════════════════════════════════ */
+function CampusHero({ onJoinClick }) {
+  return (
+    <section id="campus-home" style={{
+      background: "radial-gradient(ellipse 120% 120% at 15% 55%, rgba(197,175,255,0.65) 0%, rgba(215,205,255,0.50) 35%, rgba(225,215,255,0.38) 55%, #e8e2f8 100%)",
+      minHeight: "100vh", display: "flex", alignItems: "center",
+      position: "relative", overflow: "hidden",
+    }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, backgroundImage: `radial-gradient(rgba(124,58,237,0.10) 1px, transparent 1px)`, backgroundSize: "28px 28px" }} />
+      <div className="campus-inner" style={{
+  display: "flex", alignItems: "center", justifyContent: "space-between",
+  flexWrap: "wrap",
+  padding: "30px 5%", width: "100%", gap: "80px",
+  position: "relative", zIndex: 1, maxWidth: "1280px", margin: "0 auto"
+}}>
+
+  {/* ── 1st on mobile: Title + arc only ── */}
+  <div className="campus-left" style={{ flex: "0 0 auto", width: "500px", maxWidth: "100%" }}>
+    <h1 className="cp-v1 campus-title" style={{ fontSize: "clamp(2rem, 5vw, 3.8rem)", fontWeight: 900, lineHeight: 1.1, color: "#1a0640", marginBottom: "6px", letterSpacing: "-1.5px", fontFamily: "'Outfit', sans-serif" }}>
+      Step Beyond <span style={{ display: "inline-block", animation: "capHat 2.4s ease-in-out infinite" }}>🎓</span>
+    </h1>
+    <h2 className="cp-v2 campus-subtitle" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2.9rem)", fontWeight: 900, lineHeight: 1.15, marginBottom: "18px", letterSpacing: "-1px", fontFamily: "'Outfit', sans-serif", color: "#1a0640" }}>
+      Academics with <span style={{ color: "#ff6b35" }}>Skillra</span><br /><span style={{ color: "#ff6b35" }}>Campus</span>
+    </h2>
+    <div className="cp-v2" style={{ marginBottom: "24px" }}>
+      <svg viewBox="0 0 320 20" style={{ width: "min(320px, 90%)", maxWidth: "100%", height: "14px", overflow: "visible" }} preserveAspectRatio="none">
+        <path className="campus-arc" d="M 4 14 C 60 2, 200 0, 316 12" fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
+      </svg>
+    </div>
+
+    {/* Desktop only — paragraph + button */}
+    <p className="cp-v3 campus-desc-desktop" style={{ color: "#5c4a80", fontSize: "clamp(13px,1.4vw,14.5px)", lineHeight: 1.8, marginBottom: "34px", maxWidth: "400px", fontFamily: "'Outfit', sans-serif", fontWeight: 400 }}>
+      Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
+    </p>
+    <div className="cp-v4 campus-btn-desktop">
+      <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "clamp(13px,1.3vw,14px)", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(124,58,237,0.38)"; }}>
+        Join Skillra Campus
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </button>
+    </div>
+  </div>
+
+  {/* ── 2nd on mobile: Image ── */}
+  <div className="campus-right cp-vR" style={{
+    flex: 1, display: "flex", justifyContent: "center", alignItems: "flex-end",
+    position: "relative", minWidth: 0,
+    height: "clamp(320px, 60vw, 700px)",
+  }}>
+    <div style={{
+      position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)",
+      width: "90%", maxWidth: "580px",
+      aspectRatio: "580 / 630",
+      borderRadius: "50% 50% 0 0 / 48% 48% 0 0",
+      background: "rgba(195,180,255,0.28)",
+      overflow: "hidden", zIndex: 1,
+    }}>
+      <svg viewBox="0 0 580 630" style={{ width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="chevInner" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+            <polyline points="0,18 18,0 36,18" fill="none" stroke="rgba(124,58,237,0.22)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            <polyline points="0,36 18,18 36,36" fill="none" stroke="rgba(124,58,237,0.22)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="580" height="630" fill="url(#chevInner)" />
+      </svg>
+    </div>
+    <img src={`${PUB}/campusboy.png`} alt="Campus Student"
+      style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" }}
+    />
+    <FloatingBadge icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="Lifetime Access" style={{ top: "12%", right: "2%" }} delay={600} />
+    <FloatingBadge icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="4+ online Courses" style={{ bottom: "24%", right: "2%" }} delay={800} />
+    <ActiveStudentsBadge style={{ bottom: "40%", left: "2%" }} delay={1000} />
+  </div>
+
+  {/* ── 3rd on mobile: Paragraph + button (mobile only) ── */}
+  <div className="campus-bottom" style={{
+    display: "flex", flexDirection: "column",
+    alignItems: "center", gap: "24px", width: "100%",
+  }}>
+    <p style={{ color: "#5c4a80", fontSize: "14.5px", lineHeight: 1.8, maxWidth: "360px", fontFamily: "'Outfit', sans-serif", fontWeight: 400, textAlign: "center" }}>
+      Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
+    </p>
+    <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", transition: "all 0.22s", position: "relative", overflow: "hidden" }}>
+      Join Skillra Campus
+      <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    </button>
+  </div>
+
+</div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   CAMPUS CARD
+═══════════════════════════════════════════════════ */
+function CampusCard({ heading, body, delay, inView }) {
+  const [hovered, setHovered] = useState(false);
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background:"#fff",
-        border:`1.5px solid ${hovered ? c.border : "#e4d9ff"}`,
-        borderRadius:"20px", padding:"22px 18px 18px",
-        display:"flex", flexDirection:"column", alignItems:"center", gap:"12px",
-        cursor:"default", position:"relative", overflow:"hidden",
-        opacity: visible ? 1 : 0,
-        transform: visible ? (hovered ? "translateY(-8px) scale(1.025)" : "translateY(0) scale(1)") : "translateY(20px)",
-        transition:`opacity 0.55s ease ${delay}ms, transform 0.30s cubic-bezier(.4,0,.2,1), border-color 0.22s, box-shadow 0.22s`,
-        boxShadow: hovered ? "0 20px 48px rgba(124,58,237,0.16),0 4px 12px rgba(124,58,237,0.08)" : "0 4px 16px rgba(124,58,237,0.06)",
+        background: hovered ? "linear-gradient(145deg, #6d28d9, #4c1d95)" : "#fff",
+        border: hovered ? "1.5px solid transparent" : "1.5px solid #e5e7eb",
+        borderRadius: "20px", padding: "36px 30px",
+        boxShadow: hovered ? "0 20px 52px rgba(109,40,217,0.38)" : "0 4px 20px rgba(124,58,237,0.06)",
+        opacity: inView ? 1 : 0,
+        transform: inView ? (hovered ? "translateY(-10px) scale(1.02)" : "translateY(0) scale(1)") : "translateY(30px)",
+        transition: [
+          `opacity 0.65s ease ${delay}s`,
+          "transform 0.30s cubic-bezier(0.34,1.56,0.64,1)",
+          "background 0.28s ease", "border-color 0.28s ease", "box-shadow 0.28s ease",
+        ].join(", "),
       }}
     >
-      <div style={{ position:"absolute", top:0, left:0, right:0, height:"3px", background:grad, opacity:hovered?1:0, transition:"opacity 0.3s" }} />
-      <div style={{ position:"absolute", top:"-20px", right:"-20px", width:"70px", height:"70px", borderRadius:"50%", background:`radial-gradient(circle,${c.bg} 0%,transparent 70%)`, opacity:hovered?1:0.5, transition:"opacity 0.3s", pointerEvents:"none" }} />
-      
+      <h3 style={{ fontSize: "clamp(15px,1.6vw,18px)", fontWeight: 800, color: hovered ? "#fff" : "#7c3aed", fontFamily: "'Outfit', sans-serif", marginBottom: "18px", transition: "color 0.28s ease" }}>
+        {heading}
+      </h3>
+      <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: hovered ? "rgba(255,255,255,0.85)" : "#6b7280", fontFamily: "'Outfit', sans-serif", lineHeight: 1.8, fontWeight: 400, transition: "color 0.28s ease" }}>
+        {body}
+      </p>
+    </div>
+  );
+}
 
-      {/* Logo */}
-      <div style={{
-  width:"64px", height:"64px", borderRadius:"14px",
-  background: "transparent",   // ← was: grad
-  display:"flex", alignItems:"center", justifyContent:"center",
-  overflow:"hidden",
-  boxShadow: "none",           // ← was: hovered ? "0 8px 28px..." : "0 4px 14px..."
-  transform: hovered ? "scale(1.07)" : "scale(1)",
-  transition:"transform 0.28s, box-shadow 0.28s",
-  flexShrink:0,
-}}>
-        {imgError ? (
-  <span style={{
-    width:"64px", height:"64px", borderRadius:"14px",
-    background: c.bg,
-    display:"flex", alignItems:"center", justifyContent:"center",
-    fontSize:"15px", fontWeight:900, color:c.text,
-    fontFamily:"'Outfit',sans-serif", letterSpacing:"-0.5px",
-  }}>
-    {abbr}
-  </span>
-) : (
-  <img
-    src={`/${college.college_logo}`}
-    alt={college.name}
-    style={{ width:"100%", height:"100%", objectFit:"contain", padding:"8px" }}
-    onError={() => setImgError(true)}
-  />
-)}
-      </div>
-
-      <div style={{ textAlign:"center" }}>
-        <div style={{ fontSize:"12.5px", fontWeight:700, color:"#1a0640", lineHeight:1.35, marginBottom:"5px" }}>{college.name}</div>
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:"4px" }}>
-          <IconPin size={12} color="#9270c0" />
-          <span style={{ fontSize:"11px", color:"#9270c0", fontWeight:500 }}>{college.location}</span>
+/* ═══════════════════════════════════════════════════
+   SECTION 2 — ABOUT SKILLRA CAMPUS
+═══════════════════════════════════════════════════ */
+function AboutCampusSection() {
+  const [ref, inView] = useInView(0.08);
+  const CARDS = [
+    { heading: "Heading", body: "Skillra Campus brings together education, industry insight, and student leadership to create meaningful opportunities within college campuses." },
+    { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
+    { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
+  ];
+  return (
+    <section ref={ref} id="about-campus" style={{ background: "#fff", padding: "clamp(48px,8vw,88px) 0", borderTop: "1px solid #f0ebff", position: "relative" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,48px)", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", marginBottom: "52px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>About Skillra Campus</h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit', sans-serif", maxWidth: "580px", margin: "0 auto", lineHeight: 1.7 }}>
+            Powerful natural language processing capabilities, that can understand and respond to customer inquiries in real-time &amp; improve customer satisfaction.
+          </p>
+        </div>
+        <div className="campus-cards-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+          {CARDS.map((card, i) => (
+            <CampusCard key={i} heading={card.heading} body={card.body} delay={0.1 + i * 0.1} inView={inView} />
+          ))}
         </div>
       </div>
+    </section>
+  );
+}
 
-      <div style={{ display:"inline-flex", alignItems:"center", gap:"5px", background:c.bg, border:`1px solid ${c.border}`, borderRadius:"50px", padding:"4px 11px", fontSize:"10px", fontWeight:700, color:c.text, letterSpacing:"0.03em" }}>
-        <span style={{ width:5, height:5, borderRadius:"50%", background:c.dot, flexShrink:0 }} />
-        {college.stream}
+/* ═══════════════════════════════════════════════════
+   SECTION 3 — OPPORTUNITIES
+═══════════════════════════════════════════════════ */
+function OpportunitiesSection() {
+  const [ref, inView] = useInView(0.08);
+  return (
+    <section ref={ref} style={{ background: "#0e0e0e", position: "relative", overflow: "hidden" }}>
+      <div className="opp-inner" style={{ display: "flex", minHeight: "500px", alignItems: "stretch" }}>
+        <div className="opp-left" style={{ flex: "0 0 42%", position: "relative", overflow: "hidden", padding: "clamp(40px,6vw,80px) clamp(24px,4%,52px)", display: "flex", flexDirection: "column", justifyContent: "center", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-30px)", transition: "all 0.7s ease 0.1s" }}>
+          <div className="opp-bg-design" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "240px", overflow: "hidden" }}>
+            <svg viewBox="0 0 520 240" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
+              {Array.from({ length: 16 }).map((_, row) => {
+                const numCols = 30;
+                const pts = Array.from({ length: numCols }).map((__, i) => `${(i / (numCols - 1)) * 520},${row * 15 + (i % 2 === 0 ? 0 : 10)}`).join(" ");
+                return <polyline key={row} points={pts} fill="none" stroke={row % 2 === 0 ? "#c9a227" : "#e6b830"} strokeWidth="2" strokeLinejoin="round" opacity={0.45 + row * 0.025} />;
+              })}
+            </svg>
+          </div>
+          <h2 style={{ fontSize: "clamp(1.6rem, 3.5vw, 3.1rem)", fontWeight: 900, color: "#fff", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.03em", lineHeight: 1.12, position: "relative", zIndex: 2, marginBottom: "clamp(60px,12vw,180px)" }}>
+            Opportunities<br />Through Skillra<br />Campus
+          </h2>
+        </div>
+        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s" }}>
+          {[
+            { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
+            { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions. This experience helps students develop leadership, communication, and organizational skills that are valuable in professional environments." },
+          ].map((item, i) => (
+            <div key={i}>
+              <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
+              <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-/* ── Skeleton card shown while loading ── */
-function SkeletonCard() {
-  return (
-    <div style={{ background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"20px", padding:"22px 18px 18px", display:"flex", flexDirection:"column", alignItems:"center", gap:"12px", boxShadow:"0 4px 16px rgba(124,58,237,0.06)" }}>
-      <div style={{ width:64, height:64, borderRadius:"14px", background:"linear-gradient(90deg,#f0ebff,#e4d9ff,#f0ebff)", backgroundSize:"200% 100%", animation:"shimmer 1.4s infinite" }} />
-      <div style={{ width:"80%", height:12, borderRadius:6, background:"linear-gradient(90deg,#f0ebff,#e4d9ff,#f0ebff)", backgroundSize:"200% 100%", animation:"shimmer 1.4s 0.1s infinite" }} />
-      <div style={{ width:"55%", height:10, borderRadius:6, background:"linear-gradient(90deg,#f0ebff,#e4d9ff,#f0ebff)", backgroundSize:"200% 100%", animation:"shimmer 1.4s 0.2s infinite" }} />
-      <div style={{ width:"60%", height:22, borderRadius:50, background:"linear-gradient(90deg,#f0ebff,#e4d9ff,#f0ebff)", backgroundSize:"200% 100%", animation:"shimmer 1.4s 0.3s infinite" }} />
-    </div>
-  );
-}
+/* ═══════════════════════════════════════════════════
+   SECTION 4 — TESTIMONIALS + CONTACT FORM
+═══════════════════════════════════════════════════ */
+const TESTIMONIALS = [
+  { name: "Aria Zinario", text: "I am very helped by this E-wallet application , my days are very easy to use this application and its very helpful in my life , even I can pay a short time 😊", avatar: "AZ" },
+  { name: "Rahul Sharma", text: "Skillra Campus transformed my career path completely. The placement support was exceptional and I got 3 offers within a month of completing the course.", avatar: "RS" },
+  { name: "Priya Nair",   text: "The mentors at Skillra are incredibly supportive. Real industry experience combined with structured learning made all the difference for me.", avatar: "PN" },
+  { name: "Karthik V",    text: "Best decision I ever made. The hands-on projects gave me the confidence to clear technical interviews at top product companies.", avatar: "KV" },
+];
+const AVATAR_COLORS = ["#7c3aed", "#059669", "#dc2626", "#d97706"];
 
-/* ── Particles ── */
-function Particles() {
-  const items = Array.from({ length: 12 }, (_, i) => ({
-    id:i, x:Math.random()*100, y:Math.random()*100,
-    size:4+Math.random()*8, dur:`${6+Math.random()*7}s`, delay:`${Math.random()*4}s`,
-  }));
-  return (
-    <div style={{ position:"absolute", inset:0, pointerEvents:"none", overflow:"hidden" }}>
-      {items.map(p => (
-        <div key={p.id} style={{ position:"absolute", left:`${p.x}%`, top:`${p.y}%`, width:p.size, height:p.size, borderRadius:"50%", background:"rgba(124,58,237,0.09)", animation:`floatP ${p.dur} ${p.delay} ease-in-out infinite` }} />
-      ))}
-    </div>
-  );
-}
+function TestimonialsContactSection() {
+  const [ref, inView] = useInView(0.06);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const autoRef = useRef(null);
 
-/* ══════════════════════════════════════════════════════════════ */
-export default function CampusPage() {
-  const [colleges,  setColleges]  = useState([]);
-  const [loading,   setLoading]   = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [filter,    setFilter]    = useState("All");
-  const [visible,   setVisible]   = useState(false);
-  const [search,    setSearch]    = useState("");
-
-  /* ── Load Excel on mount ── */
-  const fetchData = async () => {
-    setLoading(true);
-    setLoadError("");
-    try {
-      const data = await loadCollegesFromExcel(EXCEL_FILE);
-      setColleges(data);
-    } catch (err) {
-      console.error(err);
-      setLoadError(err.message || "Failed to load Excel file.");
-    } finally {
-      setLoading(false);
-    }
+  const goNext = () => setActiveIdx(prev => (prev + 1) % TESTIMONIALS.length);
+  const handlePlay = () => {
+    if (isPlaying) { clearInterval(autoRef.current); setIsPlaying(false); }
+    else { goNext(); autoRef.current = setInterval(goNext, 3000); setIsPlaying(true); }
   };
-
-  useEffect(() => {
-    fetchData();
-    const t = setTimeout(() => setVisible(true), 100);
-    return () => clearTimeout(t);
-  }, []);
-
-  const filtered = colleges.filter(c => {
-    const matchStream = filter === "All" || c.stream === filter;
-    const q = search.toLowerCase();
-    const matchSearch = !q || c.name.toLowerCase().includes(q) || c.location.toLowerCase().includes(q) || c.stream.toLowerCase().includes(q);
-    return matchStream && matchSearch;
-  });
-
-  const districts = new Set(colleges.map(c => c.location)).size;
-
-  /* unique streams from Excel (dynamic filter) */
-  const streams = ["All", ...Array.from(new Set(colleges.map(c => c.stream).filter(Boolean)))];
+  const handleAvatarClick = (i) => { clearInterval(autoRef.current); setIsPlaying(false); setActiveIdx(i); };
+  useEffect(() => () => clearInterval(autoRef.current), []);
+  const handleSubmit = () => { if (formData.name && formData.email) setSubmitted(true); };
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
-        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    <section ref={ref} id="contact" style={{ background: "#f8f7ff", borderTop: "1px solid #f0ebff", padding: "clamp(48px,8vw,88px) 0", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.05) 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,48px)", position: "relative", zIndex: 1 }}>
+        <div className="tc-inner" style={{ display: "flex", gap: "clamp(24px,5%,64px)", alignItems: "flex-start" }}>
 
-        @keyframes floatP   { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.08)} }
-        @keyframes shimmer  { 0%{background-position:-200% center} 100%{background-position:200% center} }
-        @keyframes badgePop { from{opacity:0;transform:scale(0.8) translateY(6px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-
-        .campus-page { font-family:'Outfit',sans-serif; }
-
-        .grid-bg {
-          position:absolute; inset:0; pointer-events:none; z-index:0;
-          background-image:
-            linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
-            linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px);
-          background-size:32px 32px;
-        }
-
-        .filter-btn {
-          padding:8px 20px; border-radius:50px; font-size:13px; font-weight:700;
-          font-family:'Outfit',sans-serif; cursor:pointer;
-          border:1.5px solid #e4d9ff; background:#fff; color:#5c4a80;
-          transition:all 0.22s cubic-bezier(.4,0,.2,1);
-        }
-        .filter-btn:hover  { border-color:#a78bfa; color:#7c3aed; transform:translateY(-2px); box-shadow:0 4px 14px rgba(124,58,237,0.12); }
-        .filter-btn.active { background:#7c3aed; color:#fff; border-color:#7c3aed; box-shadow:0 4px 16px rgba(124,58,237,0.28); }
-
-        .college-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:18px; }
-
-        .ticker-wrap  { overflow:hidden; width:100%; -webkit-mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent); mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent); }
-        .ticker-inner { display:flex; width:max-content; animation:tickerScroll 55s linear infinite; }
-        .ticker-item { display:flex; align-items:center; gap:14px; padding:16px 40px; white-space:nowrap; font-size:15px; font-weight:600; color:#9270c0; }
-
-        .search-input { width:100%; padding:13px 18px 13px 44px; font-size:14px; font-family:'Outfit',sans-serif; font-weight:500; color:#1a0640; background:#fff; border:1.5px solid #e4d9ff; border-radius:50px; outline:none; transition:all 0.25s ease; }
-        .search-input:focus        { border-color:#7c3aed; box-shadow:0 0 0 4px rgba(124,58,237,0.09); }
-        .search-input::placeholder { color:#b9a8d4; }
-
-        .stat-card { transition:transform 0.25s,box-shadow 0.25s; }
-        .stat-card:hover { transform:translateY(-5px); box-shadow:0 14px 36px rgba(124,58,237,0.16) !important; }
-
-        .spin { animation:spin 1s linear infinite; }
-      `}</style>
-
-      <NavBar />
-
-      <div className="campus-page" style={{ minHeight:"100vh", paddingTop:"62px", background:"radial-gradient(ellipse 80% 60% at 70% 20%,rgba(167,139,250,0.18) 0%,transparent 65%),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(124,58,237,0.10) 0%,transparent 65%),#faf8ff", position:"relative", overflow:"hidden" }}>
-        <div className="grid-bg" />
-        <Particles />
-        <div style={{ position:"absolute", top:"-8%",  right:"-5%", width:"420px", height:"420px", borderRadius:"50%", background:"radial-gradient(circle,rgba(167,139,250,0.14) 0%,transparent 70%)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", bottom:"5%", left:"-4%",  width:"300px", height:"300px", borderRadius:"50%", background:"radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%)",  pointerEvents:"none" }} />
-
-        <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"52px 48px 70px", position:"relative", zIndex:1 }}>
-
-          {/* ── Header ── */}
-          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"32px", flexWrap:"wrap", marginBottom:"40px", opacity:visible?1:0, transform:visible?"translateY(0)":"translateY(-18px)", transition:"all 0.8s cubic-bezier(.4,0,.2,1) 0.05s" }}>
-            <div>
-              <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"9px", padding:"8px 16px", fontSize:"12px", color:"#3b1f7a", fontWeight:700, marginBottom:"16px", boxShadow:"0 2px 12px rgba(124,58,237,0.10)", animation:visible?"badgePop 0.6s ease 0.2s both":"none" }}>
-                <IconStar size={13} color="#7c3aed" />
-                CAMPUS TIE-UPS
-              </div>
-              <h1 style={{ fontSize:"clamp(2rem,3.5vw,2.9rem)", fontWeight:900, color:"#120630", lineHeight:1.1, letterSpacing:"-0.03em", marginBottom:"12px" }}>
-                Our College <span style={{ color:"#7c3aed" }}>Partners</span>
-              </h1>
-              <p style={{ fontSize:"15px", color:"#5c4a80", lineHeight:1.7, maxWidth:"480px", fontWeight:400 }}>
-                Skillra has formal MoU tie-ups with{" "}
-                <strong style={{ color:"#7c3aed" }}>{loading ? "..." : `${colleges.length}+`} institutions</strong>{" "}
-                across Tamil Nadu, enabling direct campus recruitment drives, skill workshops, and certified training programs.
+          {/* LEFT */}
+          <div style={{ flex: 1, minWidth: 0, opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-24px)", transition: "all 0.7s ease 0.1s" }}>
+            <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.03em", marginBottom: "8px" }}>Testimonials</h2>
+            <p style={{ fontSize: "14px", color: "#9ca3af", fontFamily: "'Outfit', sans-serif", marginBottom: "40px", fontStyle: "italic" }}>Every Story Matters. Every Success Counts.</p>
+            <div style={{ marginBottom: "20px" }}>
+              <svg width="52" height="38" viewBox="0 0 52 38" fill="none">
+                <path d="M0 38V23C0 15.3 2.8 9.6 8.4 5.8 14 2 20.7 0.2 28.5 0.2V7.4C25 7.4 22 8.3 19.4 10 16.8 11.6 15.5 14 15.3 17.2H24V38H0ZM28 38V23C28 15.3 30.8 9.6 36.4 5.8 42 2 48.7 0.2 56.5 0.2V7.4C53 7.4 50 8.3 47.4 10 44.8 11.6 43.5 14 43.3 17.2H52V38H28Z" fill="#7c3aed" opacity="0.13" />
+              </svg>
+            </div>
+            <div key={activeIdx} className="testi-slide" style={{ minHeight: "120px", marginBottom: "36px" }}>
+              <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#374151", fontFamily: "'Outfit', sans-serif", lineHeight: 1.85, fontWeight: 400 }}>
+                {TESTIMONIALS[activeIdx].text}
+              </p>
+              <p style={{ fontSize: "13px", color: "#7c3aed", fontFamily: "'Outfit', sans-serif", fontWeight: 700, marginTop: "18px" }}>
+                — {TESTIMONIALS[activeIdx].name}
               </p>
             </div>
-
-            {/* Stat cards */}
-            <div style={{ display:"flex", gap:"14px", flexWrap:"wrap", opacity:visible?1:0, transition:"opacity 0.8s ease 0.35s" }}>
-              {[
-                { num: loading ? "—" : `${colleges.length}+`, label:"Colleges",        Icon:IconBuilding },
-                { num:"5000+",                                  label:"Students Trained", Icon:IconUsers    },
-                { num: loading ? "—" : `${districts}+`,        label:"Districts",        Icon:IconMap      },
-              ].map((s, i) => (
-                <div key={i} className="stat-card" style={{ background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"18px", padding:"18px 20px", textAlign:"center", minWidth:"106px", boxShadow:"0 4px 16px rgba(124,58,237,0.08)" }}>
-                  <div style={{ display:"flex", justifyContent:"center", marginBottom:"6px" }}><s.Icon size={18} color="#7c3aed" /></div>
-                  <div style={{ fontSize:"22px", fontWeight:900, color:"#7c3aed", lineHeight:1, letterSpacing:"-0.5px" }}>{s.num}</div>
-                  <div style={{ fontSize:"11px", color:"#9270c0", marginTop:"4px", fontWeight:600 }}>{s.label}</div>
-                </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              {TESTIMONIALS.map((t, i) => (
+                <div key={i} onClick={() => handleAvatarClick(i)} style={{
+                  width: "44px", height: "44px", borderRadius: "50%", background: AVATAR_COLORS[i],
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "13px", fontWeight: 700, color: "#fff",
+                  fontFamily: "'Outfit', sans-serif", cursor: "pointer", flexShrink: 0,
+                  border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
+                  boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
+                  transition: "all 0.22s", transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
+                }}>{t.avatar}</div>
               ))}
+              <div onClick={handlePlay} style={{
+                width: "44px", height: "44px", borderRadius: "50%",
+                border: `2px solid ${isPlaying ? "#7c3aed" : "#d1d5db"}`,
+                background: isPlaying ? "#f3f0ff" : "transparent",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer", marginLeft: "4px", transition: "all 0.22s", flexShrink: 0,
+              }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "#7c3aed"; e.currentTarget.style.background = "#f3f0ff"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = isPlaying ? "#7c3aed" : "#d1d5db"; e.currentTarget.style.background = isPlaying ? "#f3f0ff" : "transparent"; }}
+              >
+                {isPlaying
+                  ? <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><rect x="1" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" /><rect x="7.5" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" /></svg>
+                  : <svg width="13" height="15" viewBox="0 0 14 16" fill="none"><path d="M1 1l12 7-12 7V1z" fill="#9ca3af" /></svg>
+                }
+              </div>
             </div>
           </div>
 
-          {/* ── Error banner ── */}
-          {loadError && (
-            <div style={{ background:"#fff0f0", border:"1.5px solid #fca5a5", borderRadius:"14px", padding:"16px 20px", marginBottom:"24px", display:"flex", alignItems:"center", gap:"14px", color:"#b91c1c" }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <div style={{ flex:1 }}>
-                <div style={{ fontWeight:700, fontSize:"13px" }}>Could not load Excel file</div>
-                <div style={{ fontSize:"12px", marginTop:"3px", color:"#ef4444" }}>{loadError}</div>
-                <div style={{ fontSize:"11px", marginTop:"4px", color:"#9270c0" }}>Make sure <strong>Skillra_College_TieUps.xlsx</strong> is in your <strong>/public/</strong> folder.</div>
+          {/* RIGHT — Contact Form */}
+          <div className="tc-form" style={{ flex: "0 0 clamp(280px,38%,380px)", background: "#fff", borderRadius: "24px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: "0 8px 48px rgba(124,58,237,0.10)", border: "1.5px solid #e9e4ff", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(24px)", transition: "all 0.7s ease 0.2s" }}>
+            {submitted ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <div style={{ fontSize: "48px", marginBottom: "16px" }}>🎉</div>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", marginBottom: "10px" }}>Message Sent!</h3>
+                <p style={{ fontSize: "14px", color: "#6b7280", fontFamily: "'Outfit', sans-serif" }}>We'll get back to you shortly.</p>
+                <button onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", course: "" }); }} style={{ marginTop: "24px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 28px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}>Send another</button>
               </div>
-              <button onClick={fetchData} style={{ display:"flex", alignItems:"center", gap:"6px", background:"#fff", border:"1.5px solid #fca5a5", borderRadius:"50px", padding:"8px 16px", fontSize:"12px", fontWeight:700, color:"#b91c1c", cursor:"pointer", whiteSpace:"nowrap" }}>
-                <IconRefresh size={13} color="#b91c1c" /> Retry
-              </button>
-            </div>
-          )}
-
-          {/* ── Search + Filter ── */}
-          <div style={{ display:"flex", gap:"14px", alignItems:"center", flexWrap:"wrap", marginBottom:"28px", opacity:visible?1:0, transform:visible?"translateY(0)":"translateY(12px)", transition:"all 0.7s ease 0.25s" }}>
-            <div style={{ position:"relative", flex:"0 0 auto", width:"250px" }}>
-              <div style={{ position:"absolute", left:"16px", top:"50%", transform:"translateY(-50%)", pointerEvents:"none" }}>
-                <IconSearch size={15} color="#b9a8d4" />
-              </div>
-              <input className="search-input" placeholder="Search college or city…" value={search} onChange={e => setSearch(e.target.value)} />
-            </div>
-
-            <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
-              {/* Use dynamic streams from Excel, fallback to defaults */}
-              {(loading ? FILTERS : streams).map(f => (
-                <button key={f} className={`filter-btn${filter===f?" active":""}`} onClick={() => setFilter(f)}>{f}</button>
-              ))}
-            </div>
-
-            <div style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"10px" }}>
-              {loading && <div className="spin"><IconRefresh size={14} color="#9270c0" /></div>}
-              <span style={{ fontSize:"13px", color:"#9270c0", fontWeight:600 }}>
-                {loading ? "Loading…" : `${filtered.length} institution${filtered.length!==1?"s":""}`}
-              </span>
-            </div>
-          </div>
-
-          {/* ── College Grid ── */}
-          {loading ? (
-            /* Skeleton placeholders */
-            <div className="college-grid">
-              {Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
-            </div>
-          ) : filtered.length > 0 ? (
-            <div className="college-grid">
-              {filtered.map((college, i) => (
-                <CollegeCard key={`${college.sno}-${college.name}`} college={college} delay={Math.min(i * 35, 600)} />
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign:"center", padding:"60px 0" }}>
-              <IconSearch size={40} color="#c4b5fd" />
-              <div style={{ fontSize:"16px", fontWeight:700, color:"#5c4a80", marginTop:"16px" }}>No colleges found</div>
-              <div style={{ fontSize:"13px", color:"#9270c0", marginTop:"6px" }}>Try a different search or filter</div>
-            </div>
-          )}
-
-          {/* ── Ticker ── */}
-          {!loading && colleges.length > 0 && (
-            <div style={{
-  marginTop:"52px", paddingTop:"32px", borderTop:"1.5px solid #e4d9ff",
-  background:"#fff",              // ← add this
-  borderRadius:"20px",            // ← add this
-  padding:"24px 0",               // ← add this
-  border:"1.5px solid #e4d9ff",  // ← add this
-  boxShadow:"0 4px 16px rgba(124,58,237,0.06)", // ← add this
-  opacity:visible?1:0, transition:"opacity 0.9s ease 0.6s",
-}}>
-              <div style={{ textAlign:"center", marginBottom:"18px" }}>
-                <span style={{ fontSize:"11px", fontWeight:700, color:"#b9a8d4", letterSpacing:"0.12em" }}>
-                  TRUSTED BY INSTITUTIONS ACROSS TAMIL NADU
-                </span>
-              </div>
-              <div className="ticker-wrap">
-                <div className="ticker-inner">
-                  {[...colleges, ...colleges].map((c, i) => (
-                    <div key={i} className="ticker-item">
-                      <TickerLogo college={c} />
-                      {c.name}
-                      <span style={{ width:4, height:4, borderRadius:"50%", background:"#e4d9ff", flexShrink:0 }} />
-                    </div>
+            ) : (
+              <>
+                <h3 style={{ fontSize: "clamp(16px,2vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", marginBottom: "6px" }}>We're here to help!</h3>
+                <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit', sans-serif", marginBottom: "28px" }}>Please contact us in case of any query.</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                  {[
+                    { key: "name", placeholder: "Your name", type: "text" },
+                    { key: "email", placeholder: "Your email address", type: "email" },
+                    { key: "phone", placeholder: "Your phone number", type: "tel" },
+                  ].map(field => (
+                    <input key={field.key} type={field.type} placeholder={field.placeholder}
+                      value={formData[field.key]}
+                      onChange={e => setFormData(p => ({ ...p, [field.key]: e.target.value }))}
+                      style={{ width: "100%", padding: "13px 16px", border: "1.5px solid #e5e7eb", borderRadius: "12px", fontSize: "13.5px", fontFamily: "'Outfit', sans-serif", color: "#374151", outline: "none", background: "#fafafa", transition: "border-color 0.2s, background 0.2s", boxSizing: "border-box" }}
+                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.background = "#fafafa"; }}
+                    />
                   ))}
+                  <div style={{ position: "relative" }}>
+                    <select value={formData.course} onChange={e => setFormData(p => ({ ...p, course: e.target.value }))} style={{ width: "100%", padding: "13px 16px", border: "1.5px solid #e5e7eb", borderRadius: "12px", fontSize: "13.5px", fontFamily: "'Outfit', sans-serif", color: formData.course ? "#374151" : "#9ca3af", outline: "none", background: "#fafafa", appearance: "none", WebkitAppearance: "none", cursor: "pointer", boxSizing: "border-box" }}>
+                      <option value="">Select Course</option>
+                      <option value="web">Web Development</option>
+                      <option value="data">Data Science</option>
+                      <option value="design">UI/UX Design</option>
+                      <option value="digital">Digital Marketing</option>
+                    </select>
+                    <svg style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </div>
+                  <button onClick={handleSubmit} style={{ background: "linear-gradient(135deg, #7c3aed, #5b21b6)", color: "#fff", border: "none", borderRadius: "50px", padding: "14px 28px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: "0 6px 20px rgba(124,58,237,0.35)", transition: "all 0.22s", marginTop: "4px" }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.48)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)"; }}>
+                    Get in Touch
+                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── CTA Banner ── */}
-          <div style={{ marginTop:"44px", background:"linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%)", borderRadius:"24px", padding:"38px 44px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"24px", flexWrap:"wrap", boxShadow:"0 16px 48px rgba(124,58,237,0.28)", position:"relative", overflow:"hidden", opacity:visible?1:0, transition:"opacity 0.9s ease 0.7s" }}>
-            <div style={{ position:"absolute", top:"-40px",   right:"-40px", width:"200px", height:"200px", borderRadius:"50%", background:"rgba(255,255,255,0.07)", pointerEvents:"none" }} />
-            <div style={{ position:"absolute", bottom:"-30px", left:"30%",   width:"140px", height:"140px", borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }} />
-
-            <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:"18px" }}>
-              <div style={{ width:48, height:48, borderRadius:"14px", background:"rgba(255,255,255,0.15)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                <IconHandshake size={22} color="white" />
-              </div>
-              <div>
-                <h3 style={{ fontSize:"clamp(1.2rem,2.5vw,1.7rem)", fontWeight:900, color:"#fff", marginBottom:"6px", letterSpacing:"-0.02em" }}>
-                  Want to partner with Skillra?
-                </h3>
-                <p style={{ fontSize:"14px", color:"rgba(255,255,255,0.72)", fontWeight:400, maxWidth:"420px", lineHeight:1.65 }}>
-                  Sign an MoU with us and bring industry-ready training directly to your campus. Placement support included.
-                </p>
-              </div>
-            </div>
-
-            <button
-              style={{ background:"#fff", color:"#7c3aed", border:"none", borderRadius:"50px", padding:"14px 28px", fontSize:"14px", fontWeight:800, fontFamily:"'Outfit',sans-serif", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0, boxShadow:"0 6px 20px rgba(0,0,0,0.16)", transition:"transform 0.22s,box-shadow 0.22s", position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:"8px" }}
-              onMouseEnter={e => { e.currentTarget.style.transform="translateY(-3px) scale(1.04)"; e.currentTarget.style.boxShadow="0 12px 32px rgba(0,0,0,0.22)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform="translateY(0) scale(1)";       e.currentTarget.style.boxShadow="0 6px 20px rgba(0,0,0,0.16)"; }}
-            >
-              Partner With Us
-              <IconArrowRight size={15} color="#7c3aed" />
-            </button>
+              </>
+            )}
           </div>
-
         </div>
       </div>
-    </>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   MAIN EXPORT
+═══════════════════════════════════════════════════ */
+export default function CampusPage() {
+  const handleJoinClick = () => {
+    const el = document.getElementById("contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden; }
+
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeRight { from{opacity:0;transform:translateX(-22px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes fadeScale { from{opacity:0;transform:scale(0.88)} to{opacity:1;transform:scale(1)} }
+        @keyframes shimmer   { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes drawArc   { from{stroke-dashoffset:400} to{stroke-dashoffset:0} }
+        @keyframes capHat    { 0%,100%{transform:rotate(-5deg) translateY(0px)} 50%{transform:rotate(5deg) translateY(-6px)} }
+        @keyframes tesFadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spinRingAnim { to{transform:rotate(360deg)} }
+
+        .testi-slide { animation: tesFadeUp 0.38s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+        .cp-v1 { animation: fadeRight .6s ease forwards; opacity:0; animation-delay:.1s; }
+        .cp-v2 { animation: fadeUp .65s ease forwards;   opacity:0; animation-delay:.22s; }
+        .cp-v3 { animation: fadeUp .65s ease forwards;   opacity:0; animation-delay:.38s; }
+        .cp-v4 { animation: fadeUp .65s ease forwards;   opacity:0; animation-delay:.54s; }
+        .cp-vR { animation: fadeScale 1s ease forwards;  opacity:0; animation-delay:.2s; }
+
+        .campus-arc {
+          stroke-dasharray: 400; stroke-dashoffset: 400;
+          animation: drawArc 1.8s cubic-bezier(0.25,0.1,0.2,1) 0.6s forwards;
+        }
+        .campus-cta-btn::after {
+          content:''; position:absolute; inset:0;
+          background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+          background-size:200% 100%;
+          animation: shimmer 2.4s infinite;
+        }
+
+        input::placeholder { color:#9ca3af; }
+        input:focus, select:focus { outline:none; }
+        select option { color:#374151; }
+
+        /* ══ LARGE DESKTOP ≥ 1280px ══ */
+        @media (min-width:1280px) {
+          .campus-inner { gap:60px !important; }
+        }
+
+        /* ══ TABLET 769–1100px ══ */
+        @media (max-width:1100px) {
+          .campus-inner { padding:0 4% !important; gap:40px !important; }
+          .campus-left  { width:420px !important; }
+        }
+
+        /* ══ TABLET 769–900px ══ */
+        @media (max-width:900px) {
+          .campus-cards-grid { grid-template-columns:1fr 1fr !important; }
+          .opp-inner         { flex-direction:column !important; }
+          .opp-left          { flex:unset !important; width:100% !important; min-height:280px !important; }
+          .opp-right         { flex:unset !important; width:100% !important; }
+          .tc-inner          { flex-direction:column !important; }
+          .tc-form           { flex:0 0 auto !important; width:100% !important; max-width:100% !important; }
+        }
+
+        /* ══ MOBILE ≤ 768px ══ */
+        /* ══ MOBILE ≤ 768px ══ */
+@media (max-width: 768px) {
+  .campus-inner {
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 100px 20px 32px !important;
+    text-align: center !important;
+    gap: 20px !important;
+  }
+
+  /* 1st — Title + arc + subtitle */
+  .campus-left {
+    order: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 8px !important;
+  }
+
+  /* 2nd — Image */
+  .campus-right {
+    order: 2 !important;
+    width: 100% !important;
+    height: 220px !important;
+  }
+
+  /* 3rd — Paragraph + button */
+  .campus-bottom {
+    order: 3 !important;
+  }
+
+  /* Hide desktop paragraph + button */
+  .campus-desc-desktop { display: none !important; }
+  .campus-btn-desktop  { display: none !important; }
+
+  /* Hide mobile bottom on desktop */
+  .campus-right img { height: 200px !important; }
+  .campus-right > div:first-child { width: 60% !important; max-width: 220px !important; bottom: -20px !important; }
+  .campus-right > div[style*="Lifetime"],
+  .campus-right > div[style*="Courses"],
+  .campus-right > div[style*="Active"] { display: none !important; }
+
+  .campus-cards-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .campus-cards-grid > div { padding: 24px 18px !important; border-radius: 14px !important; }
+  .opp-inner { flex-direction: column !important; }
+  .opp-left  { flex: unset !important; width: 100% !important; min-height: 240px !important; padding: 32px 20px !important; }
+  .opp-right { flex: unset !important; width: 100% !important; padding: 32px 20px !important; gap: 28px !important; }
+  .opp-bg-design { height: 90px !important; opacity: 0.5 !important; }
+  .tc-inner { flex-direction: column !important; gap: 32px !important; }
+  .tc-form  { flex: 0 0 auto !important; width: 100% !important; max-width: 100% !important; }
+  .nl-inner { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+  .nl-form  { width: 100% !important; flex-direction: column !important; gap: 10px !important; }
+  .nl-form input  { width: 100% !important; }
+  .nl-form button { width: 100% !important; justify-content: center !important; }
+}
+
+/* Hide mobile-bottom on desktop */
+@media (min-width: 769px) {
+  .campus-bottom { display: none !important; }
+}
+  
+/* ══ SMALL MOBILE ≤ 480px ══ */
+@media (max-width: 480px) {
+  .campus-title    { font-size: 2.8rem !important; }
+  .campus-subtitle { font-size: 2.4rem !important; }
+  .campus-right    { height: 190px !important; }
+  .campus-right img { height: 170px !important; }
+  .campus-right > div:first-child { width: 55% !important; max-width: 180px !important; }
+}
+
+/* ══ VERY SMALL ≤ 360px ══ */
+@media (max-width: 360px) {
+  .campus-inner  { padding: 70px 14px 28px !important; }
+  .campus-title  { font-size: 1.5rem !important; }
+  .campus-subtitle { font-size: 1.2rem !important; }
+  .campus-right  { height: 160px !important; }
+  .campus-right img { height: 145px !important; }
+  .campus-right > div:first-child { width: 50% !important; max-width: 155px !important; }
+}
+
+        
+      `}</style>
+
+      <CampusHero onJoinClick={handleJoinClick} />
+      <AboutCampusSection />
+      <OpportunitiesSection />
+      <TestimonialsContactSection />
+      <Footer />
+    </div>
   );
 }

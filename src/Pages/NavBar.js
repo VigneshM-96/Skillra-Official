@@ -1,40 +1,27 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-// Map nav labels to routes — add more pages here as you build them
 const NAV_LINKS = [
-
-  { label: "About Us",       path: "/about"     },
-  { label: "Course Offered", path: "/courses"   },
-  { label: "Services",       path: "/services"  },
-  { label: "Contact Us",     path: "/contact"   },
-  { label: "Career Guidance", path: "/career" },
+  { label: "About Us",        path: "/about"     },
+  { label: "Course Offered",  path: "/courses"   },
+  { label: "Contact Us",      path: "/contact"   },
+  { label: "Career Guidance", path: "/career"    },
   { label: "Placement",       path: "/placement" },
-  { label: "Campus",          path: "/campus" },
-
-  ];
+  { label: "Campus",          path: "/campus"    },
+  { label: "Books",          path: "/books"    },
+];
 
 export default function NavBar() {
-  const [navScrolled, setNavScrolled] = useState(false);
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Scroll-shadow effect
-  useEffect(() => {
-    const fn = () => setNavScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  // Close drawer on desktop resize
   useEffect(() => {
     const fn = () => { if (window.innerWidth > 820) setMenuOpen(false); };
     window.addEventListener("resize", fn);
     return () => window.removeEventListener("resize", fn);
   }, []);
 
-  // Auto-close drawer on route change
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
   const goTo = (path) => { navigate(path); setMenuOpen(false); };
@@ -70,7 +57,6 @@ export default function NavBar() {
         .skl-logo:hover .skl-logo-icon { transform: rotate(-8deg) scale(1.1); }
         .skl-logo-icon { transition: transform 0.25s; }
 
-        /* Hamburger */
         .skl-burger {
           display: none;
           flex-direction: column;
@@ -91,18 +77,20 @@ export default function NavBar() {
         .skl-burger.open span:nth-child(2) { opacity: 0; }
         .skl-burger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
-        /* Mobile drawer */
         .skl-drawer {
           display: none;
           position: fixed;
-          top: 62px; left: 0;
-          width: 100%;
-          background: rgba(52, 8, 138, 0.98);
+          top: 78px; left: 50%;
+          transform: translateX(-50%);
+          width: calc(100% - 32px);
+          max-width: 700px;
+          background: rgba(88, 20, 197, 0.98);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           z-index: 199;
           overflow: hidden;
           max-height: 0;
+          border-radius: 20px;
           box-shadow: 0 14px 44px rgba(72,16,165,0.45);
           transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
         }
@@ -166,66 +154,84 @@ export default function NavBar() {
         }
       `}</style>
 
-      {/* ══ Sticky Navbar ══ */}
-      <nav style={{
-        background: navScrolled
-          ? "rgba(72,16,165,0.97)"
-          : "linear-gradient(90deg,#5b14c5 0%,#7c3aed 55%,#6d28d9 100%)",
-        backdropFilter: "blur(14px)",
-        padding: "0 5%",
-        height: "62px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
-        boxShadow: navScrolled ? "0 4px 24px rgba(72,16,165,.4)" : "0 2px 12px rgba(109,40,217,.18)",
-        transition: "background .35s, box-shadow .35s",
+      {/* ══ Floating Pill Navbar ══ */}
+      <div style={{
+        position: "fixed",
+        top: "16px",
+        left: 0,
+        right: 0,
+        zIndex: 200,
+        display: "flex",
+        justifyContent: "center",
+        pointerEvents: "none",
         fontFamily: "'Outfit','Segoe UI',sans-serif",
       }}>
+        <nav style={{
+          pointerEvents: "all",
+          background: "#6A11CB",
+          borderRadius: "999px",
+          padding: "0 36px",
+          height: "60px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "32px",
+          boxShadow: "0 8px 32px rgba(72,16,165,0.35), 0 2px 8px rgba(0,0,0,0.12)",
+          width: "90%",
+          maxWidth: "1100px",
+        }}>
 
-        {/* Logo — click goes Home */}
-        <div className="skl-logo" onClick={() => goTo("/")}
-          style={{ display:"flex", alignItems:"center", gap:"10px", color:"#fff", fontWeight:900, fontSize:"21px", letterSpacing:"1px" }}>
-          <div className="skl-logo-icon" style={{ width:"34px", height:"34px", background:"#6A11CB", borderRadius:"8px", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 2px 8px rgba(0,0,0,.16)", flexShrink:0 }}>
-            <img src="/logo.png" alt="logo"
-              style={{ width:"34px", height:"34px", objectFit:"contain" }}
-              onError={e => { e.target.outerHTML = '<span style="font-size:17px">🎓</span>'; }} />
+          {/* Logo */}
+          <div className="skl-logo" onClick={() => goTo("/")}
+            style={{ display:"flex", alignItems:"center", gap:"8px", color:"#fff", fontWeight:900, fontSize:"19px", letterSpacing:"1px", flexShrink:0 }}>
+            <div className="skl-logo-icon" style={{ width:"30px", height:"30px", background:"rgba(255,255,255,0.15)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, overflow:"hidden" }}>
+              <img
+                src={`${process.env.PUBLIC_URL}/logo.png`}
+                alt="Skillra logo"
+                style={{ width:"100%", height:"100%", objectFit:"cover" }}
+              />
+            </div>
+            SKILLRA
           </div>
-          SKILLRA
-        </div>
 
-        {/* Desktop nav links */}
-        <ul className="skl-desktop-nav" style={{ display:"flex", gap:"24px", listStyle:"none", margin:0, padding:0 }}>
-          {NAV_LINKS.map(({ label, path }) => {
-            const active = location.pathname === path;
-            return (
-              <li key={label}>
-                <button
-                  className={`skl-nav-link${active ? " active" : ""}`}
-                  onClick={() => goTo(path)}
-                  style={{
-                    color: active ? "#fff" : "rgba(255,255,255,.82)",
-                    fontSize: "13px",
-                    fontWeight: active ? 700 : 600,
-                    letterSpacing: ".2px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {label}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+          {/* Divider */}
+          <div style={{ width:"1px", height:"24px", background:"rgba(255,255,255,0.2)", flexShrink:0 }} />
 
-        {/* Hamburger (mobile) */}
-        <button
-          className={`skl-burger${menuOpen ? " open" : ""}`}
-          onClick={() => setMenuOpen(v => !v)}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-        >
-          <span /><span /><span />
-        </button>
-      </nav>
+          {/* Desktop nav links */}
+          <ul className="skl-desktop-nav" style={{ display:"flex", gap:"20px", listStyle:"none", margin:0, padding:0, alignItems:"center" }}>
+            {NAV_LINKS.map(({ label, path }) => {
+              const active = location.pathname === path;
+              return (
+                <li key={label}>
+                  <button
+                    className={`skl-nav-link${active ? " active" : ""}`}
+                    onClick={() => goTo(path)}
+                    style={{
+                      color: active ? "#fff" : "rgba(255,255,255,.78)",
+                      fontSize: "13px",
+                      fontWeight: active ? 700 : 600,
+                      letterSpacing: ".2px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {label}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Hamburger (mobile) */}
+          <button
+            className={`skl-burger${menuOpen ? " open" : ""}`}
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            <span /><span /><span />
+          </button>
+        </nav>
+      </div>
 
       {/* ══ Mobile Drawer ══ */}
       <div className={`skl-drawer${menuOpen ? " open" : ""}`}>
@@ -246,9 +252,12 @@ export default function NavBar() {
         })}
         <div className="skl-drawer-divider" />
         <button className="skl-enroll-btn" onClick={() => goTo("/")}>
-           Enroll Now
+          🎓 Enroll Now
         </button>
       </div>
+
+      {/* Spacer */}
+      <div style={{ height: "1px" }} />
     </>
   );
 }

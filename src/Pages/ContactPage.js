@@ -1,101 +1,12 @@
-import { useState, useEffect, useRef } from "react";
-import NavBar from "./NavBar";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+const PUB = process.env.PUBLIC_URL || "";
 
 /* ═══════════════════════════════════════════════════
-   DATA
+   useInView hook
 ═══════════════════════════════════════════════════ */
-const TESTIMONIALS = [
-  {
-    id: 1,
-    name: "Aria Zinanrio",
-    role: "AI Medical Coder",
-    company: "Apollo Healthcare",
-    avatar: "abtimg1.jpg",
-    text: "Skillra's AI Medical Coding course completely transformed my career trajectory. The curriculum was practical, industry-aligned, and the placement team genuinely cared about my success. I landed a role within 3 weeks of completing the program.",
-  },
-  {
-    id: 2,
-    name: "Ravi Kumar",
-    role: "Full Stack Developer",
-    company: "Zoho Corporation",
-    avatar: "abtimg2.jpg",
-    text: "The Full Stack course at Skillra is world-class. Hands-on projects with real mentorship and structured interview preparation made all the difference. I transitioned from a fresher to a working developer in under two months.",
-  },
-  {
-    id: 3,
-    name: "Priya Nair",
-    role: "Financial Analyst",
-    company: "HDFC Bank",
-    avatar: "abtimg3.jpg",
-    text: "Skillra's Finance program is structured perfectly for career switchers. The Tally & GST module alone was worth every rupee. My confidence during interviews completely transformed after completing this course.",
-  },
-  {
-    id: 4,
-    name: "Mohammed Farhan",
-    role: "Data Analyst",
-    company: "Infosys",
-    avatar: "abtimg1.jpg",
-    text: "Practical assignments, weekly mentorship, and a placement team that genuinely follows through — Skillra delivers on every promise. The Data Analytics curriculum was exactly what the industry demands.",
-  },
-];
-
-const COURSES = [
-  "AI Medical Coding", "AI Medical Billing", "AI Medical Scribing",
-  "Full Stack Development", "Data Analytics", "UI/UX Design",
-  "SAP Development", "Tally & GST", "Financial Accounting",
-];
-
-const CONTACT_INFO = [
-  {
-    label: "Phone",
-    value: "+91 98765 43210",
-    sub: "Mon – Sat, 9 AM – 6 PM",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Email",
-    value: "info@skillra.com",
-    sub: "We reply within 24 hours",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <rect x="2" y="4" width="20" height="16" rx="3" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M2 8l10 6 10-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Location",
-    value: "Coimbatore, Tamil Nadu",
-    sub: "India – 641 001",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.8"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Working Hours",
-    value: "Mon – Saturday",
-    sub: "9:00 AM to 6:00 PM IST",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8"/>
-        <path d="M12 7v5l3 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-];
-
-/* ═══════════════════════════════════════════════════
-   useInView HOOK
-═══════════════════════════════════════════════════ */
-function useInView(threshold = 0.12) {
+function useInView(threshold = 0.3) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -105,212 +16,560 @@ function useInView(threshold = 0.12) {
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
-  }, []);
+  }, [threshold]);
   return [ref, inView];
 }
 
 /* ═══════════════════════════════════════════════════
-   SECTION LABEL
+   Floating particles
 ═══════════════════════════════════════════════════ */
-function SectionLabel({ text }) {
-  return (
-    <div style={{
-      display: "inline-flex", alignItems: "center", gap: "8px",
-      background: "#fff", border: "1.5px solid #e4d9ff",
-      borderRadius: "9px", padding: "7px 16px",
-      fontSize: "11.5px", color: "#3b1f7a", fontWeight: 700,
-      marginBottom: "18px",
-      boxShadow: "0 2px 12px rgba(124,58,237,0.09)",
-      letterSpacing: "0.1em",
-    }}>
-      <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#7c3aed", display: "inline-block" }} />
-      {text}
-    </div>
-  );
-}
-
-const GridBg = () => (
-  <div style={{
-    position: "absolute", inset: 0, pointerEvents: "none",
-    backgroundImage: `linear-gradient(rgba(124,58,237,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.035) 1px,transparent 1px)`,
-    backgroundSize: "32px 32px",
-  }} />
-);
+const PARTICLES = Array.from({ length: 16 }, (_, i) => ({
+  id: i,
+  size: 6 + (i * 7) % 12,
+  left: (i * 6.25) % 100,
+  delay: (i * 1.3) % 9,
+  duration: 14 + (i * 2.1) % 10,
+}));
 
 /* ═══════════════════════════════════════════════════
-   INPUT FIELD
+   Form validators
 ═══════════════════════════════════════════════════ */
-function InputField({ label, type = "text", value, onChange, error }) {
-  const [focused, setFocused] = useState(false);
-  return (
-    <div style={{ position: "relative", marginBottom: "14px" }}>
-      <input
-        type={type} value={value} onChange={onChange}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder={label}
-        style={{
-          width: "100%", padding: "13px 18px",
-          fontSize: "14px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
-          color: "#1a0640",
-          background: error ? "#fff8f8" : focused ? "#fff" : "#f8f5ff",
-          border: error
-            ? "1.5px solid #ef4444"
-            : focused ? "1.5px solid #7c3aed"
-            : "1.5px solid #e4d9ff",
-          borderRadius: "12px", outline: "none",
-          transition: "all 0.25s ease",
-          boxShadow: focused ? "0 0 0 4px rgba(124,58,237,0.09)" : "none",
-        }}
-      />
-      {error && (
-        <span style={{
-          position: "absolute", right: "14px", top: "50%",
-          transform: "translateY(-50%)",
-          color: "#ef4444", fontSize: "11px", fontWeight: 700,
-        }}>
-          {error}
-        </span>
-      )}
-    </div>
-  );
-}
+const VALIDATORS = {
+  name:        v => v.trim().length < 2  ? "Name must be at least 2 characters"  : "",
+  email:       v => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? "Enter a valid email address" : "",
+  phone:       v => !/^[+]?[\d\s\-().]{7,15}$/.test(v.trim()) ? "Enter a valid phone number" : "",
+  description: v => v.trim().length < 10 ? "Message must be at least 10 characters" : "",
+};
 
-function SelectField({ value, onChange, error }) {
-  const [focused, setFocused] = useState(false);
+/* ═══════════════════════════════════════════════════
+   Field component
+═══════════════════════════════════════════════════ */
+const Field = ({ label, type = "text", value, onChange, textarea, error, touched }) => {
+  const [focus, setFocus] = useState(false);
+  const hasErr = touched && error;
+  const isOk   = touched && !error && value.length > 0;
+
+  const borderColor = hasErr ? "#ef4444" : isOk ? "#22c55e" : focus ? "#7C3AED" : "#e2e8f0";
+  const shadowColor = hasErr ? "rgba(239,68,68,.13)" : isOk ? "rgba(34,197,94,.12)" : focus ? "rgba(124,58,237,.12)" : "none";
+
+  const inputStyle = {
+    width: "100%",
+    height: textarea ? "auto" : "48px",
+    padding: textarea ? "12px 40px 12px 14px" : "0 40px 0 14px",
+    fontSize: "14px",
+    fontFamily: "'Poppins', sans-serif",
+    color: "#1a0640",
+    background: hasErr ? "#fff8f8" : isOk ? "#f0fdf4" : "#fafafa",
+    border: `1.5px solid ${borderColor}`,
+    borderRadius: "10px",
+    outline: "none",
+    boxSizing: "border-box",
+    resize: "none",
+    transition: "border-color .18s, box-shadow .18s, background .18s",
+    boxShadow: `0 0 0 3px ${shadowColor}`,
+    display: "block",
+  };
+
   return (
-    <div style={{ position: "relative", marginBottom: "22px" }}>
-      <select
-        value={value} onChange={onChange}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        style={{
-          width: "100%", padding: "13px 18px",
-          fontSize: "14px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
-          color: value ? "#1a0640" : "#9270c0",
-          background: focused ? "#fff" : "#f8f5ff",
-          border: error
-            ? "1.5px solid #ef4444"
-            : focused ? "1.5px solid #7c3aed"
-            : "1.5px solid #e4d9ff",
-          borderRadius: "12px", outline: "none", cursor: "pointer",
-          appearance: "none", WebkitAppearance: "none",
-          transition: "all 0.25s ease",
-          boxShadow: focused ? "0 0 0 4px rgba(124,58,237,0.09)" : "none",
-        }}
-      >
-        <option value="">Select a Course</option>
-        {COURSES.map((c) => <option key={c} value={c}>{c}</option>)}
-      </select>
-      <div style={{ position: "absolute", right: "16px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M4 6l4 4 4-4" stroke="#9270c0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+    <div style={{ marginBottom: "20px" }}>
+      <label style={{
+        display: "flex", alignItems: "center", gap: "4px",
+        fontSize: "11px", fontWeight: 700,
+        letterSpacing: ".06em", textTransform: "uppercase",
+        color: hasErr ? "#ef4444" : isOk ? "#16a34a" : focus ? "#7C3AED" : "#64748b",
+        fontFamily: "'Poppins', sans-serif",
+        marginBottom: "6px", transition: "color .18s",
+      }}>
+        {label}<span style={{ color: "#ef4444", fontSize: "13px" }}>*</span>
+      </label>
+      <div style={{ position: "relative" }}>
+        {textarea
+          ? <textarea rows={3} value={value} onChange={onChange}
+              onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
+              style={inputStyle} />
+          : <input type={type} value={value} onChange={onChange}
+              onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
+              style={inputStyle} />
+        }
+        {(hasErr || isOk) && (
+          <div style={{
+            position: "absolute", right: "13px",
+            top: textarea ? "12px" : "50%",
+            transform: textarea ? "none" : "translateY(-50%)",
+            fontSize: "16px", lineHeight: 1,
+            color: hasErr ? "#ef4444" : "#22c55e",
+            pointerEvents: "none",
+          }}>
+            {hasErr ? "✕" : "✓"}
+          </div>
+        )}
+      </div>
+      <div style={{
+        overflow: "hidden",
+        maxHeight: hasErr ? "24px" : "0px",
+        opacity: hasErr ? 1 : 0,
+        transition: "max-height .22s ease, opacity .2s ease",
+        marginTop: "4px",
+      }}>
+        <p style={{
+          margin: 0, fontSize: "11.5px", color: "#ef4444",
+          fontFamily: "'Poppins', sans-serif",
+          display: "flex", alignItems: "center", gap: "4px",
+        }}>
+          <span style={{ fontSize: "12px" }}>⚠</span> {error}
+        </p>
       </div>
     </div>
   );
-}
+};
 
-function TextAreaField({ label, value, onChange }) {
-  const [focused, setFocused] = useState(false);
+/* ═══════════════════════════════════════════════════
+   Social Sidebar — hidden on mobile, fixed on desktop
+═══════════════════════════════════════════════════ */
+const SIDEBAR_SOCIALS = [
+  {
+    label: "Facebook", url: "https://www.facebook.com/skillratechnologies/",
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+  },
+  {
+    label: "LinkedIn", url: "https://www.linkedin.com/company/skillra-technologies/",
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>,
+  },
+  {
+    label: "X (Twitter)", url: "https://x.com/skillra_tech",
+    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M4 4l16 16M4 20L20 4"/></svg>,
+  },
+];
+
+function SocialSidebar() {
   return (
-    <div style={{ position: "relative", marginBottom: "14px" }}>
-      <textarea
-        value={value} onChange={onChange}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder={label}
-        rows={4}
-        style={{
-          width: "100%", padding: "13px 18px",
-          fontSize: "14px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
-          color: "#1a0640",
-          background: focused ? "#fff" : "#f8f5ff",
-          border: focused ? "1.5px solid #7c3aed" : "1.5px solid #e4d9ff",
-          borderRadius: "12px", outline: "none", resize: "vertical",
-          transition: "all 0.25s ease",
-          boxShadow: focused ? "0 0 0 4px rgba(124,58,237,0.09)" : "none",
-          minHeight: "100px",
-        }}
-      />
-    </div>
+    <>
+      <style>{`
+        .skl-sidebar {
+          position: fixed; right: 16px; top: 50%;
+          transform: translateY(-50%);
+          display: flex; flex-direction: column; gap: 10px;
+          z-index: 50;
+        }
+        @media(max-width: 768px) { .skl-sidebar { display: none; } }
+
+        .skl-soc-link {
+          width: 32px; height: 32px;
+          background: white; border-radius: 4px;
+          display: flex; align-items: center; justify-content: center;
+          color: #6C2BD9; cursor: pointer; text-decoration: none;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+          transition: transform .2s, box-shadow .2s, background .2s, color .2s;
+        }
+        .skl-soc-link:hover {
+          transform: scale(1.18);
+          box-shadow: 0 4px 16px rgba(108,43,217,.30);
+          background: #7c3aed; color: #fff;
+        }
+      `}</style>
+      <div className="skl-sidebar">
+        {SIDEBAR_SOCIALS.map((s, i) => (
+          <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
+            aria-label={s.label} className="skl-soc-link" title={s.label}>
+            {s.icon}
+          </a>
+        ))}
+      </div>
+    </>
   );
 }
 
 /* ═══════════════════════════════════════════════════
-   NEWSLETTER
+   Contact Section
+═══════════════════════════════════════════════════ */
+const ContactSection = () => {
+  const [form,    setForm]    = useState({ name: "", email: "", phone: "", description: "" });
+  const [touched, setTouched] = useState({});
+  const [sent,    setSent]    = useState(false);
+  const [sending, setSending] = useState(false);
+  const [shake,   setShake]   = useState(false);
+  const [cardVisible, setCardVisible] = useState(false);
+  const [headVisible, setHeadVisible] = useState(false);
+  const [mapVisible,  setMapVisible]  = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setHeadVisible(true), 80);
+    setTimeout(() => setCardVisible(true), 260);
+    setTimeout(() => setMapVisible(true),  480);
+  }, []);
+
+  const errors = {
+    name:        VALIDATORS.name(form.name),
+    email:       VALIDATORS.email(form.email),
+    phone:       VALIDATORS.phone(form.phone),
+    description: VALIDATORS.description(form.description),
+  };
+  const isValid = Object.values(errors).every(e => e === "");
+  const touch = (f) => setTouched(t => ({ ...t, [f]: true }));
+
+  const submit = () => {
+    setTouched({ name: true, email: true, phone: true, description: true });
+    if (!isValid) { setShake(true); setTimeout(() => setShake(false), 520); return; }
+    setSending(true);
+    setTimeout(() => { setSending(false); setSent(true); }, 1500);
+  };
+
+  return (
+    <section style={{
+      background: "linear-gradient(135deg,#f3e8ff 0%,#ede9fe 50%,#e0d7ff 100%)",
+      minHeight: "90vh",
+      padding: "40px 16px 64px",
+      position: "relative", overflow: "hidden",
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Outfit:wght@400;500;700;900&display=swap');
+
+        @keyframes particleRise {
+          0%   { transform:translateY(105vh) rotate(0deg); opacity:0; }
+          8%   { opacity:.13; } 92% { opacity:.07; }
+          100% { transform:translateY(-8vh) rotate(360deg); opacity:0; }
+        }
+        @keyframes cardEnter {
+          0%   { opacity:0; transform:translateY(48px) scale(.97); }
+          60%  { opacity:1; transform:translateY(-4px) scale(1.005); }
+          100% { opacity:1; transform:translateY(0) scale(1); }
+        }
+        @keyframes headReveal {
+          from { opacity:0; clip-path:inset(0 100% 0 0); }
+          to   { opacity:1; clip-path:inset(0 0% 0 0); }
+        }
+        @keyframes mapFade {
+          from { opacity:0; transform:translateY(32px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes popIn {
+          0%  { transform:scale(0); }
+          65% { transform:scale(1.22); }
+          100%{ transform:scale(1); }
+        }
+        @keyframes spin    { to { transform:rotate(360deg); } }
+        @keyframes shimmer { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+        @keyframes shake {
+          0%,100%{ transform:translateX(0); }
+          18%{ transform:translateX(-7px); }
+          36%{ transform:translateX(7px); }
+          54%{ transform:translateX(-5px); }
+          72%{ transform:translateX(5px); }
+          88%{ transform:translateX(-2px); }
+        }
+
+        .skl-card-wrap         { opacity:0; transition:none; }
+        .skl-card-wrap.visible { animation:cardEnter .65s cubic-bezier(.22,1,.36,1) forwards; }
+        .skl-card-wrap.shake   { animation:shake .52s cubic-bezier(.36,.07,.19,.97) both !important; }
+
+        .skl-head-wrap         { opacity:0; }
+        .skl-head-wrap.visible { animation:headReveal .6s cubic-bezier(.22,1,.36,1) forwards; }
+
+        .skl-map-wrap-anim         { opacity:0; }
+        .skl-map-wrap-anim.visible { animation:mapFade .65s cubic-bezier(.22,1,.36,1) forwards; }
+
+        .skl-card { transition:box-shadow .22s, transform .22s; will-change:transform; }
+        .skl-card:hover {
+          box-shadow:0 24px 56px rgba(108,43,217,.18) !important;
+          transform:translateY(-4px) !important;
+        }
+
+        .skl-btn {
+          background:linear-gradient(90deg,#7C3AED,#9333ea,#A855F7,#7C3AED);
+          background-size:220% auto;
+          color:#fff; border:none; border-radius:10px;
+          padding:13px 40px; font-size:14px;
+          font-family:'Poppins',sans-serif; font-weight:600;
+          cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+          box-shadow:0 4px 18px rgba(108,43,217,.38);
+          transition:background-position .45s, transform .18s, box-shadow .18s;
+          letter-spacing:.02em; width:100%; justify-content:center;
+        }
+        .skl-btn:hover:not(:disabled) {
+          background-position:right center;
+          transform:translateY(-2px);
+          box-shadow:0 10px 28px rgba(108,43,217,.48);
+        }
+        .skl-btn:active:not(:disabled) { transform:translateY(0); }
+        .skl-btn:disabled { opacity:.7; cursor:not-allowed; }
+
+        .skl-map-wrap {
+          border-radius:16px; overflow:hidden;
+          box-shadow:0 8px 40px rgba(108,43,217,.16);
+          border:2px solid rgba(108,43,217,.12);
+          transition:box-shadow .25s;
+        }
+        .skl-map-wrap:hover { box-shadow:0 16px 56px rgba(108,43,217,.25); }
+
+        /* ── Contact section responsive ── */
+        .contact-head h1 { font-size: clamp(24px, 5vw, 36px) !important; }
+        .contact-head p  { font-size: clamp(13px, 2vw, 14px) !important; }
+
+        .skl-form-card { padding: 48px 52px !important; }
+        @media(max-width: 600px) {
+          .skl-form-card { padding: 28px 20px !important; }
+          .skl-btn { padding: 13px 24px !important; font-size: 13px !important; }
+        }
+
+        /* map height responsive */
+        .skl-map-iframe { height: 380px; }
+        @media(max-width: 768px) { .skl-map-iframe { height: 260px; } }
+        @media(max-width: 480px) { .skl-map-iframe { height: 200px; } }
+      `}</style>
+
+      {/* Floating particles */}
+      <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0 }}>
+        {PARTICLES.map(p => (
+          <div key={p.id} style={{
+            position:"absolute", bottom:"-20px", left:`${p.left}%`,
+            width:`${p.size}px`, height:`${p.size}px`, borderRadius:"50%",
+            background:"rgba(108,43,217,.26)",
+            animation:`particleRise ${p.duration}s ${p.delay}s infinite linear`,
+          }} />
+        ))}
+      </div>
+
+      <SocialSidebar />
+
+      <div style={{ maxWidth:"1200px", margin:"0 auto", position:"relative", zIndex:1, padding:"40px 0 0 0" }}>
+
+        {/* Heading */}
+        <div className={`skl-head-wrap contact-head${headVisible ? " visible" : ""}`}
+          style={{ padding: "0 8px" }}>
+          <h1 style={{ color:"#6C2BD9", fontWeight:700, fontFamily:"'Poppins',sans-serif", marginBottom:"14px" }}>
+            Contact Us
+          </h1>
+          <p style={{ color:"#555", lineHeight:"1.7", fontFamily:"'Poppins',sans-serif", marginBottom:"44px", maxWidth:"1700px" }}>
+            At Skillra, we're here to support your learning, career, and organizational growth.
+            Whether you have questions about our courses, need guidance for enrollment, or want to
+            explore partnership opportunities, our team is ready to assist you.
+          </p>
+        </div>
+
+        {/* Form card */}
+        <div style={{ display:"flex", justifyContent:"center", padding: "0 8px" }}>
+          <div
+            className={`skl-card-wrap${cardVisible ? " visible" : ""}${shake ? " shake" : ""}`}
+            style={{ width:"100%", maxWidth:"560px" }}
+          >
+            <div className="skl-card skl-form-card" style={{
+              background:"white", borderRadius:"20px",
+              boxShadow:"0 10px 48px rgba(108,43,217,.12)",
+            }}>
+              {sent ? (
+                <div style={{ textAlign:"center", padding:"24px 0" }}>
+                  <div style={{
+                    width:"68px", height:"68px", borderRadius:"50%",
+                    background:"linear-gradient(135deg,#7C3AED,#A855F7)",
+                    display:"inline-flex", alignItems:"center", justifyContent:"center",
+                    fontSize:"30px", color:"white", marginBottom:"20px",
+                    animation:"popIn .5s cubic-bezier(.34,1.56,.64,1) both",
+                  }}>✓</div>
+                  <h3 style={{ fontFamily:"'Poppins',sans-serif", fontSize:"21px", fontWeight:700, color:"#222", marginBottom:"8px" }}>
+                    Message Sent!
+                  </h3>
+                  <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"13px", color:"#aaa" }}>
+                    We'll get back to you within 24 hours.
+                  </p>
+                  <div style={{ display:"flex", justifyContent:"center", marginTop:"28px" }}>
+                    <button className="skl-btn" style={{ width:"auto" }} onClick={() => {
+                      setSent(false);
+                      setForm({ name:"", email:"", phone:"", description:"" });
+                      setTouched({});
+                    }}>Send Another →</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 style={{ fontFamily:"'Poppins',sans-serif", fontSize:"clamp(17px,4vw,21px)", fontWeight:700, color:"#222", marginBottom:"4px", textAlign:"center" }}>
+                    We're here to help!
+                  </h2>
+                  <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"13px", color:"#bbb", textAlign:"center", marginBottom:"36px" }}>
+                    All fields are required. Please fill them in correctly.
+                  </p>
+
+                  <Field label="Your Name" value={form.name}
+                    onChange={e => { setForm({...form, name:e.target.value}); touch("name"); }}
+                    error={errors.name} touched={touched.name} />
+                  <Field label="Email Address" type="email" value={form.email}
+                    onChange={e => { setForm({...form, email:e.target.value}); touch("email"); }}
+                    error={errors.email} touched={touched.email} />
+                  <Field label="Phone Number" type="tel" value={form.phone}
+                    onChange={e => { setForm({...form, phone:e.target.value}); touch("phone"); }}
+                    error={errors.phone} touched={touched.phone} />
+                  <Field label="Description" value={form.description}
+                    onChange={e => { setForm({...form, description:e.target.value}); touch("description"); }}
+                    error={errors.description} touched={touched.description} textarea />
+
+                  {/* Progress bar */}
+                  <div style={{ marginBottom:"20px" }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"5px" }}>
+                      <span style={{ fontSize:"11px", color:"#94a3b8", fontFamily:"'Poppins',sans-serif" }}>Form completion</span>
+                      <span style={{ fontSize:"11px", fontWeight:600, color:"#7C3AED", fontFamily:"'Poppins',sans-serif" }}>
+                        {Object.values(errors).filter(e => e === "").length} / 4
+                      </span>
+                    </div>
+                    <div style={{ height:"4px", background:"#f1f5f9", borderRadius:"4px", overflow:"hidden" }}>
+                      <div style={{
+                        height:"100%", borderRadius:"4px",
+                        background:"linear-gradient(90deg,#7C3AED,#A855F7)",
+                        width:`${(Object.keys(touched).length > 0 ? Object.values(errors).filter(e=>e==="").length / 4 : 0) * 100}%`,
+                        transition:"width .35s ease",
+                      }} />
+                    </div>
+                  </div>
+
+                  <button className="skl-btn" onClick={submit} disabled={sending}>
+                    {sending ? (
+                      <>
+                        <span style={{ width:"14px", height:"14px", border:"2px solid rgba(255,255,255,.35)", borderTop:"2px solid white", borderRadius:"50%", display:"inline-block", animation:"spin .7s linear infinite" }} />
+                        Sending…
+                      </>
+                    ) : <>Get In Touch →</>}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Google Map */}
+        <div style={{ display:"flex", justifyContent:"center", marginTop:"52px", padding:"0 8px" }}>
+          <div className={`skl-map-wrap-anim${mapVisible ? " visible" : ""}`} style={{ width:"100%", maxWidth:"900px" }}>
+            <div className="skl-map-wrap">
+              <iframe
+                title="Skillra Office — KK Nagar Chennai"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.2!2d80.2090!3d13.0350!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5260e1b7ef0a3d%3A0x9e0f4b1c2d3e4f5a!2sPV%20Rajamannar%20Salai%2C%20KK%20Nagar%20West%2C%20Chennai%2C%20Tamil%20Nadu%20600078!5e0!3m2!1sen!2sin!4v1710000000001!5m2!1sen!2sin"
+                width="100%"
+                className="skl-map-iframe"
+                style={{ border:0, display:"block" }}
+                allowFullScreen="" loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+/* ═══════════════════════════════════════════════════
+   Contact Info Section
+═══════════════════════════════════════════════════ */
+const ContactInfoSection = () => (
+  <section style={{ background:"white", padding:"48px 16px", borderTop:"1px solid #f0f0f0" }}>
+    <style>{`
+      .contact-info-grid {
+        max-width: 1200px; margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 40px;
+      }
+      @media(max-width: 900px) {
+        .contact-info-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+      }
+      @media(max-width: 580px) {
+        .contact-info-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+      }
+    `}</style>
+    <div className="contact-info-grid">
+      <div>
+        <p style={{ color:"#666", fontSize:"13px", fontFamily:"'Poppins',sans-serif", lineHeight:"1.6" }}>Contact Info</p>
+        <h3 style={{ fontFamily:"'Poppins',sans-serif", fontSize:"clamp(18px,3vw,22px)", fontWeight:700, color:"#111", lineHeight:"1.4", marginTop:"8px" }}>
+          We are always happy<br />to assist you
+        </h3>
+      </div>
+      <div>
+        <h4 style={{ fontFamily:"'Poppins',sans-serif", fontSize:"15px", fontWeight:700, color:"#111", marginBottom:"8px" }}>Email Address</h4>
+        <div style={{ width:"40px", height:"2px", background:"#6C2BD9", marginBottom:"16px" }} />
+        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"13px", color:"#6C2BD9", marginBottom:"4px", wordBreak:"break-word" }}>
+          support@skillra.com / admin@skillra.com
+        </p>
+        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#999", marginTop:"12px", fontWeight:600 }}>Assistance hours:</p>
+        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#666" }}>Monday – Friday 6 am to 8 pm EST</p>
+      </div>
+      <div>
+        <h4 style={{ fontFamily:"'Poppins',sans-serif", fontSize:"15px", fontWeight:700, color:"#111", marginBottom:"8px" }}>Number &amp; Address</h4>
+        <div style={{ width:"40px", height:"2px", background:"#6C2BD9", marginBottom:"16px" }} />
+        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"13px", color:"#6C2BD9", marginBottom:"12px" }}>
+          74486 65622 · +91 8779487948
+        </p>
+        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#666", lineHeight:"1.7" }}>
+          FIRST FLOOR, 92/A19, PV Rajamannar Salai,<br />
+          Ayyavupuram, KK Nagar West, K. K. Nagar,<br />
+          Chennai, Tamil Nadu 600078<br />
+          Landmark: RTO Ground, KK Nagar, Chennai
+        </p>
+      </div>
+    </div>
+  </section>
+);
+
+/* ═══════════════════════════════════════════════════
+   Newsletter Section
 ═══════════════════════════════════════════════════ */
 function NewsletterSection() {
   const [ref, inView] = useInView(0.3);
-  const [email, setEmail] = useState("");
+  const [email, setEmail]           = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
-  const [emailError, setEmailError] = useState(false);
 
   const handleSubscribe = () => {
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-      setEmailError(true);
-      setTimeout(() => setEmailError(false), 800);
-      return;
-    }
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return;
     setSubscribing(true);
     setTimeout(() => { setSubscribing(false); setSubscribed(true); }, 1400);
   };
 
   return (
-    <div ref={ref} style={{ background: "linear-gradient(135deg,#1a0a3c,#2d1b69,#1a0a3c)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(167,139,250,0.08) 1px,transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "2px", background: "linear-gradient(90deg,#7c3aed,#a78bfa,#7c3aed)", backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite" }} />
+    <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
+      <style>{`
+        @keyframes spinRingAnim { to { transform:rotate(360deg); } }
+      `}</style>
+      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
+      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
       <div style={{
-        maxWidth: "1200px", margin: "0 auto", padding: "40px 6%",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        gap: "36px", flexWrap: "wrap", position: "relative", zIndex: 1,
-        opacity: inView ? 1 : 0, transition: "opacity 0.8s ease",
+        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
+        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
       }}>
-        <div>
-          <h2 style={{ fontSize: "clamp(1.2rem,2.2vw,1.6rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "6px", fontFamily: "'Outfit',sans-serif" }}>Join Our Newsletter</h2>
-          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.55)", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>Get latest updates, course launches &amp; career tips.</p>
+        <div style={{ display:"flex", alignItems:"center", gap:"20px" }}>
+          <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
+            <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
+              Join Our Newsletter
+            </h2>
+            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
+              Subscribe to get our latest updates &amp; news.
+            </p>
+          </div>
         </div>
         {subscribed ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.10)", border: "1.5px solid rgba(255,255,255,0.18)", borderRadius: "12px", padding: "12px 20px" }}>
-            <div style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5 6-6" stroke="white" strokeWidth="2" strokeLinecap="round" /></svg>
+          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
+            <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
             </div>
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: "14px", fontFamily: "'Outfit',sans-serif" }}>You're subscribed!</span>
+            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            <input
-              type="email" value={email}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleSubscribe()}
-              placeholder="Enter your email"
-              style={{
-                height: "46px", width: "clamp(200px,26vw,300px)", padding: "0 16px",
-                fontSize: "14px", fontFamily: "'Outfit',sans-serif", fontWeight: 500,
-                color: "#1a0640",
-                background: emailError ? "rgba(254,202,202,0.95)" : "rgba(255,255,255,0.96)",
-                border: emailError ? "1.5px solid #fca5a5" : "1.5px solid rgba(255,255,255,0.5)",
-                borderRadius: "10px", outline: "none",
-                transition: "all 0.25s",
-                animation: emailError ? "shakeX 0.5s ease" : "none",
-              }}
-            />
-            <button
-              onClick={handleSubscribe} disabled={subscribing}
-              style={{
-                height: "46px", background: "linear-gradient(135deg,#7c3aed,#5b21b6)", color: "#fff",
-                border: "none", borderRadius: "10px", padding: "0 24px",
-                fontSize: "13.5px", fontWeight: 700, fontFamily: "'Outfit',sans-serif",
-                cursor: "pointer", whiteSpace: "nowrap",
-                display: "flex", alignItems: "center", gap: "8px",
-                transition: "all 0.22s", boxShadow: "0 4px 16px rgba(124,58,237,0.4)",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
-            >
-              {subscribing ? "Subscribing…" : "Subscribe"}
-              {!subscribing && <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+          <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleSubscribe()} placeholder="Enter your email"
+              style={{ height:"48px", width:"clamp(200px,26vw,300px)", padding:"0 16px", fontSize:"14px", fontFamily:"'Outfit',sans-serif", fontWeight:500, color:"#1a0640", background:"rgba(255,255,255,0.96)", border:"2px solid rgba(255,255,255,0.7)", borderRadius:"12px", outline:"none" }}
+              onFocus={e => e.target.style.borderColor="#fff"}
+              onBlur={e => e.target.style.borderColor="rgba(255,255,255,0.7)"} />
+            <button onClick={handleSubscribe} disabled={subscribing}
+              style={{ height:"48px", background:"#111", color:"#fff", border:"none", borderRadius:"12px", padding:"0 24px", fontSize:"14px", fontWeight:700, fontFamily:"'Outfit',sans-serif", cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:"8px", transition:"all 0.22s" }}
+              onMouseEnter={e => { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background="#111"; e.currentTarget.style.transform="translateY(0)"; }}>
+              {subscribing ? "Subscribing…" : "Subscribe Now"}
+              {!subscribing && <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
             </button>
           </div>
         )}
@@ -319,657 +578,15 @@ function NewsletterSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   HERO SECTION
-═══════════════════════════════════════════════════ */
-function ContactHero({ visible }) {
-  return (
-    <section style={{
-      background: "radial-gradient(ellipse 80% 60% at 70% 40%,rgba(167,139,250,0.16) 0%,transparent 65%),#faf8ff",
-      padding: "clamp(80px,10vw,120px) 6% clamp(60px,7vw,80px)",
-      position: "relative", overflow: "hidden",
-    }}>
-      <GridBg />
-      {/* Large decorative watermark */}
-      <div style={{
-        position: "absolute", right: "-2%", top: "50%", transform: "translateY(-50%)",
-        fontSize: "clamp(80px,14vw,180px)", fontWeight: 900,
-        color: "rgba(124,58,237,0.04)", lineHeight: 1,
-        userSelect: "none", letterSpacing: "-6px", pointerEvents: "none",
-      }}>CONTACT</div>
-
-      <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-        <div style={{
-          opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(28px)",
-          transition: "all 0.9s cubic-bezier(.4,0,.2,1)",
-        }}>
-          <SectionLabel text="CONTACT US" />
-          <h1 style={{
-            fontSize: "clamp(2.4rem,5vw,3.8rem)", fontWeight: 900,
-            color: "#120630", lineHeight: 1.06, letterSpacing: "-2.5px",
-            marginBottom: "20px", maxWidth: "700px",
-          }}>
-            Let's Start a<br />
-            <span style={{ color: "#7c3aed" }}>Conversation</span>
-          </h1>
-          <p style={{
-            fontSize: "clamp(14px,1.4vw,16px)", color: "#5c4a80",
-            lineHeight: 1.85, maxWidth: "520px", fontWeight: 500,
-          }}>
-            Whether you're exploring a career change, looking for placement support, or want to know which course is right for you — our counselors are ready to guide you.
-          </p>
-        </div>
-
-        {/* Quick stat strip */}
-        <div style={{
-          display: "flex", gap: "clamp(16px,3vw,32px)", flexWrap: "wrap",
-          marginTop: "clamp(32px,5vw,48px)",
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.9s ease 0.25s",
-        }}>
-          {[
-            { num: "500+", label: "Students Counselled" },
-            { num: "< 24h", label: "Response Time" },
-            { num: "98%", label: "Placement Rate" },
-            { num: "50+", label: "Hiring Partners" },
-          ].map((s, i) => (
-            <div key={i} style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(16px)",
-              transition: `all 0.7s ease ${0.3 + i * 0.09}s`,
-            }}>
-              <div style={{ fontSize: "clamp(1.6rem,2.2vw,2rem)", fontWeight: 900, color: "#7c3aed", lineHeight: 1, letterSpacing: "-1px" }}>{s.num}</div>
-              <div style={{ fontSize: "11.5px", color: "#9270c0", marginTop: "3px", fontWeight: 600, letterSpacing: "0.04em" }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ═══════════════════════════════════════════════════
-   CONTACT INFO CARDS
+   ROOT EXPORT
 ═══════════════════════════════════════════════════ */
-function ContactInfoSection() {
-  const [ref, inView] = useInView(0.1);
+export default function SkillraContactPage() {
   return (
-    <section ref={ref} style={{ padding: "0 6% clamp(48px,7vw,80px)", background: "#faf8ff", position: "relative" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-          gap: "16px",
-        }}>
-          {CONTACT_INFO.map((item, i) => (
-            <div key={i} style={{
-              background: "#fff", border: "1.5px solid #e4d9ff",
-              borderRadius: "20px", padding: "clamp(20px,2.5vw,28px)",
-              boxShadow: "0 4px 18px rgba(124,58,237,0.06)",
-              opacity: inView ? 1 : 0,
-              transform: inView ? "translateY(0)" : "translateY(24px)",
-              transition: `all 0.7s ease ${i * 0.09}s`,
-              cursor: "default",
-            }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = "#7c3aed";
-                e.currentTarget.style.transform = "translateY(-6px)";
-                e.currentTarget.style.boxShadow = "0 16px 40px rgba(124,58,237,0.13)";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = "#e4d9ff";
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 4px 18px rgba(124,58,237,0.06)";
-              }}
-            >
-              <div style={{
-                width: "44px", height: "44px", borderRadius: "12px",
-                background: "linear-gradient(135deg,rgba(124,58,237,0.10),rgba(167,139,250,0.18))",
-                border: "1.5px solid rgba(124,58,237,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#7c3aed", marginBottom: "16px",
-              }}>
-                {item.icon}
-              </div>
-              <div style={{ fontSize: "11px", fontWeight: 800, color: "#9270c0", letterSpacing: "0.12em", marginBottom: "6px", textTransform: "uppercase" }}>{item.label}</div>
-              <div style={{ fontSize: "clamp(13px,1.2vw,15px)", fontWeight: 800, color: "#1a1035", marginBottom: "3px", letterSpacing: "-0.02em" }}>{item.value}</div>
-              <div style={{ fontSize: "12px", color: "#9270c0", fontWeight: 500 }}>{item.sub}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   MAIN FORM + TESTIMONIALS
-═══════════════════════════════════════════════════ */
-function ContactFormSection() {
-  const [ref, inView] = useInView(0.08);
-
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [animating, setAnimating] = useState(false);
-  const timerRef = useRef(null);
-
-  const [form, setForm] = useState({ name: "", email: "", phone: "", course: "", message: "" });
-  const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setAnimating(true);
-      setTimeout(() => { setActiveIdx(i => (i + 1) % TESTIMONIALS.length); setAnimating(false); }, 350);
-    }, 5500);
-    return () => clearInterval(timerRef.current);
-  }, []);
-
-  const goTo = i => {
-    clearInterval(timerRef.current);
-    setAnimating(true);
-    setTimeout(() => { setActiveIdx(i); setAnimating(false); }, 280);
-  };
-
-  const validate = () => {
-    const e = {};
-    if (!form.name.trim()) e.name = "Required";
-    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = "Invalid";
-    if (!form.phone.trim() || form.phone.length < 8) e.phone = "Invalid";
-    if (!form.course) e.course = "Pick one";
-    return e;
-  };
-
-  const handleSubmit = () => {
-    const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
-    setSubmitting(true);
-    setTimeout(() => { setSubmitting(false); setSubmitted(true); }, 1400);
-  };
-
-  const t = TESTIMONIALS[activeIdx];
-
-  return (
-    <section ref={ref} style={{ padding: "clamp(48px,7vw,80px) 6%", background: "#fff", borderTop: "1px solid #f0ebff", position: "relative" }}>
-      <GridBg />
-      <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-
-        {/* Section heading */}
-        <div style={{
-          marginBottom: "clamp(32px,5vw,52px)",
-          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.7s ease",
-        }}>
-          <SectionLabel text="GET IN TOUCH" />
-          <h2 style={{ fontSize: "clamp(1.8rem,3.2vw,2.6rem)", fontWeight: 900, color: "#120630", letterSpacing: "-0.03em", marginBottom: "10px" }}>
-            We'd Love to <span style={{ color: "#7c3aed" }}>Hear From You</span>
-          </h2>
-          <p style={{ fontSize: "clamp(13px,1.2vw,15px)", color: "#9270c0", maxWidth: "460px", lineHeight: 1.75, fontWeight: 500 }}>
-            Fill out the form and a Skillra counselor will reach out within 24 hours to guide you on the right path.
-          </p>
-        </div>
-
-        {/* Two-column layout */}
-        <div style={{ display: "flex", gap: "clamp(24px,4vw,56px)", alignItems: "flex-start", flexWrap: "wrap" }}>
-
-          {/* ── LEFT: Testimonial + Avatars + Stats ── */}
-          <div style={{
-            flex: "0 0 auto", width: "clamp(280px,36%,440px)",
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateX(0)" : "translateX(-32px)",
-            transition: "all 0.95s cubic-bezier(.4,0,.2,1) 0.1s",
-          }}>
-
-            {/* Testimonial card */}
-            <div style={{
-              background: "#fff", borderRadius: "24px",
-              padding: "clamp(24px,3vw,36px) clamp(20px,2.5vw,32px)",
-              border: "1.5px solid #e4d9ff",
-              boxShadow: "0 8px 32px rgba(124,58,237,0.09)",
-              position: "relative", overflow: "hidden", marginBottom: "20px",
-              transition: "box-shadow 0.3s, transform 0.3s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 24px 60px rgba(124,58,237,0.14)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(124,58,237,0.09)"; e.currentTarget.style.transform = "translateY(0)"; }}
-            >
-              {/* Top shimmer */}
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg,#7c3aed,#a78bfa,#7c3aed)", backgroundSize: "200% 100%", animation: "shimmer 3s infinite" }} />
-
-              {/* Quote mark */}
-              <div style={{ marginBottom: "18px" }}>
-                <svg width="36" height="28" viewBox="0 0 44 36" fill="none">
-                  <path d="M0 36V22.5C0 14.9 4.1 8.6 12.3 3.6L15.6 7.4C11.9 9.8 9.5 13.2 8.4 17.7H16V36H0ZM28 36V22.5C28 14.9 32.1 8.6 40.3 3.6L43.6 7.4C39.9 9.8 37.5 13.2 36.4 17.7H44V36H28Z" fill="rgba(124,58,237,0.18)" />
-                </svg>
-              </div>
-
-              {/* Quote text */}
-              <p style={{
-                fontSize: "clamp(13px,1.1vw,14.5px)", lineHeight: 1.8,
-                color: "#3b2a6e", minHeight: "90px", marginBottom: "20px",
-                opacity: animating ? 0 : 1,
-                transform: animating ? "translateY(8px)" : "translateY(0)",
-                transition: "all 0.3s ease",
-              }}>
-                {t.text}
-              </p>
-
-              {/* Author */}
-              <div style={{
-                opacity: animating ? 0 : 1,
-                transition: "all 0.3s ease",
-                display: "flex", alignItems: "center", gap: "12px",
-              }}>
-                <div style={{
-                  width: "40px", height: "40px", borderRadius: "50%",
-                  overflow: "hidden", border: "2px solid #e4d9ff", flexShrink: 0,
-                }}>
-                  <img src={t.avatar} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    onError={e => { e.target.style.display = "none"; e.target.parentNode.style.background = "rgba(124,58,237,0.12)"; }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#7c3aed" }}>{t.name}</div>
-                  <div style={{ fontSize: "11.5px", color: "#9270c0", fontWeight: 600 }}>{t.role} · {t.company}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Avatar dots nav */}
-            <div style={{ padding: "0 4px", marginBottom: "24px" }}>
-              <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#9270c0", letterSpacing: "0.12em", marginBottom: "12px" }}>HAPPY STUDENTS</div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-                {TESTIMONIALS.map((item, i) => (
-                  <div
-                    key={item.id} onClick={() => goTo(i)}
-                    style={{
-                      width: "40px", height: "40px", borderRadius: "50%",
-                      overflow: "hidden", cursor: "pointer",
-                      border: i === activeIdx ? "3px solid #7c3aed" : "3px solid #e4d9ff",
-                      transform: i === activeIdx ? "scale(1.12)" : "scale(1)",
-                      transition: "all 0.28s cubic-bezier(.4,0,.2,1)",
-                      boxShadow: i === activeIdx ? "0 4px 18px rgba(124,58,237,0.35)" : "none",
-                    }}
-                  >
-                    <img src={item.avatar} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      onError={e => { e.target.style.display = "none"; e.target.parentNode.style.background = "rgba(124,58,237,0.12)"; }} />
-                  </div>
-                ))}
-                {/* Next arrow */}
-                <div
-                  onClick={() => goTo((activeIdx + 1) % TESTIMONIALS.length)}
-                  style={{
-                    width: "40px", height: "40px", borderRadius: "50%",
-                    border: "2px solid #c4b5fd", cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    transition: "all 0.25s ease",
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(124,58,237,0.08)"; e.currentTarget.style.transform = "scale(1.1)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.transform = "scale(1)"; }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                    <path d="M4 2.5l6 4.5-6 4.5" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Mini stats */}
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              {[{ num: "100+", label: "Students Placed" }, { num: "15+", label: "Yrs Experience" }, { num: "50+", label: "Partners" }].map((s, i) => (
-                <div key={i} style={{
-                  flex: "1 1 80px", background: "#faf8ff", border: "1.5px solid #e4d9ff",
-                  borderRadius: "14px", padding: "clamp(10px,1.5vw,14px) 10px", textAlign: "center",
-                  transition: "all 0.22s", cursor: "default",
-                }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(135deg,#7c3aed,#5b21b6)"; e.currentTarget.querySelector(".mn").style.color = "#fff"; e.currentTarget.querySelector(".ml").style.color = "rgba(255,255,255,0.75)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "#faf8ff"; e.currentTarget.querySelector(".mn").style.color = "#7c3aed"; e.currentTarget.querySelector(".ml").style.color = "#9270c0"; e.currentTarget.style.transform = "translateY(0)"; }}
-                >
-                  <div className="mn" style={{ fontSize: "clamp(16px,1.6vw,20px)", fontWeight: 900, color: "#7c3aed", lineHeight: 1, transition: "color 0.22s" }}>{s.num}</div>
-                  <div className="ml" style={{ fontSize: "10px", color: "#9270c0", marginTop: "3px", fontWeight: 600, transition: "color 0.22s" }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ── RIGHT: Form ── */}
-          <div style={{
-            flex: 1, minWidth: "min(100%, 300px)",
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateX(0)" : "translateX(32px)",
-            transition: "all 0.95s cubic-bezier(.4,0,.2,1) 0.22s",
-          }}>
-            <div style={{
-              background: "#fff", borderRadius: "28px",
-              padding: "clamp(28px,4vw,44px) clamp(24px,3.5vw,40px)",
-              border: "1.5px solid #e4d9ff",
-              boxShadow: "0 16px 56px rgba(124,58,237,0.11)",
-              position: "relative", overflow: "hidden",
-            }}>
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg,#7c3aed,#a78bfa,#7c3aed)", backgroundSize: "200% 100%", animation: "shimmer 3s infinite" }} />
-
-              {submitted ? (
-                <div style={{ textAlign: "center", padding: "clamp(20px,4vw,32px) 0" }}>
-                  <div style={{
-                    width: "68px", height: "68px", borderRadius: "50%",
-                    background: "linear-gradient(135deg,#7c3aed,#5b21b6)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    margin: "0 auto 20px",
-                    boxShadow: "0 8px 28px rgba(124,58,237,0.35)",
-                    animation: "popIn 0.5s cubic-bezier(.4,0,.2,1) both",
-                  }}>
-                    <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-                      <path d="M7 16l7 7 11-12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <h3 style={{ fontSize: "clamp(18px,2vw,22px)", fontWeight: 800, color: "#1a0640", marginBottom: "10px" }}>Message Sent!</h3>
-                  <p style={{ fontSize: "clamp(12px,1.1vw,14px)", color: "#6b5a9e", lineHeight: 1.75 }}>
-                    Thank you for reaching out.<br />Our counselors will contact you within 24 hours.
-                  </p>
-                  <button
-                    onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", course: "", message: "" }); }}
-                    style={{
-                      marginTop: "24px", background: "none", border: "1.5px solid #7c3aed",
-                      color: "#7c3aed", borderRadius: "50px", padding: "10px 28px",
-                      fontSize: "13px", fontWeight: 700, cursor: "pointer",
-                      fontFamily: "'Outfit',sans-serif", transition: "all 0.2s",
-                    }}
-                    onMouseEnter={e => { e.target.style.background = "#7c3aed"; e.target.style.color = "#fff"; }}
-                    onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#7c3aed"; }}
-                  >
-                    Send Another
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <h3 style={{ fontSize: "clamp(20px,2.2vw,26px)", fontWeight: 900, color: "#1a0640", marginBottom: "6px", letterSpacing: "-0.4px" }}>
-                    We're here to help
-                  </h3>
-                  <p style={{ fontSize: "clamp(12px,1.1vw,13.5px)", color: "#9270c0", marginBottom: "clamp(20px,3vw,28px)", fontWeight: 500 }}>
-                    Tell us about yourself and what you're looking for.
-                  </p>
-
-                  {/* Two-column name + phone on wider screens */}
-                  <div className="form-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                    <div style={{ flex: "1 1 180px" }}>
-                      <InputField label="Your full name" value={form.name} onChange={e => { setForm({ ...form, name: e.target.value }); setErrors({ ...errors, name: "" }); }} error={errors.name} />
-                    </div>
-                    <div style={{ flex: "1 1 180px" }}>
-                      <InputField label="Phone number" type="tel" value={form.phone} onChange={e => { setForm({ ...form, phone: e.target.value }); setErrors({ ...errors, phone: "" }); }} error={errors.phone} />
-                    </div>
-                  </div>
-
-                  <InputField label="Email address" type="email" value={form.email} onChange={e => { setForm({ ...form, email: e.target.value }); setErrors({ ...errors, email: "" }); }} error={errors.email} />
-                  <SelectField value={form.course} onChange={e => { setForm({ ...form, course: e.target.value }); setErrors({ ...errors, course: "" }); }} error={errors.course} />
-                  <TextAreaField label="Your message (optional)" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
-
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px", marginTop: "8px" }}>
-                    <button
-                      onClick={handleSubmit} disabled={submitting}
-                      className="submit-btn"
-                      style={{
-                        background: "linear-gradient(135deg,#7c3aed,#5b21b6)",
-                        color: "#fff", border: "none", borderRadius: "50px",
-                        padding: "clamp(12px,1.5vw,14px) clamp(24px,3vw,32px)",
-                        fontSize: "clamp(13px,1.2vw,15px)", fontWeight: 700,
-                        fontFamily: "'Outfit',sans-serif", cursor: "pointer",
-                        display: "flex", alignItems: "center", gap: "10px",
-                        boxShadow: "0 6px 20px rgba(124,58,237,0.30)",
-                        transition: "transform 0.22s, box-shadow 0.22s",
-                        letterSpacing: "0.3px",
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.02)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(124,58,237,0.45)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.30)"; }}
-                    >
-                      {submitting ? (
-                        <>
-                          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" style={{ animation: "spinRing 0.8s linear infinite" }}>
-                            <circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.3)" strokeWidth="2.5" />
-                            <path d="M9 2a7 7 0 0 1 7 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                          </svg>
-                          Sending…
-                        </>
-                      ) : (
-                        <>
-                          Get in Touch
-                          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-                            <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </>
-                      )}
-                    </button>
-                    <p style={{ fontSize: "11.5px", color: "#b0a0cc", fontWeight: 500, maxWidth: "200px", lineHeight: 1.5 }}>
-                      We respect your privacy. No spam, ever.
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   MAP / LOCATION SECTION
-═══════════════════════════════════════════════════ */
-function LocationSection() {
-  const [ref, inView] = useInView(0.1);
-  return (
-    <section ref={ref} style={{ padding: "clamp(48px,7vw,80px) 6%", background: "#faf8ff", borderTop: "1px solid #f0ebff", position: "relative" }}>
-      <GridBg />
-      <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-        <div style={{
-          marginBottom: "clamp(28px,4vw,44px)",
-          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.7s ease",
-        }}>
-          <SectionLabel text="FIND US" />
-          <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.4rem)", fontWeight: 900, color: "#120630", letterSpacing: "-0.03em" }}>
-            Visit Our <span style={{ color: "#7c3aed" }}>Campus</span>
-          </h2>
-        </div>
-
-        <div style={{ display: "flex", gap: "clamp(20px,3.5vw,40px)", alignItems: "stretch", flexWrap: "wrap" }}>
-          {/* Map placeholder */}
-          <div style={{
-            flex: "1 1 300px", borderRadius: "24px", overflow: "hidden",
-            background: "linear-gradient(145deg,#ede9ff,#f5f0ff)",
-            border: "1.5px solid #e4d9ff",
-            minHeight: "clamp(220px,35vw,320px)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            position: "relative",
-            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
-            transition: "all 0.9s cubic-bezier(.4,0,.2,1) 0.1s",
-          }}>
-            {/* Stylised map grid */}
-            <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(124,58,237,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.06) 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
-            <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-              <div style={{
-                width: "56px", height: "56px", borderRadius: "50%",
-                background: "linear-gradient(135deg,#7c3aed,#5b21b6)",
-                boxShadow: "0 0 0 12px rgba(124,58,237,0.14), 0 8px 24px rgba(124,58,237,0.35)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 16px",
-                animation: "pinPulse 2.4s ease-in-out infinite",
-              }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="white" />
-                  <circle cx="12" cy="9" r="2.5" fill="#7c3aed" />
-                </svg>
-              </div>
-              <div style={{ fontWeight: 800, fontSize: "15px", color: "#1a1035", marginBottom: "4px" }}>Skillra — Coimbatore</div>
-              <div style={{ fontSize: "12.5px", color: "#7c3aed", fontWeight: 600 }}>Tamil Nadu, India · 641 001</div>
-            </div>
-          </div>
-
-          {/* Address details */}
-          <div style={{
-            flex: "0 0 auto", width: "clamp(260px,32%,340px)",
-            display: "flex", flexDirection: "column", gap: "14px",
-            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
-            transition: "all 0.9s cubic-bezier(.4,0,.2,1) 0.2s",
-          }}>
-            {[
-              {
-                heading: "Main Campus",
-                lines: ["Ground Floor, Tech Park Building", "Peelamedu, Coimbatore", "Tamil Nadu — 641 004"],
-              },
-              {
-                heading: "Working Hours",
-                lines: ["Monday to Saturday", "9:00 AM – 6:00 PM IST", "Sundays & Holidays: Closed"],
-              },
-              {
-                heading: "Reach Us",
-                lines: ["+91 98765 43210", "info@skillra.com", "www.skillra.com"],
-              },
-            ].map((block, i) => (
-              <div key={i} style={{
-                background: "#fff", border: "1.5px solid #e4d9ff",
-                borderRadius: "16px", padding: "clamp(16px,2vw,20px) clamp(16px,2vw,22px)",
-                boxShadow: "0 4px 14px rgba(124,58,237,0.06)",
-                transition: "all 0.22s",
-              }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "#7c3aed"; e.currentTarget.style.transform = "translateX(4px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = "#e4d9ff"; e.currentTarget.style.transform = "translateX(0)"; }}
-              >
-                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#7c3aed", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "8px" }}>{block.heading}</div>
-                {block.lines.map((l, j) => (
-                  <div key={j} style={{ fontSize: "clamp(12px,1.1vw,13.5px)", color: j === 0 ? "#1a1035" : "#6b5a9e", fontWeight: j === 0 ? 700 : 500, lineHeight: 1.65 }}>{l}</div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   FAQ SECTION
-═══════════════════════════════════════════════════ */
-const FAQS = [
-  { q: "How long does it take to get a response after submitting the form?", a: "Our counselors respond within 24 hours on working days. For urgent queries, you can call us directly at +91 98765 43210." },
-  { q: "Do I need prior experience to enrol in a course?", a: "Most of our programs are designed for beginners and career switchers. Some technology courses may benefit from basic computer literacy, but no prior domain experience is required." },
-  { q: "Is placement support guaranteed for all courses?", a: "Yes. All courses at Skillra come with 100% placement assistance. This includes resume building, mock interviews, job referrals, and active employer connects." },
-  { q: "Can I attend a demo session before enrolling?", a: "Absolutely. We offer free demo classes for all our courses. Simply contact us and we'll schedule a session at your convenience." },
-  { q: "Are the certifications recognised by employers?", a: "Yes. Our certifications are tamper-proof, digitally verifiable, and recognised by 50+ hiring partners across healthcare, technology, and finance sectors." },
-];
-
-function FAQSection() {
-  const [ref, inView] = useInView(0.08);
-  const [open, setOpen] = useState(null);
-
-  return (
-    <section ref={ref} style={{ padding: "clamp(48px,7vw,80px) 6%", background: "#fff", borderTop: "1px solid #f0ebff", position: "relative" }}>
-      <GridBg />
-      <div style={{ maxWidth: "1200px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-        <div style={{
-          marginBottom: "clamp(28px,4vw,48px)",
-          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.7s ease",
-        }}>
-          <SectionLabel text="FAQ" />
-          <h2 style={{ fontSize: "clamp(1.7rem,3vw,2.4rem)", fontWeight: 900, color: "#120630", letterSpacing: "-0.03em", marginBottom: "10px" }}>
-            Common <span style={{ color: "#7c3aed" }}>Questions</span>
-          </h2>
-          <p style={{ fontSize: "clamp(13px,1.2vw,15px)", color: "#9270c0", maxWidth: "420px", lineHeight: 1.75, fontWeight: 500 }}>
-            Everything you need to know before reaching out.
-          </p>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {FAQS.map((faq, i) => (
-            <div key={i} style={{
-              background: open === i ? "#faf8ff" : "#fff",
-              border: `1.5px solid ${open === i ? "#7c3aed" : "#e4d9ff"}`,
-              borderRadius: "16px", overflow: "hidden",
-              opacity: inView ? 1 : 0,
-              transform: inView ? "translateY(0)" : "translateY(20px)",
-              transition: `opacity 0.7s ease ${i * 0.07}s, transform 0.7s ease ${i * 0.07}s, border-color 0.25s, background 0.25s`,
-              boxShadow: open === i ? "0 8px 28px rgba(124,58,237,0.10)" : "none",
-            }}>
-              <button
-                onClick={() => setOpen(open === i ? null : i)}
-                style={{
-                  width: "100%", background: "none", border: "none",
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "clamp(16px,2vw,20px) clamp(18px,2.5vw,24px)",
-                  cursor: "pointer", textAlign: "left", gap: "16px",
-                }}
-              >
-                <span style={{ fontSize: "clamp(13.5px,1.2vw,15px)", fontWeight: 700, color: "#1a1035", lineHeight: 1.4, flex: 1 }}>{faq.q}</span>
-                <div style={{
-                  width: "28px", height: "28px", borderRadius: "8px",
-                  background: open === i ? "#7c3aed" : "rgba(124,58,237,0.08)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  flexShrink: 0, transition: "all 0.28s ease",
-                }}>
-                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none"
-                    style={{ transform: open === i ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.28s ease" }}>
-                    <path d="M2 4l5 5 5-5" stroke={open === i ? "#fff" : "#7c3aed"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-              </button>
-              <div style={{
-                maxHeight: open === i ? "200px" : "0",
-                overflow: "hidden",
-                transition: "max-height 0.38s cubic-bezier(.4,0,.2,1)",
-              }}>
-                <p style={{
-                  padding: "0 clamp(18px,2.5vw,24px) clamp(16px,2vw,20px)",
-                  fontSize: "clamp(13px,1.1vw,14px)", color: "#5c4a80",
-                  lineHeight: 1.82, fontWeight: 500,
-                }}>
-                  {faq.a}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   PAGE ROOT
-═══════════════════════════════════════════════════ */
-export default function ContactPage() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setVisible(true), 80); return () => clearTimeout(t); }, []);
-
-  return (
-    <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, paddingTop: "62px", overflowX: "hidden", background: "#faf8ff" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { overflow-x: hidden; }
-
-        @keyframes shimmer   { 0%{background-position:-200% center}100%{background-position:200% center} }
-        @keyframes spinRing  { from{transform:rotate(0deg)}to{transform:rotate(360deg)} }
-        @keyframes popIn     { 0%{transform:scale(0.6);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1} }
-        @keyframes shakeX    { 0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)} }
-        @keyframes pinPulse  { 0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,0.35)}50%{box-shadow:0 0 0 16px rgba(124,58,237,0)} }
-
-        .mn, .ml { transition: color 0.22s; }
-
-        /* Responsive overrides */
-        @media (max-width: 768px) {
-          .form-row > div { flex: 1 1 100% !important; }
-        }
-        @media (max-width: 600px) {
-          section { padding-left: 20px !important; padding-right: 20px !important; }
-        }
-      `}</style>
-
-      <NavBar />
-      <ContactHero visible={visible} />
+    <div style={{ fontFamily:"'Poppins', sans-serif" }}>
+      <ContactSection />
       <ContactInfoSection />
-      <ContactFormSection />
-      <LocationSection />
-      <FAQSection />
       <NewsletterSection />
       <Footer />
     </div>

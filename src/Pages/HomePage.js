@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import NavBar from "./NavBar";
 import Footer from "./Footer";
 
 /* ═══════════════════════════════════════════════════
@@ -13,11 +12,14 @@ const COMPANIES = [
   { name:"Vercel",    icon:"▲"  }, { name:"Stripe",    icon:"💳" },
 ];
 
+/* CRA serves /public files via process.env.PUBLIC_URL */
+const PUB = process.env.PUBLIC_URL || "";
+
 /* Slides: purple → orange → green */
 const SLIDES = [
-  { img:"/landingPageFrontImg.png", bg:"linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)", shadow:"rgba(79,28,200,.55)", ring:"rgba(124,58,237,.30)" },
-  { img:"/technology1.png",         bg:"linear-gradient(145deg,#c2410c,#ea580c,#9a3412)", shadow:"rgba(194,65,12,.55)",  ring:"rgba(234,88,12,.30)"  },
-  { img:"/finance1.png",            bg:"linear-gradient(145deg,#14532d,#15803d,#166534)", shadow:"rgba(20,83,45,.55)",   ring:"rgba(21,128,61,.30)"  },
+  { img:`${PUB}/landingPageFrontImg.png`, bg:"linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)", shadow:"rgba(79,28,200,.55)", ring:"rgba(124,58,237,.30)" },
+  { img:`${PUB}/technology1.png`,         bg:"linear-gradient(145deg,#c2410c,#ea580c,#9a3412)", shadow:"rgba(194,65,12,.55)",  ring:"rgba(234,88,12,.30)"  },
+  { img:`${PUB}/finance1.png`,            bg:"linear-gradient(145deg,#14532d,#15803d,#166534)", shadow:"rgba(20,83,45,.55)",   ring:"rgba(21,128,61,.30)"  },
 ];
 
 const COURSES_DATA = {
@@ -29,9 +31,9 @@ const COURSES_DATA = {
     badgeBg:"#1e3a8a",
     cardBg:"linear-gradient(145deg,#eff6ff 0%,#dbeafe 100%)",
     courses:[
-      { id:"hc1", title:"AI Medical Coding",   description:"Get certified and learn AI-powered coding skills with real case studies.", badge:"100% Success Rate", image:"healthcare1.png" },
-      { id:"hc2", title:"AI Medical Billing",  description:"Become a certified AI Medical Billing professional with job guarantee.",    badge:"100% Success Rate", image:"healthcare1.png" },
-      { id:"hc3", title:"AI Medical Scribing", description:"Learn AI-based medical scribing and clinical documentation.",              badge:"100% Success Rate", image:"healthcare1.png" },
+      { id:"hc1", title:"AI Medical Coding",   description:"Get certified and learn AI-powered coding skills with real case studies.", badge:"100% Success Rate", image:`${PUB}/healthcare1.png` },
+      { id:"hc2", title:"AI Medical Billing",  description:"Become a certified AI Medical Billing professional with job guarantee.",    badge:"100% Success Rate", image:`${PUB}/healthcare1.png` },
+      { id:"hc3", title:"AI Medical Scribing", description:"Learn AI-based medical scribing and clinical documentation.",              badge:"100% Success Rate", image:`${PUB}/healthcare1.png` },
     ],
   },
   technology: {
@@ -42,9 +44,9 @@ const COURSES_DATA = {
     badgeBg:"#c2410c",
     cardBg:"linear-gradient(145deg,#fff7ed 0%,#ffedd5 100%)",
     courses:[
-      { id:"tc1", title:"Full Stack Course", description:"Become a full-stack web developer with our MERN and MEAN Stack Course.", badge:null, image:"technology1.png" },
-      { id:"tc2", title:"Data Analytics",    description:"Join our Data Analytics Course for high-demand data careers.",           badge:null, image:"technology1.png" },
-      { id:"tc3", title:"UI/UX Design",      description:"Join our UI/UX Designing Course to build professional websites.",       badge:null, image:"technology1.png" },
+      { id:"tc1", title:"Full Stack Course", description:"Become a full-stack web developer with our MERN and MEAN Stack Course.", badge:null, image:`${PUB}/technology1.png` },
+      { id:"tc2", title:"Data Analytics",    description:"Join our Data Analytics Course for high-demand data careers.",           badge:null, image:`${PUB}/technology1.png` },
+      { id:"tc3", title:"UI/UX Design",      description:"Join our UI/UX Designing Course to build professional websites.",       badge:null, image:`${PUB}/technology1.png` },
     ],
   },
   finance: {
@@ -55,18 +57,18 @@ const COURSES_DATA = {
     badgeBg:"#14532d",
     cardBg:"linear-gradient(145deg,#f0fdf4 0%,#dcfce7 100%)",
     courses:[
-      { id:"fc1", title:"SAP Development",      description:"Master SAP ABAP and become a certified SAP developer.",       badge:null, image:"finance1.png" },
-      { id:"fc2", title:"Tally & GST Course",   description:"Learn Tally, GST filing, and financial accounting tools.",    badge:null, image:"finance1.png" },
-      { id:"fc3", title:"Financial Accounting", description:"Master financial accounting and IFRS reporting standards.",   badge:null, image:"finance1.png" },
+      { id:"fc1", title:"SAP Development",      description:"Master SAP ABAP and become a certified SAP developer.",       badge:null, image:`${PUB}/finance1.png` },
+      { id:"fc2", title:"Tally & GST Course",   description:"Learn Tally, GST filing, and financial accounting tools.",    badge:null, image:`${PUB}/finance1.png` },
+      { id:"fc3", title:"Financial Accounting", description:"Master financial accounting and IFRS reporting standards.",   badge:null, image:`${PUB}/finance1.png` },
     ],
   },
 };
 
 const TESTIMONIALS = [
-  { id:1, name:"Aria Zinanrio",   role:"Medical Coder",        avatar:"abtimg1.jpg", text:"Skillra's AI Medical Coding course transformed my career completely — I landed a job within 3 weeks of completing the program. The trainers are incredibly experienced." },
-  { id:2, name:"Ravi Kumar",      role:"Full Stack Developer", avatar:"abtimg2.jpg", text:"The Full Stack course at Skillra is world-class. Hands-on projects, real mentorship, and 100% placement support made all the difference. Fresher to employed in 2 months." },
-  { id:3, name:"Priya Nair",      role:"Financial Analyst",    avatar:"abtimg3.jpg", text:"Skillra's Finance training is structured perfectly for career switchers. The Tally & GST module alone was worth every rupee. My interview confidence shot up." },
-  { id:4, name:"Mohammed Farhan", role:"Data Analyst",         avatar:"abtimg1.jpg", text:"The Data Analytics course was exactly what I needed. Practical assignments, weekly mentorship, and a placement team that genuinely cares — Skillra delivers every promise." },
+  { id:1, name:"Aria Zinanrio",   role:"Medical Coder",        avatar:`${PUB}/abtimg1.jpg`, text:"Skillra's AI Medical Coding course transformed my career completely — I landed a job within 3 weeks of completing the program. The trainers are incredibly experienced." },
+  { id:2, name:"Ravi Kumar",      role:"Full Stack Developer", avatar:`${PUB}/abtimg2.jpg`, text:"The Full Stack course at Skillra is world-class. Hands-on projects, real mentorship, and 100% placement support made all the difference. Fresher to employed in 2 months." },
+  { id:3, name:"Priya Nair",      role:"Financial Analyst",    avatar:`${PUB}/abtimg3.jpg`, text:"Skillra's Finance training is structured perfectly for career switchers. The Tally & GST module alone was worth every rupee. My interview confidence shot up." },
+  { id:4, name:"Mohammed Farhan", role:"Data Analyst",         avatar:`${PUB}/abtimg1.jpg`, text:"The Data Analytics course was exactly what I needed. Practical assignments, weekly mentorship, and a placement team that genuinely cares — Skillra delivers every promise." },
 ];
 
 const CONTACT_COURSES = [
@@ -229,7 +231,6 @@ const CalendarIcon = () => (
   </svg>
 );
 
-/* Simple rotation: 3s per slide, all 3 images always rendered, CSS opacity handles fade */
 function useSlideRotation() {
   const [activeIdx, setActiveIdx] = useState(0);
   useEffect(() => {
@@ -258,7 +259,8 @@ function HeroSection({ scrollRef, onCounselorClick }) {
   const activeIdx = useSlideRotation();
 
   return (
-    <section id="home" style={{ background:`radial-gradient(ellipse 80% 70% at 70% 40%,rgba(167,139,250,0.18) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(124,58,237,0.1) 0%,transparent 65%),#faf8ff`, minHeight:"calc(100vh - 62px)", display:"flex", flexDirection:"column", justifyContent:"center", position:"relative", overflow:"hidden" }}>
+    
+    <section id="home" style={{ background:`radial-gradient(ellipse 80% 70% at 70% 40%,rgba(167,139,250,0.18) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(124,58,237,0.1) 0%,transparent 65%),#faf8ff`, minHeight:"calc(100vh - 84px)", display:"flex", flexDirection:"column", justifyContent:"center", position:"relative", overflow:"hidden", padding: "40px 0 0 0"}}>
       <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0, backgroundImage:`linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
 
       <div className="hero-inner" style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"56px 6% 20px", width:"100%", gap:"40px", position:"relative", zIndex:1 }}>
@@ -304,7 +306,7 @@ function HeroSection({ scrollRef, onCounselorClick }) {
             </div>
           </div>
 
-          {/* Rotating circle — all 3 images stacked, active one shown */}
+          {/* Rotating circle */}
           <div className="hero-float" style={{ position:"relative", flexShrink:0 }}>
             <div className="circle-size" style={{
               width:"500px", height:"500px", borderRadius:"50%",
@@ -403,9 +405,9 @@ function AboutSection() {
       <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
       <div style={{ maxWidth:"1180px", margin:"0 auto", padding:"0 48px", display:"flex", alignItems:"center", gap:"80px", flexWrap:"wrap", position:"relative", zIndex:1 }}>
         <div style={{ position:"relative", width:"480px", minWidth:"320px", height:"440px", flexShrink:0 }}>
-          <ImageCard src="abtimg3.jpg" alt="Instructor" delay={100} style={{ position:"absolute", top:0, left:0, width:"260px", height:"196px" }}/>
-          <ImageCard src="abtimg2.jpg" alt="Campus" delay={250} style={{ position:"absolute", top:0, right:0, width:"210px", height:"196px" }}/>
-          <ImageCard src="abtimg1.jpg" alt="Students" delay={400} style={{ position:"absolute", top:"208px", left:0, width:"100%", height:"232px" }}/>
+          <ImageCard src={`${PUB}/abtimg3.jpg`} alt="Instructor" delay={100} style={{ position:"absolute", top:0, left:0, width:"260px", height:"196px" }}/>
+          <ImageCard src={`${PUB}/abtimg2.jpg`} alt="Campus" delay={250} style={{ position:"absolute", top:0, right:0, width:"210px", height:"196px" }}/>
+          <ImageCard src={`${PUB}/abtimg1.jpg`} alt="Students" delay={400} style={{ position:"absolute", top:"208px", left:0, width:"100%", height:"232px" }}/>
           <div style={{ position:"absolute", left:"50%", top:"200px", transform:"translate(-50%,-50%)", width:"130px", height:"130px", borderRadius:"50%", background:"linear-gradient(135deg,#7c3aed,#4c1d95)", boxShadow:"0 0 0 6px rgba(124,58,237,0.12),0 8px 32px rgba(108,43,217,0.38)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", zIndex:10 }}>
             <span style={{ fontWeight:900, fontSize:"2rem", color:"#fff", lineHeight:1 }}>1+</span>
             <span style={{ fontWeight:500, fontSize:"0.68rem", color:"rgba(255,255,255,0.88)", marginTop:"4px", textAlign:"center", lineHeight:1.4 }}>Years Of<br/>Experience</span>
@@ -438,7 +440,7 @@ function AboutSection() {
 }
 
 /* ═══════════════════════════════════════════════════
-   COURSES SECTION — bigger, left-aligned, per-category colors
+   COURSES SECTION
 ═══════════════════════════════════════════════════ */
 function CoursesSection() {
   const [ref, inView] = useInView(0.08);
@@ -450,7 +452,6 @@ function CoursesSection() {
       <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
       <div style={{ maxWidth:"1280px", margin:"0 auto", padding:"0 48px", position:"relative", zIndex:1 }}>
 
-        {/* Header — left aligned */}
         <div style={{ marginBottom:"48px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
           <SectionLabel text="OUR COURSES"/>
           <h2 style={{ fontSize:"clamp(2rem,4vw,3rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#120630", letterSpacing:"-0.03em", lineHeight:1.05, marginBottom:"12px" }}>
@@ -505,11 +506,7 @@ function CoursesSection() {
                     <img src={course.image} alt={course.title} style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"top center", display:"block", transition:"transform 0.5s" }}
                       onMouseEnter={e => e.target.style.transform="scale(1.06)"}
                       onMouseLeave={e => e.target.style.transform="scale(1)"}
-                      onError={e => { e.target.style.display="none"; e.target.nextSibling.style.display="flex"; }}
                     />
-                    <div style={{ display:"none", width:"100%", height:"100%", alignItems:"center", justifyContent:"center", fontSize:60, background:cat.cardBg }}>
-                      {activeTab==="healthcare"?"🏥":activeTab==="technology"?"💻":"💰"}
-                    </div>
                   </div>
 
                   {/* Content */}
@@ -533,7 +530,7 @@ function CoursesSection() {
 }
 
 /* ═══════════════════════════════════════════════════
-   SERVICES SECTION — animated cards
+   SERVICES SECTION
 ═══════════════════════════════════════════════════ */
 const SERVICE_CARDS = [
   { id:1, bg:"linear-gradient(160deg,#7c3aed,#6d28d9)", title:"Campus Training Programs",    titleColor:"#e9d5ff", desc:"We partner with colleges to deliver industry-ready training directly on campus.", shadowColor:"rgba(109,40,217,0.40)", icon:"🏫" },
@@ -560,27 +557,20 @@ function ServiceCard({ card, delay, inView }) {
     <div ref={cardRef} onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)} onClick={handleClick}
       style={{ flex:"1 1 280px", maxWidth:"360px", background:card.bg, borderRadius:"24px", overflow:"hidden", cursor:"pointer", position:"relative", opacity:visible?1:0, transform:visible?(hovered?"translateY(-12px) scale(1.03)":"translateY(0) scale(1)"):"translateY(40px) scale(0.94)", transition:"opacity 0.65s ease,transform 0.38s cubic-bezier(.34,1.4,.64,1),box-shadow 0.38s ease", boxShadow:hovered?`0 32px 70px ${card.shadowColor},0 4px 20px rgba(0,0,0,0.14)`:`0 10px 32px ${card.shadowColor.replace("0.40","0.24")}`, display:"flex", flexDirection:"column", minHeight:"340px" }}>
 
-      {/* Ripples */}
       {ripples.map(rp => (
         <div key={rp.id} style={{ position:"absolute", left:rp.x, top:rp.y, width:"10px", height:"10px", marginLeft:"-5px", marginTop:"-5px", borderRadius:"50%", background:"rgba(255,255,255,0.28)", animation:"svcRipple 0.65s ease-out forwards", pointerEvents:"none", zIndex:20 }}/>
       ))}
 
-      {/* Ambient glow */}
       <div style={{ position:"absolute", inset:0, background:"radial-gradient(ellipse at 30% 20%,rgba(255,255,255,0.13) 0%,transparent 65%)", opacity:hovered?1:0, transition:"opacity 0.4s", pointerEvents:"none" }}/>
-
-      {/* Shine sweep */}
       <div style={{ position:"absolute", top:0, left:hovered?"110%":"-60%", width:"50%", height:"100%", background:"linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.08) 50%,transparent 70%)", transition:"left 0.65s cubic-bezier(.4,0,.2,1)", pointerEvents:"none", zIndex:2 }}/>
 
-      {/* Icon badge */}
       <div style={{ position:"absolute", top:"22px", right:"22px", width:"48px", height:"48px", borderRadius:"14px", background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"22px", transform:hovered?"rotate(12deg) scale(1.15)":"rotate(0deg) scale(1)", transition:"transform 0.4s cubic-bezier(.34,1.56,.64,1)", zIndex:3 }}>
         {card.icon}
       </div>
 
-      {/* Bottom dots */}
       <div style={{ position:"absolute", bottom:"-28px", right:"-28px", width:"90px", height:"90px", borderRadius:"50%", border:"2px solid rgba(255,255,255,0.07)", pointerEvents:"none" }}/>
       <div style={{ position:"absolute", bottom:"-14px", right:"-14px", width:"54px", height:"54px", borderRadius:"50%", border:"1.5px solid rgba(255,255,255,0.05)", pointerEvents:"none" }}/>
 
-      {/* Text */}
       <div style={{ padding:"36px 26px 32px", flex:1, display:"flex", flexDirection:"column", justifyContent:"flex-end", position:"relative", zIndex:3 }}>
         <h3 style={{ fontFamily:"'Outfit',sans-serif", fontWeight:800, fontSize:"1.22rem", color:card.titleColor, lineHeight:1.28, marginBottom:"12px", transform:hovered?"translateY(-3px)":"translateY(0)", transition:"transform 0.3s" }}>{card.title}</h3>
         <p style={{ fontFamily:"'Outfit',sans-serif", fontSize:"0.9rem", color:"rgba(255,255,255,0.80)", lineHeight:1.72, transform:hovered?"translateY(-2px)":"translateY(0)", transition:"transform 0.35s ease 0.04s" }}>{card.desc}</p>
@@ -631,7 +621,6 @@ function PlacementSection() {
 
   useEffect(() => {
     if (!inView) return;
-    // Stagger each bar individually with its own timeout
     PLACEMENT_BARS.forEach((b, i) => {
       setTimeout(() => {
         setBarWidths(prev => {
@@ -695,9 +684,7 @@ function PlacementSection() {
                     <span style={{ fontSize:"15px", fontWeight:900, color:b.color, fontFamily:"'Outfit',sans-serif", minWidth:"42px", textAlign:"right" }}>{b.rate}%</span>
                   </div>
                 </div>
-                {/* Track */}
                 <div style={{ height:"8px", background:"#ede8ff", borderRadius:"99px", overflow:"hidden" }}>
-                  {/* Fill — width driven by JS state, not CSS transition-delay hack */}
                   <div style={{
                     height:"100%",
                     width:`${barWidths[i]}%`,
@@ -717,7 +704,7 @@ function PlacementSection() {
 }
 
 /* ═══════════════════════════════════════════════════
-   CONTACT — auto-scroll + play/pause
+   CONTACT SECTION
 ═══════════════════════════════════════════════════ */
 function ContactSection() {
   const [ref, inView] = useInView(0.1);
@@ -784,7 +771,6 @@ function ContactSection() {
           {/* LEFT — testimonials */}
           <div style={{ flex:"0 0 auto", width:"420px", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-28px)", transition:"all 0.9s ease 0.1s" }}>
 
-            {/* Card */}
             <div style={{ background:"#fff", borderRadius:"24px", padding:"32px 28px", border:"1.5px solid #e4d9ff", boxShadow:"0 8px 32px rgba(124,58,237,0.09)", position:"relative", overflow:"hidden", marginBottom:"20px", minHeight:"220px" }}>
               <div style={{ position:"absolute", top:0, left:0, right:0, height:"4px", background:"linear-gradient(90deg,#7c3aed,#a78bfa,#7c3aed)", backgroundSize:"200% 100%", animation:"shimmer 3s infinite" }}/>
               <div style={{ marginBottom:"14px" }}>
@@ -807,18 +793,15 @@ function ContactSection() {
                 </div>
               ))}
 
-              {/* Play / Pause button */}
               <button onClick={() => setPlaying(p => !p)} style={{ marginLeft:"auto", width:42, height:42, borderRadius:"50%", border:"1.5px solid #c4b5fd", background:playing?"rgba(124,58,237,0.07)":"rgba(124,58,237,0.14)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", transition:"all 0.22s", flexShrink:0 }}
                 onMouseEnter={e => e.currentTarget.style.background="rgba(124,58,237,0.16)"}
                 onMouseLeave={e => e.currentTarget.style.background=playing?"rgba(124,58,237,0.07)":"rgba(124,58,237,0.14)"}>
                 {playing ? (
-                  /* Pause icon */
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <rect x="3" y="2" width="4" height="12" rx="1.5" fill="#7c3aed"/>
                     <rect x="9" y="2" width="4" height="12" rx="1.5" fill="#7c3aed"/>
                   </svg>
                 ) : (
-                  /* Play icon */
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <path d="M4 2.5l10 5.5-10 5.5V2.5z" fill="#7c3aed"/>
                   </svg>
@@ -971,7 +954,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, paddingTop:"62px", overflowX:"hidden", background:"#faf8ff" }}>
+    <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, overflowX:"hidden", background:"#faf8ff" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -1040,14 +1023,11 @@ export default function HomePage() {
 
       {showModal && <CounselorModal onClose={() => setShowModal(false)}/>}
 
-      <NavBar />
       <HeroSection scrollRef={scrollRef} onCounselorClick={() => setShowModal(true)}/>
       <AboutSection />
       <CoursesSection />
-      <ServicesSection />
       <PlacementSection />
       <ContactSection />
-      <NewsletterSection />
       <Footer />
     </div>
   );

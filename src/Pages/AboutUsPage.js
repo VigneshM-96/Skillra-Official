@@ -1,153 +1,160 @@
 import { useEffect, useRef, useState } from "react";
-import NavBar from "./NavBar";
 import Footer from "./Footer";
 
-/* ═══════════════════════════════════════════════════
-   useInView HOOK
-═══════════════════════════════════════════════════ */
-function useInView(threshold = 0.12) {
+const PUB = process.env.PUBLIC_URL || "";
+
+function useInView(threshold = 0.08) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold }
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
   return [ref, inView];
 }
 
-/* ═══════════════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════════════ */
-const STATS = [
-  { num: "1+",   label: "Years of Excellence" },
-  { num: "500+", label: "Students Placed"      },
-  { num: "50+",  label: "Hiring Partners"       },
-  { num: "98%",  label: "Placement Rate"        },
+/* ═══════════════════════════════════════════
+   ABOUT SECTION
+═══════════════════════════════════════════ */
+const ABOUT_PARAGRAPHS = [
+  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
+  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
+  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
+  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
 ];
 
-const LEADERSHIP = [
-  {
-    name:  "Bhuvaneshwari",
-    title: "Founder & CEO",
-    img:   "founder.png",
-    accentColor: "#7c3aed",
-    accentLight: "rgba(124,58,237,0.07)",
-    accentBorder: "rgba(124,58,237,0.18)",
-    bio:   "Bhuvaneshwari is a visionary edupreneur with deep roots in healthcare informatics. With a passion for bridging the gap between academic learning and industry demands, she founded Skillra to create a training ecosystem where every learner is job-ready. Her leadership drives the institute's core philosophy — real skills, real careers.",
-    credentials: ["Healthcare IT Expert", "Career Strategy", "EdTech Leadership"],
-    imgLeft: true,
-  },
-  {
-    name:  "Premchandar",
-    title: "Co-Founder",
-    img:   "cofounder.png",
-    accentColor: "#c2410c",
-    accentLight: "rgba(194,65,12,0.06)",
-    accentBorder: "rgba(194,65,12,0.16)",
-    bio:   "Premchandar brings a strong technology and business development background to Skillra. His expertise spans full-stack development, data systems, and building industry partnerships. He co-founded Skillra with the mission to equip students in tier-2 and tier-3 cities with the same quality of training available in metropolitan hubs.",
-    credentials: ["Technology & Systems", "Business Development", "Industry Partnerships"],
-    imgLeft: false,
-  },
-];
-
-const COURSES_OVERVIEW = [
-  {
-    category: "Healthcare",
-    accentColor: "#7c3aed",
-    accentLight: "#f3efff",
-    accentBorder: "#ddd3f8",
-    tagline: "AI-powered medical careers",
-    courses: [
-      { name: "AI Medical Coding",   desc: "Get certified and learn AI-powered coding skills with 100% placement." },
-      { name: "AI Medical Billing",  desc: "Become a certified AI Medical Billing professional." },
-      { name: "AI Medical Scribing", desc: "Learn AI-based medical scribing and clinical documentation." },
-    ],
-  },
-  {
-    category: "Technology",
-    accentColor: "#c2410c",
-    accentLight: "#fff4ee",
-    accentBorder: "#fcd9c4",
-    tagline: "Build the digital future",
-    courses: [
-      { name: "Full Stack Development", desc: "Master MERN and MEAN Stack for high-demand developer roles." },
-      { name: "Data Analytics",         desc: "Join our Data Analytics program for data-driven careers." },
-      { name: "UI/UX Design",           desc: "Build professional interfaces with modern design systems." },
-    ],
-  },
-  {
-    category: "Finance",
-    accentColor: "#166534",
-    accentLight: "#f0fdf4",
-    accentBorder: "#bbf7d0",
-    tagline: "Master numbers that matter",
-    courses: [
-      { name: "SAP Development",      desc: "Master SAP ABAP and become a certified SAP developer." },
-      { name: "Tally & GST Course",   desc: "Learn Tally, GST filing, and financial accounting tools." },
-      { name: "Financial Accounting", desc: "Master financial reporting and accounting standards." },
-    ],
-  },
-];
-
-const VALUES = [
-  { num: "01", title: "Job-First Curriculum",      desc: "Every course is built backward from what employers actually hire for, not just what textbooks say." },
-  { num: "02", title: "Mentor-Led Learning",        desc: "Our trainers bring 15+ years of industry experience into every class session." },
-  { num: "03", title: "100% Placement Support",     desc: "Active hiring drives, mock interviews, resume reviews — we don't stop until you're placed." },
-  { num: "04", title: "Tamper-Proof Certificates",  desc: "Digital, verifiable certificates that carry real weight with top employers across India." },
-  { num: "05", title: "50+ Industry Partners",      desc: "Active hiring relationships across healthcare, IT, and finance sectors." },
-  { num: "06", title: "Career-Long Support",        desc: "Alumni get ongoing access to upskilling resources, job portals, and counseling post-placement." },
-];
-
-/* ═══════════════════════════════════════════════════
-   SHARED UI
-═══════════════════════════════════════════════════ */
-function SectionLabel({ text, light = false }) {
+function AboutSection() {
+  const [ref, inView] = useInView(0.06);
   return (
-    <div style={{ display:"inline-flex", alignItems:"center", gap:"8px", background: light ? "rgba(255,255,255,0.10)" : "#fff", border: light ? "1.5px solid rgba(255,255,255,0.18)" : "1.5px solid #e4d9ff", borderRadius:"9px", padding:"7px 16px", fontSize:"11.5px", color: light ? "rgba(255,255,255,0.85)" : "#3b1f7a", fontWeight:700, marginBottom:"18px", boxShadow: light ? "none" : "0 2px 12px rgba(124,58,237,0.09)", letterSpacing:"0.1em" }}>
-      <span style={{ width:"6px", height:"6px", borderRadius:"50%", background: light ? "#a78bfa" : "#7c3aed", display:"inline-block" }} />
-      {text}
+    <section ref={ref} className="about-section" style={{
+      background: "linear-gradient(160deg,#f0eaff 0%,#ede8f8 40%,#e8e0f8 100%)",
+      padding: "100px 0",
+paddingTop: "calc(80px + 70px)", position: "relative", overflow: "hidden",
+    }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.07) 1px,transparent 1px)`, backgroundSize: "30px 30px", zIndex: 0 }} />
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+
+        <h1 className="section-title" style={{
+          textAlign: "center", color: "#7c3aed",
+          fontFamily: "'Outfit',sans-serif", fontWeight: 900,
+          letterSpacing: "-0.5px", marginBottom: "48px",
+          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.7s ease, transform 0.7s ease",
+        }}>
+          About us
+        </h1>
+
+        <div className="about-row">
+          {/* Image */}
+          <div className="about-img-col" style={{
+            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
+            transition: "opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s",
+          }}>
+            <img src={`${PUB}/aboutusimg.png`} alt="About Skillra Team" className="about-img" />
+          </div>
+
+          {/* Text */}
+          <div className="about-text-col" style={{
+            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
+            transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
+          }}>
+            {ABOUT_PARAGRAPHS.map((para, i) => (
+              <p key={i} className="body-text" style={{
+                lineHeight: 1.85, color: "#4b4466",
+                fontFamily: "'Outfit',sans-serif", fontWeight: 400, margin: 0,
+                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(16px)",
+                transition: `opacity 0.6s ease ${0.25 + i * 0.1}s, transform 0.6s ease ${0.25 + i * 0.1}s`,
+              }}>
+                {para}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   MISSION CARD
+═══════════════════════════════════════════ */
+const MVV_TEXT = "Skillra mission is to equip graduates with industry-ready expertise and empower them to pursue high-growth careers in the healthcare sector. We deliver rigorously structured training, real-world learning, and dedicated support, ensuring every student gains the confidence and capability to excel in their chosen field.";
+
+function MissionCard({ label, delay, inView }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex", flexDirection: "column",
+        borderRadius: "20px", padding: "32px 28px", cursor: "default",
+        background: hovered ? "linear-gradient(145deg,#6d28d9,#4c1d95)" : "#fff",
+        border: hovered ? "1.5px solid transparent" : "1.5px solid #e4d9ff",
+        boxShadow: hovered ? "0 20px 52px rgba(109,40,217,0.38)" : "0 4px 20px rgba(124,58,237,0.07)",
+        opacity: inView ? 1 : 0,
+        transform: inView
+          ? hovered ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)"
+          : "translateY(36px)",
+        transition: [
+          `opacity 0.65s ease ${delay}s`,
+          "transform 0.30s cubic-bezier(0.34,1.56,0.64,1)",
+          "background 0.28s ease", "border-color 0.28s ease", "box-shadow 0.28s ease",
+        ].join(", "),
+      }}
+    >
+      <h3 className="card-heading" style={{
+        fontFamily: "'Outfit',sans-serif", fontWeight: 700,
+        color: hovered ? "#fff" : "#7c3aed",
+        marginBottom: "16px", transition: "color 0.28s ease",
+      }}>{label}</h3>
+      <p className="body-text" style={{
+        fontFamily: "'Outfit',sans-serif",
+        color: hovered ? "rgba(255,255,255,0.88)" : "#6b5a9e",
+        lineHeight: 1.78, margin: 0, transition: "color 0.28s ease",
+      }}>{MVV_TEXT}</p>
     </div>
   );
 }
 
-function Divider({ light = false }) {
-  return <div style={{ width:"48px", height:"3px", background: light ? "linear-gradient(90deg,#a78bfa,#7c3aed)" : "linear-gradient(90deg,#7c3aed,#a78bfa)", borderRadius:"99px", marginBottom:"20px" }} />;
-}
-
-const GridBg = () => (
-  <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.035) 1px,transparent 1px)`, backgroundSize:"32px 32px" }} />
-);
-
-/* ═══════════════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════════════ */
-function AboutHero() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setVisible(true), 80); return () => clearTimeout(t); }, []);
-
+function MissionSection() {
+  const [ref, inView] = useInView(0.06);
   return (
-    <section style={{ background:"radial-gradient(ellipse 90% 70% at 60% 40%,rgba(167,139,250,0.14) 0%,transparent 68%),#faf8ff", minHeight:"400px", display:"flex", alignItems:"center", position:"relative", overflow:"hidden", padding:"88px 6% 72px" }}>
-      <GridBg />
-      <div style={{ position:"absolute", right:"-2%", top:"50%", transform:"translateY(-50%)", fontSize:"clamp(100px,16vw,200px)", fontWeight:900, color:"rgba(124,58,237,0.04)", lineHeight:1, userSelect:"none", letterSpacing:"-8px", pointerEvents:"none" }}>ABOUT</div>
+    <section ref={ref} style={{ background: "#fff", padding: "80px 0 88px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "32px 32px" }} />
+      <div style={{ maxWidth: "1160px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
 
-      <div style={{ maxWidth:"800px", position:"relative", zIndex:1, opacity:visible?1:0, transform:visible?"translateY(0)":"translateY(32px)", transition:"all 1s cubic-bezier(.4,0,.2,1)" }}>
-        <SectionLabel text="ABOUT SKILLRA" />
-        <h1 style={{ fontSize:"clamp(2.6rem,5.5vw,4rem)", fontWeight:900, color:"#120630", lineHeight:1.06, letterSpacing:"-2.5px", marginBottom:"24px" }}>
-          Turning Learners Into<br/>
-          <span style={{ color:"#7c3aed" }}>Industry-Ready</span> Professionals
-        </h1>
-        <p style={{ fontSize:"16px", color:"#5c4a80", lineHeight:1.85, maxWidth:"560px", fontWeight:500, marginBottom:"48px" }}>
-          Skillra is Coimbatore's leading training institute for <strong style={{ color:"#120630", fontWeight:700 }}>AI Medical Coding & Billing</strong>, <strong style={{ color:"#120630", fontWeight:700 }}>IT Development</strong>, and <strong style={{ color:"#120630", fontWeight:700 }}>Finance</strong>. We bridge the gap between education and employment with job-focused curricula and 100% placement support.
+        <h2 className="section-title" style={{
+          textAlign: "center", fontFamily: "'Outfit',sans-serif", fontWeight: 900,
+          color: "#120630", lineHeight: 1.15, letterSpacing: "-1px", marginBottom: "16px",
+          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)",
+          transition: "opacity 0.7s ease, transform 0.7s ease",
+        }}>
+          We build careers. We shape futures.<br className="title-br" /> We create professionals.
+        </h2>
+
+        <p className="body-text" style={{
+          textAlign: "center", color: "#6b5a9e", lineHeight: 1.75,
+          maxWidth: "540px", margin: "0 auto 52px",
+          fontFamily: "'Outfit',sans-serif",
+          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(16px)",
+          transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",
+        }}>
+          Powerful natural language processing capabilities, that can understand and respond to
+          customer inquiries in real-time &amp; improve customer satisfaction.
         </p>
-        <div style={{ display:"flex", gap:"14px", flexWrap:"wrap" }}>
-          {STATS.map((s, i) => (
-            <div key={i} style={{ background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"16px", padding:"18px 24px", boxShadow:"0 4px 18px rgba(124,58,237,0.07)", minWidth:"110px", opacity:visible?1:0, transform:visible?"translateY(0)":"translateY(18px)", transition:`background 0.3s, transform 0.3s, opacity 0.7s ease ${0.25 + i * 0.09}s, translateY 0.7s ease ${0.25 + i * 0.09}s` }}
-              onMouseEnter={e => { e.currentTarget.style.background="linear-gradient(135deg,#7c3aed,#5b21b6)"; e.currentTarget.querySelector(".sn").style.color="#fff"; e.currentTarget.querySelector(".sl").style.color="rgba(255,255,255,0.72)"; e.currentTarget.style.transform="translateY(-5px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background="#fff"; e.currentTarget.querySelector(".sn").style.color="#7c3aed"; e.currentTarget.querySelector(".sl").style.color="#9270c0"; e.currentTarget.style.transform="translateY(0)"; }}>
-              <div className="sn" style={{ fontSize:"1.9rem", fontWeight:900, color:"#7c3aed", lineHeight:1, letterSpacing:"-1px", transition:"color 0.3s" }}>{s.num}</div>
-              <div className="sl" style={{ fontSize:"11px", color:"#9270c0", marginTop:"4px", fontWeight:600, letterSpacing:"0.04em", transition:"color 0.3s" }}>{s.label}</div>
-            </div>
+
+        <div className="mvv-grid">
+          {[
+            { label: "Mission", delay: 0.20 },
+            { label: "Vision",  delay: 0.35 },
+            { label: "Values",  delay: 0.50 },
+          ].map(card => (
+            <MissionCard key={card.label} label={card.label} delay={card.delay} inView={inView} />
           ))}
         </div>
       </div>
@@ -155,52 +162,82 @@ function AboutHero() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   COMPANY STORY
-═══════════════════════════════════════════════════ */
-function CompanyStorySection() {
-  const [ref, inView] = useInView(0.1);
+/* ═══════════════════════════════════════════
+   DIAMOND CIRCLE DECORATION
+═══════════════════════════════════════════ */
+function DiamondCircle({ side = "left" }) {
   return (
-    <section ref={ref} style={{ padding:"88px 0", background:"#fff", borderTop:"1px solid #f0ebff", position:"relative" }}>
-      <GridBg />
-      <div style={{ maxWidth:"1180px", margin:"0 auto", padding:"0 6%", position:"relative", zIndex:1 }}>
-        <div style={{ display:"flex", gap:"80px", alignItems:"center", flexWrap:"wrap" }}>
+    <div className="diamond-circle" style={{
+      position: "absolute", [side]: "-30px", top: "50%",
+      transform: "translateY(-50%)", width: "280px", height: "280px",
+      borderRadius: "50%", background: "rgba(195,180,255,0.20)",
+      overflow: "hidden", zIndex: 0, pointerEvents: "none",
+    }}>
+      <svg viewBox="0 0 280 280" style={{ width: "100%", height: "100%" }}>
+        <defs>
+          <pattern id={`dp-${side}`} x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+            <rect x="14" y="2" width="11" height="11" rx="1.5"
+              transform="rotate(45 14 7.5)" fill="none"
+              stroke="rgba(124,58,237,0.22)" strokeWidth="1.5" />
+          </pattern>
+        </defs>
+        <circle cx="140" cy="140" r="140" fill={`url(#dp-${side})`} />
+      </svg>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   FOUNDER SECTION
+═══════════════════════════════════════════ */
+function FounderSection() {
+  const [ref, inView] = useInView(0.06);
+  return (
+    <section ref={ref} style={{ background: "#fff", padding: "80px 0", position: "relative", overflow: "hidden", borderTop: "1px solid #f0ebff" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "32px 32px" }} />
+      <div style={{ maxWidth: "1160px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+
+        <h2 className="section-title" style={{
+          textAlign: "center", fontFamily: "'Outfit',sans-serif", fontWeight: 900,
+          color: "#120630", letterSpacing: "-0.5px", marginBottom: "52px",
+          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.7s ease, transform 0.7s ease",
+        }}>
+          About our founder
+        </h2>
+
+        <div className="founder-row">
           {/* Image */}
-          <div style={{ flex:"0 0 auto", width:"460px", minWidth:"300px", position:"relative", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-36px)", transition:"all 0.95s cubic-bezier(.4,0,.2,1)" }}>
-            <div style={{ borderRadius:"4px 24px 4px 24px", overflow:"hidden", boxShadow:"0 28px 70px rgba(124,58,237,0.13)", height:"360px" }}>
-              <img src="abtimg3.jpg" alt="Skillra" style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center" }} />
-            </div>
-            <div style={{ position:"absolute", bottom:"-10px", right:"-10px", width:"120px", height:"120px", border:"2px solid rgba(124,58,237,0.15)", borderRadius:"0 0 20px 0", zIndex:0 }} />
-            <div style={{ position:"absolute", bottom:"-28px", right:"-28px", background:"linear-gradient(135deg,#7c3aed,#5b21b6)", borderRadius:"14px", padding:"18px 22px", boxShadow:"0 14px 36px rgba(124,58,237,0.36)", zIndex:10 }}>
-              <div style={{ fontSize:"20px", fontWeight:900, color:"#fff", lineHeight:1, letterSpacing:"-0.5px" }}>Est. 2024</div>
-              <div style={{ fontSize:"11px", color:"rgba(255,255,255,0.78)", marginTop:"3px", fontWeight:600 }}>Coimbatore, India</div>
-            </div>
+          <div className="founder-img-wrap" style={{
+            position: "relative", flexShrink: 0,
+            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
+            transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
+          }}>
+            <DiamondCircle side="left" />
+            <img src={`${PUB}/aboutusgirl.png`} alt="Founder" className="founder-img" style={{
+              objectFit: "cover", objectPosition: "top center",
+              display: "block", position: "relative", zIndex: 1,
+              filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
+            }} />
           </div>
-          {/* Content */}
-          <div style={{ flex:1, opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(28px)", transition:"all 0.9s ease 0.18s" }}>
-            <SectionLabel text="OUR STORY" />
-            <Divider />
-            <h2 style={{ fontSize:"clamp(1.9rem,3vw,2.5rem)", fontWeight:900, color:"#1a1035", lineHeight:1.14, marginBottom:"22px", letterSpacing:"-0.03em" }}>
-              Built With One Purpose:<br/><span style={{ color:"#7c3aed" }}>Your Career</span>
-            </h2>
-            <p style={{ fontSize:"15px", color:"#4b4466", lineHeight:1.88, marginBottom:"16px" }}>
-              Skillra was born out of a simple but powerful frustration — thousands of graduates in tier-2 cities sitting on degrees but unable to find jobs because they lacked the <strong style={{ color:"#3b1f7a", fontWeight:700 }}>right, practical skills</strong> that employers demand.
-            </p>
-            <p style={{ fontSize:"15px", color:"#4b4466", lineHeight:1.88, marginBottom:"32px" }}>
-              We built Skillra from the ground up with one mission: close that gap. Every course, every module, every mentor session is designed not just to teach — but to <strong style={{ color:"#1a1035", fontWeight:700 }}>prepare, certify, and place</strong>.
-            </p>
-            <div style={{ display:"flex", flexDirection:"column", gap:"16px" }}>
-              {[
-                { year:"2024", event:"Skillra founded in Coimbatore by Bhuvaneshwari & Premchandar" },
-                { year:"2024", event:"Launched AI Medical Coding & Billing with 100% placement guarantee" },
-                { year:"2025", event:"Expanded to Technology & Finance; 50+ hiring partners onboarded" },
-              ].map((item, i) => (
-                <div key={i} style={{ display:"flex", gap:"16px", alignItems:"flex-start" }}>
-                  <div style={{ flexShrink:0, background:"linear-gradient(135deg,#7c3aed,#5b21b6)", borderRadius:"20px", padding:"4px 12px", fontSize:"10.5px", fontWeight:800, color:"#fff", letterSpacing:"0.6px", marginTop:"2px" }}>{item.year}</div>
-                  <p style={{ fontSize:"13.5px", color:"#5c4a80", lineHeight:1.65, fontWeight:500 }}>{item.event}</p>
-                </div>
-              ))}
-            </div>
+
+          {/* Text */}
+          <div className="founder-text" style={{
+            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
+            transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
+          }}>
+            {[
+              "Bhuvaneshwari Sivakumar began her journey with a deep commitment to teaching and student development. What initially started as classroom support soon grew into a purposeful mission: to provide students with clear direction and access to structured career pathways. Observing the widespread lack of awareness about opportunities in Medical Coding, Healthcare Operations, and allied healthcare careers, she dedicated herself to conducting orientation sessions, academic workshops, and career-focused programs across institutions.",
+              "Over the years, she has delivered career awareness sessions in 20+ reputed colleges, established 3 strategic academic MOUs, and developed a strong network of 25+ hiring partners. She is recognized for her strengths in academic planning, institutional coordination, student counseling, and her ability to build meaningful industry connections that directly benefit learners.",
+              "With a strong focus on practical learning, placement readiness, and career clarity, she continues to guide students toward opportunities that offer long-term stability and sustainable growth. Her vision for Skillra is to build it into one of Tamil Nadu's most trusted training institutions and progressively establish its presence across India.",
+            ].map((para, i) => (
+              <p key={i} className="body-text" style={{
+                lineHeight: 1.85, color: "#4b4466",
+                fontFamily: "'Outfit',sans-serif", fontWeight: 400, margin: 0,
+                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+                transition: `opacity 0.6s ease ${0.3 + i * 0.12}s, transform 0.6s ease ${0.3 + i * 0.12}s`,
+              }}>{para}</p>
+            ))}
           </div>
         </div>
       </div>
@@ -208,236 +245,64 @@ function CompanyStorySection() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   VISION & MISSION — alternating layout
-═══════════════════════════════════════════════════ */
-function VisionMissionSection() {
-  const [ref, inView] = useInView(0.08);
+/* ═══════════════════════════════════════════
+   CO-FOUNDER SECTION
+═══════════════════════════════════════════ */
+function CoFounderSection() {
+  const [ref, inView] = useInView(0.06);
   return (
-    <section ref={ref} style={{ padding:"88px 0", background:"#faf8ff", borderTop:"1px solid #f0ebff", position:"relative" }}>
-      <GridBg />
-      <div style={{ maxWidth:"1180px", margin:"0 auto", padding:"0 6%", position:"relative", zIndex:1 }}>
-        <div style={{ marginBottom:"52px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
-          <SectionLabel text="VISION & MISSION" />
-          <h2 style={{ fontSize:"clamp(1.9rem,3.5vw,2.7rem)", fontWeight:900, color:"#120630", letterSpacing:"-0.03em" }}>
-            What Drives <span style={{ color:"#7c3aed", fontStyle:"italic" }}>Everything</span> We Do
-          </h2>
-        </div>
+    <section ref={ref} style={{ background: "#faf8ff", padding: "80px 0", position: "relative", overflow: "hidden", borderTop: "1px solid #f0ebff" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "32px 32px" }} />
+      <div style={{ maxWidth: "1160px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
 
-        {/* VISION — image left, content right */}
-        <div style={{ display:"flex", gap:"0", alignItems:"stretch", borderRadius:"28px", overflow:"hidden", boxShadow:"0 16px 56px rgba(124,58,237,0.10)", border:"1px solid #e4d9ff", marginBottom:"28px", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-44px)", transition:"all 0.95s cubic-bezier(.4,0,.2,1) 0.1s", flexWrap:"wrap" }}>
-          <div style={{ flex:"0 0 420px", minWidth:"260px", position:"relative", overflow:"hidden" }}>
-            <img src="abtimg1.jpg" alt="Vision" style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center", display:"block", minHeight:"320px" }} />
-            <div style={{ position:"absolute", inset:0, background:"linear-gradient(to right,transparent 55%,rgba(250,248,255,0.25))" }} />
-          </div>
-          <div style={{ flex:1, background:"#fff", padding:"52px 52px 52px 56px", display:"flex", flexDirection:"column", justifyContent:"center", minWidth:"280px" }}>
-            <SectionLabel text="VISION" />
-            <Divider />
-            <h3 style={{ fontSize:"clamp(1.5rem,2.2vw,1.9rem)", fontWeight:900, color:"#1a1035", lineHeight:1.22, marginBottom:"18px", letterSpacing:"-0.03em" }}>
-              India's Most Trusted<br/><span style={{ color:"#7c3aed" }}>Career-Transformation</span> Institute
-            </h3>
-            <p style={{ fontSize:"14.5px", color:"#4b4466", lineHeight:1.85, fontWeight:500, marginBottom:"28px" }}>
-              We envision a future where every student — regardless of their city, background, or starting point — has access to world-class training that guarantees them a seat at the professional table.
-            </p>
-            <div style={{ display:"flex", gap:"32px", flexWrap:"wrap" }}>
-              {[["Accessible","Training for all cities"],["Certified","Tamper-proof credentials"],["Trusted","By 50+ employers"]].map(([h,s],i)=>(
-                <div key={i}>
-                  <div style={{ fontSize:"13px", fontWeight:800, color:"#7c3aed", marginBottom:"3px" }}>{h}</div>
-                  <div style={{ fontSize:"11.5px", color:"#9270c0", fontWeight:500 }}>{s}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* MISSION — content left (dark), image right */}
-        <div style={{ display:"flex", gap:"0", alignItems:"stretch", borderRadius:"28px", overflow:"hidden", boxShadow:"0 16px 56px rgba(45,27,105,0.18)", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(44px)", transition:"all 0.95s cubic-bezier(.4,0,.2,1) 0.22s", flexWrap:"wrap" }}>
-          <div style={{ flex:1, background:"linear-gradient(155deg,#1a0a3c,#2d1b69)", padding:"52px 56px 52px 52px", display:"flex", flexDirection:"column", justifyContent:"center", minWidth:"280px" }}>
-            <SectionLabel text="MISSION" light />
-            <Divider light />
-            <h3 style={{ fontSize:"clamp(1.5rem,2.2vw,1.9rem)", fontWeight:900, color:"#fff", lineHeight:1.22, marginBottom:"18px", letterSpacing:"-0.03em" }}>
-              Deliver Training That Turns<br/><span style={{ color:"#c4b5fd" }}>Potential Into Placement</span>
-            </h3>
-            <p style={{ fontSize:"14.5px", color:"rgba(255,255,255,0.70)", lineHeight:1.85, fontWeight:500, marginBottom:"28px" }}>
-              Practical, industry-aligned training in Healthcare IT, Technology, and Finance — backed by experienced mentors, real projects, and relentless placement support that follows every student until they're employed.
-            </p>
-            <div style={{ display:"flex", flexDirection:"column", gap:"11px" }}>
-              {["Curriculum updated every quarter with employer input","Dedicated placement cells with 50+ active employer ties","Affordable, accessible training from Coimbatore to India"].map((pt,i)=>(
-                <div key={i} style={{ display:"flex", gap:"10px", alignItems:"flex-start" }}>
-                  <div style={{ width:"17px", height:"17px", borderRadius:"50%", background:"rgba(124,58,237,0.45)", border:"1px solid rgba(167,139,250,0.45)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, marginTop:"2px" }}>
-                    <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5 3.5-4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>
-                  <span style={{ fontSize:"13px", color:"rgba(255,255,255,0.72)", fontWeight:500, lineHeight:1.65 }}>{pt}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ flex:"0 0 420px", minWidth:"260px", position:"relative", overflow:"hidden" }}>
-            <img src="abtimg2.jpg" alt="Mission" style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center", display:"block", minHeight:"320px" }} />
-            <div style={{ position:"absolute", inset:0, background:"linear-gradient(to left,transparent 55%,rgba(45,27,105,0.18))" }} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   LEADERSHIP — alternating layout
-═══════════════════════════════════════════════════ */
-function LeaderRow({ leader, index, inView }) {
-  const isLeft = leader.imgLeft;
-  const delay = 0.08 + index * 0.14;
-  const fromX = isLeft ? -44 : 44;
-
-  const ImageSide = () => (
-    <div style={{ flex:"0 0 440px", minWidth:"260px", position:"relative" }}>
-      <div style={{ position:"absolute", top:"-10px", [isLeft?"left":"right"]:"-10px", width:"80px", height:"80px", border:`2px solid ${leader.accentBorder}`, borderRadius: isLeft ? "4px 0 0 0" : "0 4px 0 0", zIndex:0 }} />
-      <div style={{ position:"relative", zIndex:1, borderRadius:"4px 20px 4px 20px", overflow:"hidden", boxShadow:`0 28px 64px ${leader.accentColor}26`, height:"460px" }}>
-        <img src={leader.img} alt={leader.name} style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"top center", display:"block", transition:"transform 0.6s ease" }}
-          onMouseEnter={e => { e.target.style.transform="scale(1.04)"; }}
-          onMouseLeave={e => { e.target.style.transform="scale(1)"; }} />
-        <div style={{ position:"absolute", bottom:"20px", [isLeft?"left":"right"]:"20px", background:"rgba(255,255,255,0.96)", backdropFilter:"blur(12px)", borderRadius:"12px", padding:"12px 18px", boxShadow:"0 8px 28px rgba(0,0,0,0.10)" }}>
-          <div style={{ fontSize:"15px", fontWeight:900, color:"#1a1035", letterSpacing:"-0.3px" }}>{leader.name}</div>
-          <div style={{ fontSize:"11px", fontWeight:700, color:leader.accentColor, letterSpacing:"0.06em", marginTop:"2px", textTransform:"uppercase" }}>{leader.title}</div>
-        </div>
-      </div>
-      <div style={{ position:"absolute", bottom:"-12px", [isLeft?"right":"left"]:"-12px", width:"90px", height:"90px", border:`2px solid ${leader.accentBorder}`, borderRadius: isLeft ? "0 0 16px 0" : "0 0 0 16px", zIndex:0 }} />
-    </div>
-  );
-
-  const ContentSide = () => (
-    <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding: isLeft ? "0 0 0 16px" : "0 16px 0 0" }}>
-      <SectionLabel text={leader.title.toUpperCase()} />
-      <Divider />
-      <h2 style={{ fontSize:"clamp(2rem,3.2vw,2.9rem)", fontWeight:900, color:"#1a1035", lineHeight:1.08, marginBottom:"20px", letterSpacing:"-0.04em" }}>
-        {leader.name}
-      </h2>
-      <p style={{ fontSize:"15px", color:"#4b4466", lineHeight:1.9, marginBottom:"28px", fontWeight:500 }}>
-        {leader.bio}
-      </p>
-      <div style={{ display:"flex", flexDirection:"column", gap:"13px", marginBottom:"32px" }}>
-        {leader.credentials.map((c, i) => (
-          <div key={i} style={{ display:"flex", alignItems:"center", gap:"12px" }}>
-            <div style={{ width:"36px", height:"1.5px", background:`linear-gradient(90deg,${leader.accentColor},transparent)`, flexShrink:0 }} />
-            <span style={{ fontSize:"13.5px", fontWeight:600, color:"#3b2a6e" }}>{c}</span>
-          </div>
-        ))}
-      </div>
-      <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-        <button style={{ background:`linear-gradient(135deg,${leader.accentColor},${leader.accentColor}bb)`, color:"#fff", border:"none", borderRadius:"50px", padding:"11px 28px", fontSize:"13px", fontWeight:700, cursor:"pointer", letterSpacing:"0.4px", boxShadow:`0 6px 20px ${leader.accentColor}40`, transition:"all 0.22s" }}
-          onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow=`0 12px 30px ${leader.accentColor}55`; }}
-          onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=`0 6px 20px ${leader.accentColor}40`; }}>
-          Connect
-        </button>
-        <button style={{ background:"transparent", color:"#3b1f7a", border:"1.5px solid #e4d9ff", borderRadius:"50px", padding:"11px 26px", fontSize:"13px", fontWeight:600, cursor:"pointer", transition:"all 0.22s" }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor="#7c3aed"; e.currentTarget.style.background="#f8f5ff"; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor="#e4d9ff"; e.currentTarget.style.background="transparent"; }}>
-          Learn More
-        </button>
-      </div>
-    </div>
-  );
-
-  return (
-    <div style={{ display:"flex", gap:"60px", alignItems:"center", flexWrap:"wrap", marginBottom:"96px", opacity:inView?1:0, transform:inView?"translateX(0)":`translateX(${fromX}px)`, transition:`all 0.95s cubic-bezier(.4,0,.2,1) ${delay}s` }}>
-      {isLeft ? <><ImageSide /><ContentSide /></> : <><ContentSide /><ImageSide /></>}
-    </div>
-  );
-}
-
-function LeadershipSection() {
-  const [ref, inView] = useInView(0.08);
-  return (
-    <section ref={ref} style={{ padding:"88px 0 24px", background:"#fff", borderTop:"1px solid #f0ebff", position:"relative" }}>
-      <GridBg />
-      <div style={{ maxWidth:"1180px", margin:"0 auto", padding:"0 6%", position:"relative", zIndex:1 }}>
-        <div style={{ marginBottom:"64px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
-          <SectionLabel text="LEADERSHIP" />
-          <h2 style={{ fontSize:"clamp(1.9rem,3.5vw,2.7rem)", fontWeight:900, color:"#120630", letterSpacing:"-0.03em", marginBottom:"12px" }}>
-            The People Behind <span style={{ color:"#7c3aed" }}>Skillra</span>
-          </h2>
-          <p style={{ fontSize:"15px", color:"#9270c0", maxWidth:"460px", lineHeight:1.75, fontWeight:500 }}>
-            Our founders bring together domain expertise and a shared commitment to transforming careers across India.
-          </p>
-        </div>
-        {LEADERSHIP.map((leader, i) => (
-          <LeaderRow key={i} leader={leader} index={i} inView={inView} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   COURSES OVERVIEW
-═══════════════════════════════════════════════════ */
-function CoursesOverviewSection() {
-  const [ref, inView] = useInView(0.08);
-  const [active, setActive] = useState(0);
-  const current = COURSES_OVERVIEW[active];
-
-  return (
-    <section ref={ref} style={{ padding:"88px 0", background:"#faf8ff", borderTop:"1px solid #f0ebff", position:"relative" }}>
-      <GridBg />
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 6%", position:"relative", zIndex:1 }}>
-        <div style={{ marginBottom:"52px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
-          <SectionLabel text="OUR COURSES" />
-          <h2 style={{ fontSize:"clamp(1.9rem,3.5vw,2.7rem)", fontWeight:900, color:"#120630", letterSpacing:"-0.03em", marginBottom:"10px" }}>
-            Programs Built for <span style={{ fontStyle:"italic", color:"#7c3aed" }}>Real Careers</span>
-          </h2>
-          <p style={{ fontSize:"15px", color:"#9270c0", maxWidth:"440px", lineHeight:1.75, fontWeight:500 }}>
-            Three verticals. Nine programs. All designed with employers in mind.
+        {/* Quote */}
+        <div style={{
+          textAlign: "center", marginBottom: "52px",
+          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.7s ease, transform 0.7s ease",
+        }}>
+          <p className="quote-text" style={{
+            fontFamily: "'Georgia','Times New Roman',serif",
+            fontStyle: "italic", fontWeight: 700,
+            color: "#7c3aed", lineHeight: 1.45,
+            maxWidth: "780px", margin: "0 auto", letterSpacing: "-0.2px",
+          }}>
+            "Leadership is not about authority—it's about creating direction and clarity for those who follow".
           </p>
         </div>
 
-        <div style={{ display:"flex", gap:"36px", alignItems:"flex-start", flexWrap:"wrap" }}>
-          {/* Tab nav */}
-          <div style={{ flex:"0 0 auto", display:"flex", flexDirection:"column", gap:"8px", width:"192px" }}>
-            {COURSES_OVERVIEW.map((cat, i) => (
-              <button key={i} onClick={() => setActive(i)} style={{ textAlign:"left", background:active===i?`linear-gradient(135deg,${cat.accentColor},${cat.accentColor}cc)`:"#fff", border:`1.5px solid ${active===i?cat.accentColor:"#e4d9ff"}`, borderRadius:"12px", padding:"13px 18px", fontSize:"14px", fontWeight:700, color:active===i?"#fff":"#3b1f7a", cursor:"pointer", transition:"all 0.22s", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                {cat.category}
-                {active === i && (
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                )}
-              </button>
+        <div className="cofounder-row">
+          {/* Text */}
+          <div className="cofounder-text" style={{
+            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
+            transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
+          }}>
+            {[
+              "Prem Chander began his career as a UX Designer, gradually advancing into product strategy, business analysis, and user-centric problem solving. Over the years, he has managed 20+ international client projects, collaborating with global teams and contributing to measurable improvements in user experience, business performance, and digital product growth.",
+              "His professional expertise spans Product Management, UX Design, Process Optimization, Growth Strategy, ROI Evaluation, Case Study Development, and Presentation Design. Through extensive research and project-based insights, he discovered a recurring gap: many students were graduating without clear guidance, industry exposure, or structured career pathways. This realization laid the foundation for Skillra.",
+              "Today, he oversees product development, operational planning, student experience, and institutional strategy, ensuring that Skillra delivers consistent quality and remains aligned with industry expectations.",
+            ].map((para, i) => (
+              <p key={i} className="body-text" style={{
+                lineHeight: 1.85, color: "#4b4466",
+                fontFamily: "'Outfit',sans-serif", fontWeight: 400, margin: 0,
+                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+                transition: `opacity 0.6s ease ${0.25 + i * 0.12}s, transform 0.6s ease ${0.25 + i * 0.12}s`,
+              }}>{para}</p>
             ))}
           </div>
 
-          {/* Panel */}
-          <div style={{ flex:1, minWidth:"300px" }}>
-            <div style={{ background:"#fff", border:`1.5px solid ${current.accentBorder}`, borderRadius:"24px", overflow:"hidden", boxShadow:`0 12px 40px ${current.accentColor}12` }}>
-              <div style={{ background:current.accentLight, borderBottom:`1px solid ${current.accentBorder}`, padding:"28px 36px" }}>
-                <div style={{ fontSize:"11px", fontWeight:800, color:current.accentColor, letterSpacing:"0.14em", textTransform:"uppercase", marginBottom:"6px" }}>{current.category} Courses</div>
-                <h3 style={{ fontSize:"1.45rem", fontWeight:900, color:"#1a1035", letterSpacing:"-0.02em" }}>{current.tagline}</h3>
-              </div>
-              <div style={{ padding:"8px 0" }}>
-                {current.courses.map((course, i) => (
-                  <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"20px", padding:"22px 36px", borderBottom: i < current.courses.length - 1 ? "1px solid #f5f0ff" : "none", cursor:"pointer", transition:"background 0.18s" }}
-                    onMouseEnter={e => { e.currentTarget.style.background=current.accentLight; }}
-                    onMouseLeave={e => { e.currentTarget.style.background="transparent"; }}>
-                    <div style={{ width:"34px", height:"34px", borderRadius:"10px", background:current.accentLight, border:`1.5px solid ${current.accentBorder}`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                      <span style={{ fontSize:"12px", fontWeight:900, color:current.accentColor }}>{String(i+1).padStart(2,"0")}</span>
-                    </div>
-                    <div style={{ flex:1 }}>
-                      <div style={{ fontSize:"14.5px", fontWeight:800, color:"#1a1035", marginBottom:"4px" }}>{course.name}</div>
-                      <div style={{ fontSize:"13px", color:"#6b5a9e", fontWeight:500, lineHeight:1.6 }}>{course.desc}</div>
-                    </div>
-                    <div style={{ flexShrink:0, marginTop:"6px" }}>
-                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke={current.accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ padding:"20px 36px", borderTop:`1px solid ${current.accentBorder}`, display:"flex", alignItems:"center", justifyContent:"space-between", background:current.accentLight }}>
-                <span style={{ fontSize:"13px", color:"#6b5a9e", fontWeight:500 }}>All programs include placement support</span>
-                <button style={{ background:current.accentColor, color:"#fff", border:"none", borderRadius:"24px", padding:"9px 20px", fontSize:"12px", fontWeight:800, cursor:"pointer", letterSpacing:"0.5px", transition:"all 0.2s" }}
-                  onMouseEnter={e => { e.currentTarget.style.opacity="0.88"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.opacity="1"; e.currentTarget.style.transform="translateY(0)"; }}>
-                  EXPLORE ALL
-                </button>
-              </div>
-            </div>
+          {/* Image */}
+          <div className="cofounder-img-wrap" style={{
+            position: "relative", flexShrink: 0,
+            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
+            transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
+          }}>
+            <DiamondCircle side="right" />
+            <img src={`${PUB}/campusboy.png`} alt="Co-founder" className="cofounder-img" style={{
+              objectFit: "contain", objectPosition: "bottom center",
+              display: "block", position: "relative", zIndex: 1,
+              filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
+            }} />
           </div>
         </div>
       </div>
@@ -445,74 +310,68 @@ function CoursesOverviewSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   WHY SKILLRA
-═══════════════════════════════════════════════════ */
-function ValuesSection() {
-  const [ref, inView] = useInView(0.08);
-  return (
-    <section ref={ref} style={{ padding:"88px 0", background:"#fff", borderTop:"1px solid #f0ebff", position:"relative" }}>
-      <GridBg />
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 6%", position:"relative", zIndex:1 }}>
-        <div style={{ marginBottom:"52px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
-          <SectionLabel text="WHY SKILLRA" />
-          <h2 style={{ fontSize:"clamp(1.9rem,3.5vw,2.7rem)", fontWeight:900, color:"#120630", letterSpacing:"-0.03em", marginBottom:"10px" }}>
-            The Skillra <span style={{ color:"#7c3aed" }}>Difference</span>
-          </h2>
-          <p style={{ fontSize:"15px", color:"#9270c0", maxWidth:"440px", lineHeight:1.75, fontWeight:500 }}>
-            Six commitments that set us apart from every other training institute.
-          </p>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))", border:"1.5px solid #e4d9ff", borderRadius:"24px", overflow:"hidden" }}>
-          {VALUES.map((v, i) => (
-            <div key={i} style={{ padding:"36px 32px", borderRight: i % 2 === 0 ? "1px solid #e4d9ff" : "none", borderBottom: i < VALUES.length - 2 ? "1px solid #e4d9ff" : "none", background:"#fff", cursor:"default", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:`opacity 0.7s ease ${i * 0.07}s, transform 0.7s ease ${i * 0.07}s, background 0.22s` }}
-              onMouseEnter={e => { e.currentTarget.style.background="#faf8ff"; }}
-              onMouseLeave={e => { e.currentTarget.style.background="#fff"; }}>
-              <div style={{ fontSize:"10.5px", fontWeight:800, color:"rgba(124,58,237,0.3)", letterSpacing:"0.14em", marginBottom:"16px" }}>{v.num}</div>
-              <div style={{ width:"32px", height:"2px", background:"linear-gradient(90deg,#7c3aed,#a78bfa)", borderRadius:"99px", marginBottom:"16px" }} />
-              <h4 style={{ fontSize:"15.5px", fontWeight:800, color:"#1a1035", marginBottom:"10px", letterSpacing:"-0.02em", lineHeight:1.3 }}>{v.title}</h4>
-              <p style={{ fontSize:"13.5px", color:"#5c4a80", lineHeight:1.78, fontWeight:500 }}>{v.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   NEWSLETTER
-═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   NEWSLETTER SECTION
+═══════════════════════════════════════════ */
 function NewsletterSection() {
   const [ref, inView] = useInView(0.3);
-  const [email, setEmail] = useState(""), [subscribed, setSubscribed] = useState(false), [subscribing, setSubscribing] = useState(false);
-  const handleSubscribe = () => { if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return; setSubscribing(true); setTimeout(() => { setSubscribing(false); setSubscribed(true); }, 1400); };
+  const [email, setEmail]           = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+
+  const handleSubscribe = () => {
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return;
+    setSubscribing(true);
+    setTimeout(() => { setSubscribing(false); setSubscribed(true); }, 1400);
+  };
+
   return (
-    <div ref={ref} style={{ background:"linear-gradient(135deg,#1a0a3c,#2d1b69,#1a0a3c)", position:"relative", overflow:"hidden" }}>
-      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(167,139,250,0.08) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
-      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"2px", background:"linear-gradient(90deg,#7c3aed,#a78bfa,#7c3aed)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"40px 6%", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1, opacity:inView?1:0, transition:"opacity 0.8s ease" }}>
-        <div>
-          <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"6px" }}>Join Our Newsletter</h2>
-          <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.55)", fontWeight:500 }}>Get latest updates, course launches &amp; career tips.</p>
+    <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
+      <style>{`
+        @keyframes spinRingAnim { to { transform:rotate(360deg); } }
+      `}</style>
+      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
+      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
+      <div style={{
+        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
+        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
+      }}>
+        <div style={{ display:"flex", alignItems:"center", gap:"20px" }}>
+          <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
+            <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
+              Join Our Newsletter
+            </h2>
+            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
+              Subscribe to get our latest updates &amp; news.
+            </p>
+          </div>
         </div>
         {subscribed ? (
-          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.10)", border:"1.5px solid rgba(255,255,255,0.18)", borderRadius:"12px", padding:"12px 20px" }}>
-            <div style={{ width:"24px", height:"24px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5 6-6" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
+          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
+            <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
             </div>
-            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px" }}>You're subscribed!</span>
+            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
           <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSubscribe()} placeholder="Enter your email"
-              style={{ height:"46px", width:"clamp(200px,26vw,300px)", padding:"0 16px", fontSize:"14px", fontWeight:500, color:"#1a0640", background:"rgba(255,255,255,0.96)", border:"1.5px solid rgba(255,255,255,0.5)", borderRadius:"10px", outline:"none" }}
-              onFocus={e => e.target.style.borderColor="#fff"} onBlur={e => e.target.style.borderColor="rgba(255,255,255,0.5)"} />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleSubscribe()} placeholder="Enter your email"
+              style={{ height:"48px", width:"clamp(200px,26vw,300px)", padding:"0 16px", fontSize:"14px", fontFamily:"'Outfit',sans-serif", fontWeight:500, color:"#1a0640", background:"rgba(255,255,255,0.96)", border:"2px solid rgba(255,255,255,0.7)", borderRadius:"12px", outline:"none" }}
+              onFocus={e => e.target.style.borderColor="#fff"}
+              onBlur={e => e.target.style.borderColor="rgba(255,255,255,0.7)"} />
             <button onClick={handleSubscribe} disabled={subscribing}
-              style={{ height:"46px", background:"linear-gradient(135deg,#7c3aed,#5b21b6)", color:"#fff", border:"none", borderRadius:"10px", padding:"0 24px", fontSize:"13.5px", fontWeight:700, cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:"8px", transition:"all 0.22s", boxShadow:"0 4px 16px rgba(124,58,237,0.4)" }}
-              onMouseEnter={e => { e.currentTarget.style.opacity="0.9"; e.currentTarget.style.transform="translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity="1"; e.currentTarget.style.transform="translateY(0)"; }}>
-              {subscribing ? "Subscribing…" : "Subscribe"}
+              style={{ height:"48px", background:"#111", color:"#fff", border:"none", borderRadius:"12px", padding:"0 24px", fontSize:"14px", fontWeight:700, fontFamily:"'Outfit',sans-serif", cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:"8px", transition:"all 0.22s" }}
+              onMouseEnter={e => { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background="#111"; e.currentTarget.style.transform="translateY(0)"; }}>
+              {subscribing ? "Subscribing…" : "Subscribe Now"}
               {!subscribing && <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
             </button>
           </div>
@@ -522,32 +381,196 @@ function NewsletterSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   PAGE ROOT
-═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   MAIN EXPORT
+══════════════════════════════════════════ */
 export default function AboutUsPage() {
   return (
-    <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, paddingTop:"62px", overflowX:"hidden", background:"#faf8ff" }}>
+    <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
-        *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-        html, body { overflow-x:hidden; }
-        @keyframes shimmer { 0%{background-position:-200% center}100%{background-position:200% center} }
-        .sn, .sl { transition: color 0.3s; }
-        @media (max-width: 860px) {
-          .leader-row > div { flex-direction: column !important; gap: 40px !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden; }
+
+        @keyframes shimmer      { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes spinRingAnim { to { transform: rotate(360deg); } }
+
+        /* ══════════════════════════════════
+           FLUID TYPOGRAPHY — all via clamp
+        ══════════════════════════════════ */
+        .section-title    { font-size: clamp(1.6rem, 4vw, 3rem); }
+        .card-heading     { font-size: clamp(1rem, 2.2vw, 1.4rem); }
+        .body-text        { font-size: clamp(13px, 1.5vw, 14.5px); }
+        .quote-text       { font-size: clamp(1.1rem, 2.8vw, 2.2rem); }
+        .newsletter-title { font-size: clamp(1rem, 2.2vw, 1.6rem); }
+
+        /* ══════════════════════════════════
+           ABOUT ROW — desktop: side by side
+        ══════════════════════════════════ */
+        .about-row {
+          display: flex; align-items: flex-start;
+          gap: 48px; flex-wrap: nowrap;
         }
+        .about-img-col {
+          flex: 0 0 360px; max-width: 360px;
+        }
+        .about-img {
+          width: 100%; height: 420px;
+          object-fit: cover; object-position: center top;
+          border-radius: 20px; display: block;
+          box-shadow: 0 16px 56px rgba(109,40,217,0.16);
+        }
+        .about-text-col {
+          flex: 1; min-width: 0;
+          display: flex; flex-direction: column; gap: 18px;
+        }
+
+        /* ══════════════════════════════════
+           MISSION GRID — desktop: 3 col
+        ══════════════════════════════════ */
+        .mvv-grid {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr 1fr;
+          gap: 20px; align-items: stretch;
+        }
+
+        /* ══════════════════════════════════
+           FOUNDER — desktop: row, image left
+        ══════════════════════════════════ */
+        .founder-row {
+          display: flex; align-items: center;
+          gap: 56px; flex-wrap: nowrap;
+        }
+        .founder-img-wrap { width: 300px; }
+        .founder-img      { width: 100%; height: 380px; border-radius: 0; }
+        .founder-text     { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+
+        /* ══════════════════════════════════
+           CO-FOUNDER — desktop: text left, image right
+        ══════════════════════════════════ */
+        .cofounder-row {
+          display: flex; align-items: flex-start;
+          gap: 56px; flex-wrap: nowrap;
+        }
+        .cofounder-img-wrap { width: 300px; }
+        .cofounder-img      { width: 100%; height: 400px; border-radius: 12px; }
+        .cofounder-text     { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+
+     
+}
+
+
+        @media (max-width: 700px) {
+  .newsletter-form {
+    display: flex;
+    gap: clamp(10px, 3vw, 20px); /* ✅ now works properly */
+  }
+
+  .newsletter-input {
+    height: 55px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .newsletter-btn {
+    margin-top: 100px;
+    height: 55px;
+    flex-shrink: 0;
+  }
+}
+        
+        /* ══════════════════════════════════
+           LARGE SCREENS ≥ 1400px
+        ══════════════════════════════════ */
+        @media (min-width: 1400px) {
+          .about-img-col  { flex: 0 0 420px; max-width: 420px; }
+          .about-img      { height: 480px !important; }
+          .founder-img-wrap, .cofounder-img-wrap { width: 340px; }
+          .founder-img    { height: 420px !important; }
+          .cofounder-img  { height: 440px !important; }
+          .mvv-grid       { gap: 24px; }
+        }
+
+        /* ══════════════════════════════════
+           TABLET 769–1024px — slightly compact
+        ══════════════════════════════════ */
+        @media (max-width: 1024px) {
+          .about-img-col  { flex: 0 0 300px; max-width: 300px; }
+          .about-img      { height: 360px !important; }
+          .founder-img-wrap, .cofounder-img-wrap { width: 250px; }
+          .founder-img    { height: 310px !important; }
+          .cofounder-img  { height: 330px !important; }
+          .mvv-grid       { grid-template-columns: 1fr 1fr !important; }
+        }
+
+        /* ══════════════════════════════════
+           TABLET ≤ 900px — stack to column
+        ══════════════════════════════════ */
+        @media (max-width: 900px) {
+          /* About */
+          .about-row      { flex-direction: column !important; align-items: center; gap: 28px !important; flex-wrap: wrap !important; }
+          .about-img-col  { flex: unset !important; width: 100% !important; max-width: 480px !important; }
+          .about-img      { height: 300px !important; }
+
+          /* Mission */
+          .mvv-grid       { grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
+
+          /* Founder — image above text */
+          .founder-row    { flex-direction: column !important; align-items: center !important; gap: 32px !important; flex-wrap: wrap !important; }
+          .founder-img-wrap { width: 100% !important; max-width: 380px; }
+          .founder-img    { height: 290px !important; }
+          .founder-text   { width: 100%; }
+
+          /* Co-founder — image below text (column-reverse so image ends up below) */
+          .cofounder-row  { flex-direction: column !important; align-items: center !important; gap: 32px !important; flex-wrap: wrap !important; }
+          .cofounder-img-wrap { width: 100% !important; max-width: 380px; }
+          .cofounder-img  { height: 290px !important; }
+          .cofounder-text { width: 100%; }
+
+          /* Newsletter */
+          .newsletter-inner { flex-direction: column; align-items: flex-start !important; gap: 20px !important; }
+          .newsletter-form  { width: 100%; flex-wrap: wrap; }
+          .newsletter-input { width: 100% !important; flex: 1; min-width: 0; }
+          .newsletter-btn   { width: 100%; }
+        }
+
+        /* ══════════════════════════════════
+           MOBILE ≤ 640px
+        ══════════════════════════════════ */
         @media (max-width: 640px) {
-          section { padding: 56px 0 !important; }
+          .about-section  { padding: 100px 0 56px !important; }
+          .about-img      { height: 240px !important; border-radius: 14px !important; }
+          .mvv-grid       { grid-template-columns: 1fr !important; gap: 14px !important; }
+          .founder-img    { height: 240px !important; }
+          .cofounder-img  { height: 240px !important; }
+          .newsletter-form { flex-direction: column; }
+          .title-br       { display: none; }
+
+          /* MissionCard padding */
+          .mvv-grid > div { padding: 24px 20px !important; border-radius: 16px !important; }
+        }
+
+        /* ══════════════════════════════════
+           SMALL MOBILE ≤ 400px
+        ══════════════════════════════════ */
+        @media (max-width: 400px) {
+          .about-img      { height: 200px !important; }
+          .founder-img    { height: 200px !important; }
+          .cofounder-img  { height: 200px !important; }
+
+          /* Hide diamond circles — prevent side overflow on tiny screens */
+          .diamond-circle { display: none !important; }
+
+          /* Tighten horizontal padding */
+          .about-section > div,
+          section > div { padding-left: 16px !important; padding-right: 16px !important; }
         }
       `}</style>
-      <NavBar />
-      <AboutHero />
-      <CompanyStorySection />
-      <VisionMissionSection />
-      <LeadershipSection />
-      <CoursesOverviewSection />
-      <ValuesSection />
+
+      <AboutSection />
+      <MissionSection />
+      <FounderSection />
+      <CoFounderSection />
       <NewsletterSection />
       <Footer />
     </div>
