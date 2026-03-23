@@ -8,6 +8,7 @@ import PlacementPage  from "./Pages/PlacementPage";
 import CareerPage     from "./Pages/CareerPage";
 import BooksPage     from "./Pages/BooksPage";
 import NavBar from "./Pages/NavBar";
+import ChatBot from "./components/ChatBot";
 // Add more page imports here as you build them:
 
 // import ELearningsPage from "./ELearningsPage";
@@ -34,6 +35,7 @@ export default function App() {
         {/* Catch-all — redirects unknown URLs back to Home */}
         <Route path="*" element={<HomePage />} />
       </Routes>
+       <ChatBot />
     </BrowserRouter>
   );
 }

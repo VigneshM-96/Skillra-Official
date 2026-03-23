@@ -151,7 +151,7 @@ function SocialSidebar() {
           display: flex; flex-direction: column; gap: 10px;
           z-index: 50;
         }
-        @media(max-width: 768px) { .skl-sidebar { display: none; } }
+        @media(max-width: 768px) { .skl-sidebar { display: none; } .contact-head { text-align: center; }}
 
         .skl-soc-link {
           width: 32px; height: 32px;
@@ -303,7 +303,7 @@ const ContactSection = () => {
 
         /* ── Contact section responsive ── */
         .contact-head h1 { font-size: clamp(24px, 5vw, 36px) !important; }
-        .contact-head p  { font-size: clamp(13px, 2vw, 14px) !important; }
+        .contact-head p  { font-size: clamp(13px, 2vw, 14px) !important; text-align: justify}
 
         .skl-form-card { padding: 48px 52px !important; }
         @media(max-width: 600px) {
@@ -339,7 +339,7 @@ const ContactSection = () => {
           <h1 style={{ color:"#6C2BD9", fontWeight:700, fontFamily:"'Poppins',sans-serif", marginBottom:"14px" }}>
             Contact Us
           </h1>
-          <p style={{ color:"#555", lineHeight:"1.7", fontFamily:"'Poppins',sans-serif", marginBottom:"44px", maxWidth:"1700px" }}>
+          <p className={"contact-description"} style={{ color:"#555", lineHeight:"1.7", fontFamily:"'Poppins',sans-serif", marginBottom:"44px", maxWidth:"1700px" }}>
             At Skillra, we're here to support your learning, career, and organizational growth.
             Whether you have questions about our courses, need guidance for enrollment, or want to
             explore partnership opportunities, our team is ready to assist you.

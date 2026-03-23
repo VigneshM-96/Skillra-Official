@@ -55,12 +55,87 @@ function StarRating({ rating = 4.7 }) {
 
 /* ══════════════════════════════════════════════════════
    SECTION 1 — HERO
-   Lavender bg, students image left, contact form right
-   "Medical Coding" heading at bottom left
 ══════════════════════════════════════════════════════ */
 function CourseHero() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "" });
+  const [errors, setErrors]     = useState({});
+  const [touched, setTouched]   = useState({});
   const [submitted, setSubmitted] = useState(false);
+
+  /* ── Validators ── */
+  const validators = {
+    name: (v) => {
+      if (!v.trim()) return "Name is required";
+      if (v.trim().length < 3) return "Minimum 3 characters required";
+      if (v.trim().length > 50) return "Maximum 50 characters allowed";
+      if (!/^[a-zA-Z\s'\-]+$/.test(v.trim())) return "Only letters, spaces & hyphens allowed";
+      if (/\s{2,}/.test(v)) return "No consecutive spaces allowed";
+      return "";
+    },
+    email: (v) => {
+      if (!v.trim()) return "Email is required";
+      if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v.trim()))
+        return "Enter a valid email (e.g. name@domain.com)";
+      if (v.length > 100) return "Email address is too long";
+      return "";
+    },
+    phone: (v) => {
+      const d = v.replace(/\D/g, "");
+      if (!d) return "Phone number is required";
+      if (d.length !== 10) return "Must be exactly 10 digits";
+      if (!/^[6-9]/.test(d)) return "Must start with 6, 7, 8 or 9";
+      if (/^(\d)\1{9}$/.test(d)) return "Invalid number (all same digits)";
+      return "";
+    },
+    course: (v) => (!v ? "Please select a course" : ""),
+  };
+
+  const validate = (field, value) => {
+    const err = validators[field](value);
+    setErrors(prev => ({ ...prev, [field]: err }));
+    return err;
+  };
+
+  const handleChange = (field, value) => {
+    // Name: block numbers & special chars while typing
+    if (field === "name" && /[^a-zA-Z\s'\-]/.test(value)) return;
+    // Phone: digits only, max 10
+    if (field === "phone") value = value.replace(/\D/g, "").slice(0, 10);
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (touched[field]) validate(field, value);
+  };
+
+  const handleBlur = (field) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    validate(field, formData[field]);
+  };
+
+  const handleSubmit = () => {
+    setTouched({ name: true, email: true, phone: true, course: true });
+    const newErrors = {};
+    let hasError = false;
+    Object.keys(validators).forEach(field => {
+      const err = validators[field](formData[field]);
+      newErrors[field] = err;
+      if (err) hasError = true;
+    });
+    setErrors(newErrors);
+    if (!hasError) setSubmitted(true);
+  };
+
+  const handleReset = () => {
+    setSubmitted(false);
+    setFormData({ name: "", email: "", phone: "", course: "" });
+    setErrors({});
+    setTouched({});
+  };
+
+  /* ── Field border colour helper ── */
+  const borderColor = (field) => {
+    if (!touched[field]) return "#e5e7eb";
+    if (errors[field]) return "#ef4444";
+    return "#22c55e";
+  };
 
   return (
     <section style={{
@@ -80,13 +155,13 @@ function CourseHero() {
         maxWidth: "1200px", margin: "0 auto",
         padding: "0 clamp(16px,5%,60px)",
         display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-        gap: "clamp(24px,4%,60px)", position: "relative", zIndex: 1, marginTop : "70px"
+        gap: "clamp(24px,4%,60px)", position: "relative", zIndex: 1, marginTop: "70px",
       }} className="hero-flex">
 
         {/* LEFT — Students image */}
         <div className="hero-img-wrap co-vR" style={{
           flex: 1, display: "flex", alignItems: "flex-end",
-          justifyContent: "flex-start", minHeight: "300px", marginBottom : "100px"
+          justifyContent: "flex-start", minHeight: "300px",
         }}>
           <img
             src={`${PUB}/students.jpg`}
@@ -96,6 +171,7 @@ function CourseHero() {
               maxWidth: "100%", objectFit: "contain",
               objectPosition: "bottom center", display: "block",
               filter: "drop-shadow(0 16px 40px rgba(109,40,217,0.14))",
+              borderRadius: "20px",
             }}
           />
         </div>
@@ -115,7 +191,7 @@ function CourseHero() {
               <div style={{ fontSize: "40px", marginBottom: "12px" }}>🎉</div>
               <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", marginBottom: "8px" }}>Brochure Sent!</h3>
               <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit', sans-serif" }}>Check your email shortly.</p>
-              <button onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", course: "" }); }}
+              <button onClick={handleReset}
                 style={{ marginTop: "18px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 24px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}>
                 Submit Again
               </button>
@@ -128,37 +204,137 @@ function CourseHero() {
               <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit', sans-serif", marginBottom: "22px" }}>
                 Please contact us in case of any query.
               </p>
+
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+
+                {/* ── Text / Email / Phone inputs ── */}
                 {[
-                  { key: "name",  placeholder: "Your name",         type: "text"  },
-                  { key: "email", placeholder: "Your email address", type: "email" },
-                  { key: "phone", placeholder: "Your phone number",  type: "tel"   },
+                  { key: "name",  placeholder: "Your name",          type: "text"  },
+                  { key: "email", placeholder: "Your email address",  type: "email" },
+                  { key: "phone", placeholder: "Your phone number",   type: "tel"   },
                 ].map(f => (
-                  <input key={f.key} type={f.type} placeholder={f.placeholder}
-                    value={formData[f.key]}
-                    onChange={e => setFormData(p => ({ ...p, [f.key]: e.target.value }))}
-                    style={{ width: "100%", padding: "12px 14px", border: "1.5px solid #e5e7eb", borderRadius: "10px", fontSize: "13.5px", fontFamily: "'Outfit', sans-serif", color: "#374151", outline: "none", background: "#fafafa", boxSizing: "border-box", transition: "border-color 0.2s" }}
-                    onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.background = "#fafafa"; }}
-                  />
+                  <div key={f.key}>
+                    <input
+                      type={f.type}
+                      placeholder={f.placeholder}
+                      value={formData[f.key]}
+                      onChange={e => handleChange(f.key, e.target.value)}
+                      onBlur={() => handleBlur(f.key)}
+                      style={{
+                        width: "100%", padding: "12px 14px",
+                        border: `1.5px solid ${borderColor(f.key)}`,
+                        borderRadius: "10px", fontSize: "13.5px",
+                        fontFamily: "'Outfit', sans-serif", color: "#374151",
+                        outline: "none", background: "#fafafa",
+                        boxSizing: "border-box", transition: "border-color 0.2s",
+                      }}
+                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; }}
+                    />
+                    {/* Error message */}
+                    {touched[f.key] && errors[f.key] && (
+                      <p style={{
+                        fontSize: "11.5px", color: "#ef4444", marginTop: "5px",
+                        fontFamily: "'Outfit', sans-serif",
+                        display: "flex", alignItems: "center", gap: "4px",
+                      }}>
+                        <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="9" stroke="#ef4444" strokeWidth="1.8"/>
+                          <path d="M10 6v4M10 14h.01" stroke="#ef4444" strokeWidth="1.8" strokeLinecap="round"/>
+                        </svg>
+                        {errors[f.key]}
+                      </p>
+                    )}
+                    {/* Success message */}
+                    {touched[f.key] && !errors[f.key] && formData[f.key] && (
+                      <p style={{
+                        fontSize: "11.5px", color: "#22c55e", marginTop: "5px",
+                        fontFamily: "'Outfit', sans-serif",
+                        display: "flex", alignItems: "center", gap: "4px",
+                      }}>
+                        <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="10" r="9" stroke="#22c55e" strokeWidth="1.8"/>
+                          <path d="M6 10l3 3 5-5" stroke="#22c55e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Looks good!
+                      </p>
+                    )}
+                  </div>
                 ))}
-                {/* Course select */}
-                <div style={{ position: "relative" }}>
-                  <select value={formData.course} onChange={e => setFormData(p => ({ ...p, course: e.target.value }))}
-                    style={{ width: "100%", padding: "12px 14px", border: "1.5px solid #e5e7eb", borderRadius: "10px", fontSize: "13.5px", fontFamily: "'Outfit', sans-serif", color: formData.course ? "#374151" : "#9ca3af", outline: "none", background: "#fafafa", appearance: "none", WebkitAppearance: "none", cursor: "pointer", boxSizing: "border-box" }}>
-                    <option value="">Select Course</option>
-                    <option value="medical-coding">Medical Coding</option>
-                    <option value="medical-billing">Medical Billing</option>
-                    <option value="medical-scribing">Medical Scribing</option>
-                    <option value="full-stack">Full Stack Development</option>
-                    <option value="data-analytics">Data Analytics</option>
-                  </select>
-                  <svg style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <path d="M5 8l5 5 5-5" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+
+                {/* ── Course select ── */}
+                <div>
+                  <div style={{ position: "relative" }}>
+                    <select
+                      value={formData.course}
+                      onChange={e => {
+                        handleChange("course", e.target.value);
+                        setTouched(prev => ({ ...prev, course: true }));
+                        validate("course", e.target.value);
+                      }}
+                      onBlur={() => handleBlur("course")}
+                      style={{
+                        width: "100%", padding: "12px 14px",
+                        border: `1.5px solid ${borderColor("course")}`,
+                        borderRadius: "10px", fontSize: "13.5px",
+                        fontFamily: "'Outfit', sans-serif",
+                        color: formData.course ? "#374151" : "#9ca3af",
+                        outline: "none", background: "#fafafa",
+                        appearance: "none", WebkitAppearance: "none",
+                        cursor: "pointer", boxSizing: "border-box",
+                        transition: "border-color 0.2s",
+                      }}
+                    >
+                      <option value="">Select Course</option>
+                      <option value="medical-coding">Medical Coding</option>
+                      <option value="medical-billing">Medical Billing</option>
+                      <option value="medical-scribing">Medical Scribing</option>
+                      <option value="full-stack">Full Stack Development</option>
+                      <option value="data-analytics">Data Analytics</option>
+                    </select>
+                    <svg style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} width="14" height="14" viewBox="0 0 20 20" fill="none">
+                      <path d="M5 8l5 5 5-5" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  {touched.course && errors.course && (
+                    <p style={{
+                      fontSize: "11.5px", color: "#ef4444", marginTop: "5px",
+                      fontFamily: "'Outfit', sans-serif",
+                      display: "flex", alignItems: "center", gap: "4px",
+                    }}>
+                      <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="9" stroke="#ef4444" strokeWidth="1.8"/>
+                        <path d="M10 6v4M10 14h.01" stroke="#ef4444" strokeWidth="1.8" strokeLinecap="round"/>
+                      </svg>
+                      {errors.course}
+                    </p>
+                  )}
+                  {touched.course && !errors.course && formData.course && (
+                    <p style={{
+                      fontSize: "11.5px", color: "#22c55e", marginTop: "5px",
+                      fontFamily: "'Outfit', sans-serif",
+                      display: "flex", alignItems: "center", gap: "4px",
+                    }}>
+                      <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="9" stroke="#22c55e" strokeWidth="1.8"/>
+                        <path d="M6 10l3 3 5-5" stroke="#22c55e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Looks good!
+                    </p>
+                  )}
                 </div>
-                <button onClick={() => { if (formData.name && formData.email) setSubmitted(true); }}
-                  style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "13px 24px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: "0 6px 20px rgba(124,58,237,0.32)", transition: "all 0.22s", marginTop: "4px" }}
+
+                {/* ── Submit button ── */}
+                <button
+                  onClick={handleSubmit}
+                  style={{
+                    background: "#7c3aed", color: "#fff", border: "none",
+                    borderRadius: "50px", padding: "13px 24px",
+                    fontSize: "14px", fontWeight: 700, cursor: "pointer",
+                    fontFamily: "'Outfit', sans-serif",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                    boxShadow: "0 6px 20px rgba(124,58,237,0.32)",
+                    transition: "all 0.22s", marginTop: "4px",
+                  }}
                   onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 30px rgba(124,58,237,0.46)"; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.32)"; }}
                 >
@@ -167,6 +343,7 @@ function CourseHero() {
                     <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
+
               </div>
             </>
           )}
@@ -178,9 +355,6 @@ function CourseHero() {
 
 /* ══════════════════════════════════════════════════════
    SECTION 2 — COURSE DETAIL
-   White bg, title + star rating + meta info,
-   Tab bar: Overview / Curriculum / Instructor / Reviews
-   Tab content: Course Description + What Will I Learn
 ══════════════════════════════════════════════════════ */
 const TABS = ["Overview", "Curriculum", "Instructor", "Reviews"];
 
@@ -248,12 +422,12 @@ function CourseDetailSection() {
   return (
     <section ref={ref} style={{ background: "#fff", padding: "clamp(40px,6vw,72px) 0", fontFamily: "'Outfit', sans-serif", position: "relative", overflow: "hidden" }}>
       <div style={{
-  position: "absolute", inset: 0, pointerEvents: "none",
-  backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px)`,
-  backgroundSize: "32px 32px",
-  zIndex: 0,
-}} />
+        position: "absolute", inset: 0, pointerEvents: "none",
+        backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px)`,
+        backgroundSize: "32px 32px",
+        zIndex: 0,
+      }} />
       <div style={{ maxWidth: "2000px", margin: "0 auto", padding: "0 clamp(16px,5%,60px)" }}>
 
         {/* Course title row */}
@@ -331,7 +505,6 @@ function CourseDetailSection() {
 
 /* ══════════════════════════════════════════════════════
    SECTION 3 — OTHER COURSES (horizontal scroll)
-   Each card: colored bg, person image, title, desc, KNOW MORE btn
 ══════════════════════════════════════════════════════ */
 const OTHER_COURSES = [
   {
@@ -400,7 +573,6 @@ function OtherCourseCard({ course, inView, delay }) {
         position: "relative", overflow: "hidden",
       }}
     >
-      {/* Tech tag pills */}
       {course.tags.length > 0 && (
         <div style={{ display: "flex", gap: "6px", marginBottom: "10px", flexWrap: "wrap" }}>
           {course.tags.map((tag, i) => (
@@ -410,8 +582,6 @@ function OtherCourseCard({ course, inView, delay }) {
           ))}
         </div>
       )}
-
-      {/* Course image */}
       <div style={{ height: "140px", display: "flex", alignItems: "flex-end", justifyContent: "center", marginBottom: "14px", overflow: "hidden" }}>
         <img
           src={`${PUB}/${course.image}`}
@@ -424,18 +594,12 @@ function OtherCourseCard({ course, inView, delay }) {
           }}
         />
       </div>
-
-      {/* Title */}
       <h3 style={{ fontSize: "clamp(14px,1.5vw,16px)", fontWeight: 800, color: course.titleColor, fontFamily: "'Outfit', sans-serif", marginBottom: "10px", lineHeight: 1.3 }}>
         {course.title}
       </h3>
-
-      {/* Desc */}
       <p style={{ fontSize: "12.5px", color: "#6b7280", fontFamily: "'Outfit', sans-serif", lineHeight: 1.6, marginBottom: "18px", flex: 1 }}>
         {course.desc}
       </p>
-
-      {/* KNOW MORE button */}
       <button style={{
         background: course.btnColor, color: "#fff", border: "none",
         borderRadius: "6px", padding: "10px 20px",
@@ -475,7 +639,6 @@ function OtherCoursesSection() {
     <section ref={ref} style={{ background: "#fff", padding: "clamp(10px,3vw,10px) 0", fontFamily: "'Outfit', sans-serif", overflow: "hidden" }}>
       <div style={{ maxWidth: "2000px", margin: "0 auto", padding: "0 clamp(16px,5%,60px)" }}>
 
-        {/* Header row */}
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           marginBottom: "28px", flexWrap: "wrap", gap: "12px",
@@ -485,7 +648,6 @@ function OtherCoursesSection() {
           <h2 style={{ fontSize: "clamp(1.2rem,2.5vw,1.8rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.02em" }}>
             OTHER COURSE
           </h2>
-          {/* Arrow controls */}
           <div style={{ display: "flex", gap: "10px" }}>
             {[{ dir: -1, icon: "←" }, { dir: 1, icon: "→" }].map(({ dir, icon }) => (
               <button key={dir} onClick={() => scroll(dir)} style={{
@@ -504,7 +666,6 @@ function OtherCoursesSection() {
           </div>
         </div>
 
-        {/* Horizontal scroll container */}
         <div
           ref={scrollRef}
           onScroll={checkScroll}
@@ -521,7 +682,6 @@ function OtherCoursesSection() {
           ))}
         </div>
 
-        {/* Scroll indicator dots */}
         <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginTop: "20px" }}>
           {OTHER_COURSES.map((_, i) => (
             <div key={i} style={{
@@ -547,7 +707,6 @@ export default function CourseOffered() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
 
-        /* ── Entrance animations ── */
         @keyframes coFadeRight { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }
         @keyframes coFadeUp    { from{opacity:0;transform:translateY(22px)}  to{opacity:1;transform:translateY(0)} }
         @keyframes coFadeScale { from{opacity:0;transform:scale(0.9)}        to{opacity:1;transform:scale(1)} }
@@ -558,15 +717,11 @@ export default function CourseOffered() {
         .co-vR { animation: coFadeScale 0.9s  ease forwards; opacity:0; animation-delay:0.10s; }
         .tab-content-fade { animation: tabFade 0.35s ease forwards; }
 
-        /* ── Scrollbar hide ── */
         .course-scroll::-webkit-scrollbar { display:none; }
 
-        /* input/select */
         input::placeholder { color: #9ca3af; }
         input:focus, select:focus { outline: none; }
         select option { color: #374151; }
-
-        /* ══ RESPONSIVE ══ */
 
         /* Tablet */
         @media (max-width: 1024px) and (min-width: 769px) {
@@ -585,6 +740,7 @@ export default function CourseOffered() {
             width: 100% !important;
             min-height: 200px !important;
             justify-content: center !important;
+            margin-bottom: 0 !important;
           }
           .hero-img-wrap img {
             max-height: 220px !important;

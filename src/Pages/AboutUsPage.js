@@ -3,6 +3,92 @@ import Footer from "./Footer";
 
 const PUB = process.env.PUBLIC_URL || "";
 
+/* ═══════════════════════════════════════════
+   PAGE META — SEO, Open Graph, Twitter Card
+   Uses plain DOM — no external package needed
+═══════════════════════════════════════════ */
+const META = {
+  title:       "About Us | Skillra – AI Medical Coding, IT & Finance Training Institute",
+  description: "Learn about Skillra, a leading training and upskilling institute in Tamil Nadu offering industry-aligned programs in AI Medical Coding, IT, Finance, and Professional Development. Meet our founder and co-founder.",
+  canonical:   "https://www.skillra.com/about",
+  ogImage:     `${PUB}/aboutusimg.png`,
+  keywords:    "Skillra, medical coding training, AI medical coding, IT training institute, finance courses, upskilling, Tamil Nadu, career development, professional training",
+};
+
+/** Set or create a <meta> tag by attribute selector */
+function setMeta(attr, value, content) {
+  let el = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
+  el.setAttribute("content", content);
+}
+
+/** Set or create a <link> tag */
+function setLink(rel, href) {
+  let el = document.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
+
+/** Inject JSON-LD structured data */
+function setJsonLd(data) {
+  const id = "skillra-about-jsonld";
+  let el = document.getElementById(id);
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+}
+
+function PageMeta() {
+  useEffect(() => {
+    /* ── Title ── */
+    document.title = META.title;
+
+    /* ── Primary SEO ── */
+    setMeta("name", "description",  META.description);
+    setMeta("name", "keywords",     META.keywords);
+    setMeta("name", "robots",       "index, follow");
+    setMeta("name", "author",       "Skillra");
+    setLink("canonical",            META.canonical);
+
+    /* ── Open Graph ── */
+    setMeta("property", "og:type",        "website");
+    setMeta("property", "og:url",         META.canonical);
+    setMeta("property", "og:title",       META.title);
+    setMeta("property", "og:description", META.description);
+    setMeta("property", "og:image",       META.ogImage);
+    setMeta("property", "og:image:alt",   "Skillra training institute team");
+    setMeta("property", "og:site_name",   "Skillra");
+    setMeta("property", "og:locale",      "en_IN");
+
+    /* ── Twitter Card ── */
+    setMeta("name", "twitter:card",        "summary_large_image");
+    setMeta("name", "twitter:title",       META.title);
+    setMeta("name", "twitter:description", META.description);
+    setMeta("name", "twitter:image",       META.ogImage);
+    setMeta("name", "twitter:image:alt",   "Skillra training institute team");
+
+    /* ── JSON-LD Structured Data ── */
+    setJsonLd({
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Skillra",
+      "url": "https://www.skillra.com",
+      "logo": `${PUB}/logo.png`,
+      "description": META.description,
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Tamil Nadu",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/skillra",
+        "https://www.instagram.com/skillra"
+      ]
+    });
+  }, []); // runs once on mount
+
+  return null; // renders nothing into the React tree
+}
+
 function useInView(threshold = 0.08) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -13,7 +99,7 @@ function useInView(threshold = 0.08) {
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
-  }, []);
+  }, [threshold]); // ✅ threshold included — it's a primitive (number), safe to depend on
   return [ref, inView];
 }
 
@@ -163,16 +249,27 @@ function MissionSection() {
 }
 
 /* ═══════════════════════════════════════════
-   DIAMOND CIRCLE DECORATION
+   DIAMOND CIRCLE DECORATION  ← FIXED
 ═══════════════════════════════════════════ */
 function DiamondCircle({ side = "left" }) {
   return (
-    <div className="diamond-circle" style={{
-      position: "absolute", [side]: "-30px", top: "50%",
-      transform: "translateY(-50%)", width: "280px", height: "280px",
-      borderRadius: "50%", background: "rgba(195,180,255,0.20)",
-      overflow: "hidden", zIndex: 0, pointerEvents: "none",
-    }}>
+    <div
+      className="diamond-circle"
+      style={{
+        position: "absolute",
+        /* Center it behind the image on all screen sizes */
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "280px",
+        height: "280px",
+        borderRadius: "50%",
+        background: "rgba(195,180,255,0.20)",
+        overflow: "hidden",
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
+    >
       <svg viewBox="0 0 280 280" style={{ width: "100%", height: "100%" }}>
         <defs>
           <pattern id={`dp-${side}`} x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
@@ -207,18 +304,31 @@ function FounderSection() {
         </h2>
 
         <div className="founder-row">
-          {/* Image */}
-          <div className="founder-img-wrap" style={{
-            position: "relative", flexShrink: 0,
-            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
-            transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
-          }}>
+          {/* Image — position:relative so DiamondCircle centres inside it */}
+          <div
+            className="founder-img-wrap"
+            style={{
+              position: "relative",
+              flexShrink: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateX(0)" : "translateX(-28px)",
+              transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
+            }}
+          >
             <DiamondCircle side="left" />
-            <img src={`${PUB}/aboutusgirl.png`} alt="Founder" className="founder-img" style={{
-              objectFit: "cover", objectPosition: "top center",
-              display: "block", position: "relative", zIndex: 1,
-              filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
-            }} />
+            <img
+              src={`${PUB}/aboutusgirl.png`}
+              alt="Founder"
+              className="founder-img"
+              style={{
+                objectFit: "cover", objectPosition: "top center",
+                display: "block", position: "relative", zIndex: 1,
+                filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
+              }}
+            />
           </div>
 
           {/* Text */}
@@ -291,18 +401,31 @@ function CoFounderSection() {
             ))}
           </div>
 
-          {/* Image */}
-          <div className="cofounder-img-wrap" style={{
-            position: "relative", flexShrink: 0,
-            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
-            transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
-          }}>
+          {/* Image — position:relative so DiamondCircle centres inside it */}
+          <div
+            className="cofounder-img-wrap"
+            style={{
+              position: "relative",
+              flexShrink: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateX(0)" : "translateX(28px)",
+              transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
+            }}
+          >
             <DiamondCircle side="right" />
-            <img src={`${PUB}/campusboy.png`} alt="Co-founder" className="cofounder-img" style={{
-              objectFit: "contain", objectPosition: "bottom center",
-              display: "block", position: "relative", zIndex: 1,
-              filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
-            }} />
+            <img
+              src={`${PUB}/campusboy.png`}
+              alt="Co-founder"
+              className="cofounder-img"
+              style={{
+                objectFit: "contain", objectPosition: "bottom center",
+                display: "block", position: "relative", zIndex: 1,
+                filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
+              }}
+            />
           </div>
         </div>
       </div>
@@ -311,34 +434,110 @@ function CoFounderSection() {
 }
 
 /* ═══════════════════════════════════════════
-   NEWSLETTER SECTION
+   NEWSLETTER — STRICT INPUT VALIDATION
 ═══════════════════════════════════════════ */
+
+/* Disposable / throwaway email domains to reject */
+const BLOCKED_DOMAINS = new Set([
+  "mailinator.com","guerrillamail.com","tempmail.com","throwam.com",
+  "yopmail.com","sharklasers.com","guerrillamailblock.com","grr.la",
+  "guerrillamail.info","spam4.me","trashmail.com","trashmail.me",
+  "fakeinbox.com","maildrop.cc","dispostable.com","mailnull.com",
+  "spamgourmet.com","trashmail.at","discard.email","getnada.com",
+  "tempinbox.com","33mail.com","spamgourmet.net","spamgourmet.org",
+]);
+
+/* Strict RFC-5321-aligned regex — no consecutive dots, no leading/trailing dot in local */
+const EMAIL_REGEX = /^(?![.\-])(?!.*[.\-]{2})[a-zA-Z0-9._%+\-]{1,64}(?<![.\-])@[a-zA-Z0-9\-]{1,63}(?:\.[a-zA-Z0-9\-]{1,63})*\.[a-zA-Z]{2,}$/;
+
+/* Strip any HTML / script injection attempts from the value */
+function sanitise(raw) {
+  return raw
+    .replace(/[<>"'`]/g, "")   // remove tag/attribute chars
+    .replace(/javascript:/gi, "") // kill JS protocol
+    .trim()
+    .slice(0, 254);             // hard cap at RFC max length
+}
+
+function validateEmail(raw) {
+  const val = sanitise(raw);
+  if (!val)                        return "Email address is required.";
+  if (val.length > 254)            return "Email address is too long (max 254 characters).";
+  if (!EMAIL_REGEX.test(val))      return "Please enter a valid email address (e.g. name@example.com).";
+  const domain = val.split("@")[1].toLowerCase();
+  if (BLOCKED_DOMAINS.has(domain)) return "Disposable email addresses are not accepted. Please use a real email.";
+  if (domain.split(".").pop().length < 2) return "Email domain extension is invalid.";
+  return null; // valid
+}
+
+const MAX_ATTEMPTS = 3; // rate-limit: 3 failed attempts → locked for session
+
 function NewsletterSection() {
-  const [ref, inView] = useInView(0.3);
-  const [email, setEmail]           = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  const [ref, inView]           = useInView(0.3);
+  const [email, setEmail]       = useState("");
+  const [error, setError]       = useState("");        // inline validation message
+  const [touched, setTouched]   = useState(false);     // only show error after first blur/submit
+  const [subscribed, setSubscribed]   = useState(false);
   const [subscribing, setSubscribing] = useState(false);
+  const [attempts, setAttempts] = useState(0);         // failed-submit counter
+  const [locked, setLocked]     = useState(false);     // too many bad attempts
+
+  /* Live-validate once the field has been touched */
+  useEffect(() => {
+    if (touched) setError(validateEmail(email) || "");
+  }, [email, touched]);
+
+  const handleChange = (e) => {
+    const clean = sanitise(e.target.value);
+    setEmail(clean);
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+    setError(validateEmail(email) || "");
+  };
 
   const handleSubscribe = () => {
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return;
+    if (locked || subscribing) return;
+    setTouched(true);
+    const err = validateEmail(email);
+    if (err) {
+      setError(err);
+      const next = attempts + 1;
+      setAttempts(next);
+      if (next >= MAX_ATTEMPTS) {
+        setLocked(true);
+        setError("Too many invalid attempts. Please refresh the page to try again.");
+      }
+      return;
+    }
+    setError("");
     setSubscribing(true);
+    /* Replace setTimeout with your real API call here */
     setTimeout(() => { setSubscribing(false); setSubscribed(true); }, 1400);
   };
 
+  const inputBorderColor = !touched
+    ? "rgba(255,255,255,0.7)"
+    : error
+      ? "#f87171"
+      : "#4ade80";
+
   return (
     <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
-      <style>{`
-        @keyframes spinRingAnim { to { transform:rotate(360deg); } }
-      `}</style>
+      <style>{`@keyframes spinRingAnim { to { transform:rotate(360deg); } }`}</style>
+
       <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
       <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
+
       <div style={{
         maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
-        display:"flex", alignItems:"center", justifyContent:"space-between",
+        display:"flex", alignItems:"flex-start", justifyContent:"space-between",
         gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
         opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
       }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"20px" }}>
+        {/* Left — branding */}
+        <div style={{ display:"flex", alignItems:"center", gap:"20px", paddingTop:"6px" }}>
           <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
             <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
               <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
@@ -353,6 +552,8 @@ function NewsletterSection() {
             </p>
           </div>
         </div>
+
+        {/* Right — form / success */}
         {subscribed ? (
           <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
             <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -361,19 +562,109 @@ function NewsletterSection() {
             <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleSubscribe()} placeholder="Enter your email"
-              style={{ height:"48px", width:"clamp(200px,26vw,300px)", padding:"0 16px", fontSize:"14px", fontFamily:"'Outfit',sans-serif", fontWeight:500, color:"#1a0640", background:"rgba(255,255,255,0.96)", border:"2px solid rgba(255,255,255,0.7)", borderRadius:"12px", outline:"none" }}
-              onFocus={e => e.target.style.borderColor="#fff"}
-              onBlur={e => e.target.style.borderColor="rgba(255,255,255,0.7)"} />
-            <button onClick={handleSubscribe} disabled={subscribing}
-              style={{ height:"48px", background:"#111", color:"#fff", border:"none", borderRadius:"12px", padding:"0 24px", fontSize:"14px", fontWeight:700, fontFamily:"'Outfit',sans-serif", cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:"8px", transition:"all 0.22s" }}
-              onMouseEnter={e => { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background="#111"; e.currentTarget.style.transform="translateY(0)"; }}>
-              {subscribing ? "Subscribing…" : "Subscribe Now"}
-              {!subscribing && <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-            </button>
+          <div style={{ display:"flex", flexDirection:"column", gap:"6px", flex:"0 0 auto" }}>
+            <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
+              {/* Email input */}
+              <div style={{ display:"flex", flexDirection:"column", gap:"4px" }}>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  aria-label="Email address"
+                  aria-describedby={error ? "nl-error" : undefined}
+                  aria-invalid={touched && !!error}
+                  value={email}
+                  disabled={locked}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onKeyDown={e => e.key === "Enter" && handleSubscribe()}
+                  placeholder="Enter your email"
+                  maxLength={254}
+                  style={{
+                    height:"48px",
+                    width:"clamp(200px,26vw,300px)",
+                    padding:"0 16px",
+                    fontSize:"14px",
+                    fontFamily:"'Outfit',sans-serif",
+                    fontWeight:500,
+                    color: locked ? "#999" : "#1a0640",
+                    background: locked ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.96)",
+                    border:`2px solid ${inputBorderColor}`,
+                    borderRadius:"12px",
+                    outline:"none",
+                    cursor: locked ? "not-allowed" : "text",
+                    transition:"border-color 0.2s",
+                  }}
+                />
+              </div>
+
+              {/* Submit button */}
+              <button
+                onClick={handleSubscribe}
+                disabled={subscribing || locked}
+                aria-disabled={subscribing || locked}
+                style={{
+                  height:"48px",
+                  background: locked ? "#555" : "#111",
+                  color:"#fff",
+                  border:"none",
+                  borderRadius:"12px",
+                  padding:"0 24px",
+                  fontSize:"14px",
+                  fontWeight:700,
+                  fontFamily:"'Outfit',sans-serif",
+                  cursor: (subscribing || locked) ? "not-allowed" : "pointer",
+                  whiteSpace:"nowrap",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"8px",
+                  transition:"all 0.22s",
+                  opacity: locked ? 0.6 : 1,
+                  alignSelf:"flex-start",
+                }}
+                onMouseEnter={e => { if (!locked && !subscribing) { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; } }}
+                onMouseLeave={e => { e.currentTarget.style.background= locked ? "#555" : "#111"; e.currentTarget.style.transform="translateY(0)"; }}
+              >
+                {subscribing ? "Subscribing…" : "Subscribe Now"}
+                {!subscribing && !locked && (
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* Inline error message */}
+            {touched && error && (
+              <p
+                id="nl-error"
+                role="alert"
+                style={{
+                  margin:0,
+                  fontSize:"12px",
+                  fontWeight:600,
+                  fontFamily:"'Outfit',sans-serif",
+                  color:"#fca5a5",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"5px",
+                  animation:"fadeIn 0.2s ease",
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8"/>
+                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+                {error}
+              </p>
+            )}
+
+            {/* Attempt counter hint */}
+            {touched && error && !locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
+              <p style={{ margin:0, fontSize:"11px", color:"rgba(255,255,255,0.5)", fontFamily:"'Outfit',sans-serif" }}>
+                {MAX_ATTEMPTS - attempts} attempt{MAX_ATTEMPTS - attempts !== 1 ? "s" : ""} remaining.
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -394,6 +685,7 @@ export default function AboutUsPage() {
 
         @keyframes shimmer      { 0%{background-position:-200% center} 100%{background-position:200% center} }
         @keyframes spinRingAnim { to { transform: rotate(360deg); } }
+        @keyframes fadeIn       { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 
         /* ══════════════════════════════════
            FLUID TYPOGRAPHY — all via clamp
@@ -441,9 +733,17 @@ export default function AboutUsPage() {
           display: flex; align-items: center;
           gap: 56px; flex-wrap: nowrap;
         }
-        .founder-img-wrap { width: 300px; }
-        .founder-img      { width: 100%; height: 380px; border-radius: 0; }
-        .founder-text     { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+        /* Give the wrapper a fixed size so the circle knows its bounds */
+        .founder-img-wrap {
+          width: 300px;
+          height: 380px;
+        }
+        .founder-img {
+          width: 100%; height: 100%;
+          object-fit: cover; object-position: top center;
+          border-radius: 0;
+        }
+        .founder-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
 
         /* ══════════════════════════════════
            CO-FOUNDER — desktop: text left, image right
@@ -452,42 +752,26 @@ export default function AboutUsPage() {
           display: flex; align-items: flex-start;
           gap: 56px; flex-wrap: nowrap;
         }
-        .cofounder-img-wrap { width: 300px; }
-        .cofounder-img      { width: 100%; height: 400px; border-radius: 12px; }
-        .cofounder-text     { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+        /* Give the wrapper a fixed size so the circle knows its bounds */
+        .cofounder-img-wrap {
+          width: 300px;
+          height: 400px;
+        }
+        .cofounder-img {
+          width: 100%; height: 100%;
+          object-fit: contain; object-position: bottom center;
+          border-radius: 12px;
+        }
+        .cofounder-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
 
-     
-}
-
-
-        @media (max-width: 700px) {
-  .newsletter-form {
-    display: flex;
-    gap: clamp(10px, 3vw, 20px); /* ✅ now works properly */
-  }
-
-  .newsletter-input {
-    height: 55px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .newsletter-btn {
-    margin-top: 100px;
-    height: 55px;
-    flex-shrink: 0;
-  }
-}
-        
         /* ══════════════════════════════════
            LARGE SCREENS ≥ 1400px
         ══════════════════════════════════ */
         @media (min-width: 1400px) {
           .about-img-col  { flex: 0 0 420px; max-width: 420px; }
           .about-img      { height: 480px !important; }
-          .founder-img-wrap, .cofounder-img-wrap { width: 340px; }
-          .founder-img    { height: 420px !important; }
-          .cofounder-img  { height: 440px !important; }
+          .founder-img-wrap  { width: 340px !important; height: 420px !important; }
+          .cofounder-img-wrap { width: 340px !important; height: 440px !important; }
           .mvv-grid       { gap: 24px; }
         }
 
@@ -497,9 +781,8 @@ export default function AboutUsPage() {
         @media (max-width: 1024px) {
           .about-img-col  { flex: 0 0 300px; max-width: 300px; }
           .about-img      { height: 360px !important; }
-          .founder-img-wrap, .cofounder-img-wrap { width: 250px; }
-          .founder-img    { height: 310px !important; }
-          .cofounder-img  { height: 330px !important; }
+          .founder-img-wrap  { width: 250px !important; height: 310px !important; }
+          .cofounder-img-wrap { width: 250px !important; height: 330px !important; }
           .mvv-grid       { grid-template-columns: 1fr 1fr !important; }
         }
 
@@ -515,16 +798,14 @@ export default function AboutUsPage() {
           /* Mission */
           .mvv-grid       { grid-template-columns: 1fr 1fr !important; gap: 16px !important; }
 
-          /* Founder — image above text */
+          /* Founder — image above text, wrapper goes full-width but keeps aspect ratio */
           .founder-row    { flex-direction: column !important; align-items: center !important; gap: 32px !important; flex-wrap: wrap !important; }
-          .founder-img-wrap { width: 100% !important; max-width: 380px; }
-          .founder-img    { height: 290px !important; }
+          .founder-img-wrap { width: 100% !important; max-width: 380px !important; height: 290px !important; }
           .founder-text   { width: 100%; }
 
-          /* Co-founder — image below text (column-reverse so image ends up below) */
+          /* Co-founder — image below text */
           .cofounder-row  { flex-direction: column !important; align-items: center !important; gap: 32px !important; flex-wrap: wrap !important; }
-          .cofounder-img-wrap { width: 100% !important; max-width: 380px; }
-          .cofounder-img  { height: 290px !important; }
+          .cofounder-img-wrap { width: 100% !important; max-width: 380px !important; height: 290px !important; }
           .cofounder-text { width: 100%; }
 
           /* Newsletter */
@@ -541,8 +822,8 @@ export default function AboutUsPage() {
           .about-section  { padding: 100px 0 56px !important; }
           .about-img      { height: 240px !important; border-radius: 14px !important; }
           .mvv-grid       { grid-template-columns: 1fr !important; gap: 14px !important; }
-          .founder-img    { height: 240px !important; }
-          .cofounder-img  { height: 240px !important; }
+          .founder-img-wrap  { height: 240px !important; }
+          .cofounder-img-wrap { height: 240px !important; }
           .newsletter-form { flex-direction: column; }
           .title-br       { display: none; }
 
@@ -554,9 +835,8 @@ export default function AboutUsPage() {
            SMALL MOBILE ≤ 400px
         ══════════════════════════════════ */
         @media (max-width: 400px) {
-          .about-img      { height: 200px !important; }
-          .founder-img    { height: 200px !important; }
-          .cofounder-img  { height: 200px !important; }
+          .founder-img-wrap  { height: 200px !important; }
+          .cofounder-img-wrap { height: 200px !important; }
 
           /* Hide diamond circles — prevent side overflow on tiny screens */
           .diamond-circle { display: none !important; }
@@ -567,6 +847,7 @@ export default function AboutUsPage() {
         }
       `}</style>
 
+      <PageMeta />
       <AboutSection />
       <MissionSection />
       <FounderSection />
