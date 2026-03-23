@@ -12,7 +12,7 @@ const META = {
   description: "Learn about Skillra, a leading training and upskilling institute in Tamil Nadu offering industry-aligned programs in AI Medical Coding, IT, Finance, and Professional Development. Meet our founder and co-founder.",
   canonical:   "https://www.skillra.com/about",
   ogImage:     `${PUB}/aboutusimg.png`,
-  keywords:    "Skillra, medical coding training, AI medical coding, IT training institute, finance courses, upskilling, Tamil Nadu, career development, professional training",
+  keywords:    "Skillra, medical coding training, AI medical coding, IT training institute, finance courses, career development, professional training",
 };
 
 /** Set or create a <meta> tag by attribute selector */

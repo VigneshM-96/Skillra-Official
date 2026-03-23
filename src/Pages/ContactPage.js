@@ -434,21 +434,22 @@ const ContactSection = () => {
         </div>
 
         {/* Google Map */}
-        <div style={{ display:"flex", justifyContent:"center", marginTop:"52px", padding:"0 8px" }}>
-          <div className={`skl-map-wrap-anim${mapVisible ? " visible" : ""}`} style={{ width:"100%", maxWidth:"900px" }}>
-            <div className="skl-map-wrap">
-              <iframe
-                title="Skillra Office — KK Nagar Chennai"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.2!2d80.2090!3d13.0350!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5260e1b7ef0a3d%3A0x9e0f4b1c2d3e4f5a!2sPV%20Rajamannar%20Salai%2C%20KK%20Nagar%20West%2C%20Chennai%2C%20Tamil%20Nadu%20600078!5e0!3m2!1sen!2sin!4v1710000000001!5m2!1sen!2sin"
-                width="100%"
-                className="skl-map-iframe"
-                style={{ border:0, display:"block" }}
-                allowFullScreen="" loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          </div>
-        </div>
+<div style={{ display:"flex", justifyContent:"center", marginTop:"52px", padding:"0 8px" }}>
+  <div className={`skl-map-wrap-anim${mapVisible ? " visible" : ""}`} style={{ width:"100%", maxWidth:"900px" }}>
+    <div className="skl-map-wrap">
+      <iframe
+        title="Skillra Technologies — Chennai"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.8634002039066!2d80.19374959999999!3d13.0443657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf593a54ba3c9787%3A0xd3f59dcb324aec!2sSkillra%20Technologies!5e0!3m2!1sen!2sin!4v1774248356803!5m2!1sen!2sin"
+        width="100%"
+        className="skl-map-iframe"
+        style={{ border: 0, display: "block" }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
+    </div>
+  </div>
+</div>
 
       </div>
     </section>

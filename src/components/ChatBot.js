@@ -45,7 +45,9 @@ async function fetchBotReply(messages) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+      "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "Skillra Chatbot"
     },
     body: JSON.stringify({
       model: "anthropic/claude-3-haiku",
@@ -59,7 +61,13 @@ async function fetchBotReply(messages) {
       ],
     }),
   });
-  if (!res.ok) throw new Error("API error");
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error(err); // 🔥 VERY IMPORTANT
+    throw new Error("API error");
+  }
+
   const data = await res.json();
   return data.choices[0].message.content;
 }
@@ -373,7 +381,7 @@ export default function ChatBot() {
           <div className="cb-header">
             <img src={process.env.PUBLIC_URL + "/botavatar.png"} alt="Bot" className="cb-avatar" />
             <div className="cb-header-text">
-              <p className="cb-header-name">Skillra AI</p>
+              <p className="cb-header-name">Maadasaami</p>
               <span className="cb-header-status">
                 <span className="cb-status-dot" /> Online
               </span>

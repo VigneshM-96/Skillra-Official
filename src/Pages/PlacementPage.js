@@ -707,10 +707,8 @@ export default function PlacementPage() {
       <AboutHero onCtaClick={handleCtaClick} />
       <WhyTrustSection />
       <HowWeHelpSection />
-      <StudentsPlacedSection />
-      <AboutCampusSection />
-      <OpportunitiesSection />
-      <TestimonialsContactSection />
+      <StudentsPlacedSection /> 
+    
       <Footer />
     </div>
   );

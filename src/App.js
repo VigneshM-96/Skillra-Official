@@ -9,6 +9,7 @@ import CareerPage     from "./Pages/CareerPage";
 import BooksPage     from "./Pages/BooksPage";
 import NavBar from "./Pages/NavBar";
 import ChatBot from "./components/ChatBot";
+import ScrollToTop from "./components/ScrollToTop";
 // Add more page imports here as you build them:
 
 // import ELearningsPage from "./ELearningsPage";
@@ -17,11 +18,13 @@ import ChatBot from "./components/ChatBot";
 export default function App() {
   return (
     <BrowserRouter basename="/Skillra-Official">
+      <ScrollToTop />
        <NavBar />
       <Routes>
         <Route path="/"          element={<HomePage />} />
         <Route path="/about"     element={<AboutUsPage />} />
-        <Route path="/courses"   element={<CoursesPage />} />
+        <Route path="/courses/:courseId" element={<CoursesPage />} />
+        <Route path="/courses"           element={<CoursesPage />} />
         <Route path="/contact"    element={<ContactPage />} />
         <Route path="/campus"     element={<CampusPage />} />
         <Route path="/placement"  element={<PlacementPage />} />
