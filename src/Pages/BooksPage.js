@@ -647,39 +647,45 @@ function NewsletterSection() {
   const [subscribing, setSubscribing] = useState(false);
 
   const handleSubscribe = async () => {
-  const v = email.trim();
+  const v = email.trim().toLowerCase();
+
   if (!v) { setEmailError("Email is required"); return; }
   if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) {
     setEmailError("Enter a valid email address");
     return;
   }
+
+  // ── Duplicate check ──
+  const raw = localStorage.getItem("subscribedEmails");
+  const subscribedEmails = raw ? JSON.parse(raw) : [];
+
+  if (subscribedEmails.includes(v)) {
+    setEmailError("⚠️ This email is already subscribed!");
+    return;   // ← stops here, never hits setSubscribed(true)
+  }
+
   setEmailError("");
   setSubscribing(true);
 
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
+    await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      mode: "no-cors",
       body: JSON.stringify({ type: "subscriber", email: v }),
     });
 
-    const result = await res.json();
-
-    if (result.reason === "duplicate") {
-      setEmailError("This email is already subscribed!");
-      return;
-    }
+    // ── Persist ──
+    subscribedEmails.push(v);
+    localStorage.setItem("subscribedEmails", JSON.stringify(subscribedEmails));
 
     setSubscribed(true);
 
   } catch {
-    // Network issue — fallback
     setEmailError("Something went wrong. Please try again.");
   } finally {
     setSubscribing(false);
   }
 };
-
   return (
     <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)",position:"relative",overflow:"hidden" }}>
       <div style={{ position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)",backgroundSize:"22px 22px",pointerEvents:"none" }}/>
