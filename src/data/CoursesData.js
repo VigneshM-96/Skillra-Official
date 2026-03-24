@@ -41,8 +41,7 @@ export const COURSES = {
               "Module 2: ICD-10-CM Coding — Diagnosis coding conventions, guidelines, and chapter-specific rules.",
               "Module 3: CPT Coding — Procedure coding for E&M services, surgery, radiology, and laboratory.",
               "Module 4: HCPCS Level II Coding — National codes for drugs, supplies, and non-physician services.",
-              "Module 5: AI in Medical Coding — Using AI tools like Optum360, TruCode, and encoder software.",
-              "Module 6: Mock Tests & CPC Exam Prep — Full-length practice tests and exam strategy sessions.",
+              
             ],
           },
         ],
