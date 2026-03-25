@@ -88,6 +88,7 @@ export default function NavBar() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
 
+        
         .skl-nav-link {
           position: relative; cursor: pointer;
           transition: color 0.2s; background: none;

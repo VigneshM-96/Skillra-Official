@@ -613,7 +613,7 @@ export default function PlacementPage() {
           .about-inner {
             flex-direction: column !important;
             align-items: center !important;
-            padding: 100px 20px 32px !important;
+            padding: 10px 20px 32px !important;
             text-align: center !important;
             gap: 20px !important;
           }
