@@ -4,11 +4,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 const NAV_LINKS = [
   { label: "About Us",        path: "/about"     },
   { label: "Course Offered",  path: "/courses",   hasMega: true },
-  { label: "Contact Us",      path: "/contact"   },
   { label: "Career Guidance", path: "/career"    },
   { label: "Placement",       path: "/placement" },
   { label: "Campus",          path: "/campus"    },
   { label: "Books",           path: "/books"     },
+  { label: "Contact Us",      path: "/contact"   },
 ];
 
 const MEGA_MENU = [

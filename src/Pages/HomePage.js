@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import SocialSidebar from "../components/SocialSideBar";
 
 const SHEETS_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
 const GOOGLE_PLACE_ID = "YOUR_GOOGLE_PLACE_ID";
@@ -358,7 +359,7 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
           <div className="card-float glass-card-pos hero-glass-card" style={{ position:"absolute", bottom:"200px", left:"10%", zIndex:30, background:"rgba(255,255,255,0.62)", backdropFilter:"blur(22px) saturate(1.8)", WebkitBackdropFilter:"blur(22px) saturate(1.8)", border:"1.5px solid rgba(255,255,255,0.82)", borderRadius:"20px", padding:"18px 28px", display:"flex", alignItems:"center", gap:"16px", boxShadow:"0 20px 56px rgba(80,20,180,.16)", minWidth:"230px" }}>
             <div style={{ width:"54px", height:"54px", background:"linear-gradient(135deg,rgba(124,58,237,.12),rgba(167,139,250,.22))", borderRadius:"14px", display:"flex", alignItems:"center", justifyContent:"center", border:"1px solid rgba(124,58,237,.2)", flexShrink:0 }}><CalendarIcon/></div>
             <div>
-              <div style={{ fontWeight:900, fontSize:"26px", color:"#1a0640", lineHeight:1, letterSpacing:"-0.5px" }}>100 +</div>
+              <div style={{ fontWeight:900, fontSize:"26px", color:"#1a0640", lineHeight:1, letterSpacing:"-0.5px" }}>250 +</div>
               <div style={{ fontSize:"12px", color:"#6b5a9e", marginTop:"4px", fontWeight:600 }}>Assisted Students</div>
             </div>
           </div>
@@ -392,7 +393,7 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
       </div>
       <div style={{ padding:"48px 0 28px", position:"relative", zIndex:1 }}>
         <div className="partners-title" style={{ textAlign:"center", fontWeight:900, fontSize:"clamp(18px,3vw,26px)", color:"#120630", marginBottom:"24px", letterSpacing:"-0.3px" }}>
-          More than <span style={{ color:"#7c3aed" }}>50 +</span> Hiring Partners
+          More than <span style={{ color:"#7c3aed" }}>25 +</span> Hiring Partners
         </div>
         <div style={{ overflow:"hidden", width:"100%", userSelect:"none" }} ref={scrollRef}>
           <div style={{ display:"flex", width:"max-content" }}>
@@ -446,8 +447,8 @@ function AboutSection() {
           <ImageCard src={`${PUB}/abtimg2.jpg`} alt="Campus" delay={250} style={{ position:"absolute", top:0, right:0, width:"180px", height:"170px" }}/>
           <ImageCard src={`${PUB}/abtimg1.jpg`} alt="Students" delay={400} style={{ position:"absolute", top:"182px", left:0, width:"100%", height:"210px" }}/>
           <div style={{ position:"absolute", left:"50%", top:"178px", transform:"translate(-50%,-50%)", width:"110px", height:"110px", borderRadius:"50%", background:"linear-gradient(135deg,#7c3aed,#4c1d95)", boxShadow:"0 0 0 6px rgba(124,58,237,0.12),0 8px 32px rgba(108,43,217,0.38)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", zIndex:10 }}>
-            <span style={{ fontWeight:900, fontSize:"1.8rem", color:"#fff", lineHeight:1 }}>1+</span>
-            <span style={{ fontWeight:500, fontSize:"0.62rem", color:"rgba(255,255,255,0.88)", marginTop:"4px", textAlign:"center", lineHeight:1.4 }}>Years Of<br/>Experience</span>
+            <span style={{ fontWeight:900, fontSize:"1.8rem", color:"#fff", lineHeight:1 }}>25+</span>
+            <span style={{ fontWeight:500, fontSize:"0.62rem", color:"rgba(255,255,255,0.88)", marginTop:"4px", textAlign:"center", lineHeight:1.4 }}>Hiring<br/>Partners</span>
           </div>
         </div>
         <div style={{ flex:1, minWidth:"260px", opacity:cv?1:0, transform:cv?"translateY(0)":"translateY(24px)", transition:"all 0.9s cubic-bezier(.4,0,.2,1) 0.15s" }}>
@@ -1008,6 +1009,7 @@ export default function HomePage() {
       {showReviews && <ReviewsModal   onClose={()=>setShowReviews(false)}/>}
 
       <HeroSection scrollRef={scrollRef} onCounselorClick={()=>setShowModal(true)} onViewReviews={()=>setShowReviews(true)}/>
+      <SocialSidebar />
       <AboutSection />
       <CoursesSection />
       <ServicesSection />

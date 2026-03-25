@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
+import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -612,8 +613,8 @@ function BundleSection({ onBuyClick }) {
   return (
     <section className="bundle-section" ref={ref} style={{background:"#f3f0ff",padding:"clamp(32px,5vw,80px) 0 clamp(36px,5vw,88px)",position:"relative",overflow:"hidden",fontFamily:"'Outfit',sans-serif"}}>
       <div style={{textAlign:"center",marginBottom:"44px",padding:"0 clamp(16px,4%,40px)",position:"relative",zIndex:1,opacity:inView?1:0,transform:inView?"translateY(0)":"translateY(20px)",transition:"all 0.6s ease"}}>
-        <h2 style={{fontSize:"clamp(1.5rem,3vw,2.6rem)",fontWeight:900,color:"#111827",letterSpacing:"-0.03em",fontFamily:"'Outfit',sans-serif",marginBottom:"14px"}}>Get the Complete CPC Preparation Package</h2>
-        <p style={{fontSize:"clamp(13px,1.3vw,14px)",color:"#6b7280",fontFamily:"'Outfit',sans-serif",maxWidth:"480px",margin:"0 auto",lineHeight:1.7}}>One package. Everything you need. Pass with confidence.</p>
+        <h2 style={{fontSize:"clamp(1.5rem,3vw,2.6rem)",fontWeight:900,color:"#111827",letterSpacing:"-0.03em",fontFamily:"'Outfit',sans-serif",marginBottom:"14px"}}>Try Our Sample Piece Now</h2>
+        <p style={{fontSize:"clamp(13px,1.3vw,14px)",color:"#6b7280",fontFamily:"'Outfit',sans-serif",maxWidth:"480px",margin:"0 auto",lineHeight:1.7}}>One package. Everything you need. Pass with confidence. Take Demo and check.</p>
       </div>
       <div style={{position:"relative",paddingBottom:"clamp(40px,8vw,80px)"}}>
         <img src={`${PUB}/bgbooks.png`} alt="" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",transform:"scale(2.0)",transformOrigin:"center top",top:"-120px",objectPosition:"center top",opacity:0.18,pointerEvents:"none",zIndex:0}}/>
@@ -637,7 +638,7 @@ function BundleSection({ onBuyClick }) {
                 onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 14px 36px rgba(124,58,237,0.50)";}}
                 onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 6px 22px rgba(124,58,237,0.35)";}}
               >
-                Buy Book
+                Download
                 <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </button>
             </div>
@@ -870,6 +871,7 @@ export default function BooksPage() {
       `}</style>
 
       <Navbar/>
+      <SocialSidebar />
       <BooksHero onBuyClick={() => setShowModal(true)}/>
       <ChallengesSection/>
       <PrepSystemSection/>

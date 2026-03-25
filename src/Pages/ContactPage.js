@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import SocialSidebar from "../components/SocialSideBar";
 const PUB = process.env.PUBLIC_URL || "";
 
 /* ═══════════════════════════════════════════════════
@@ -123,61 +124,6 @@ const Field = ({ label, type = "text", value, onChange, textarea, error, touched
   );
 };
 
-/* ═══════════════════════════════════════════════════
-   Social Sidebar — hidden on mobile, fixed on desktop
-═══════════════════════════════════════════════════ */
-const SIDEBAR_SOCIALS = [
-  {
-    label: "Facebook", url: "https://www.facebook.com/skillratechnologies/",
-    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
-  },
-  {
-    label: "LinkedIn", url: "https://www.linkedin.com/company/skillra-technologies/",
-    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>,
-  },
-  {
-    label: "X (Twitter)", url: "https://x.com/skillra_tech",
-    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M4 4l16 16M4 20L20 4"/></svg>,
-  },
-];
-
-function SocialSidebar() {
-  return (
-    <>
-      <style>{`
-        .skl-sidebar {
-          position: fixed; right: 16px; top: 50%;
-          transform: translateY(-50%);
-          display: flex; flex-direction: column; gap: 10px;
-          z-index: 50;
-        }
-        @media(max-width: 768px) { .skl-sidebar { display: none; } .contact-head { text-align: center; }}
-
-        .skl-soc-link {
-          width: 32px; height: 32px;
-          background: white; border-radius: 4px;
-          display: flex; align-items: center; justify-content: center;
-          color: #6C2BD9; cursor: pointer; text-decoration: none;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-          transition: transform .2s, box-shadow .2s, background .2s, color .2s;
-        }
-        .skl-soc-link:hover {
-          transform: scale(1.18);
-          box-shadow: 0 4px 16px rgba(108,43,217,.30);
-          background: #7c3aed; color: #fff;
-        }
-      `}</style>
-      <div className="skl-sidebar">
-        {SIDEBAR_SOCIALS.map((s, i) => (
-          <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
-            aria-label={s.label} className="skl-soc-link" title={s.label}>
-            {s.icon}
-          </a>
-        ))}
-      </div>
-    </>
-  );
-}
 
 /* ═══════════════════════════════════════════════════
    Contact Section
@@ -328,8 +274,6 @@ const ContactSection = () => {
           }} />
         ))}
       </div>
-
-      <SocialSidebar />
 
       <div style={{ maxWidth:"1200px", margin:"0 auto", position:"relative", zIndex:1, padding:"40px 0 0 0" }}>
 
@@ -586,6 +530,7 @@ function NewsletterSection() {
 export default function SkillraContactPage() {
   return (
     <div style={{ fontFamily:"'Poppins', sans-serif" }}>
+      <SocialSidebar />
       <ContactSection />
       <ContactInfoSection />
       <NewsletterSection />

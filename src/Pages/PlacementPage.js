@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
+import SocialSidebar from "../components/SocialSideBar";
+
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -704,6 +706,7 @@ export default function PlacementPage() {
       `}</style>
 
       <Navbar />
+      <SocialSidebar />
       <AboutHero onCtaClick={handleCtaClick} />
       <WhyTrustSection />
       <HowWeHelpSection />

@@ -147,7 +147,7 @@ export default function ChatBot() {
         .cb-fab {
           position: fixed;
           bottom: 24px;
-          right: 24px;
+          right: 500px;
           z-index: 9999;
           width: 52px;
           height: 52px;
@@ -188,10 +188,10 @@ export default function ChatBot() {
         .cb-panel {
           position: fixed;
           bottom: 86px;
-          right: 24px;
+          right: 100px;
           z-index: 9998;
-          width: min(340px, calc(100vw - 48px));
-          height: min(480px, calc(100vh - 110px));
+          width: min(300px, calc(100vw - 48px));
+  height: min(400px, calc(100vh - 110px));
           background: #ffffff;
           border-radius: 20px;
           box-shadow: 0 12px 48px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
@@ -397,61 +397,43 @@ export default function ChatBot() {
           .cb-input { font-size: 12.5px; }
         }
 
-        /* ── Mobile (≤ 480px) – full-screen drawer ── */
-        @media (max-width: 480px) {
-          .cb-fab {
-            width: 46px; height: 46px;
-            bottom: 16px; right: 16px;
-          }
-          .cb-dot {
-            width: 9px; height: 9px;
-            top: 3px; right: 3px;
-          }
+        /* ── Mobile (≤ 480px) – same floating card as desktop ── */
+@media (max-width: 480px) {
+  .cb-fab {
+    width: 44px; height: 44px;
+    bottom: 16px; right: 16px;
+  }
+  .cb-dot { width: 9px; height: 9px; top: 3px; right: 3px; }
 
-          /* Slide up from bottom as a sheet */
-          .cb-panel {
-            width: 100%;
-            /* Leave top safe area + small peek for context */
-            height: calc(100dvh - 64px);
-            max-height: calc(100dvh - 64px);
-            bottom: 0;
-            right: 0;
-            border-radius: 20px 20px 0 0;
-            transform-origin: bottom center;
-          }
-          .cb-panel.hidden {
-            transform: translateY(100%);
-            opacity: 1; /* keep opacity so it just slides */
-          }
-          .cb-panel.visible {
-            transform: translateY(0);
-            opacity: 1;
-          }
+  .cb-panel {
+    width: calc(100vw - 32px);
+    height: 340px;
+    bottom: 70px;
+    right: 16px;
+    border-radius: 16px;
+    transform-origin: bottom right;
+  }
+  .cb-panel.hidden {
+    transform: scale(0.85) translateY(10px);
+    opacity: 0;
+  }
+  .cb-panel.visible {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 
-          /* Move FAB out of the way when panel is open */
-          .cb-fab.open {
-            bottom: calc(100dvh - 64px + 10px);
-            right: 12px;
-            width: 38px; height: 38px;
-            box-shadow: 0 2px 10px rgba(99,102,241,0.4);
-          }
+  .cb-header { padding: 10px 12px; }
+  .cb-avatar, .cb-avatar-fallback { width: 28px; height: 28px; }
+  .cb-header-name { font-size: 12px; }
 
-          .cb-header { padding: 14px 14px 12px; }
-          .cb-avatar, .cb-avatar-fallback { width: 32px; height: 32px; }
-          .cb-header-name { font-size: 13px; }
+  .cb-messages { padding: 8px; gap: 7px; }
+  .cb-bubble { font-size: 12px; max-width: 85%; padding: 7px 10px; }
+  .cb-bubble-icon { width: 20px; height: 20px; font-size: 11px; }
 
-          .cb-messages { padding: 10px 9px; gap: 8px; }
-          .cb-bubble {
-            font-size: 13px;
-            max-width: 85%;
-            padding: 8px 11px;
-          }
-          .cb-bubble-icon { width: 22px; height: 22px; font-size: 11px; }
-
-          .cb-input-area { padding: 8px 9px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
-          .cb-input { font-size: 16px; /* prevent iOS zoom */ }
-          .cb-send { width: 34px; height: 34px; border-radius: 8px; }
-        }
+  .cb-input-area { padding: 7px 8px; padding-bottom: max(7px, env(safe-area-inset-bottom)); }
+  .cb-input { font-size: 16px; padding: 7px 10px; } /* 16px prevents iOS zoom */
+  .cb-send { width: 32px; height: 32px; border-radius: 8px; }
+}
 
         /* ── Very small phones (≤ 360px) ── */
         @media (max-width: 360px) {
@@ -465,10 +447,10 @@ export default function ChatBot() {
         /* ── Large screens / desktop (≥ 1200px) ── */
         @media (min-width: 1200px) {
           .cb-panel {
-            width: 360px;
-            height: min(500px, calc(100vh - 120px));
+            width: 310px;
+    height: min(420px, calc(100vh - 120px));
             bottom: 90px;
-            right: 28px;
+            right: 80px;
           }
           .cb-fab { width: 56px; height: 56px; bottom: 28px; right: 28px; }
           .cb-bubble { font-size: 13.5px; }

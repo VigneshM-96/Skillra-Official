@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import { COURSES, nameToSlug } from "../data/CoursesData";
+import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -593,6 +594,7 @@ export default function CoursesPage() {
       )}
 
       <Footer />
+      <SocialSidebar />
     </div>
   );
 }

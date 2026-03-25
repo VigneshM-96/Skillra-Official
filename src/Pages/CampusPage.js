@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -782,6 +783,7 @@ export default function CampusPage() {
       `}</style>
 
       <CampusHero onJoinClick={handleJoinClick} />
+      <SocialSidebar />
       <AboutCampusSection />
       <OpportunitiesSection />
       <TestimonialsContactSection />

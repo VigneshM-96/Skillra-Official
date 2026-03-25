@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
+import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -337,7 +338,7 @@ function FounderSection() {
             transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
           }}>
             {[
-              "Bhuvaneshwari Sivakumar began her journey with a deep commitment to teaching and student development. What initially started as classroom support soon grew into a purposeful mission: to provide students with clear direction and access to structured career pathways. Observing the widespread lack of awareness about opportunities in Medical Coding, Healthcare Operations, and allied healthcare careers, she dedicated herself to conducting orientation sessions, academic workshops, and career-focused programs across institutions.",
+              "Bhuvaneswari began her journey with a deep commitment to teaching and student development. What initially started as classroom support soon grew into a purposeful mission: to provide students with clear direction and access to structured career pathways. Observing the widespread lack of awareness about opportunities in Medical Coding, Healthcare Operations, and allied healthcare careers, she dedicated herself to conducting orientation sessions, academic workshops, and career-focused programs across institutions.",
               "Over the years, she has delivered career awareness sessions in 20+ reputed colleges, established 3 strategic academic MOUs, and developed a strong network of 25+ hiring partners. She is recognized for her strengths in academic planning, institutional coordination, student counseling, and her ability to build meaningful industry connections that directly benefit learners.",
               "With a strong focus on practical learning, placement readiness, and career clarity, she continues to guide students toward opportunities that offer long-term stability and sustainable growth. Her vision for Skillra is to build it into one of Tamil Nadu's most trusted training institutions and progressively establish its presence across India.",
             ].map((para, i) => (
@@ -846,7 +847,7 @@ export default function AboutUsPage() {
           section > div { padding-left: 16px !important; padding-right: 16px !important; }
         }
       `}</style>
-
+      <SocialSidebar />
       <PageMeta />
       <AboutSection />
       <MissionSection />
