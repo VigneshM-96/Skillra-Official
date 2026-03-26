@@ -11,7 +11,7 @@ export const COURSES = {
     timing: "9:00 AM – 1:00 PM",
     students: "200+",
     duration: "3 Months",
-    color: "#0ea5e9",
+    color: "#7c3aed",
     heroImage: "students.jpg",
     tabs: {
       Overview: {

@@ -134,7 +134,7 @@ export default function Footer() {
         }
 
         /* ── Brand column ── */
-        .ft-brand { flex: 0 0 260px; min-width: 200px; }
+        .ft-brand { flex: 0 0 400px; min-width: 200px; }
 
         /* ── Spacer ── */
         .ft-spacer { flex: 1; min-width: 0; }
@@ -205,10 +205,15 @@ export default function Footer() {
 
           {/* Description */}
           <p style={{
-            fontSize: "13.5px", color: "rgba(255,255,255,0.58)",
-            lineHeight: 1.8, fontWeight: 400, marginBottom: "24px",
-            maxWidth: "240px", fontFamily: "'Outfit', sans-serif",
-          }}>
+  fontSize: "13.5px", 
+  color: "rgba(255,255,255,0.58)",
+  lineHeight: 1.8, 
+  fontWeight: 400, 
+  marginBottom: "24px",
+  width: "100%",
+  maxWidth: "460px",
+  fontFamily: "'Outfit', sans-serif",
+}}>
             Skillra delivers industry-aligned training to help students build strong careers in Medical Coding, IT, and Finance.
           </p>
 

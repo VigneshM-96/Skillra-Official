@@ -248,7 +248,11 @@ function OpportunitiesSection() {
   const [ref, inView] = useInView(0.08);
   return (
     <section ref={ref} style={{ background: "#0e0e0e", position: "relative", overflow: "hidden" }}>
-      <div className="opp-inner" style={{ display: "flex", minHeight: "500px", alignItems: "stretch" }}>
+      <div className="opp-inner" style={{ 
+  display: "flex", 
+  height: "clamp(420px, 65vh, 600px)",   // ✅ controlled height
+  alignItems: "stretch" 
+}}>
         <div className="opp-left" style={{ flex: "0 0 42%", position: "relative", overflow: "hidden", padding: "clamp(40px,6vw,80px) clamp(24px,4%,52px)", display: "flex", flexDirection: "column", justifyContent: "center", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-30px)", transition: "all 0.7s ease 0.1s" }}>
           <div className="opp-bg-design" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "240px", overflow: "hidden" }}>
             <svg viewBox="0 0 520 240" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
@@ -263,16 +267,67 @@ function OpportunitiesSection() {
             Opportunities<br />Through Skillra<br />Campus
           </h2>
         </div>
-        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s" }}>
-          {[
-            { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
-            { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions. This experience helps students develop leadership, communication, and organizational skills that are valuable in professional environments." },
-          ].map((item, i) => (
-            <div key={i}>
-              <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
-              <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
+        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", display: "flex", flexDirection: "column", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s", overflow: "hidden" }}>
+
+          {/* Scrollable inner — snaps page by page */}
+          <div style={{
+            height: "100%",
+overflowY: "auto",              // ✅ smoother
+WebkitOverflowScrolling: "touch", // ✅ mobile smooth
+scrollBehavior: "smooth",
+            scrollSnapType: "y mandatory",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}>
+            <style>{`.opp-scroll::-webkit-scrollbar { display: none; }`}</style>
+
+            {/* Page 1 */}
+            <div style={{ scrollSnapAlign: "start", minHeight: "100%",height: "100%",   padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
+              {[
+                { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
+                { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions. This experience helps students develop leadership, communication, and organizational skills that are valuable in professional environments." },
+              ].map((item, i) => (
+                <div key={i}>
+                  <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
+                  <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
+                </div>
+              ))}
             </div>
-          ))}
+
+            {/* Page 2 */}
+            <div style={{ scrollSnapAlign: "start", minHeight: "100%",height: "100%",   padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
+              {[
+                { title: "Industry Mentorship Access", desc: "Students get direct access to working professionals and industry mentors who guide them through real challenges. These sessions bridge the gap between theoretical knowledge and practical workplace expectations." },
+                { title: "Internship & Project Exposure", desc: "Skillra connects campus students with live internship projects from partner companies. Working on real briefs with deadlines gives students a head start in understanding professional work culture and deliverables." },
+              ].map((item, i) => (
+                <div key={i}>
+                  <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
+                  <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Page 3 */}
+            <div style={{ scrollSnapAlign: "start", minHeight: "100%",height: "100%",   padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
+              {[
+                { title: "Certification & Career Placement", desc: "Upon completing Skillra's campus programs, students receive industry-recognized certifications and gain access to our dedicated placement cell. With 100+ hiring partners, we actively connect graduates to job opportunities that match their newly acquired skills." },
+              ].map((item, i) => (
+                <div key={i}>
+                  <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
+                  <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {/* Scroll indicator dots */}
+          <div style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "7px", zIndex: 10 }}>
+            {[0,1,2].map(i => (
+              <div key={i} style={{ width: "5px", height: "5px", borderRadius: "50%", background: i === 0 ? "#e6b830" : "rgba(255,255,255,0.2)" }}/>
+            ))}
+          </div>
+
         </div>
       </div>
     </section>

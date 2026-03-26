@@ -154,7 +154,7 @@ function CourseHero({ course }) {
             alt={course.title}
             style={{
               maxHeight: "clamp(240px,38vw,420px)",
-              maxWidth: "100%", objectFit: "contain",
+              maxWidth: "100%", objectFit: "contain", marginBottom : "70px",
               objectPosition: "bottom center", display: "block",
               filter: `drop-shadow(0 16px 40px ${accentColor}33)`,
               borderRadius: "20px",
@@ -188,7 +188,7 @@ function CourseHero({ course }) {
                 We're here to help!
               </h3>
               <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit', sans-serif", marginBottom: "22px" }}>
-                Enquire about <strong style={{ color: accentColor }}>{course.title}</strong>
+                Enquire about <strong>Courses & Training</strong>
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
