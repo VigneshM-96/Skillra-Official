@@ -4,6 +4,11 @@ import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
+// ─── Update this with your Google Apps Script URL for newsletter ───────────────
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
+
+
+
 /* ═══════════════════════════════════════════
    PAGE META — SEO, Open Graph, Twitter Card
    Uses plain DOM — no external package needed
@@ -109,9 +114,9 @@ function useInView(threshold = 0.08) {
 ═══════════════════════════════════════════ */
 const ABOUT_PARAGRAPHS = [
   "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
-  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
-  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
-  "Skillra is a leading training and upskilling institute offering advanced programs in AI Medical Coding, IT, Finance, and Professional Development. We are committed to bridging the gap between traditional classroom learning and real-world industry expectations through practical, career-driven, and industry-aligned training.",
+  "Our curriculum is crafted by industry experts and updated with AI-integrated learning modules, ensuring every learner gains job-ready competence from day one. From AI Medical Coding, Full Stack Development, Data Analytics, Tally & GST, and IT Training, our programs are built to prepare students for today’s fast-evolving job market.",
+  "Skillra’s training model blends hands-on practice, live interactive sessions, project-based learning, and guided mentorship, giving students absolute clarity and confidence in their chosen field. Every learner receives strong career support, including internship opportunities, resume crafting, interview preparation, and complete placement assistance.",
+  "To make quality education accessible, we provide No-Cost EMI options, ensuring students can learn without financial barriers. All our programs include tamper-proof digital certificates, offering authenticity and global recognition.",
 ];
 
 function AboutSection() {
@@ -169,9 +174,8 @@ paddingTop: "calc(80px + 70px)", position: "relative", overflow: "hidden",
 /* ═══════════════════════════════════════════
    MISSION CARD
 ═══════════════════════════════════════════ */
-const MVV_TEXT = "Skillra mission is to equip graduates with industry-ready expertise and empower them to pursue high-growth careers in the healthcare sector. We deliver rigorously structured training, real-world learning, and dedicated support, ensuring every student gains the confidence and capability to excel in their chosen field.";
 
-function MissionCard({ label, delay, inView }) {
+function MissionCard({ label, text, delay, inView }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
@@ -203,7 +207,7 @@ function MissionCard({ label, delay, inView }) {
         fontFamily: "'Outfit',sans-serif",
         color: hovered ? "rgba(255,255,255,0.88)" : "#6b5a9e",
         lineHeight: 1.78, margin: 0, transition: "color 0.28s ease",
-      }}>{MVV_TEXT}</p>
+      }}>{text}</p>
     </div>
   );
 }
@@ -236,14 +240,26 @@ function MissionSection() {
         </p>
 
         <div className="mvv-grid">
-          {[
-            { label: "Mission", delay: 0.20 },
-            { label: "Vision",  delay: 0.35 },
-            { label: "Values",  delay: 0.50 },
-          ].map(card => (
-            <MissionCard key={card.label} label={card.label} delay={card.delay} inView={inView} />
-          ))}
-        </div>
+  {[
+    {
+      label: "Mission",
+      delay: 0.20,
+      text: "Skillra's mission is to equip graduates with industry-ready expertise and empower them to pursue high-growth careers in the healthcare sector. We deliver rigorously structured training, real-world learning, and dedicated support, ensuring every student gains the confidence and capability to excel in their chosen field.",
+    },
+    {
+      label: "Vision",
+      delay: 0.35,
+      text: "We strive to become a distinguished leader in healthcare education, recognized for our advance programs, high-caliber faculty, and unwavering commitment to student success. Our vision is to shape a future where every learner gains credible skills, career clarity, and access to meaningful opportunities in the healthcare industry.",
+    },
+    {
+      label: "Values",
+      delay: 0.50,
+      text: "Integrity, Excellence, Inclusivity, and Impact form the foundation of every decision we make. These values drive us to deliver authentic learning, ensure fair and supportive environments, embrace diverse aspirations, and create a lasting positive influence on our students and the healthcare community.",
+    },
+  ].map(card => (
+    <MissionCard key={card.label} label={card.label} text={card.text} delay={card.delay} inView={inView} />
+  ))}
+</div>
       </div>
     </section>
   );
@@ -307,49 +323,92 @@ function FounderSection() {
         <div className="founder-row">
           {/* Image — position:relative so DiamondCircle centres inside it */}
           <div
-            className="founder-img-wrap"
-            style={{
-              position: "relative",
-              flexShrink: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              opacity: inView ? 1 : 0,
-              transform: inView ? "translateX(0)" : "translateX(-28px)",
-              transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
-            }}
-          >
-            <DiamondCircle side="left" />
-            <img
-              src={`${PUB}/aboutusgirl.png`}
-              alt="Founder"
-              className="founder-img"
-              style={{
-                objectFit: "cover", objectPosition: "top center",
-                display: "block", position: "relative", zIndex: 1,
-                filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
-              }}
-            />
-          </div>
+  className="founder-img-wrap"
+  style={{
+    position: "relative",
+    flexShrink: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    opacity: inView ? 1 : 0,
+    transform: inView ? "translateX(0)" : "translateX(-28px)",
+    transition: "opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s",
+  }}
+>
+  <DiamondCircle side="left" />
+  <div style={{
+    width: "clamp(200px, 28vw, 360px)",
+    aspectRatio: "3 / 4",
+    borderRadius: "20px",
+    overflow: "hidden",
+    position: "relative",
+    zIndex: 1,
+    flexShrink: 0,
+  }}>
+    <img
+      src={`${PUB}/bhuvaneshwari.png`}
+      alt="Founder"
+      className="founder-img"
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        objectPosition: "top center",
+        display: "block",
+        filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))",
+      }}
+    />
+  </div>
+</div>
 
           {/* Text */}
-          <div className="founder-text" style={{
-            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
-            transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
-          }}>
-            {[
-              "Bhuvaneswari began her journey with a deep commitment to teaching and student development. What initially started as classroom support soon grew into a purposeful mission: to provide students with clear direction and access to structured career pathways. Observing the widespread lack of awareness about opportunities in Medical Coding, Healthcare Operations, and allied healthcare careers, she dedicated herself to conducting orientation sessions, academic workshops, and career-focused programs across institutions.",
-              "Over the years, she has delivered career awareness sessions in 20+ reputed colleges, established 3 strategic academic MOUs, and developed a strong network of 25+ hiring partners. She is recognized for her strengths in academic planning, institutional coordination, student counseling, and her ability to build meaningful industry connections that directly benefit learners.",
-              "With a strong focus on practical learning, placement readiness, and career clarity, she continues to guide students toward opportunities that offer long-term stability and sustainable growth. Her vision for Skillra is to build it into one of Tamil Nadu's most trusted training institutions and progressively establish its presence across India.",
-            ].map((para, i) => (
-              <p key={i} className="body-text" style={{
-                lineHeight: 1.85, color: "#4b4466",
-                fontFamily: "'Outfit',sans-serif", fontWeight: 400, margin: 0,
-                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
-                transition: `opacity 0.6s ease ${0.3 + i * 0.12}s, transform 0.6s ease ${0.3 + i * 0.12}s`,
-              }}>{para}</p>
-            ))}
-          </div>
+<div className="founder-text" style={{
+  opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
+  transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
+}}>
+  {/* Name & Title */}
+  <div style={{ marginBottom: "20px" }}>
+    <h2 style={{
+      fontFamily: "'Outfit', sans-serif", fontWeight: 800,
+      fontSize: "clamp(22px, 3.5vw, 30px)", color: "#1a0640", margin: "0 0 4px 0",
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: "opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s",
+    }}>
+      Bhuvaneswari
+    </h2>
+    <p style={{
+      fontFamily: "'Outfit', sans-serif", fontWeight: 600,
+      fontSize: "clamp(13px, 1.8vw, 15px)", color: "#7C3AED", margin: "0 0 10px 0",
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: "opacity 0.6s ease 0.22s, transform 0.6s ease 0.22s",
+    }}>
+      Founder, Skillra
+    </p>
+    <p style={{
+      fontFamily: "'Outfit', sans-serif", fontWeight: 500,
+      fontSize: "clamp(13px, 1.6vw, 14.5px)", color: "#9c88c4",
+      fontStyle: "italic", margin: 0,
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: "opacity 0.6s ease 0.24s, transform 0.6s ease 0.24s",
+    }}>
+      "Mentoring students toward the right career path."
+    </p>
+  </div>
+
+  {/* Paragraphs */}
+  {[
+    "Bhuvaneswari began her journey with a deep commitment to teaching and student development. What initially started as classroom support soon grew into a purposeful mission: to provide students with clear direction and access to structured career pathways. Observing the widespread lack of awareness about opportunities in Medical Coding, Healthcare Operations, and allied healthcare careers, she dedicated herself to conducting orientation sessions, academic workshops, and career-focused programs across institutions.",
+    "Over the years, she has delivered career awareness sessions in 20+ reputed colleges, established 3 strategic academic MOUs, and developed a strong network of 25+ hiring partners. She is recognized for her strengths in academic planning, institutional coordination, student counseling, and her ability to build meaningful industry connections that directly benefit learners.",
+    "With a strong focus on practical learning, placement readiness, and career clarity, she continues to guide students toward opportunities that offer long-term stability and sustainable growth. Her vision for Skillra is to build it into one of Tamil Nadu's most trusted training institutions and progressively establish its presence across India — ensuring that every student receives the direction, support, and opportunities needed to build a secure and successful future.",
+  ].map((para, i) => (
+    <p key={i} className="body-text" style={{
+      lineHeight: 1.85, color: "#4b4466",
+      fontFamily: "'Outfit', sans-serif", fontWeight: 400, margin: "0 0 14px 0",
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: `opacity 0.6s ease ${0.3 + i * 0.12}s, transform 0.6s ease ${0.3 + i * 0.12}s`,
+    }}>{para}</p>
+  ))}
+</div>
         </div>
       </div>
     </section>
@@ -366,41 +425,57 @@ function CoFounderSection() {
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "32px 32px" }} />
       <div style={{ maxWidth: "1160px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
 
-        {/* Quote */}
-        <div style={{
-          textAlign: "center", marginBottom: "52px",
-          opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)",
-          transition: "opacity 0.7s ease, transform 0.7s ease",
-        }}>
-          <p className="quote-text" style={{
-            fontFamily: "'Georgia','Times New Roman',serif",
-            fontStyle: "italic", fontWeight: 700,
-            color: "#7c3aed", lineHeight: 1.45,
-            maxWidth: "780px", margin: "0 auto", letterSpacing: "-0.2px",
-          }}>
-            "Leadership is not about authority—it's about creating direction and clarity for those who follow".
-          </p>
-        </div>
+        
 
         <div className="cofounder-row">
           {/* Text */}
-          <div className="cofounder-text" style={{
-            opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
-            transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
-          }}>
-            {[
-              "Prem Chander began his career as a UX Designer, gradually advancing into product strategy, business analysis, and user-centric problem solving. Over the years, he has managed 20+ international client projects, collaborating with global teams and contributing to measurable improvements in user experience, business performance, and digital product growth.",
-              "His professional expertise spans Product Management, UX Design, Process Optimization, Growth Strategy, ROI Evaluation, Case Study Development, and Presentation Design. Through extensive research and project-based insights, he discovered a recurring gap: many students were graduating without clear guidance, industry exposure, or structured career pathways. This realization laid the foundation for Skillra.",
-              "Today, he oversees product development, operational planning, student experience, and institutional strategy, ensuring that Skillra delivers consistent quality and remains aligned with industry expectations.",
-            ].map((para, i) => (
-              <p key={i} className="body-text" style={{
-                lineHeight: 1.85, color: "#4b4466",
-                fontFamily: "'Outfit',sans-serif", fontWeight: 400, margin: 0,
-                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
-                transition: `opacity 0.6s ease ${0.25 + i * 0.12}s, transform 0.6s ease ${0.25 + i * 0.12}s`,
-              }}>{para}</p>
-            ))}
-          </div>
+<div className="cofounder-text" style={{
+  opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
+  transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",
+}}>
+  {/* Name & Title */}
+  <div style={{ marginBottom: "20px" }}>
+    <h2 style={{
+      fontFamily: "'Outfit', sans-serif", fontWeight: 800,
+      fontSize: "clamp(22px, 3.5vw, 30px)", color: "#1a0640", margin: "0 0 4px 0",
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: "opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s",
+    }}>
+      Prem Chander C
+    </h2>
+    <p style={{
+      fontFamily: "'Outfit', sans-serif", fontWeight: 600,
+      fontSize: "clamp(13px, 1.8vw, 15px)", color: "#7C3AED", margin: "0 0 10px 0",
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: "opacity 0.6s ease 0.22s, transform 0.6s ease 0.22s",
+    }}>
+      Co-Founder, Skillra
+    </p>
+    <p style={{
+      fontFamily: "'Outfit', sans-serif", fontWeight: 500,
+      fontSize: "clamp(13px, 1.6vw, 14.5px)", color: "#9c88c4",
+      fontStyle: "italic", margin: 0,
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: "opacity 0.6s ease 0.24s, transform 0.6s ease 0.24s",
+    }}>
+      "From UX Designer to Co-Founder."
+    </p>
+  </div>
+
+  {/* Paragraphs */}
+  {[
+    "Prem Chander began his career as a UX Designer, gradually advancing into product strategy, business analysis, and user-centric problem solving. Over the years, he has managed 20+ international client projects, collaborating with global teams and contributing to measurable improvements in user experience, business performance, and digital product growth.",
+    "His professional expertise spans Product Management, UX Design, Process Optimization, Growth Strategy, ROI Evaluation, Case Study Development, and Presentation Design. Through extensive research and project-based insights, he discovered a recurring gap: many students were graduating without clear guidance, industry exposure, or structured career pathways. This realization laid the foundation for Skillra, envisioned as a platform that equips students with practical skills, organized training, and genuine placement support.",
+    "Today, he oversees product development, operational planning, student experience, and institutional strategy, ensuring that Skillra delivers consistent quality and remains aligned with industry expectations. His commitment is to build a training ecosystem where students gain clarity, confidence, and access to career opportunities.",
+  ].map((para, i) => (
+    <p key={i} className="body-text" style={{
+      lineHeight: 1.85, color: "#4b4466",
+      fontFamily: "'Outfit', sans-serif", fontWeight: 400, margin: "0 0 14px 0",
+      opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)",
+      transition: `opacity 0.6s ease ${0.3 + i * 0.12}s, transform 0.6s ease ${0.3 + i * 0.12}s`,
+    }}>{para}</p>
+  ))}
+</div>
 
           {/* Image — position:relative so DiamondCircle centres inside it */}
           <div
@@ -418,7 +493,7 @@ function CoFounderSection() {
           >
             <DiamondCircle side="right" />
             <img
-              src={`${PUB}/campusboy.png`}
+              src={`${PUB}/premchandar.png`}
               alt="Co-founder"
               className="cofounder-img"
               style={{
@@ -433,6 +508,7 @@ function CoFounderSection() {
     </section>
   );
 }
+
 
 /* ═══════════════════════════════════════════
    NEWSLETTER — STRICT INPUT VALIDATION
@@ -498,25 +574,41 @@ function NewsletterSection() {
     setError(validateEmail(email) || "");
   };
 
-  const handleSubscribe = () => {
-    if (locked || subscribing) return;
-    setTouched(true);
-    const err = validateEmail(email);
-    if (err) {
-      setError(err);
-      const next = attempts + 1;
-      setAttempts(next);
-      if (next >= MAX_ATTEMPTS) {
-        setLocked(true);
-        setError("Too many invalid attempts. Please refresh the page to try again.");
-      }
-      return;
+  const handleSubscribe = async () => {
+  if (locked || subscribing) return;
+  setTouched(true);
+  const err = validateEmail(email);
+  if (err) {
+    setError(err);
+    const next = attempts + 1;
+    setAttempts(next);
+    if (next >= MAX_ATTEMPTS) {
+      setLocked(true);
+      setError("Too many invalid attempts. Please refresh the page to try again.");
     }
-    setError("");
-    setSubscribing(true);
-    /* Replace setTimeout with your real API call here */
-    setTimeout(() => { setSubscribing(false); setSubscribed(true); }, 1400);
-  };
+    return;
+  }
+  setError("");
+  setSubscribing(true);
+
+  try {
+    await fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ type: "subscriber", email: email.trim() }),
+    });
+
+    // ✅ no-cors = can't read response, if no error thrown = success
+    setSubscribed(true);
+
+  } catch (err) {
+    setError("Something went wrong. Please try again.");
+    setTouched(true);
+  } finally {
+    setSubscribing(false);
+  }
+};
 
   const inputBorderColor = !touched
     ? "rgba(255,255,255,0.7)"
@@ -600,6 +692,7 @@ function NewsletterSection() {
               </div>
 
               {/* Submit button */}
+              <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
               <button
                 onClick={handleSubscribe}
                 disabled={subscribing || locked}
@@ -633,6 +726,7 @@ function NewsletterSection() {
                   </svg>
                 )}
               </button>
+              </a>
             </div>
 
             {/* Inline error message */}
@@ -723,7 +817,7 @@ export default function AboutUsPage() {
         ══════════════════════════════════ */
         .mvv-grid {
           display: grid;
-          grid-template-columns: 1.4fr 1fr 1fr;
+          grid-template-columns: repeat(3, 1fr)
           gap: 20px; align-items: stretch;
         }
 

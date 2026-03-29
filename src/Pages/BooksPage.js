@@ -241,6 +241,7 @@ function BuyBookModal({ onClose }) {
                   )}
                 </div>
               ))}
+              
               <button onClick={handleSubmit} disabled={loading} style={{
                 background:loading?"#a78bfa":"#7c3aed",
                 color:"#fff",border:"none",borderRadius:"50px",
@@ -298,18 +299,23 @@ function FloatingBook() {
 ══════════════════════════════════════════════════════ */
 function BooksHero({ onBuyClick }) {
   const [arcReady, setArcReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
   useEffect(() => {
     const t = setTimeout(() => setArcReady(true), 300);
     return () => clearTimeout(t);
   }, []);
 
-  const BULLETS = [
-    "2000+ CPC Practice Questions",
-    "10 Full-Length CPC Mock Tests",
-    "Detailed Answer Keys & Explanations",
-  ];
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const PARA = "Prepare smarter with the Skillra CPC Exam Practice Book, designed to help medical coding students build strong fundamentals, practice extensively, and approach the CPC exam with confidence.";
 
   const BuyBtn = ({ style={} }) => (
+    <a href="/Skillra-Official/books" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
     <button onClick={onBuyClick} className="books-cta-btn" style={{
       background:"#fff",color:"#6d28d9",border:"none",
       borderRadius:"50px",padding:"14px 28px",fontSize:"clamp(13px,1.4vw,14.5px)",
@@ -324,6 +330,7 @@ function BooksHero({ onBuyClick }) {
       Buy Book
       <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="#6d28d9" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
     </button>
+    </a>
   );
 
   return (
@@ -347,33 +354,35 @@ function BooksHero({ onBuyClick }) {
       }}>
         <div className="books-left" style={{flex:"0 0 auto",width:"480px",maxWidth:"100%",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
           <h1 className="bk-v1 books-title" style={{fontSize:"clamp(2rem,4.5vw,3.6rem)",fontWeight:900,lineHeight:1.18,color:"#fff",letterSpacing:"-1.5px",marginBottom:"10px",whiteSpace:"nowrap"}}>
-            Crack the AAPC CPC<br/>Exam with<br/>Confidence
+            Skillra CPC Exam<br/>Preparation<br/>Combo Kit.
           </h1>
           <div className="bk-v2" style={{marginBottom:"30px"}}>
             <svg viewBox="0 0 340 18" style={{width:"min(340px,90vw)",height:"12px",overflow:"visible",display:"block"}} preserveAspectRatio="none">
               <path className={`books-arc${arcReady?" arc-animate":""}`} d="M 4 13 C 70 2, 230 1, 336 11" fill="none" stroke="rgba(255,255,255,0.70)" strokeWidth="4.5" strokeLinecap="round"/>
             </svg>
           </div>
-          <ul className="bk-v3 books-bullets books-bullets-desktop" style={{listStyle:"none",padding:0,margin:"0 0 36px 0",display:"flex",flexDirection:"column",gap:"12px",alignItems:"flex-start"}}>
-            {BULLETS.map((b,i) => (
-              <li key={i} style={{display:"flex",alignItems:"center",gap:"10px",fontSize:"clamp(13px,1.5vw,14.5px)",fontWeight:500,color:"rgba(255,255,255,0.88)"}}>
-                <span style={{width:"7px",height:"7px",borderRadius:"50%",background:"rgba(255,255,255,0.75)",flexShrink:0}}/>{b}
-              </li>
-            ))}
-          </ul>
+
+          {/* Desktop only paragraph */}
+          {!isMobile && (
+            <p className="bk-v3" style={{margin:"0 0 36px 0",fontSize:"clamp(13px,1.5vw,15px)",fontWeight:400,color:"rgba(255,255,255,0.88)",lineHeight:1.7,maxWidth:"420px"}}>
+              {PARA}
+            </p>
+          )}
+
           <div className="bk-v4 books-btn-desktop"><BuyBtn/></div>
         </div>
         <div className="books-right bk-vR" style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",position:"relative",minHeight:"380px",maxHeight:"480px"}}>
           <FloatingBook/>
         </div>
         <div className="books-bottom" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"20px",width:"100%"}}>
-          <ul className="books-bullets" style={{listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:"12px",alignItems:"center"}}>
-            {BULLETS.map((b,i) => (
-              <li key={i} style={{display:"flex",alignItems:"center",gap:"10px",fontSize:"14px",fontWeight:500,color:"rgba(255,255,255,0.88)"}}>
-                <span style={{width:"7px",height:"7px",borderRadius:"50%",background:"rgba(255,255,255,0.75)",flexShrink:0}}/>{b}
-              </li>
-            ))}
-          </ul>
+
+          {/* Mobile only paragraph — shows once, below the book image */}
+          {isMobile && (
+            <p style={{margin:0,fontSize:"14px",fontWeight:400,color:"rgba(255,255,255,0.88)",lineHeight:1.7,textAlign:"center",maxWidth:"480px"}}>
+              {PARA}
+            </p>
+          )}
+
           <BuyBtn/>
         </div>
       </div>
@@ -381,160 +390,577 @@ function BooksHero({ onBuyClick }) {
   );
 }
 
-/* ══════════════════════════════════════════════════════
-   SECTION 2 — CHALLENGES
-══════════════════════════════════════════════════════ */
-const CHALLENGES = [
-  {
-    color:"#7c3aed",sealBg:"rgba(200,180,255,0.38)",sealBorder:"rgba(255,255,255,0.55)",
-    title:"Time Management Issues",
-    desc:"Struggling to complete the exam within the allotted time",
-    decor:"blob",animClass:"icon-pulse",sparkles:true,
-    icon:(<svg width="20" height="20" top="-40px" right="-20px" viewBox="0 0 24 24" fill="none"><path d="M9 21h6M12 3C8.686 3 6 5.686 6 9c0 2.21 1.12 4.15 2.81 5.28.48.33.79.86.79 1.42V17a1 1 0 001 1h4a1 1 0 001-1v-1.3c0-.56.31-1.09.79-1.42C17.88 13.15 19 11.21 19 9c0-3.314-2.686-6-7-6z" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>),
-  },
-  {
-    color:"#f97316",sealBg:"rgba(255,210,180,0.50)",sealBorder:"rgba(255,255,255,0.40)",
-    title:"Lack of Exam-Level Practice",
-    desc:"Not enough realistic questions matching actual exam difficulty",
-    decor:"circles",animClass:"icon-wobble",sparkles:false,
-    icon:(<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2.5" stroke="#1a0a00" strokeWidth="1.8"/><path d="M8 10l2 2 4-4M8 15l4-4 4 4" stroke="#1a0a00" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>),
-  },
-  {
-    color:"#16a34a",sealBg:"rgba(190,225,195,0.48)",sealBorder:"rgba(255,255,255,0.40)",
-    title:"Guideline Confusion",
-    desc:"Difficulty with ICD-10, CPT, and HCPCS coding guidelines",
-    decor:"dots",animClass:"icon-bounce",sparkles:false,
-    icon:(<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#0a1a0f" strokeWidth="1.8"/><circle cx="12" cy="12" r="7.5" stroke="#0a1a0f" strokeWidth="1.6" strokeDasharray="3 2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#0a1a0f" strokeWidth="1.8" strokeLinecap="round"/></svg>),
-  },
-];
 
-function SealBadge({ bg, border, children, animClass, large }) {
-  const size = large ? 72 : 58;
-  return (
-    <div style={{position:"relative",width:size,height:size,flexShrink:0,animation:`${animClass} 2.8s ease-in-out infinite`}}>
-      <svg width={size} height={size} viewBox="0 0 58 58" style={{position:"absolute",inset:0,width:"100%",height:"100%"}}>
-        <path d="M29 3 C31 3 33 6 35 6 C37 6 39 3 41 4 C43 5 43 8 45 9 C47 10 50 9 51 11 C52 13 50 16 51 18 C52 20 55 21 55 23 C55 25 52 27 52 29 C52 31 55 33 55 35 C55 37 52 38 51 40 C50 42 52 45 51 47 C50 49 47 49 45 50 C43 51 43 54 41 55 C39 56 37 53 35 53 C33 53 31 56 29 56 C27 56 25 53 23 53 C21 53 19 56 17 55 C15 54 15 51 13 50 C11 49 8 49 7 47 C6 45 8 42 7 40 C6 38 3 37 3 35 C3 33 6 31 6 29 C6 27 3 25 3 23 C3 21 6 20 7 18 C8 16 6 13 7 11 C8 9 11 10 13 9 C15 8 15 5 17 4 C19 3 21 6 23 6 C25 6 27 3 29 3Z"
-          fill={bg} stroke={border} strokeWidth="1.2"/>
-      </svg>
-      <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-        {children}
-      </div>
-    </div>
-  );
-}
 
 // Each card has its OWN observer with its own delay — this is the stagger fix
-function ChallengeCard({ card, delay }) {
-  const [hovered, setHovered] = useState(false);
-  const [ref, inView] = useInViewDelayed(delay);
-
-  return (
-    <div
-      ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background:card.color,borderRadius:"22px",
-        padding:"clamp(24px,4vw,28px) clamp(20px,4vw,26px) clamp(28px,5vw,36px)",
-        position:"relative",overflow:"hidden",
-        flex:1,minWidth:0,minHeight:"clamp(320px,45vw,380px)",
-        display:"flex",flexDirection:"column",
-        opacity: inView ? 1 : 0,
-        transform: inView
-          ? (hovered ? "translateY(-10px) scale(1.025)" : "translateY(0) scale(1)")
-          : "translateY(50px) scale(0.95)",
-        transition:"opacity 0.55s cubic-bezier(0.34,1.56,0.64,1), transform 0.55s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease",
-        boxShadow:hovered?`0 28px 60px ${card.color}66`:`0 6px 28px ${card.color}44`,
-      }}
-    >
-      {/* ── Blob decor ── */}
-      {card.decor === "blob" && (
-        <>
-          <svg className="decor-blob" width="290" height="220" viewBox="0 0 130 90" style={{
-            position:"absolute",top:"-80px",right:"-100px",zIndex:1,
-            transform:hovered?"scale(1.12) rotate(-4deg)":"scale(1) rotate(0deg)",
-            transition:"transform 0.55s ease",
-          }}>
-            <path d="M20 70 Q10 70 10 58 Q10 50 18 48 Q16 42 22 38 Q28 34 36 38 Q38 28 50 26 Q62 24 66 34 Q74 30 82 36 Q90 42 88 52 Q96 54 96 63 Q96 72 86 72 Q80 76 72 74 Q66 80 56 78 Q46 82 38 76 Q28 78 20 70Z" fill="rgba(180,150,255,0.38)"/>
-          </svg>
-          {card.sparkles && (<>
-            <div className="decor-sparkle1" style={{position:"absolute",top:"22px",left:"72px",zIndex:3,animation:"sparkle1 2.2s ease-in-out infinite"}}>
-              <svg viewBox="0 0 8 8" style={{width:"100%",height:"100%"}}><path d="M4 0L4.8 3.2L8 4L4.8 4.8L4 8L3.2 4.8L0 4L3.2 3.2Z" fill="rgba(255,255,255,0.85)"/></svg>
-            </div>
-            <div className="decor-sparkle2" style={{position:"absolute",top:"38px",left:"80px",zIndex:3,animation:"sparkle2 1.8s ease-in-out 0.4s infinite"}}>
-              <svg viewBox="0 0 8 8" style={{width:"100%",height:"100%"}}><path d="M4 0L4.8 3.2L8 4L4.8 4.8L4 8L3.2 4.8L0 4L3.2 3.2Z" fill="rgba(255,255,255,0.70)"/></svg>
-            </div>
-          </>)}
-        </>
-      )}
-
-      {/* ── Circles decor ── */}
-      {card.decor === "circles" && (
-        <div className="decor-circles" style={{position:"absolute",top:"-10px",right:"-10px",width:"110px",height:"110px",zIndex:1}}>
-          {[100,76,52,28].map((s,i) => (
-            <div key={i} style={{
-              position:"absolute",top:"50%",left:"50%",
-              transform:"translate(-50%,-50%)",width:s,height:s,borderRadius:"50%",
-              border:`2.5px solid rgba(109,40,217,${0.25+i*0.18})`,
-              animation:`ringExpand 2.4s ease-in-out ${i*0.35}s infinite`,
-            }}/>
-          ))}
-        </div>
-      )}
-
-      {/* ── Dots decor ── */}
-      {card.decor === "dots" && (
-        <div className="decor-dots" style={{
-          position:"absolute",top:"14px",right:"14px",
-          width:"82px",height:"82px",zIndex:1,
-          backgroundImage:"radial-gradient(rgba(255,255,255,0.60) 2px,transparent 2px)",
-          backgroundSize:"12px 12px",
-          transform:hovered?"scale(1.1)":"scale(1)",transition:"transform 0.5s ease",
-        }}/>
-      )}
-
-      {/* ── Badge ── */}
-      <div style={{position:"relative",zIndex:4,alignSelf:"flex-start"}} className="card-seal">
-        <SealBadge bg={card.sealBg} border={card.sealBorder} animClass={card.animClass}>
-          {card.icon}
-        </SealBadge>
-      </div>
-
-      <div style={{flex:1,minHeight:"clamp(40px,6vw,60px)"}}/>
-
-      <h3 className="card-title" style={{
-        fontSize:"clamp(18px,2vw,21px)",fontWeight:800,color:"#fff",
-        fontFamily:"'Outfit',sans-serif",lineHeight:1.18,marginBottom:"16px",
-        position:"relative",zIndex:2,letterSpacing:"-0.3px",maxWidth:"200px",
-      }}>{card.title}</h3>
-
-      <p className="card-desc" style={{
-        fontSize:"clamp(13px,1.3vw,13.5px)",color:"rgba(255,255,255,0.85)",
-        fontFamily:"'Outfit',sans-serif",lineHeight:1.8,fontWeight:400,
-        position:"relative",zIndex:2,
-      }}>{card.desc}</p>
-    </div>
-  );
+// Add this to your global CSS or a <style> tag
+/*
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes badgePop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes dotBounce {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.7); }
+}
+*/
 
 function ChallengesSection() {
   const [ref, inView] = useInView(0.1);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
+  const MODULES = [
+    {
+      label: "Module 1",
+      title: "Foundations & compliance",
+      items: [
+        "Medical terminology and anatomy basics",
+        "ICD-10-CM fundamentals and coding structure",
+        "CPT and HCPCS basics",
+        "AAPC compliance rules and ethics",
+      ],
+    },
+    {
+      label: "Module 2",
+      title: "Practice questions & scenarios",
+      items: [
+        "2000+ CPC exam-level practice questions",
+        "Scenario-based coding questions",
+        "ICD-10, CPT, and HCPCS mixed cases",
+        "Focus on accuracy and speed improvement",
+      ],
+    },
+    {
+      label: "Module 3",
+      title: "Full-length mock exams",
+      items: [
+        "10 full-length CPC mock exams",
+        "Timed practice sessions",
+        "Comprehensive answer explanations",
+        "Performance tracking and analysis",
+      ],
+    },
+  ];
+
   return (
-    <section ref={ref} style={{background:"#fff",padding:"88px 0 80px",fontFamily:"'Outfit',sans-serif"}}>
-      <div style={{maxWidth:"1100px",margin:"0 auto",padding:"0 clamp(16px,4%,40px)"}}>
-        <h2 style={{
-          textAlign:"center",fontSize:"clamp(1.5rem,3vw,2.6rem)",fontWeight:900,
-          color:"#111827",letterSpacing:"-0.03em",marginBottom:"52px",
-          fontFamily:"'Outfit',sans-serif",
-          opacity:inView?1:0,transform:inView?"translateY(0)":"translateY(20px)",
-          transition:"all 0.6s ease",
-        }}>
-          Common CPC Exam Challenges
+    <section
+      ref={ref}
+      style={{
+        background: "#fff",
+        padding: "88px 0 80px",
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "860px",
+          margin: "0 auto",
+          padding: "0 clamp(16px,4%,40px)",
+        }}
+      >
+        {/* Heading */}
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(1.5rem,3vw,2.6rem)",
+            fontWeight: 900,
+            color: "#111827",
+            letterSpacing: "-0.03em",
+            marginBottom: "12px",
+            fontFamily: "'Outfit', sans-serif",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.6s ease, transform 0.6s ease",
+          }}
+        >
+          What the CPC Books Contain
         </h2>
-        {/* Pass delay in ms — each card observes itself and fires at different times */}
-        <div className="challenges-grid">
-          {CHALLENGES.map((card,i) => (
-            <ChallengeCard key={i} card={card} delay={i * 180} />
+
+        {/* Intro para */}
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(13px,1.4vw,15px)",
+            color: "#6b7280",
+            maxWidth: "580px",
+            margin: "0 auto 40px",
+            lineHeight: 1.7,
+            fontWeight: 400,
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s",
+          }}
+        >
+          The Skillra CPC book is organized into three powerful modules, each
+          focusing on a key part of CPC preparation.
+        </p>
+
+        {/* Module cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {MODULES.map((mod, i) => {
+            const hovered = hoveredIdx === i;
+            return (
+              <div
+                key={i}
+                onMouseEnter={() => setHoveredIdx(i)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                style={{
+                  background: "#fff",
+                  border: `0.5px solid ${hovered ? "#c4b5fd" : "#e5e7eb"}`,
+                  borderRadius: "16px",
+                  padding: "clamp(20px,4vw,28px) clamp(20px,4vw,32px)",
+                  display: "flex",
+                  gap: "24px",
+                  alignItems: "flex-start",
+                  position: "relative",
+                  overflow: "hidden",
+                  cursor: "default",
+                  opacity: inView ? 1 : 0,
+                  transform: inView
+                    ? hovered
+                      ? "translateY(-4px) scale(1.012)"
+                      : "translateY(0) scale(1)"
+                    : "translateY(32px)",
+                  boxShadow: hovered
+                    ? "0 12px 36px rgba(109,40,217,0.10)"
+                    : "none",
+                  transition: `opacity 0.55s cubic-bezier(0.34,1.3,0.64,1) ${0.15 + i * 0.14}s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s ease, box-shadow 0.25s ease`,
+                }}
+              >
+                {/* Left accent bar */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0, top: 0, bottom: 0,
+                    width: "3px",
+                    background: "#6d28d9",
+                    borderRadius: "3px 0 0 3px",
+                    transform: hovered ? "scaleY(1)" : "scaleY(0)",
+                    transformOrigin: "bottom",
+                    transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+                  }}
+                />
+
+                {/* Number badge */}
+                <div
+                  style={{
+                    flexShrink: 0,
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: hovered ? "#ede9fe" : "#f3f4f6",
+                    border: `1px solid ${hovered ? "#c4b5fd" : "#e5e7eb"}`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    color: "#6d28d9",
+                    fontFamily: "'Outfit', sans-serif",
+                    transform: hovered ? "scale(1.15) rotate(-6deg)" : "scale(1) rotate(0deg)",
+                    transition: "background 0.25s ease, border-color 0.25s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+                  }}
+                >
+                  {i + 1}
+                </div>
+
+                {/* Content */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
+                      color: "#9ca3af",
+                      textTransform: "uppercase",
+                      margin: "0 0 4px",
+                      fontFamily: "'Outfit', sans-serif",
+                    }}
+                  >
+                    {mod.label}
+                  </p>
+
+                  <p
+                    style={{
+                      fontSize: "clamp(15px,1.6vw,17px)",
+                      fontWeight: 800,
+                      color: hovered ? "#6d28d9" : "#111827",
+                      margin: "0 0 6px",
+                      fontFamily: "'Outfit', sans-serif",
+                      transition: "color 0.2s ease",
+                    }}
+                  >
+                    {mod.title}
+                  </p>
+
+                  {/* Animated underline */}
+                  <div
+                    style={{
+                      height: "2px",
+                      background: "#6d28d9",
+                      borderRadius: "2px",
+                      marginBottom: "14px",
+                      transformOrigin: "left",
+                      transform: hovered ? "scaleX(1)" : "scaleX(0)",
+                      transition: "transform 0.35s ease 0.05s",
+                    }}
+                  />
+
+                  <ul
+                    style={{
+                      listStyle: "none",
+                      padding: 0,
+                      margin: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "9px",
+                    }}
+                  >
+                    {mod.items.map((item, j) => (
+                      <li
+                        key={j}
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: "10px",
+                          fontSize: "clamp(13px,1.3vw,14px)",
+                          color: hovered ? "#374151" : "#6b7280",
+                          lineHeight: 1.5,
+                          fontFamily: "'Outfit', sans-serif",
+                          transform: hovered ? "translateX(3px)" : "translateX(0)",
+                          transition: `color 0.2s ease, transform 0.2s ease ${j * 0.04}s`,
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: "5px",
+                            height: "5px",
+                            borderRadius: "50%",
+                            background: hovered ? "#6d28d9" : "#d1d5db",
+                            flexShrink: 0,
+                            marginTop: "6px",
+                            transition: "background 0.2s ease",
+                          }}
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutSection() {
+  const [ref, inView] = useInView(0.15);
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        background: "#faf5ff",
+        padding: "88px 0 80px",
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "860px",
+          margin: "0 auto",
+          padding: "0 clamp(16px,4%,40px)",
+        }}
+      >
+        {/* Label pill */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-block",
+              background: "#ede9fe",
+              color: "#6d28d9",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.09em",
+              textTransform: "uppercase",
+              padding: "6px 16px",
+              borderRadius: "50px",
+              fontFamily: "'Outfit', sans-serif",
+            }}
+          >
+            About the Kit
+          </span>
+        </div>
+
+        {/* Heading */}
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(1.5rem,3vw,2.6rem)",
+            fontWeight: 900,
+            color: "#111827",
+            letterSpacing: "-0.03em",
+            marginBottom: "48px",
+            fontFamily: "'Outfit', sans-serif",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s",
+          }}
+        >
+          About the CPC Combo Kit
+        </h2>
+
+        {/* Card */}
+        <AboutCard inView={inView} />
+      </div>
+    </section>
+  );
+}
+
+function AboutCard({ inView }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: "#fff",
+        border: `0.5px solid ${hovered ? "#c4b5fd" : "#e5e7eb"}`,
+        borderRadius: "20px",
+        padding: "clamp(28px,5vw,48px) clamp(24px,5vw,52px)",
+        position: "relative",
+        overflow: "hidden",
+        opacity: inView ? 1 : 0,
+        transform: inView
+          ? hovered ? "translateY(-4px) scale(1.008)" : "translateY(0) scale(1)"
+          : "translateY(32px)",
+        boxShadow: hovered ? "0 16px 48px rgba(109,40,217,0.10)" : "none",
+        transition:
+          "opacity 0.6s ease 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s ease, box-shadow 0.25s ease",
+      }}
+    >
+      {/* Top accent bar */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0,
+          height: "3px",
+          background: "linear-gradient(90deg, #6d28d9, #a78bfa)",
+          borderRadius: "20px 20px 0 0",
+          transform: hovered ? "scaleX(1)" : "scaleX(0)",
+          transformOrigin: "left",
+          transition: "transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
+        }}
+      />
+
+      {/* Decorative blob */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-60px", right: "-60px",
+          width: "200px", height: "200px",
+          borderRadius: "50%",
+          background: hovered ? "rgba(109,40,217,0.06)" : "rgba(109,40,217,0.03)",
+          transition: "background 0.4s ease, transform 0.4s ease",
+          transform: hovered ? "scale(1.2)" : "scale(1)",
+        }}
+      />
+
+      {/* Intro paragraph */}
+      <p
+        style={{
+          fontSize: "clamp(14px,1.5vw,16px)",
+          fontWeight: 500,
+          color: "#111827",
+          lineHeight: 1.75,
+          margin: "0 0 24px 0",
+          fontFamily: "'Outfit', sans-serif",
+          position: "relative",
+          zIndex: 1,
+          transition: "color 0.2s ease",
+        }}
+      >
+        The Skillra CPC Combo Kit is a comprehensive practice resource designed
+        to support students preparing for the{" "}
+        <span
+          style={{
+            color: "#6d28d9",
+            fontWeight: 700,
+          }}
+        >
+          Certified Professional Coder (CPC) exam.
+        </span>
+      </p>
+
+      {/* Divider */}
+      <div
+        style={{
+          height: "1px",
+          background: hovered
+            ? "linear-gradient(90deg, #6d28d9 0%, #e5e7eb 100%)"
+            : "#f3f4f6",
+          margin: "0 0 24px 0",
+          transition: "background 0.4s ease",
+        }}
+      />
+
+      {/* Body paragraph */}
+      <p
+        style={{
+          fontSize: "clamp(13px,1.4vw,15px)",
+          fontWeight: 400,
+          color: hovered ? "#374151" : "#6b7280",
+          lineHeight: 1.85,
+          margin: 0,
+          fontFamily: "'Outfit', sans-serif",
+          position: "relative",
+          zIndex: 1,
+          transition: "color 0.3s ease",
+        }}
+      >
+        This book is designed as a structured, exam-focused learning system that
+        bridges theory, coding standards, and real-world application, helping
+        learners move confidently from fundamentals to professional readiness.
+        Consistent practice with the modules builds{" "}
+        <span style={{ color: "#6d28d9", fontWeight: 600 }}>
+          accuracy, speed, and industry-level competence
+        </span>{" "}
+        — the exact skills required to succeed in certification exams and
+        workplace environments.
+      </p>
+    </div>
+  );
+}
+
+function ReviewsSection() {
+  const [ref, inView] = useInView(0.1);
+
+  const REVIEWS = [
+    {
+      quote: "The Skillra CPC Question Bank was instrumental in my exam success. The 2000+ practice questions helped me build confidence and speed.",
+      name: "Priya Sharma",
+      role: "CPC Certified",
+      initials: "PS",
+    },
+    {
+      quote: "Excellent resource! The mock tests are very close to the actual exam. Passed on my first attempt thanks to this book.",
+      name: "Rahul Verma",
+      role: "Medical Coding Professional",
+      initials: "RV",
+    },
+    {
+      quote: "The detailed answer explanations are fantastic. I understood the 'why' behind each answer, which made a huge difference.",
+      name: "Anitha Rajan",
+      role: "Healthcare IT Specialist",
+      initials: "AR",
+    },
+  ];
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        background: "#fff",
+        padding: "88px 0 80px",
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "860px",
+          margin: "0 auto",
+          padding: "0 clamp(16px,4%,40px)",
+        }}
+      >
+        {/* Pill label */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "12px",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-block",
+              background: "#ede9fe",
+              color: "#6d28d9",
+              fontSize: "11px",
+              fontWeight: 700,
+              letterSpacing: "0.09em",
+              textTransform: "uppercase",
+              padding: "6px 16px",
+              borderRadius: "50px",
+              fontFamily: "'Outfit', sans-serif",
+            }}
+          >
+            Success Stories
+          </span>
+        </div>
+
+        {/* Heading */}
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(1.5rem,3vw,2.6rem)",
+            fontWeight: 900,
+            color: "#111827",
+            letterSpacing: "-0.03em",
+            marginBottom: "12px",
+            fontFamily: "'Outfit', sans-serif",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s",
+          }}
+        >
+          Success Stories from Certified Professionals
+        </h2>
+
+        {/* Description */}
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(13px,1.4vw,15px)",
+            color: "#6b7280",
+            maxWidth: "560px",
+            margin: "0 auto 48px",
+            lineHeight: 1.7,
+            fontWeight: 400,
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s",
+          }}
+        >
+          Insights from individuals who enhanced their skills, strengthened
+          their knowledge, and achieved certification success through structured
+          practice and guidance.
+        </p>
+
+        {/* Review rows */}
+        <div>
+          {REVIEWS.map((r, i) => (
+            <ReviewRow key={i} review={r} index={i} inView={inView} />
           ))}
         </div>
       </div>
@@ -542,57 +968,135 @@ function ChallengesSection() {
   );
 }
 
-/* ══════════════════════════════════════════════════════
-   SECTION 3 — PREP SYSTEM
-══════════════════════════════════════════════════════ */
-const PREP_CARDS = [
-  {title:"Fundamentals",hoverColor:"#7c3aed",items:["Medical terminology and anatomy basics","ICD-10-CM fundamentals and coding structure","CPT and HCPCS basics","AAPC compliance rules and ethics"]},
-  {title:"Advanced Practice",hoverColor:"#7c3aed",items:["2000+ CPC exam-level practice questions","Scenario-based coding questions","ICD-10, CPT, and HCPCS mixed cases","Focus on accuracy and speed improvement"]},
-  {title:"Mock Tests",hoverColor:"#7c3aed",items:["10 Full-length CPC mock exams","Timed practice sessions","Comprehensive answer explanations","Performance tracking and analysis"]},
-];
-
-function PrepCard({ card, delay }) {
+function ReviewRow({ review, index, inView }) {
   const [hovered, setHovered] = useState(false);
-  const [ref, inView] = useInViewDelayed(delay);
-  return (
-    <div ref={ref} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{
-        flex:1,minWidth:0,
-        background:hovered?card.hoverColor:"#fff",
-        border:`1.5px solid ${hovered?card.hoverColor:"#e5e7eb"}`,
-        borderRadius:"20px",padding:"32px 28px",
-        boxShadow:hovered?`0 20px 48px ${card.hoverColor}44`:"0 2px 12px rgba(0,0,0,0.06)",
-        opacity:inView?1:0,
-        transform:inView?(hovered?"translateY(-10px) scale(1.02)":"translateY(0) scale(1)"):"translateY(40px) scale(0.95)",
-        transition:`opacity 0.55s cubic-bezier(0.34,1.56,0.64,1), transform 0.55s cubic-bezier(0.34,1.56,0.64,1), background 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease`,
-      }}>
-      <h3 style={{fontSize:"clamp(15px,1.6vw,17px)",fontWeight:800,color:hovered?"#fff":"#111827",fontFamily:"'Outfit',sans-serif",marginBottom:"20px",textAlign:"center",transition:"color 0.28s ease"}}>{card.title}</h3>
-      <ul style={{listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:"13px"}}>
-        {card.items.map((item,i) => (
-          <li key={i} style={{display:"flex",alignItems:"flex-start",gap:"10px",fontSize:"clamp(12px,1.2vw,13.5px)",color:hovered?"rgba(255,255,255,0.85)":"#374151",fontFamily:"'Outfit',sans-serif",lineHeight:1.65,transition:"color 0.28s ease"}}>
-            <span style={{width:"6px",height:"6px",borderRadius:"50%",background:hovered?"rgba(255,255,255,0.65)":"#7c3aed",flexShrink:0,marginTop:"7px",transition:"background 0.28s ease"}}/>
-            {item}
-          </li>
-        ))}
-      </ul>
+
+  const StarRow = () => (
+    <div style={{ display: "flex", gap: "3px", marginLeft: "auto", flexShrink: 0 }}>
+      {[...Array(5)].map((_, i) => (
+        <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
     </div>
   );
-}
 
-function PrepSystemSection() {
-  const [ref, inView] = useInView(0.08);
   return (
-    <section ref={ref} style={{background:"#f8f7ff",padding:"80px 0",fontFamily:"'Outfit',sans-serif"}}>
-      <div style={{maxWidth:"1100px",margin:"0 auto",padding:"0 clamp(16px,4%,40px)"}}>
-        <div style={{textAlign:"center",marginBottom:"52px",opacity:inView?1:0,transform:inView?"translateY(0)":"translateY(20px)",transition:"all 0.6s ease"}}>
-          <h2 style={{fontSize:"clamp(1.5rem,3vw,2.6rem)",fontWeight:900,color:"#111827",letterSpacing:"-0.03em",fontFamily:"'Outfit',sans-serif",marginBottom:"14px"}}>Complete 3-Volume CPC Preparation System</h2>
-          <p style={{fontSize:"clamp(13px,1.3vw,14px)",color:"#6b7280",fontFamily:"'Outfit',sans-serif",maxWidth:"520px",margin:"0 auto",lineHeight:1.7}}>Everything you need to pass the CPC exam on your first attempt — practice questions, mock tests, and detailed explanations.</p>
-        </div>
-        <div className="prep-grid">
-          {PREP_CARDS.map((card,i) => <PrepCard key={i} card={card} delay={i*180}/>)}
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        gap: "24px",
+        alignItems: "flex-start",
+        padding: "28px 0",
+        borderBottom: index < 2 ? "0.5px solid #f3f4f6" : "none",
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(28px)",
+        transition: `opacity 0.55s cubic-bezier(0.34,1.2,0.64,1) ${0.2 + index * 0.12}s, transform 0.55s cubic-bezier(0.34,1.2,0.64,1) ${0.2 + index * 0.12}s`,
+        cursor: "default",
+      }}
+    >
+      {/* Large quote mark */}
+      <div
+        style={{
+          fontSize: "56px",
+          lineHeight: 1,
+          color: hovered ? "#c4b5fd" : "#ede9fe",
+          fontFamily: "Georgia, serif",
+          flexShrink: 0,
+          marginTop: "-4px",
+          userSelect: "none",
+          transition: "color 0.3s ease",
+        }}
+      >
+        "
+      </div>
+
+      {/* Left accent bar */}
+      <div
+        style={{
+          width: "3px",
+          flexShrink: 0,
+          borderRadius: "3px",
+          background: hovered ? "#6d28d9" : "#e5e7eb",
+          alignSelf: "stretch",
+          minHeight: "80px",
+          transition: "background 0.3s ease",
+        }}
+      />
+
+      {/* Content */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p
+          style={{
+            fontSize: "clamp(13px,1.5vw,15px)",
+            color: "#111827",
+            lineHeight: 1.8,
+            fontStyle: "italic",
+            margin: "0 0 16px 0",
+            fontFamily: "'Outfit', sans-serif",
+            fontWeight: 400,
+          }}
+        >
+          {review.quote}
+        </p>
+
+        {/* Meta row */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {/* Avatar */}
+          <div
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "50%",
+              background: hovered ? "#6d28d9" : "#ede9fe",
+              border: `1.5px solid ${hovered ? "#6d28d9" : "#c4b5fd"}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "11px",
+              fontWeight: 700,
+              color: hovered ? "#fff" : "#6d28d9",
+              flexShrink: 0,
+              fontFamily: "'Outfit', sans-serif",
+              transform: hovered ? "scale(1.1)" : "scale(1)",
+              transition: "all 0.3s cubic-bezier(0.34,1.56,0.64,1)",
+            }}
+          >
+            {review.initials}
+          </div>
+
+          {/* Name + role */}
+          <div>
+            <p
+              style={{
+                fontSize: "13px",
+                fontWeight: 700,
+                color: "#111827",
+                margin: "0 0 2px",
+                fontFamily: "'Outfit', sans-serif",
+              }}
+            >
+              {review.name}
+            </p>
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#9ca3af",
+                margin: 0,
+                fontFamily: "'Outfit', sans-serif",
+              }}
+            >
+              {review.role}
+            </p>
+          </div>
+
+          {/* Stars */}
+          <StarRow />
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -629,18 +1133,29 @@ function BundleSection({ onBuyClick }) {
               ))}
             </ul>
             <div style={{textAlign:"center"}}>
-              <button onClick={onBuyClick} style={{
-                background:"#7c3aed",color:"#fff",border:"none",borderRadius:"50px",
-                padding:"14px 36px",fontSize:"14.5px",fontWeight:800,cursor:"pointer",
-                fontFamily:"'Outfit',sans-serif",display:"inline-flex",alignItems:"center",
-                gap:"10px",boxShadow:"0 6px 22px rgba(124,58,237,0.35)",transition:"all 0.22s",
-              }}
-                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 14px 36px rgba(124,58,237,0.50)";}}
-                onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 6px 22px rgba(124,58,237,0.35)";}}
-              >
-                Download
-                <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </button>
+              <button
+  onClick={() => {
+    const link = document.createElement('a');
+    link.href = '/books.png';
+    link.download = 'books.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }}
+  style={{
+    background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px",
+    padding: "14px 36px", fontSize: "14.5px", fontWeight: 800, cursor: "pointer",
+    fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center",
+    gap: "10px", boxShadow: "0 6px 22px rgba(124,58,237,0.35)", transition: "all 0.22s",
+  }}
+  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.50)"; }}
+  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 22px rgba(124,58,237,0.35)"; }}
+>
+  Download
+  <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+    <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+</button>
             </div>
           </div>
         </div>
@@ -649,102 +1164,258 @@ function BundleSection({ onBuyClick }) {
   );
 }
 
-/* ══════════════════════════════════════════════════════
-   NEWSLETTER SECTION
-══════════════════════════════════════════════════════ */
-function NewsletterSection() {
-  const [ref, inView]               = useInView(0.3);
-  const [email, setEmail]           = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-  const [subscribing, setSubscribing] = useState(false);
 
-  const handleSubscribe = async () => {
-    const v = email.trim().toLowerCase();
-    if (!v) { setEmailError("Email is required"); return; }
-    if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) {
-      setEmailError("Enter a valid email address"); return;
-    }
-    const raw = localStorage.getItem("subscribedEmails");
-    const subscribedEmails = raw ? JSON.parse(raw) : [];
-    if (subscribedEmails.includes(v)) {
-      setEmailError("⚠️ This email is already subscribed!"); return;
-    }
-    setEmailError("");
-    setSubscribing(true);
-    try {
-      await fetch(APPS_SCRIPT_URL, {
-        method:"POST", mode:"no-cors",
-        body: JSON.stringify({ type:"subscriber", email:v }),
-      });
-      subscribedEmails.push(v);
-      localStorage.setItem("subscribedEmails", JSON.stringify(subscribedEmails));
-      setSubscribed(true);
-    } catch {
-      setEmailError("Something went wrong. Please try again.");
-    } finally {
-      setSubscribing(false);
-    }
+
+/* ═══════════════════════════════════════════
+   NEWSLETTER — STRICT INPUT VALIDATION
+═══════════════════════════════════════════ */
+
+/* Disposable / throwaway email domains to reject */
+const BLOCKED_DOMAINS = new Set([
+  "mailinator.com","guerrillamail.com","tempmail.com","throwam.com",
+  "yopmail.com","sharklasers.com","guerrillamailblock.com","grr.la",
+  "guerrillamail.info","spam4.me","trashmail.com","trashmail.me",
+  "fakeinbox.com","maildrop.cc","dispostable.com","mailnull.com",
+  "spamgourmet.com","trashmail.at","discard.email","getnada.com",
+  "tempinbox.com","33mail.com","spamgourmet.net","spamgourmet.org",
+]);
+
+/* Strict RFC-5321-aligned regex — no consecutive dots, no leading/trailing dot in local */
+const EMAIL_REGEX = /^(?![.\-])(?!.*[.\-]{2})[a-zA-Z0-9._%+\-]{1,64}(?<![.\-])@[a-zA-Z0-9\-]{1,63}(?:\.[a-zA-Z0-9\-]{1,63})*\.[a-zA-Z]{2,}$/;
+
+/* Strip any HTML / script injection attempts from the value */
+function sanitise(raw) {
+  return raw
+    .replace(/[<>"'`]/g, "")   // remove tag/attribute chars
+    .replace(/javascript:/gi, "") // kill JS protocol
+    .trim()
+    .slice(0, 254);             // hard cap at RFC max length
+}
+
+function validateEmail(raw) {
+  const val = sanitise(raw);
+  if (!val)                        return "Email address is required.";
+  if (val.length > 254)            return "Email address is too long (max 254 characters).";
+  if (!EMAIL_REGEX.test(val))      return "Please enter a valid email address (e.g. name@example.com).";
+  const domain = val.split("@")[1].toLowerCase();
+  if (BLOCKED_DOMAINS.has(domain)) return "Disposable email addresses are not accepted. Please use a real email.";
+  if (domain.split(".").pop().length < 2) return "Email domain extension is invalid.";
+  return null; // valid
+}
+
+const MAX_ATTEMPTS = 3; // rate-limit: 3 failed attempts → locked for session
+
+function NewsletterSection() {
+  const [ref, inView]           = useInView(0.3);
+  const [email, setEmail]       = useState("");
+  const [error, setError]       = useState("");        // inline validation message
+  const [touched, setTouched]   = useState(false);     // only show error after first blur/submit
+  const [subscribed, setSubscribed]   = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [attempts, setAttempts] = useState(0);         // failed-submit counter
+  const [locked, setLocked]     = useState(false);     // too many bad attempts
+
+  /* Live-validate once the field has been touched */
+  useEffect(() => {
+    if (touched) setError(validateEmail(email) || "");
+  }, [email, touched]);
+
+  const handleChange = (e) => {
+    const clean = sanitise(e.target.value);
+    setEmail(clean);
   };
 
+  const handleBlur = () => {
+    setTouched(true);
+    setError(validateEmail(email) || "");
+  };
+
+  const handleSubscribe = async () => {
+  if (locked || subscribing) return;
+  setTouched(true);
+  const err = validateEmail(email);
+  if (err) {
+    setError(err);
+    const next = attempts + 1;
+    setAttempts(next);
+    if (next >= MAX_ATTEMPTS) {
+      setLocked(true);
+      setError("Too many invalid attempts. Please refresh the page to try again.");
+    }
+    return;
+  }
+  setError("");
+  setSubscribing(true);
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ type: "subscriber", email: email.trim() }),
+    });
+
+    // ✅ no-cors = can't read response, if no error thrown = success
+    setSubscribed(true);
+
+  } catch (err) {
+    setError("Something went wrong. Please try again.");
+    setTouched(true);
+  } finally {
+    setSubscribing(false);
+  }
+};
+
+  const inputBorderColor = !touched
+    ? "rgba(255,255,255,0.7)"
+    : error
+      ? "#f87171"
+      : "#4ade80";
+
   return (
-    <div ref={ref} style={{background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)",position:"relative",overflow:"hidden"}}>
-      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)",backgroundSize:"22px 22px",pointerEvents:"none"}}/>
-      <div style={{maxWidth:"1200px",margin:"0 auto",padding:"36px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"36px",flexWrap:"wrap",position:"relative",zIndex:1,opacity:inView?1:0,transition:"opacity 0.8s ease"}}>
-        <div style={{display:"flex",alignItems:"center",gap:"20px"}}>
-          <div style={{width:"46px",height:"46px",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",animation:"spinRingAnim 6s linear infinite"}}>
-            <svg width="40" height="40" viewBox="0 0 46 46" fill="none"><path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/></svg>
+    <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
+      <style>{`@keyframes spinRingAnim { to { transform:rotate(360deg); } }`}</style>
+
+      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
+      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
+
+      <div style={{
+        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
+        display:"flex", alignItems:"flex-start", justifyContent:"space-between",
+        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
+        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
+      }}>
+        {/* Left — branding */}
+        <div style={{ display:"flex", alignItems:"center", gap:"20px", paddingTop:"6px" }}>
+          <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
+            <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+            </svg>
           </div>
           <div>
-            <h2 style={{fontSize:"clamp(1.2rem,2.2vw,1.6rem)",fontWeight:900,color:"#fff",lineHeight:1.1,letterSpacing:"-0.02em",marginBottom:"5px",fontFamily:"'Outfit',sans-serif"}}>Join Our Newsletter</h2>
-            <p style={{fontSize:"13px",color:"rgba(255,255,255,0.75)",fontWeight:500,fontFamily:"'Outfit',sans-serif"}}>Subscribe to get our latest updates &amp; news.</p>
+            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
+              Join Our Newsletter
+            </h2>
+            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
+              Subscribe to get our latest updates &amp; news.
+            </p>
           </div>
         </div>
+
+        {/* Right — form / success */}
         {subscribed ? (
-          <div style={{display:"flex",alignItems:"center",gap:"10px",background:"rgba(255,255,255,0.15)",border:"1.5px solid rgba(255,255,255,0.4)",borderRadius:"12px",padding:"12px 20px"}}>
-            <div style={{width:"28px",height:"28px",borderRadius:"50%",background:"#22c55e",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
+            <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
             </div>
-            <span style={{color:"#fff",fontWeight:700,fontSize:"14px",fontFamily:"'Outfit',sans-serif"}}>You're subscribed!</span>
+            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-            <div style={{display:"flex",gap:"10px",flexWrap:"wrap"}}>
-              <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
-                <input type="email" value={email}
-                  onChange={e=>{setEmail(e.target.value);if(emailError)setEmailError("");}}
-                  onKeyDown={e=>e.key==="Enter"&&handleSubscribe()}
+          <div style={{ display:"flex", flexDirection:"column", gap:"6px", flex:"0 0 auto" }}>
+            <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
+              {/* Email input */}
+              <div style={{ display:"flex", flexDirection:"column", gap:"4px" }}>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  aria-label="Email address"
+                  aria-describedby={error ? "nl-error" : undefined}
+                  aria-invalid={touched && !!error}
+                  value={email}
+                  disabled={locked}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onKeyDown={e => e.key === "Enter" && handleSubscribe()}
                   placeholder="Enter your email"
+                  maxLength={254}
                   style={{
-                    height:"48px",width:"clamp(200px,26vw,300px)",padding:"0 16px",fontSize:"14px",
-                    fontFamily:"'Outfit',sans-serif",fontWeight:500,color:"#1a0640",
-                    background:"rgba(255,255,255,0.96)",
-                    border:`2px solid ${emailError?"#f87171":"rgba(255,255,255,0.7)"}`,
-                    borderRadius:"12px",outline:"none",
+                    height:"48px",
+                    width:"clamp(200px,26vw,300px)",
+                    padding:"0 16px",
+                    fontSize:"14px",
+                    fontFamily:"'Outfit',sans-serif",
+                    fontWeight:500,
+                    color: locked ? "#999" : "#1a0640",
+                    background: locked ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.96)",
+                    border:`2px solid ${inputBorderColor}`,
+                    borderRadius:"12px",
+                    outline:"none",
+                    cursor: locked ? "not-allowed" : "text",
+                    transition:"border-color 0.2s",
                   }}
-                  onFocus={e=>e.target.style.borderColor="#fff"}
-                  onBlur={e=>e.target.style.borderColor=emailError?"#f87171":"rgba(255,255,255,0.7)"}
                 />
-                {emailError && (
-                  <p style={{fontSize:"11.5px",color:"#fca5a5",fontFamily:"'Outfit',sans-serif",display:"flex",alignItems:"center",gap:"4px",margin:0}}>
-                    <svg width="11" height="11" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#fca5a5" strokeWidth="1.8"/><path d="M10 6v4M10 14h.01" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/></svg>
-                    {emailError}
-                  </p>
-                )}
               </div>
-              <button onClick={handleSubscribe} disabled={subscribing} style={{
-                height:"48px",background:"#111",color:"#fff",border:"none",borderRadius:"12px",
-                padding:"0 24px",fontSize:"14px",fontWeight:700,fontFamily:"'Outfit',sans-serif",
-                cursor:subscribing?"not-allowed":"pointer",whiteSpace:"nowrap",
-                display:"flex",alignItems:"center",gap:"8px",transition:"all 0.22s",opacity:subscribing?0.7:1,
-              }}
-                onMouseEnter={e=>{if(!subscribing){e.currentTarget.style.background="#2d1b69";e.currentTarget.style.transform="translateY(-2px)";}}}
-                onMouseLeave={e=>{e.currentTarget.style.background="#111";e.currentTarget.style.transform="translateY(0)";}}
+
+              {/* Submit button */}
+              <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+              <button
+                onClick={handleSubscribe}
+                disabled={subscribing || locked}
+                aria-disabled={subscribing || locked}
+                style={{
+                  height:"48px",
+                  background: locked ? "#555" : "#111",
+                  color:"#fff",
+                  border:"none",
+                  borderRadius:"12px",
+                  padding:"0 24px",
+                  fontSize:"14px",
+                  fontWeight:700,
+                  fontFamily:"'Outfit',sans-serif",
+                  cursor: (subscribing || locked) ? "not-allowed" : "pointer",
+                  whiteSpace:"nowrap",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"8px",
+                  transition:"all 0.22s",
+                  opacity: locked ? 0.6 : 1,
+                  alignSelf:"flex-start",
+                }}
+                onMouseEnter={e => { if (!locked && !subscribing) { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; } }}
+                onMouseLeave={e => { e.currentTarget.style.background= locked ? "#555" : "#111"; e.currentTarget.style.transform="translateY(0)"; }}
               >
-                {subscribing?"Subscribing…":"Subscribe Now"}
-                {!subscribing&&<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                {subscribing ? "Subscribing…" : "Subscribe Now"}
+                {!subscribing && !locked && (
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
               </button>
+              </a>
             </div>
+
+            {/* Inline error message */}
+            {touched && error && (
+              <p
+                id="nl-error"
+                role="alert"
+                style={{
+                  margin:0,
+                  fontSize:"12px",
+                  fontWeight:600,
+                  fontFamily:"'Outfit',sans-serif",
+                  color:"#fca5a5",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"5px",
+                  animation:"fadeIn 0.2s ease",
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8"/>
+                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+                {error}
+              </p>
+            )}
+
+            {/* Attempt counter hint */}
+            {touched && error && !locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
+              <p style={{ margin:0, fontSize:"11px", color:"rgba(255,255,255,0.5)", fontFamily:"'Outfit',sans-serif" }}>
+                {MAX_ATTEMPTS - attempts} attempt{MAX_ATTEMPTS - attempts !== 1 ? "s" : ""} remaining.
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -874,7 +1545,8 @@ export default function BooksPage() {
       <SocialSidebar />
       <BooksHero onBuyClick={() => setShowModal(true)}/>
       <ChallengesSection/>
-      <PrepSystemSection/>
+      <AboutSection />
+      <ReviewsSection />
       <BundleSection onBuyClick={() => setShowModal(true)}/>
       <NewsletterSection/>
       <Footer/>

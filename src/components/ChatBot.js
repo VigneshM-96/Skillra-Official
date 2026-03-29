@@ -471,6 +471,7 @@ export default function ChatBot() {
 
       <div className="cb-root">
         {/* ── Floating Button ── */}
+        <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
         <button
           className={`cb-fab ${open ? "open" : ""}`}
           onClick={() => setOpen((v) => !v)}
@@ -488,6 +489,7 @@ export default function ChatBot() {
             </svg>
           )}
         </button>
+        </a>
 
         {/* ── Chat Panel ── */}
         <div
@@ -509,7 +511,7 @@ export default function ChatBot() {
             />
             <span className="cb-avatar-fallback" style={{ display: "none" }}>🤖</span>
             <div className="cb-header-text">
-              <p className="cb-header-name">Maadasaami</p>
+              <p className="cb-header-name">Tyzon v1.1</p>
               <span className="cb-header-status">
                 <span className="cb-status-dot" /> Online
               </span>

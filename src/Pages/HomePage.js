@@ -2,54 +2,159 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+import { BLOG_POSTS } from "./data";
 
 // ─── Update this with your Google Apps Script URL for newsletter ───────────────
-const SHEETS_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
-const COMPANIES = [
-  { name:"Unsplash", icon:"🖼" },{ name:"Notion", icon:"📝" },
-  { name:"INTERCOM", icon:"💬" },{ name:"descript", icon:"🎙" },
-  { name:"grammarly", icon:"✏️" },{ name:"Slack", icon:"💼" },
-  { name:"Figma", icon:"🎨" },{ name:"Linear", icon:"📐" },
-  { name:"Vercel", icon:"▲" },{ name:"Stripe", icon:"💳" },
-];
+
 
 const PUB = process.env.PUBLIC_URL || "";
 
-const SLIDES = [
-  { img:`${PUB}/landingPageFrontImg.png`, bg:"linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)", shadow:"rgba(79,28,200,.55)", ring:"rgba(124,58,237,.30)" },
-  { img:`${PUB}/technology1.png`,         bg:"linear-gradient(145deg,#c2410c,#ea580c,#9a3412)", shadow:"rgba(194,65,12,.55)",  ring:"rgba(234,88,12,.30)"  },
-  { img:`${PUB}/finance1.png`,            bg:"linear-gradient(145deg,#14532d,#15803d,#166534)", shadow:"rgba(20,83,45,.55)",   ring:"rgba(21,128,61,.30)"  },
+const COMPANIES = [
+  { name: "Unsplash",   logo: `${PUB}/CORRO.png`   },
+  { name: "Notion",     logo: `${PUB}/R1.png`     },
+  { name: "Intercom",   logo: `${PUB}/FIRSTSOURCE.png`   },
+  { name: "Descript",   logo: `${PUB}/CLARUS.png`   },
+  { name: "Grammarly",  logo: `${PUB}/SAVISTA.png`  },
+  { name: "Slack",      logo: `${PUB}/S10.png`      },
+  { name: "Figma",      logo: `${PUB}/VEE HEALTHTEK.png`      },
+  { name: "Linear",     logo: `${PUB}/MEDCODE.png`     },
+  { name: "Vercel",     logo: `${PUB}/OPTUM.png`     },
+  { name: "Stripe",     logo: `${PUB}/AANEEL.png`     },
+  { name: "Stripe",     logo: `${PUB}/ACCESSHEALTH.png`},
+  { name: "Stripe",     logo: `${PUB}/REVEELER.png` },
+  { name: "Stripe",     logo: `${PUB}/SUTHERLAND.png` },
+  { name: "Stripe",     logo: `${PUB}/HURON.png` },
+  { name: "Stripe",     logo: `${PUB}/COGNIZANT.png` },
 ];
 
+const SLIDES = [
+  {
+    img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&auto=format&fit=crop&crop=top",
+    // 👩‍⚕️ Female doctor/nurse in medical setting — white coat, slight purple-cool tone
+    bg: "linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)",
+    shadow: "rgba(79,28,200,.55)",
+    ring: "rgba(124,58,237,.30)"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&auto=format&fit=crop&crop=top",
+    // 👨‍💻 Male developer/tech professional with screens/code background — warm orange tone
+    bg: "linear-gradient(145deg,#c2410c,#ea580c,#9a3412)",
+    shadow: "rgba(194,65,12,.55)",
+    ring: "rgba(234,88,12,.30)"
+  },
+  {
+    img: "https://images.unsplash.com/photo-1598550874175-4d0ef436c909?w=800&auto=format&fit=crop&crop=top",
+    // 👩‍💼 Female finance professional with charts/office background — green tone
+    bg: "linear-gradient(145deg,#14532d,#15803d,#166534)",
+    shadow: "rgba(20,83,45,.55)",
+    ring: "rgba(21,128,61,.30)"
+  },
+];
 const COURSES_DATA = {
   healthcare: {
-    label:"Healthcare Courses", activeColor:"#1e3a8a", tagColor:"#1e3a8a", btnColor:"#1e3a8a", badgeBg:"#1e3a8a",
-    cardBg:"linear-gradient(145deg,#eff6ff 0%,#dbeafe 100%)",
-    courses:[
-      { id:"ai-medical-coding",   title:"AI Medical Coding",   description:"Get certified and learn AI-powered coding skills with real case studies.", image:`${PUB}/healthcare1.png` },
-      { id:"ai-medical-billing",  title:"AI Medical Billing",  description:"Become a certified AI Medical Billing professional with job guarantee.",    image:`${PUB}/healthcare1.png` },
-      { id:"ai-medical-scribing", title:"AI Medical Scribing", description:"Learn AI-based medical scribing and clinical documentation.",              image:`${PUB}/healthcare1.png` },
+    label: "Healthcare Courses",
+    activeColor: "#1e3a8a", tagColor: "#1e3a8a", btnColor: "#1e3a8a", badgeBg: "#1e3a8a",
+    cardBg: "linear-gradient(145deg,#eff6ff 0%,#dbeafe 100%)",
+    courses: [
+      {
+        id: "ai-medical-coding",
+        title: "AI Medical Coding",
+        description: "Get certified and learn AI-powered coding skills with real case studies.",
+        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop",
+        // Doctor reviewing digital patient records / medical data on screen
+      },
+      {
+        id: "ai-medical-billing",
+        title: "AI Medical Billing",
+        description: "Become a certified AI Medical Billing professional with job guarantee.",
+        image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format&fit=crop",
+        // Medical billing / finance paperwork and calculator
+      },
+      {
+        id: "ai-medical-scribing",
+        title: "AI Medical Scribing",
+        description: "Learn AI-based medical scribing and clinical documentation.",
+        image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=600&auto=format&fit=crop",
+        // Medical professional writing/documenting clinical notes
+      },
     ],
   },
+
   technology: {
-    label:"Technology Course", activeColor:"#c2410c", tagColor:"#c2410c", btnColor:"#c2410c", badgeBg:"#c2410c",
-    cardBg:"linear-gradient(145deg,#fff7ed 0%,#ffedd5 100%)",
-    courses:[
-      { id:"full-stack",    title:"Full Stack Course", description:"Become a full-stack web developer with our MERN and MEAN Stack Course.", image:`${PUB}/technology1.png` },
-      { id:"data-analytics",title:"Data Analytics",    description:"Join our Data Analytics Course for high-demand data careers.",           image:`${PUB}/technology1.png` },
-      { id:"ui-ux-design",  title:"UI/UX Design",      description:"Join our UI/UX Designing Course to build professional websites.",       image:`${PUB}/technology1.png` },
+    label: "Technology Course",
+    activeColor: "#c2410c", tagColor: "#c2410c", btnColor: "#c2410c", badgeBg: "#c2410c",
+    cardBg: "linear-gradient(145deg,#fff7ed 0%,#ffedd5 100%)",
+    courses: [
+      {
+        id: "full-stack",
+        title: "Full Stack Course",
+        description: "Become a full-stack web developer with our MERN and MEAN Stack Course.",
+        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop",
+        // Developer coding on laptop with multiple screens
+      },
+      {
+  id: "ai-machine-learning",
+  title: "AI & Machine Learning",
+  description: "Master Python, ML algorithms, and deep learning to build intelligent real-world AI applications.",
+  image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&auto=format&fit=crop",
+  // AI neural network / machine learning concept with glowing tech background
+},
+      {
+        id: "data-analytics",
+        title: "Data Analytics",
+        description: "Join our Data Analytics Course for high-demand data careers.",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
+        // Data charts and analytics dashboard
+      },
+      {
+        id: "ui-ux-design",
+        title: "UI/UX Design",
+        description: "Join our UI/UX Designing Course to build professional websites.",
+        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop",
+        // Designer working on UI wireframes / design mockups
+      },
+      
     ],
   },
+
   finance: {
-    label:"Finance Course", activeColor:"#14532d", tagColor:"#14532d", btnColor:"#14532d", badgeBg:"#14532d",
-    cardBg:"linear-gradient(145deg,#f0fdf4 0%,#dcfce7 100%)",
-    courses:[
-      { id:"sap-development",      title:"SAP Development",      description:"Master SAP ABAP and become a certified SAP developer.",     image:`${PUB}/finance1.png` },
-      { id:"tally-gst",            title:"Tally & GST Course",   description:"Learn Tally, GST filing, and financial accounting tools.",  image:`${PUB}/finance1.png` },
-      { id:"financial-accounting", title:"Financial Accounting", description:"Master financial accounting and IFRS reporting standards.", image:`${PUB}/finance1.png` },
+    label: "Finance Course",
+    activeColor: "#14532d", tagColor: "#14532d", btnColor: "#14532d", badgeBg: "#14532d",
+    cardBg: "linear-gradient(145deg,#f0fdf4 0%,#dcfce7 100%)",
+    courses: [
+      {
+        id: "sap-development",
+        title: "SAP Development",
+        description: "Master SAP ABAP and become a certified SAP developer.",
+        image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&auto=format&fit=crop",
+        // ERP / enterprise software dashboard on screen
+      },
+      {
+        id: "tally-gst",
+        title: "Tally & GST Course",
+        description: "Learn Tally with GST accounting and prepare for accounting careers.",
+        image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&auto=format&fit=crop",
+        // Accountant working with financial spreadsheets / calculator
+      },
     ],
   },
+
+  others: {
+  label: "Others",
+  activeColor: "#b45309", tagColor: "#b45309", btnColor: "#b45309", badgeBg: "#b45309",
+  cardBg: "linear-gradient(145deg,#fffbeb 0%,#fef3c7 100%)",
+  courses: [
+    {
+      id: "personality-development",
+      title: "Personality Development",
+      description: "Build confidence, communication skills, and a winning mindset for personal and professional growth.",
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&auto=format&fit=crop",
+      // Group of confident professionals in a training/workshop setting
+    },
+  ],
+},
 };
 
 // ─── REPLACE THESE with your real student reviews ────────────────────────────
@@ -58,85 +163,49 @@ const COURSES_DATA = {
 // or leave the default images as-is.
 const STUDENT_REVIEWS = [
   {
-    name: "Aria Zinanrio",
-    role: "Medical Coder",
+    name: "Swetha K H",
+    role: "Student",
     rating: 5,
-    avatar: `${PUB}/abtimg1.jpg`,
-    text: "Skillra's AI Medical Coding course transformed my career — I landed a job within 3 weeks! Incredibly experienced trainers.",
+    avatar: `${PUB}/userreview1.png`,
+    text: "Best experience we had in SkillRaa Technology, I gained extensive exposure to medical coding across multiple specialties. Staff are very friendly and thank you for Dr Saraswathi mam she is teaching very well and easily understand.. thankyou skillra technology",
     time: "1 month ago",
   },
   {
-    name: "Ravi Kumar",
-    role: "Full Stack Developer",
+    name: "Klara Racheel",
+    role: "Student",
     rating: 5,
-    avatar: `${PUB}/abtimg2.jpg`,
-    text: "World-class Full Stack course. Real projects, great mentorship, 100% placement support. Fresher to employed in 2 months.",
-    time: "2 months ago",
+    avatar: `${PUB}/userreview7.png`,
+    text: "Good coaching with clear explanation and proper guidance.",
+    time: "1 months ago",
   },
+  
   {
-    name: "Priya Nair",
-    role: "Financial Analyst",
+    name: "Jeffrey Sebastian",
+    role: "Student",
     rating: 5,
-    avatar: `${PUB}/abtimg3.jpg`,
-    text: "Finance training structured perfectly for career switchers. Tally & GST module was worth every rupee. Confidence shot up!",
-    time: "3 months ago",
-  },
-  {
-    name: "Mohammed Farhan",
-    role: "Data Analyst",
-    rating: 5,
-    avatar: `${PUB}/abtimg1.jpg`,
-    text: "Exactly what I needed. Practical assignments, weekly mentorship, placement team that genuinely cares — Skillra delivers.",
-    time: "3 months ago",
-  },
-  {
-    name: "Sneha Reddy",
-    role: "Medical Biller",
-    rating: 5,
-    avatar: `${PUB}/abtimg2.jpg`,
-    text: "The AI Medical Billing course is thorough and practical. Got placed in a top hospital within a month of completion.",
+    avatar: `${PUB}/userreview2.png`,
+    text: "I studied SAP ABAB here and got placed as a Senior Consultant. Very thanks to Skillra as the teaching was good and supportive.",
     time: "4 months ago",
   },
   {
-    name: "Arjun Mehta",
-    role: "SAP Consultant",
+    name: "SURIYA 11",
+    role: "Student",
     rating: 5,
-    avatar: `${PUB}/abtimg3.jpg`,
-    text: "SAP Development course covered everything I needed. The trainers have real industry experience and are very approachable.",
-    time: "4 months ago",
+    avatar: `${PUB}/userreview5.png`,
+    text: "Practical classes helped me understand concepts easily.",
+    time: "3 weeks ago",
   },
+
   {
-    name: "Lakshmi Devi",
-    role: "UI/UX Designer",
-    rating: 5,
-    avatar: `${PUB}/abtimg1.jpg`,
-    text: "Skillra's UI/UX course helped me build a stunning portfolio. Got hired at a product company 3 weeks after graduation!",
-    time: "5 months ago",
+    name: "Mohan Raj",
+    role: "Student",
+    rating: 4,
+    avatar: `${PUB}/userreview4.png`,
+    text: "Great place to start a career in medical coding. Teachers are supportive and friendly.",
+    time: "1 months ago",
   },
-  {
-    name: "Karthik V",
-    role: "Medical Scribe",
-    rating: 5,
-    avatar: `${PUB}/abtimg2.jpg`,
-    text: "Best decision ever. Hands-on projects gave me confidence to clear every interview. The community support is amazing.",
-    time: "5 months ago",
-  },
-  {
-    name: "Divya S",
-    role: "Data Scientist",
-    rating: 5,
-    avatar: `${PUB}/abtimg3.jpg`,
-    text: "Data Analytics course with real datasets made all the difference. Well-structured curriculum and supportive mentors.",
-    time: "6 months ago",
-  },
-  {
-    name: "Rahul Sharma",
-    role: "Full Stack Dev",
-    rating: 5,
-    avatar: `${PUB}/abtimg1.jpg`,
-    text: "From zero to full-stack hero in 4 months. Skillra's placement team worked tirelessly to get me into a top startup.",
-    time: "6 months ago",
-  },
+  
+  
 ];
 
 // Average rating computed automatically from the reviews above
@@ -145,8 +214,8 @@ const TOTAL_COUNT = "100+";
 
 const CONTACT_COURSES = [
   "AI Medical Coding","AI Medical Billing","AI Medical Scribing",
-  "Full Stack Development","Data Analytics","UI/UX Design",
-  "SAP Development","Tally & GST","Financial Accounting",
+  "MERN / MEAN Stack","UI/UX Designing","AI & Machine Learning",
+  "SAP ABAP Development","Tally & GST",
 ];
 
 /* ═══════════════ HOOK ═══════════════ */
@@ -359,12 +428,14 @@ function SectionLabel({ text }) {
 
 /* ═══════════════ HERO ═══════════════ */
 const StarRating = ({ rating=4.9, max=5 }) => (
+  <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
   <span style={{ color:"#f5a623", fontSize:"15px", letterSpacing:"2px" }}>
     {Array.from({length:max},(_,i)=>{
       const filled=i+1<=Math.floor(rating), half=!filled&&i<rating;
       return <span key={i} style={{opacity:filled?1:half?0.65:0.25}}>★</span>;
     })}
   </span>
+  </a>
 );
 
 const CalendarIcon = () => (
@@ -394,17 +465,51 @@ function useSlideRotation() {
   return activeIdx;
 }
 
-function ReviewAvatars({ centered=false, onViewAll }) {
+function ReviewAvatars({ centered = false, onViewAll }) {
+  const avatars = [`${PUB}/userreview1.png`, `${PUB}/userreview2.png`, `${PUB}/userreview3.png`];
+
   return (
-    <div style={{ display:"flex", alignItems:"center", gap:"10px", justifyContent:centered?"center":"flex-start" }}>
-      <div style={{ display:"flex" }}>
-        {["#7c3aed","#059669","#2563eb"].map((bg,i) => (
-          <div key={i} style={{ width:"34px", height:"34px", borderRadius:"50%", background:bg, border:"2.5px solid #fff", marginLeft:i===0?"0":"-10px", zIndex:3-i, display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:800, fontSize:"13px" }}>{["A","B","C"][i]}</div>
+    <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: centered ? "center" : "flex-start" }}>
+      <div style={{ display: "flex" }}>
+        {avatars.map((src, i) => (
+          <div
+            key={i}
+            style={{
+              width: "34px",
+              height: "34px",
+              borderRadius: "50%",
+              border: "2.5px solid #fff",
+              marginLeft: i === 0 ? "0" : "-10px",
+              zIndex: 3 - i,
+              overflow: "hidden",
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src={src}
+              alt={`reviewer ${i + 1}`}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              onError={(e) => {
+                // Fallback to colored circle if image fails to load
+                e.target.style.display = "none";
+                e.target.parentNode.style.background = ["#7c3aed", "#059669", "#2563eb"][i];
+                e.target.parentNode.style.display = "flex";
+                e.target.parentNode.style.alignItems = "center";
+                e.target.parentNode.style.justifyContent = "center";
+                e.target.parentNode.innerHTML = `<span style="color:#fff;font-weight:800;font-size:13px">${["A","B","C"][i]}</span>`;
+              }}
+            />
+          </div>
         ))}
       </div>
-      <div onClick={onViewAll} style={{ cursor:"pointer" }}>
-        <StarRating rating={4.9}/>
-        <div style={{ fontSize:"11px", color:"#9270c0", marginTop:"2px" }}>({TOTAL_COUNT} Reviews) <span style={{ color:"#7c3aed", fontWeight:700 }}>View all →</span></div>
+      <div onClick={onViewAll} style={{ cursor: "pointer" }}>
+        <StarRating rating={4.9} />
+        <div style={{ fontSize: "11px", color: "#9270c0", marginTop: "2px" }}>
+          ({TOTAL_COUNT} Reviews){" "}
+          <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+          <span style={{ color: "#7c3aed", fontWeight: 700 }}>View all →</span>
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -439,9 +544,17 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
             ))}
           </div>
           <div className="v4 hero-cta-desktop" style={{ display:"flex", alignItems:"center", gap:"20px", flexWrap:"wrap" }}>
-            <button className="cta-btn" onClick={onCounselorClick} style={{ background:"linear-gradient(135deg,#ff6b35 0%,#f03e00 100%)", color:"#fff", border:"none", borderRadius:"32px", padding:"15px 28px", fontSize:"13px", fontWeight:800, cursor:"pointer", letterSpacing:".5px", boxShadow:"0 6px 22px rgba(255,80,0,.38)", whiteSpace:"nowrap", position:"relative", overflow:"hidden" }}>
-              TALK TO OUR COUNSELLORS
-            </button>
+            <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+  <button
+  className="cta-btn"
+  onClick={() => {
+    document.getElementById("testimonials")?.scrollIntoView({ behavior: "smooth" });
+  }}
+  style={{ background:"linear-gradient(135deg,#ff6b35 0%,#f03e00 100%)", color:"#fff", border:"none", borderRadius:"32px", padding:"15px 28px", fontSize:"13px", fontWeight:800, cursor:"pointer", letterSpacing:".5px", boxShadow:"0 6px 22px rgba(255,80,0,.38)", whiteSpace:"nowrap", position:"relative", overflow:"hidden" }}
+>
+  TALK TO OUR COUNSELLORS
+</button>
+</a>
             <ReviewAvatars onViewAll={onViewReviews}/>
           </div>
         </div>
@@ -488,10 +601,16 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
         <div style={{ overflow:"hidden", width:"100%", userSelect:"none" }} ref={scrollRef}>
           <div style={{ display:"flex", width:"max-content" }}>
             {[...COMPANIES,...COMPANIES,...COMPANIES].map((c,i) => (
-              <div key={i} className="company-item" style={{ display:"flex", alignItems:"center", gap:"8px", padding:"0 clamp(20px,3vw,40px)", color:"#a08cc4", fontSize:"15px", fontWeight:700, whiteSpace:"nowrap" }}>
-                <span style={{ fontSize:"20px", opacity:0.6 }}>{c.icon}</span><span>{c.name}</span>
-              </div>
-            ))}
+  <div key={i} className="company-item" style={{ display:"flex", alignItems:"center", padding:"0 clamp(16px,2.5vw,32px)" }}>
+    <img
+      src={c.logo}
+      alt={c.name}
+      style={{ height:"90px", width:"auto", maxWidth:"120px", objectFit:"contain", opacity:0.65, filter:"grayscale(30%)", transition:"opacity 0.2s, filter 0.2s" }}
+      onMouseEnter={e => { e.currentTarget.style.opacity="1"; e.currentTarget.style.filter="grayscale(0%)"; }}
+      onMouseLeave={e => { e.currentTarget.style.opacity="0.65"; e.currentTarget.style.filter="grayscale(30%)"; }}
+    />
+  </div>
+))}
           </div>
         </div>
       </div>
@@ -546,19 +665,18 @@ function AboutSection() {
           <h2 style={{ fontFamily:"'Outfit',sans-serif", fontWeight:900, fontSize:"clamp(1.8rem,3.5vw,2.6rem)", color:"#1a1035", lineHeight:1.15, marginBottom:"22px", letterSpacing:"-0.02em" }}>
             Your{" "}<span style={{ position:"relative", display:"inline-block", whiteSpace:"nowrap" }}>Skill Partner<AnimatedCircle/></span><br/>For Career Growth
           </h2>
-          <p style={{ fontFamily:"'Outfit',sans-serif", fontSize:"0.97rem", color:"#4b4466", lineHeight:1.78, marginBottom:"24px", maxWidth:"520px" }}>
+          <p style={{ fontFamily:"'Outfit',sans-serif", fontSize:"0.97rem", color:"#4b4466", lineHeight:1.78, marginBottom:"24px", maxWidth:"520px", textAlign: "justify"}}>
             Skillra is a leading training institute specializing in <strong style={{ color:"#1e3a8a" }}>AI Medical Coding</strong> &amp; <strong style={{ color:"#1e3a8a" }}>Medical Billing</strong>, <strong style={{ color:"#c2410c" }}>IT development</strong>, <strong style={{ color:"#14532d" }}>Finance training</strong>, and Career oriented programs.
+             We focus on bridging the gap between academic learning and industry expectations through practical, real-world training. Our expert mentors guide students with hands-on experience, industry projects, and job-ready skill development. With structured learning pathways, live mentor interactions, and outcome-driven practical training, Skillra empowers learners to outperform industry expectations with confidence and credibility. As a trusted upskilling institute, we prepare students for high-growth job roles in top companies. Our commitment is to ensure every learner moves from classroom to career with ease. Skillra, you learn faster, grow smarter, and succeed with industry-recognized skills.
           </p>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"20px", marginBottom:"32px" }}>
-            <p style={{ fontFamily:"'Outfit',sans-serif", fontSize:"0.88rem", color:"#5a5275", lineHeight:1.8 }}>Our expert mentors guide students with hands-on experience, industry projects, and job-ready skill development.</p>
-            <p style={{ fontFamily:"'Outfit',sans-serif", fontSize:"0.88rem", color:"#5a5275", lineHeight:1.8 }}>Skillra empowers learners to outperform industry expectations with confidence and credibility.</p>
-          </div>
+          <a href="/Skillra-Official/about" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
           <button onClick={() => navigate("/about")} style={{ display:"flex", alignItems:"center", gap:"10px", background:"#f05a00", color:"#fff", border:"none", borderRadius:"50px", padding:"13px 30px", fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:"1rem", cursor:"pointer", boxShadow:"0 4px 18px rgba(240,90,0,0.28)", transition:"all 0.25s" }}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(240,90,0,0.38)";}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 18px rgba(240,90,0,0.28)";}}>
             Learn More
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
+          </a>
         </div>
       </div>
     </section>
@@ -615,7 +733,7 @@ function HashtagBubblesDesktop() {
  
       {/* #enjoy — right */}
       <div style={{
-        position: "absolute", top: "58px", right: "-6px",
+        position: "absolute", top: "98px", right: "-6px",
         transform: "rotate(5deg)",
         background: "#fef9c3", border: "1.5px solid #fde047",
         borderRadius: "22px", padding: "5px 13px",
@@ -627,7 +745,7 @@ function HashtagBubblesDesktop() {
  
       {/* #happy — bottom centre */}
       <div style={{
-        position: "absolute", bottom: "4px", left: "50%",
+        position: "absolute", bottom: "40px", left: "-10%",
         transform: "translateX(-50%) rotate(-3deg)",
         background: "#dcfce7", border: "1.5px solid #86efac",
         borderRadius: "22px", padding: "5px 13px",
@@ -640,33 +758,7 @@ function HashtagBubblesDesktop() {
   );
 }
  
-function HashtagBubblesMobile() {
-  return (
-    <div
-      className="hashtag-mobile"
-      style={{
-        flexDirection: "row",
-        gap: "6px",
-        flexWrap: "wrap",
-        marginTop: "8px",
-      }}
-    >
-      {[
-        { text: "#certified", bg: "#ede9fe", border: "#c4b5fd", color: "#6d28d9" },
-        { text: "#enjoy",     bg: "#fef9c3", border: "#fde047", color: "#854d0e" },
-        { text: "#happy",     bg: "#dcfce7", border: "#86efac", color: "#15803d" },
-      ].map((b, i) => (
-        <span key={i} style={{
-          background: b.bg, border: `1.5px solid ${b.border}`,
-          borderRadius: "20px", padding: "3px 10px",
-          fontSize: "11px", fontWeight: 700, color: b.color,
-          fontFamily: "'Outfit',sans-serif", whiteSpace: "nowrap",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
-        }}>{b.text}</span>
-      ))}
-    </div>
-  );
-}
+
  
 function CoursesSection() {
   const [ref, inView] = useInView(0.08);
@@ -686,18 +778,21 @@ function CoursesSection() {
     return () => window.removeEventListener("resize", fn);
   }, []);
 
-  const syncArrows = useCallback(() => {
+  // ── FIXED: simple syncArrows, no useCallback dependency issues ──
+  const syncArrows = () => {
     const el = scrollRef.current;
     if (!el) return;
-    setCanLeft(el.scrollLeft > 4);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  }, []);
+    setCanLeft(el.scrollLeft > 2);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+  };
 
+  // ── FIXED: single clean useEffect for scroll sync ──
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollLeft = 0;
-    const t = setTimeout(syncArrows, 80);
+    // Delay so DOM has painted and scrollWidth is accurate
+    const t = setTimeout(syncArrows, 120);
     el.addEventListener("scroll", syncArrows, { passive: true });
     window.addEventListener("resize", syncArrows);
     return () => {
@@ -705,20 +800,19 @@ function CoursesSection() {
       el.removeEventListener("scroll", syncArrows);
       window.removeEventListener("resize", syncArrows);
     };
-  }, [activeTab, syncArrows]);
+  }, [activeTab, isMobile]);
 
   useEffect(() => {
-    if (inView) setTimeout(syncArrows, 150);
-  }, [inView, syncArrows]);
+    if (inView) setTimeout(syncArrows, 200);
+  }, [inView]);
 
+  // ── FIXED: direct scrollLeft assignment, no scrollBy behavior issues ──
   const doScroll = (dir) => {
     const el = scrollRef.current;
     if (!el) return;
-    const card = el.querySelector(".c-card");
-    el.scrollBy({
-      left: dir * ((card ? card.offsetWidth : 220) + 12),
-      behavior: "smooth"
-    });
+    const STEP = 320;
+    const target = el.scrollLeft + dir * STEP;
+    el.scrollTo({ left: target, behavior: "smooth" });
   };
 
   const cat = COURSES_DATA[activeTab];
@@ -726,6 +820,7 @@ function CoursesSection() {
     healthcare: { active: "#4c1d95", label: "Healthcare Courses" },
     technology: { active: "#c2410c", label: "Technology Course"  },
     finance:    { active: "#14532d", label: "Finance Course"     },
+    others:     { active: "#b45309", label: "Others"             },
   };
 
   return (
@@ -760,6 +855,7 @@ function CoursesSection() {
           transform: inView ? "translateY(0)" : "translateY(22px)",
           transition: "all 0.7s ease",
           paddingRight: isMobile ? "0" : "220px",
+          textAlign: "center",
         }}>
           <SectionLabel text="OUR COURSES" />
           <h2 style={{
@@ -786,13 +882,10 @@ function CoursesSection() {
             fontFamily: "'Outfit',sans-serif",
             maxWidth: "400px",
             lineHeight: 1.7,
-            margin: 0,
+            margin: "0 auto",
           }}>
             Excellent courses, intellectual knowledge and industry-ready content.
           </p>
-
-          {/* Hashtag bubbles — mobile inline, desktop absolute top-right */}
-          <HashtagBubblesMobile />
           {!isMobile && <HashtagBubblesDesktop />}
         </div>
 
@@ -847,78 +940,124 @@ function CoursesSection() {
           </div>
 
           {/* ── CARDS ── */}
-          <div style={{ flex: 1, position: "relative" }}>
+          <div style={{ flex: 1, position: "relative", minWidth: 0 }}>
 
-            {/* ── ARROWS (mobile only) — DO NOT TOUCH LOGIC ── */}
+            {/* ── MOBILE left arrow ── */}
             {isMobile && (
-              <>
-                <button
-                  onClick={() => doScroll(-1)}
-                  style={{
-                    position: "absolute",
-                    left: "4px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    zIndex: 10,
-                    opacity: canLeft ? 1 : 0.3,
-                    pointerEvents: canLeft ? "auto" : "none",
-                    touchAction: "manipulation",
-                    // ── Design only ──
-                    background: "#fff",
-                    border: "1.5px solid #e4d9ff",
-                    borderRadius: "50%",
-                    width: "34px",
-                    height: "34px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
-                    transition: "opacity .2s",
-                  }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                    <path d="M9 2L4 7l5 5" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-
-                <button
-                  onClick={() => doScroll(1)}
-                  style={{
-                    position: "absolute",
-                    right: "4px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    zIndex: 10,
-                    opacity: canRight ? 1 : 0.3,
-                    pointerEvents: canRight ? "auto" : "none",
-                    touchAction: "manipulation",
-                    // ── Design only ──
-                    background: "#fff",
-                    border: "1.5px solid #e4d9ff",
-                    borderRadius: "50%",
-                    width: "34px",
-                    height: "34px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
-                    transition: "opacity .2s",
-                  }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                    <path d="M5 2l5 5-5 5" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </>
+              <button
+                onClick={() => doScroll(-1)}
+                style={{
+                  position: "absolute",
+                  left: "4px", top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  opacity: canLeft ? 1 : 0.3,
+                  pointerEvents: canLeft ? "auto" : "none",
+                  touchAction: "manipulation",
+                  background: "#fff",
+                  border: "1.5px solid #e4d9ff",
+                  borderRadius: "50%",
+                  width: "34px", height: "34px",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer",
+                  boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
+                  transition: "opacity .2s",
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                  <path d="M9 2L4 7l5 5" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             )}
 
-            {/* ── SCROLL TRACK — DO NOT TOUCH ── */}
+            {/* ── MOBILE right arrow ── */}
+            {isMobile && (
+              <button
+                onClick={() => doScroll(1)}
+                style={{
+                  position: "absolute",
+                  right: "4px", top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  opacity: canRight ? 1 : 0.3,
+                  pointerEvents: canRight ? "auto" : "none",
+                  touchAction: "manipulation",
+                  background: "#fff",
+                  border: "1.5px solid #e4d9ff",
+                  borderRadius: "50%",
+                  width: "34px", height: "34px",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer",
+                  boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
+                  transition: "opacity .2s",
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                  <path d="M5 2l5 5-5 5" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            )}
+
+            {/* ── DESKTOP right arrow — outside map, before scroll track ── */}
+            {!isMobile && canRight && (
+              <button
+                onClick={() => doScroll(1)}
+                style={{
+                  position: "absolute",
+                  right: "-22px", top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  background: "#fff",
+                  border: "1.5px solid #e4d9ff",
+                  borderRadius: "50%",
+                  width: "44px", height: "44px",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                  transition: "box-shadow .2s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.3)"}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)"}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M5 2l5 5-5 5" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            )}
+
+            {/* ── DESKTOP left arrow ── */}
+            {!isMobile && canLeft && (
+              <button
+                onClick={() => doScroll(-1)}
+                style={{
+                  position: "absolute",
+                  left: "-22px", top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  background: "#fff",
+                  border: "1.5px solid #e4d9ff",
+                  borderRadius: "50%",
+                  width: "44px", height: "44px",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                  transition: "box-shadow .2s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.3)"}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)"}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M9 2L4 7l5 5" stroke="#7c3aed" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            )}
+
+            {/* ── SCROLL TRACK ── */}
             <div
               ref={scrollRef}
               className="hide-scrollbar"
               style={isMobile ? {
+                // ── MOBILE ──
                 display: "flex",
                 gap: "12px",
                 overflowX: "auto",
@@ -929,9 +1068,16 @@ function CoursesSection() {
                 paddingLeft: "48px",
                 paddingRight: "48px",
               } : {
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                // ── DESKTOP — KEY FIX: flex not grid ──
+                display: "flex",
+                flexWrap: "nowrap",         // never wrap to next row
+                flexDirection: "row",
                 gap: "20px",
+                overflowX: "auto",          // allow horizontal scroll
+                overflowY: "hidden",
+                width: "100%",
+                boxSizing: "border-box",
+                paddingBottom: "8px",
               }}
             >
               {cat.courses.map((course, idx) => (
@@ -950,13 +1096,17 @@ function CoursesSection() {
                     transform: inView ? "translateY(0)" : "translateY(26px)",
                     transition: `opacity 0.5s ease ${0.08 + idx * 0.1}s,
                                  transform 0.5s ease ${0.08 + idx * 0.1}s`,
-                    ...(isMobile && {
-                      flexShrink: 0,
+                    // ── KEY FIX: both mobile and desktop get flexShrink:0 ──
+                    flexShrink: 0,
+                    ...(isMobile ? {
                       width: "70vw",
                       maxWidth: "260px",
                       minWidth: "200px",
                       scrollSnapAlign: "start",
                       scrollSnapStop: "always",
+                    } : {
+                      width: "300px",       // fixed width forces overflow with 4+ cards
+                      scrollSnapAlign: "start",
                     }),
                   }}
                 >
@@ -964,7 +1114,7 @@ function CoursesSection() {
                   {/* Success badge */}
                   <div style={{
                     position: "absolute", top: "9px", right: "9px", zIndex: 10,
-                    background: "linear-gradient(135deg,#ff6b35,#f03e00)",
+                    background: cat.activeColor,
                     color: "#fff",
                     fontSize: isMobile ? "8.5px" : "9.5px",
                     fontWeight: 800,
@@ -1026,7 +1176,6 @@ function CoursesSection() {
                       fontWeight: 900,
                       color: "#120630",
                       fontFamily: "'Outfit',sans-serif",
-                      marginBottom: isMobile ? "3px" : "6px",
                       lineHeight: 1.25,
                       margin: `0 0 ${isMobile ? "3px" : "6px"} 0`,
                     }}>
@@ -1039,7 +1188,6 @@ function CoursesSection() {
                       color: "#6b5a9e",
                       fontFamily: "'Outfit',sans-serif",
                       lineHeight: 1.55,
-                      marginBottom: isMobile ? "8px" : "clamp(10px,1.3vw,15px)",
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
@@ -1049,33 +1197,34 @@ function CoursesSection() {
                       {course.description}
                     </p>
 
-                    {/* Know More button */}
-                    <button
-                      className="know-more-btn"
-                      style={{
-                        width: "100%",
-                        background: "linear-gradient(135deg,#ff6b35,#f03e00)",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "50px",
-                        padding: isMobile ? "7px 10px" : "clamp(8px,1vw,10px) 16px",
-                        fontSize: isMobile ? "9.5px" : "clamp(10.5px,1vw,12px)",
-                        fontWeight: 800,
-                        fontFamily: "'Outfit',sans-serif",
-                        cursor: "pointer",
-                        letterSpacing: "0.07em",
-                        boxShadow: "0 3px 12px rgba(255,80,0,0.26)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      KNOW MORE
-                      <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
-                        <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
+                    <a href={`/Skillra-Official/courses/${course.id}`} style={{ textDecoration: "none" }}>
+                      <button
+                        className="know-more-btn"
+                        style={{
+                          width: "100%",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "50px",
+                          padding: isMobile ? "7px 10px" : "clamp(8px,1vw,10px) 16px",
+                          fontSize: isMobile ? "9.5px" : "clamp(10.5px,1vw,12px)",
+                          fontWeight: 800,
+                          fontFamily: "'Outfit',sans-serif",
+                          cursor: "pointer",
+                          letterSpacing: "0.07em",
+                          background: cat.activeColor,
+                          boxShadow: `0 3px 12px ${cat.activeColor}44`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "5px",
+                        }}
+                      >
+                        KNOW MORE
+                        <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                          <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </a>
 
                   </div>
                 </div>
@@ -1094,16 +1243,14 @@ function CoursesSection() {
   );
 }
 const COLLEGES = [
-  { name:"College 1",  logo:`${PUB}/college1.png`  },
-  { name:"College 2",  logo:`${PUB}/college2.png`  },
-  { name:"College 3",  logo:`${PUB}/college3.png`  },
-  { name:"College 4",  logo:`${PUB}/college4.png`  },
-  { name:"College 5",  logo:`${PUB}/college5.png`  },
-  { name:"College 6",  logo:`${PUB}/college6.png`  },
-  { name:"College 7",  logo:`${PUB}/college7.png`  },
-  { name:"College 8",  logo:`${PUB}/college8.png`  },
-  { name:"College 9",  logo:`${PUB}/college9.png`  },
-  { name:"College 10", logo:`${PUB}/college10.png` },
+  { name: "IIT Madras",                          logo: `${PUB}/college1.png` },
+  { name: "Anna University",                     logo: `${PUB}/college2.png` },
+  { name: "Loyola College",                      logo: `${PUB}/college3.png` },
+  { name: "Madras Medical College",              logo: `${PUB}/college4.png` },
+  { name: "SRM Institute of Science & Technology", logo: `${PUB}/college5.png` },
+  { name: "Vellore Institute of Technology",     logo: `${PUB}/college6.png` },
+  { name: "Madras Christian College",            logo: `${PUB}/college7.png` },
+  { name: "PSG College of Technology",           logo: `${PUB}/college8.png` },
 ];
 
 function CollegesSection() {
@@ -1329,171 +1476,300 @@ function CollegesSection() {
 // 3. BLOGS SECTION  (NEW — place just before NewsletterSection)
 // ═══════════════════════════════════════════════════════════════════
  
-const BLOG_POSTS = [
-  {
-    id:1,
-    tag:"Healthcare",
-    tagColor:"#1e3a8a",
-    tagBg:"#eff6ff",
-    date:"March 15, 2026",
-    readTime:"5 min read",
-    title:"How AI is Transforming Medical Coding in 2026",
-    excerpt:"Artificial Intelligence is revolutionising the way healthcare organisations handle medical coding — improving accuracy and cutting processing times by up to 60%.",
-    content:`AI-powered medical coding tools are now capable of reading physician notes, interpreting clinical documentation, and auto-assigning ICD-10 and CPT codes with remarkable accuracy. Major US hospital networks report a 40–60% reduction in coding turnaround time after adopting AI solutions.
- 
-What does this mean for aspiring medical coders? Far from replacing human coders, AI acts as a co-pilot — handling repetitive coding tasks while human experts focus on complex cases, audits, and compliance. Professionals who understand how to work alongside AI tools are commanding premium salaries and are in extremely high demand across telehealth companies and insurance firms alike.
- 
-At Skillra, our AI Medical Coding curriculum is built around this exact reality. Students learn not just traditional coding frameworks, but also how to operate AI-assisted coding platforms used by leading healthcare providers today. Graduates are placed with companies already deploying these tools — giving them a decisive edge over peers from conventional programs.`,
-    image:`${PUB}/healthcare1.png`,
-  },
-  {
-    id:2,
-    tag:"Technology",
-    tagColor:"#c2410c",
-    tagBg:"#fff7ed",
-    date:"March 8, 2026",
-    readTime:"4 min read",
-    title:"Full Stack Development: What Companies Actually Want in 2026",
-    excerpt:"The full-stack landscape has shifted dramatically. Here's what hiring managers at top product companies say they're really looking for when they screen candidates.",
-    content:`Gone are the days when knowing React and Node.js was enough. Today's full-stack hiring bar includes strong system design fundamentals, cloud deployment experience (AWS / GCP), CI/CD familiarity, and an ability to ship features end-to-end without handholding.
- 
-The most-hired full-stack developers in 2026 have at least one or two production projects on their GitHub that demonstrate real-world complexity — authentication flows, third-party integrations, optimised database schemas, and responsive design. Hiring managers scroll past certificates; they stop at live projects.
- 
-Our Full Stack Development course at Skillra is structured around this insight. Every module culminates in a project milestone, and students graduate with a portfolio of three production-grade applications. The final capstone is reviewed by an industry mentor who has hired developers at a product company — feedback doesn't get more real than that.`,
-    image:`${PUB}/technology1.png`,
-  },
-  {
-    id:3,
-    tag:"Finance",
-    tagColor:"#14532d",
-    tagBg:"#f0fdf4",
-    date:"February 28, 2026",
-    readTime:"4 min read",
-    title:"SAP & Tally Skills: Why Finance Professionals Are Upskilling Fast",
-    excerpt:"Finance roles now require hands-on proficiency with ERP tools. Professionals without SAP or Tally credentials are finding career growth increasingly difficult.",
-    content:`The shift to cloud-based ERP systems has accelerated dramatically. SAP S/4HANA migrations are happening across large enterprises, while SMEs continue to rely heavily on Tally for GST compliance and day-to-day accounting. The result: a huge skills gap that finance graduates and working professionals are rushing to fill.
- 
-Recruiters in the banking and manufacturing sectors now filter applicants on SAP proficiency before even looking at educational qualifications. For accounting professionals, Tally with advanced GST filing knowledge has become table stakes — not a bonus skill.
- 
-Skillra's Finance training programmes are designed for both fresh graduates and working professionals. Our part-time scheduling options allow employed candidates to upskill without leaving their current jobs. With live project work on actual enterprise datasets and a dedicated placement team, our Finance graduates are consistently landing roles 30–40% above the average fresher package in their city.`,
-    image:`${PUB}/finance1.png`,
-  },
-];
+
  
 function BlogCard({ post, inView, delay }) {
-  const [expanded, setExpanded] = useState(false);
-  const contentRef = useRef(null);
-  const [contentH, setContentH] = useState(0);
- 
-  useEffect(() => {
-    if (contentRef.current) setContentH(contentRef.current.scrollHeight);
-  }, []);
+  const navigate = useNavigate();
  
   return (
-    <div className="blog-card"
-      style={{ background:"#fff", borderRadius:"22px", overflow:"hidden", boxShadow:"0 6px 24px rgba(0,0,0,0.07)", cursor:"default", display:"flex", flexDirection:"column", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(32px)", transition:`opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s` }}>
- 
+    <div
+      className="blog-card"
+      style={{
+        background: "#fff",
+        borderRadius: "22px",
+        overflow: "hidden",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.07)",
+        cursor: "default",
+        display: "flex",
+        flexDirection: "column",
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(32px)",
+        transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
+      }}
+    >
       {/* Image */}
-      <div style={{ width:"100%", height:"clamp(160px,18vw,210px)", overflow:"hidden", flexShrink:0 }}>
-        <img src={post.image} alt={post.title} style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"top center", display:"block", transition:"transform 0.5s ease" }}
-          onMouseEnter={e=>e.target.style.transform="scale(1.06)"}
-          onMouseLeave={e=>e.target.style.transform="scale(1)"}
+      <div style={{ overflow: "hidden", flexShrink: 0 }}>
+        <img
+          src={post.image}
+          alt={post.title}
+          style={{
+            width: "100%",
+            height: "clamp(160px,18vw,210px)",
+            objectFit: "cover",
+            objectPosition: "top center",
+            display: "block",
+            transition: "transform 0.5s ease",
+          }}
+          onMouseEnter={e => (e.target.style.transform = "scale(1.06)")}
+          onMouseLeave={e => (e.target.style.transform = "scale(1)")}
         />
       </div>
  
       {/* Body */}
-      <div style={{ padding:"clamp(16px,2.5vw,22px) clamp(16px,2.5vw,22px) clamp(18px,2.5vw,24px)", display:"flex", flexDirection:"column", flex:1 }}>
-        {/* Meta row */}
-        <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px", flexWrap:"wrap" }}>
-          <span style={{ background:post.tagBg, color:post.tagColor, fontSize:"11px", fontWeight:800, fontFamily:"'Outfit',sans-serif", padding:"3px 10px", borderRadius:"20px", letterSpacing:"0.05em" }}>{post.tag}</span>
-          <span style={{ fontSize:"11.5px", color:"#9ca3af", fontFamily:"'Outfit',sans-serif", fontWeight:500 }}>{post.date}</span>
-          <span style={{ fontSize:"11.5px", color:"#9ca3af", fontFamily:"'Outfit',sans-serif", fontWeight:500 }}>· {post.readTime}</span>
+      <div
+        style={{
+          padding: "clamp(14px,2.5vw,22px)",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
+        {/* Meta */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", flexWrap: "wrap" }}>
+          <span
+            style={{
+              background: post.tagBg,
+              color: post.tagColor,
+              fontSize: "11px",
+              fontWeight: 800,
+              fontFamily: "'Outfit',sans-serif",
+              padding: "3px 10px",
+              borderRadius: "20px",
+              letterSpacing: "0.05em",
+            }}
+          >
+            {post.tag}
+          </span>
+          <span style={{ fontSize: "11.5px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", fontWeight: 500 }}>
+            {post.date}
+          </span>
+          <span style={{ fontSize: "11.5px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", fontWeight: 500 }}>
+            · {post.readTime}
+          </span>
         </div>
  
         {/* Title */}
-        <h3 style={{ fontSize:"clamp(14px,1.6vw,17px)", fontWeight:900, color:"#120630", fontFamily:"'Outfit',sans-serif", marginBottom:"10px", lineHeight:1.3 }}>{post.title}</h3>
+        <h3
+          style={{
+            fontSize: "clamp(14px,1.6vw,17px)",
+            fontWeight: 900,
+            color: "#120630",
+            fontFamily: "'Outfit',sans-serif",
+            margin: "0 0 10px",
+            lineHeight: 1.3,
+          }}
+        >
+          {post.title}
+        </h3>
  
-        {/* Excerpt */}
-        <p style={{ fontSize:"clamp(12px,1.2vw,13.5px)", color:"#6b5a9e", fontFamily:"'Outfit',sans-serif", lineHeight:1.7, marginBottom:"14px" }}>{post.excerpt}</p>
+        {/* Excerpt only — no expandable content anymore */}
+        <p
+          style={{
+            fontSize: "clamp(12px,1.2vw,13.5px)",
+            color: "#6b5a9e",
+            fontFamily: "'Outfit',sans-serif",
+            lineHeight: 1.7,
+            margin: "0 0 14px",
+          }}
+        >
+          {post.excerpt}
+        </p>
  
-        {/* Expandable full content */}
-        <div className="blog-expand"
-          style={{ maxHeight: expanded ? `${contentH}px` : "0", opacity: expanded ? 1 : 0 }}>
-          <div ref={contentRef}>
-            <div style={{ height:"1px", background:"#e4d9ff", margin:"0 0 14px" }}/>
-            {post.content.trim().split("\n\n").map((para, i) => (
-              <p key={i} style={{ fontSize:"clamp(12px,1.2vw,13.5px)", color:"#4b4466", fontFamily:"'Outfit',sans-serif", lineHeight:1.75, marginBottom:"12px" }}>{para}</p>
-            ))}
-          </div>
-        </div>
- 
-        {/* Read more button */}
-        <button onClick={() => setExpanded(p => !p)}
-          style={{ marginTop:"auto", display:"flex", alignItems:"center", gap:"6px", background:"none", border:"none", cursor:"pointer", padding:"0", fontFamily:"'Outfit',sans-serif", fontWeight:700, fontSize:"clamp(12px,1.2vw,13.5px)", color:post.tagColor, transition:"gap .2s" }}
-          onMouseEnter={e=>e.currentTarget.style.gap="10px"}
-          onMouseLeave={e=>e.currentTarget.style.gap="6px"}>
-          {expanded ? "Show less" : "Read more"}
-          <div style={{ width:"24px", height:"24px", borderRadius:"50%", background:`${post.tagColor}18`, display:"flex", alignItems:"center", justifyContent:"center", transform:expanded?"rotate(180deg)":"rotate(0deg)", transition:"transform .35s ease" }}>
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke={post.tagColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        {/* Read more — navigates to BlogPage */}
+        <a href="/Skillra-Official/blog" style={{ textDecoration: "none" }}>
+        <button
+          onClick={() => navigate(`/blog`)}
+          style={{
+            marginTop: "auto",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "8px 0 0",
+            fontFamily: "'Outfit',sans-serif",
+            fontWeight: 700,
+            fontSize: "clamp(12px,1.2vw,13.5px)",
+            color: post.tagColor,
+            transition: "gap 0.2s",
+          }}
+          onMouseEnter={e => (e.currentTarget.style.gap = "10px")}
+          onMouseLeave={e => (e.currentTarget.style.gap = "6px")}
+        >
+          View more
+          <div
+            style={{
+              width: "24px",
+              height: "24px",
+              borderRadius: "50%",
+              background: `${post.tagColor}18`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+              <path
+                d="M2 4l4 4 4-4"
+                stroke={post.tagColor}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
         </button>
+        </a>
       </div>
     </div>
   );
 }
  
+ 
+// ─── BlogsSection — unchanged except removed expand style tag ────────────────
+ 
 function BlogsSection() {
   const [ref, inView] = useInView(0.08);
  
   return (
-    <section ref={ref} style={{ padding:"clamp(48px,8vw,88px) 0", background:"#F3F4F4", borderTop:"1px solid #e5e7eb", position:"relative" }}>
-      <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.035) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
+    <section
+      ref={ref}
+      style={{
+        padding: "clamp(48px,8vw,88px) 0",
+        background: "#F3F4F4",
+        borderTop: "1px solid #e5e7eb",
+        position: "relative",
+      }}
+    >
+      <style>{`
+        @media (max-width: 560px) {
+          .blog-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
  
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 clamp(16px,4%,48px)", position:"relative", zIndex:1 }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          backgroundImage: `
+            linear-gradient(rgba(124,58,237,0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(124,58,237,0.035) 1px, transparent 1px)
+          `,
+          backgroundSize: "32px 32px",
+        }}
+      />
  
-        {/* Header */}
-        <div style={{ textAlign:"center", marginBottom:"clamp(32px,5vw,52px)", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
-          <SectionLabel text="LATEST BLOGS"/>
-          <h2 style={{ fontSize:"clamp(1.8rem,4vw,2.8rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#120630", letterSpacing:"-0.03em", lineHeight:1.1 }}>
-            Insights &amp; <span style={{ background:"linear-gradient(135deg,#7c3aed,#a855f7)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>Industry Trends</span>
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "0 clamp(16px,4%,48px)",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "clamp(32px,5vw,52px)",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(24px)",
+            transition: "all 0.7s ease",
+          }}
+        >
+          <SectionLabel text="LATEST BLOGS" />
+ 
+          <h2
+            style={{
+              fontSize: "clamp(1.8rem,4vw,2.8rem)",
+              fontWeight: 900,
+              fontFamily: "'Outfit',sans-serif",
+              color: "#120630",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              margin: "0 0 10px",
+            }}
+          >
+            Learn, &amp;{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg,#7c3aed,#a855f7)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Explore &amp; Stay Industry-Updated
+            </span>
           </h2>
-          <p style={{ fontSize:"clamp(13px,1.3vw,15px)", color:"#6b5a9e", fontFamily:"'Outfit',sans-serif", marginTop:"10px", maxWidth:"480px", margin:"10px auto 0", lineHeight:1.7 }}>
-            Stay ahead with expert articles on healthcare, technology, and finance careers. Click <strong style={{ color:"#7c3aed" }}>Read more</strong> on any card to expand it.
+ 
+          <p
+            style={{
+              fontSize: "clamp(13px,1.3vw,15px)",
+              color: "#6b5a9e",
+              fontFamily: "'Outfit',sans-serif",
+              maxWidth: "1480px",
+              margin: "10px auto 0",
+              lineHeight: 1.7,
+            }}
+          >
+            Explore expert articles on Medical Coding, IT trends, Finance skills,
+            AI innovations, career tips, and industry insights. Stay updated with
+            the latest advancements in AI-driven healthcare, automation, and
+            technology. Grow your knowledge through fresh, insightful, and
+            student-friendly blog posts designed to keep you ahead in a rapidly
+            evolving digital world.
           </p>
         </div>
  
-        {/* Blog grid */}
-        <div className="blog-grid"
-          style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"clamp(16px,2.5vw,28px)", alignItems:"start" }}>
-          {BLOG_POSTS.map((post, i) => (
-            <BlogCard key={post.id} post={post} inView={inView} delay={0.1 + i * 0.13} />
-          ))}
+        <div
+          className="blog-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "clamp(16px,2.5vw,28px)",
+            alignItems: "start",
+          }}
+        >
+          {BLOG_POSTS.slice(0, 3).map((post, i) => (
+  <BlogCard
+    key={post.id}
+    post={post}
+    inView={inView}
+    delay={0.1 + i * 0.13}
+  />
+))}
         </div>
- 
       </div>
     </section>
   );
 }
+
+
+
 const SERVICE_CARDS = [
   {
     id:1, bg:"linear-gradient(160deg,#7c3aed,#6d28d9)", title:"Campus Training Programs",
     titleColor:"#e9d5ff", shadowColor:"rgba(109,40,217,0.40)",
     shortDesc:"We partner with colleges to deliver industry-ready training directly on campus.",
-    longDesc:"Our Campus Training Programs bring Skillra's expertise directly to your institution. We design and deliver structured training modules on AI Medical Coding, Full Stack Development, Data Analytics, and Finance — tailored to your curriculum. Students receive hands-on projects, live mentorship, and industry certifications without leaving campus. We have partnered with 50+ institutions.",
+    longDesc:"We partner with colleges to deliver industry-ready training directly on campus. Students get exposure to practical skills, real projects, and updated industry tools. Our programs help institutions boost student employability before graduation with strong placement outcomes.",
     icon: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4L4 10l12 6 12-6-12-6z"/><path d="M4 16l12 6 12-6"/><path d="M4 22l12 6 12-6"/></svg>,
   },
   {
     id:2, bg:"linear-gradient(160deg,#ea580c,#c2410c)", title:"Placement Support",
     titleColor:"#fed7aa", shadowColor:"rgba(234,88,12,0.40)",
     shortDesc:"We guide every student with structured job preparation, resume building, and interview.",
-    longDesc:"Our dedicated Placement Cell works tirelessly to connect students with the right opportunities. We provide resume building workshops, mock interview sessions, LinkedIn profile optimization, and direct referrals to our 120+ hiring partners across Medical Coding firms, IT companies, and Finance organizations. We maintain a 98% placement rate and a 4.2L average package across all courses.",
+    longDesc:"We guide every student with structured job preparation, resume building, and interview coaching. Our dedicated placement team connects you with top companies across healthcare, IT, and finance. From mock interviews to real job opportunities.",
     icon: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="10" r="5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10"/><path d="M22 14l3 3-3 3"/></svg>,
   },
   {
     id:3, bg:"linear-gradient(160deg,#15803d,#166534)", title:"Career Guidance & Mentorship",
     titleColor:"#bbf7d0", shadowColor:"rgba(21,128,61,0.40)",
     shortDesc:"Get personalized guidance from industry experts who help you chart your ideal career path.",
-    longDesc:"Our Career Guidance program pairs every student with an industry mentor who has 10+ years of real-world experience. Through one-on-one sessions, group workshops, and personality assessments, we help you identify your strengths, pick the right specialization, and build a roadmap to your dream role. Mentors are available throughout the course and for 6 months post-placement.",
+    longDesc:"Get personalized guidance from experts who understand industry trends and hiring expectations. We help you choose the right career path based on your strengths and goals. Mentors support you throughout your journey—from course selection to job placement.",
     icon: <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M8 20c0-4.418 3.582-8 8-8s8 3.582 8 8"/><circle cx="16" cy="10" r="3"/><path d="M4 28h24"/><path d="M12 28v-4h8v4"/></svg>,
   },
 ];
@@ -1505,8 +1781,8 @@ function ServiceCard({ card, delay, inView }) {
 
   const ROUTES = {
     1: "/campus",
-    2: "/placement-support",
-    3: "/career-guidance",
+    2: "/placement",
+    3: "/career",
   };
 
   useEffect(() => {
@@ -1602,45 +1878,50 @@ function ServiceCard({ card, delay, inView }) {
           color: "rgba(255,255,255,0.78)",
           lineHeight: 1.8,
           margin: "0 0 20px 0",
+          textAlign : 'justify'
         }}>
           {card.longDesc}
         </p>
 
         {/* Learn More button */}
-        <div
-          onClick={e => { e.stopPropagation(); navigate(ROUTES[card.id]); }}
-          style={{
-            marginTop: "auto",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "rgba(255,255,255,0.15)",
-            backdropFilter: "blur(8px)",
-            border: "1.5px solid rgba(255,255,255,0.3)",
-            borderRadius: "50px",
-            padding: "9px 18px",
-            cursor: "pointer",
-            width: "fit-content",
-            transition: "background 0.25s, transform 0.25s",
-            transform: hovered ? "translateX(4px)" : "translateX(0)",
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
-          onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
-        >
-          <span style={{
-            fontFamily: "'Outfit',sans-serif",
-            fontWeight: 700,
-            fontSize: "12px",
-            color: "#fff",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-          }}>
-            Learn More
-          </span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2 6h8M6 2l4 4-4 4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
+        
+        <a href={`/Skillra-Official${ROUTES[card.id]}`} style={{ textDecoration: "none" }}>
+  <div
+    onClick={e => { e.stopPropagation(); navigate(ROUTES[card.id]); }}
+    style={{
+      marginTop: "auto",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "8px",
+      background: "rgba(255,255,255,0.15)",
+      backdropFilter: "blur(8px)",
+      border: "1.5px solid rgba(255,255,255,0.3)",
+      borderRadius: "50px",
+      padding: "9px 18px",
+      cursor: "pointer",
+      width: "fit-content",
+      transition: "background 0.25s, transform 0.25s",
+      transform: hovered ? "translateX(4px)" : "translateX(0)",
+    }}
+    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
+    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+  >
+    <span style={{
+      fontFamily: "'Outfit',sans-serif",
+      fontWeight: 700,
+      fontSize: "12px",
+      color: "#fff",
+      letterSpacing: "0.08em",
+      textTransform: "uppercase",
+    }}>
+      Learn More
+    </span>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M2 6h8M6 2l4 4-4 4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </div>
+</a>
+       
       
       </div>
     </div>
@@ -1682,19 +1963,19 @@ function ServicesSection() {
             fontSize: "clamp(1.8rem,4vw,2.8rem)", color: "#1a0a3c",
             letterSpacing: "-0.03em", lineHeight: 1.1,
           }}>
-            Services{" "}
+            Complete Career Support from{" "}
             <span style={{
               background: "linear-gradient(135deg,#7c3aed,#a855f7)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
             }}>
-              We Do
+              Start to Success
             </span>
           </h2>
           <p style={{
             fontSize: "clamp(13px,1.3vw,14.5px)", color: "#6b5a9e",
             fontFamily: "'Outfit',sans-serif", marginTop: "12px",
           }}>
-            Everything we offer to make your career journey seamless and successful.
+            We provide end-to-end training and career services to help students build strong professional pathways.From learning to placement, Skillra ensures every stage of your growth is supported.
           </p>
         </div>
 
@@ -1713,239 +1994,778 @@ function ServicesSection() {
   );
 }
 
+
+
 const TESTIMONIALS = [
-  { name: "Aria Zinanrio", text: "I am very helped by this E-wallet application, my days are very easy to use this application and its very helpful in my life, even I can pay a short time 😊", avatar: "AZ", color: "#7c3aed" },
-  { name: "Rahul Sharma",  text: "Skillra Career Guidance completely transformed my approach to job searching. I secured 3 interviews within 2 weeks of following their roadmap.", avatar: "RS", color: "#059669" },
-  { name: "Priya Nair",    text: "The personalized assessment was eye-opening. I finally understood which career paths aligned with my actual strengths.", avatar: "PN", color: "#dc2626" },
-  { name: "Karthik V",     text: "Expert counseling sessions gave me clarity I never had before. The mentors are incredibly supportive and industry-aware.", avatar: "KV", color: "#d97706" },
+  {
+    text: "Working with this team transformed our product completely. Their attention to detail and commitment to quality is unmatched — we saw a 3x improvement in user engagement within weeks.",
+    name: "Sarah M., Product Lead",
+    color: "#7c3aed",
+    avatar: "SM",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&auto=format&fit=crop&crop=face",
+    // Professional woman, warm smile — fits "Product Lead"
+  },
+  {
+    text: "I was skeptical at first, but the results exceeded every expectation. The support team is incredibly responsive and the platform itself is intuitive and powerful.",
+    name: "James K., Startup Founder",
+    color: "#a855f7",
+    avatar: "JK",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&auto=format&fit=crop&crop=face",
+    // Young professional man — fits "Startup Founder"
+  },
+  {
+    text: "From onboarding to delivery, everything was seamless. Our clients noticed the difference immediately. Highly recommend to anyone serious about growth.",
+    name: "Priya R., Marketing Director",
+    color: "#6d28d9",
+    avatar: "PR",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&auto=format&fit=crop&crop=face",
+    // South Asian professional woman — fits "Priya, Marketing Director"
+  },
+  {
+    text: "The best investment we made this year. Our workflows are faster, our team is happier, and we're delivering better results than ever before.",
+    name: "Tom B., Operations Manager",
+    color: "#8b5cf6",
+    avatar: "TB",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&auto=format&fit=crop&crop=face",
+    // Professional man in suit — fits "Operations Manager"
+  },
 ];
+
+const styles = `
+  .testi-inner {
+    display: flex;
+    gap: clamp(24px, 5%, 64px);
+    align-items: flex-start;
+  }
+  .testi-form-card {
+    flex: 0 0 clamp(280px, 38%, 400px);
+  }
+  .testi-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Mobile: stack vertically ── */
+  @media (max-width: 700px) {
+    .testi-inner {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .testi-form-card {
+      flex: none;
+      width: 100%;
+    }
+  }
+`;
+
+
 
 function TestimonialsSection() {
   const [ref, inView] = useInView(0.06);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", desc: "" });
+  const [formErrors, setFormErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false); // 👈 sending state
   const autoRef = useRef(null);
 
   const goNext = () => setActiveIdx(p => (p + 1) % TESTIMONIALS.length);
-  const handlePlay = () => {
-    if (isPlaying) { clearInterval(autoRef.current); setIsPlaying(false); }
-    else { goNext(); autoRef.current = setInterval(goNext, 3000); setIsPlaying(true); }
+
+  const startAuto = () => {
+    clearInterval(autoRef.current);
+    autoRef.current = setInterval(goNext, 5000);
+    setIsPlaying(true);
   };
-  const handleAvatar = (i) => { clearInterval(autoRef.current); setIsPlaying(false); setActiveIdx(i); };
-  useEffect(() => () => clearInterval(autoRef.current), []);
 
-  return (
-    <section ref={ref} style={{ background: "#ede9ff", padding: "clamp(56px,8vw,88px) 0 clamp(64px,10vw,96px)", fontFamily: "'Outfit',sans-serif" }}>
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,40px)" }}>
-        <div className="testi-inner" style={{ display: "flex", gap: "clamp(24px,5%,64px)", alignItems: "flex-start" }}>
+  const handlePlay = () => {
+    if (isPlaying) {
+      clearInterval(autoRef.current);
+      setIsPlaying(false);
+    } else {
+      goNext();
+      startAuto();
+    }
+  };
 
-          {/* LEFT */}
-          <div style={{ flex: 1, minWidth: 0, opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-24px)", transition: "all 0.7s ease 0.1s" }}>
-            <h2 style={{ fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 900, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "8px" }}>Testimonials</h2>
-            <p style={{ fontSize: "14px", color: "#5c4a80", fontFamily: "'Outfit',sans-serif", marginBottom: "32px", fontStyle: "italic" }}>Every Story Matters. Every Success Counts.</p>
-            <div style={{ marginBottom: "18px" }}>
-              <svg width="48" height="36" viewBox="0 0 52 38" fill="none">
-                <path d="M0 38V23C0 15.3 2.8 9.6 8.4 5.8 14 2 20.7 0.2 28.5 0.2V7.4C25 7.4 22 8.3 19.4 10 16.8 11.6 15.5 14 15.3 17.2H24V38H0ZM28 38V23C28 15.3 30.8 9.6 36.4 5.8 42 2 48.7 0.2 56.5 0.2V7.4C53 7.4 50 8.3 47.4 10 44.8 11.6 43.5 14 43.3 17.2H52V38H28Z" fill="#7c3aed" opacity="0.18" />
-              </svg>
-            </div>
-            <div key={activeIdx} className="testi-slide" style={{ minHeight: "110px", marginBottom: "28px" }}>
-              <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#374151", fontFamily: "'Outfit',sans-serif", lineHeight: 1.85 }}>{TESTIMONIALS[activeIdx].text}</p>
-              <p style={{ fontSize: "13px", color: "#7c3aed", fontFamily: "'Outfit',sans-serif", fontWeight: 700, marginTop: "14px" }}>— {TESTIMONIALS[activeIdx].name}</p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-              {TESTIMONIALS.map((t, i) => (
-                <div key={i} onClick={() => handleAvatar(i)} style={{ width: "42px", height: "42px", borderRadius: "50%", background: t.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, color: "#fff", fontFamily: "'Outfit',sans-serif", cursor: "pointer", flexShrink: 0, border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent", boxShadow: activeIdx === i ? "0 0 0 2px #fff,0 0 0 4px #7c3aed" : "none", transform: activeIdx === i ? "scale(1.12)" : "scale(1)", transition: "all 0.22s" }}>{t.avatar}</div>
-              ))}
-              <div onClick={handlePlay} style={{ width: "42px", height: "42px", borderRadius: "50%", border: `2px solid ${isPlaying ? "#7c3aed" : "#c4b5fd"}`, background: isPlaying ? "#f3f0ff" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", marginLeft: "4px", transition: "all 0.22s", flexShrink: 0 }}>
-                {isPlaying
-                  ? <svg width="11" height="13" viewBox="0 0 12 14" fill="none"><rect x="1" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" /><rect x="7.5" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" /></svg>
-                  : <svg width="12" height="14" viewBox="0 0 14 16" fill="none"><path d="M1 1l12 7-12 7V1z" fill="#9ca3af" /></svg>
-                }
-              </div>
-            </div>
-          </div>
+  const handleAvatar = (i) => {
+    clearInterval(autoRef.current);
+    setActiveIdx(i);
+    autoRef.current = setInterval(goNext, 5000);
+    setIsPlaying(true);
+  };
 
-          {/* RIGHT — contact form */}
-          <div className="testi-form" style={{ flex: "0 0 clamp(280px,38%,400px)", background: "#fff", borderRadius: "20px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: "0 8px 40px rgba(109,40,217,0.10)", border: "1.5px solid rgba(124,58,237,0.08)", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(24px)", transition: "all 0.7s ease 0.2s" }}>
-            {submitted ? (
-              <div style={{ textAlign: "center", padding: "32px 0" }}>
-                <div style={{ fontSize: "44px", marginBottom: "14px" }}>🎉</div>
-                <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "8px" }}>Message Sent!</h3>
-                <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit',sans-serif" }}>We'll get back to you shortly.</p>
-                <button onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", desc: "" }); }} style={{ marginTop: "20px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 24px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif" }}>Send another</button>
-              </div>
-            ) : (
-              <>
-                <h3 style={{ fontSize: "clamp(16px,2vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "6px" }}>We're here to help!</h3>
-                <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "24px" }}>Please contact us in case of any query.</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {[
-                    { key: "name",  placeholder: "Your name",         type: "text"  },
-                    { key: "email", placeholder: "Your email address", type: "email" },
-                    { key: "phone", placeholder: "Your phone number",  type: "tel"   },
-                    { key: "desc",  placeholder: "Description",        type: "text"  },
-                  ].map(field => (
-                    <input key={field.key} type={field.type} placeholder={field.placeholder}
-                      value={formData[field.key]}
-                      onChange={e => setFormData(p => ({ ...p, [field.key]: e.target.value }))}
-                      style={{ width: "100%", padding: "12px 14px", border: "1.5px solid #e5e7eb", borderRadius: "10px", fontSize: "13.5px", fontFamily: "'Outfit',sans-serif", color: "#374151", outline: "none", background: "#fafafa", transition: "border-color 0.2s", boxSizing: "border-box" }}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.background = "#fafafa"; }}
-                    />
-                  ))}
-                  <button onClick={() => { if (formData.name && formData.email) setSubmitted(true); }}
-                    style={{ background: "linear-gradient(135deg,#7c3aed,#5b21b6)", color: "#fff", border: "none", borderRadius: "50px", padding: "13px 24px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: "0 6px 18px rgba(124,58,237,0.32)", transition: "all 0.22s", marginTop: "4px" }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.46)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 18px rgba(124,58,237,0.32)"; }}>
-                    Get in Touch
-                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
-/* ═══════════════ PLACEMENT ═══════════════ */
-const PLACEMENT_BARS = [
-  { course:"AI Medical Coding",  rate:98, placed:142, avg:"3.8 LPA", color:"#1e3a8a" },
-  { course:"AI Medical Billing", rate:97, placed:88,  avg:"3.5 LPA", color:"#7c3aed" },
-  { course:"Full Stack Dev",     rate:96, placed:118, avg:"5.2 LPA", color:"#c2410c" },
-  { course:"SAP Development",    rate:95, placed:61,  avg:"6.0 LPA", color:"#14532d" },
-  { course:"Data Analytics",     rate:94, placed:95,  avg:"4.5 LPA", color:"#0ea5e9" },
-  { course:"UI/UX Design",       rate:92, placed:74,  avg:"4.8 LPA", color:"#ec4899" },
-];
-
-function PlacementSection() {
-  const [ref, inView] = useInView(0.1);
-  const [barWidths, setBarWidths] = useState(PLACEMENT_BARS.map(()=>0));
   useEffect(() => {
-    if (!inView) return;
-    PLACEMENT_BARS.forEach((b,i) => { setTimeout(()=>{ setBarWidths(prev=>{const n=[...prev];n[i]=b.rate;return n;}); }, 300+i*180); });
-  },[inView]);
+    autoRef.current = setInterval(goNext, 5000);
+    setIsPlaying(true);
+    return () => clearInterval(autoRef.current);
+  }, []);
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px 14px",
+    border: "1.5px solid #e5e7eb",
+    borderRadius: "10px",
+    fontSize: "13.5px",
+    fontFamily: "'Outfit', sans-serif",
+    color: "#374151",
+    outline: "none",
+    background: "#fafafa",
+    transition: "border-color 0.2s",
+    boxSizing: "border-box",
+    display: "block",
+  };
+
+  const validateForm = () => {
+  const errs = {};
+  const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const phoneRegex = /^[6-9]\d{9}$/; // Indian mobile number
+
+  if (!formData.name.trim())               errs.name  = "Name is required.";
+  else if (!nameRegex.test(formData.name)) errs.name  = "Enter a valid name (letters only).";
+
+  if (!formData.email.trim())                errs.email = "Email is required.";
+  else if (!emailRegex.test(formData.email)) errs.email = "Enter a valid email address.";
+
+  if (!formData.phone.trim())                errs.phone = "Phone number is required.";
+  else if (!phoneRegex.test(formData.phone)) errs.phone = "Enter a valid 10-digit mobile number.";
+
+  if (!formData.desc.trim())                errs.desc  = "Description is required.";
+  else if (formData.desc.trim().length < 10) errs.desc  = "Description must be at least 10 characters.";
+
+  return errs;
+};
+
   return (
-    <section id="placement" ref={ref} style={{ padding:"clamp(48px,8vw,80px) 0", background:"#F3F4F4", borderTop:"1px solid #e5e7eb", position:"relative" }}>
-      <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 clamp(16px,4%,48px)", position:"relative", zIndex:1 }}>
-        <div style={{ textAlign:"center", marginBottom:"48px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
-          <SectionLabel text="PLACEMENT"/>
-          <h2 style={{ fontSize:"clamp(1.6rem,3.5vw,2.6rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", letterSpacing:"-0.02em" }}>
-            Your Dream Job <span style={{ color:"#7c3aed" }}>Starts Here</span>
-          </h2>
-          <p style={{ fontSize:"clamp(13px,1.4vw,15px)", color:"#9270c0", marginTop:"10px", fontWeight:500, maxWidth:"500px", margin:"10px auto 0", fontFamily:"'Outfit',sans-serif" }}>
-            We don't just train you — we place you. 100% placement assistance, 120+ hiring partners.
-          </p>
-        </div>
-        <div style={{ display:"flex", gap:"18px", flexWrap:"wrap", marginBottom:"48px" }}>
-          {[{num:"500+",label:"Students Placed"},{num:"98%",label:"Placement Rate"},{num:"120+",label:"Hiring Partners"},{num:"4.2L",label:"Avg. Package"}].map((s,i) => (
-            <div key={i} style={{ flex:"1 1 120px", minWidth:"120px", background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"20px", padding:"clamp(16px,3%,24px) 18px", textAlign:"center", boxShadow:"0 4px 16px rgba(124,58,237,0.07)", transition:"all 0.32s", cursor:"default", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(20px)", transitionDelay:`${i*0.1}s` }}
-              onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px) scale(1.03)";e.currentTarget.style.background="linear-gradient(135deg,#7c3aed,#5b21b6)";e.currentTarget.querySelector(".sn").style.color="#fff";e.currentTarget.querySelector(".sl").style.color="rgba(255,255,255,0.75)";}}
-              onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0) scale(1)";e.currentTarget.style.background="#fff";e.currentTarget.querySelector(".sn").style.color="#7c3aed";e.currentTarget.querySelector(".sl").style.color="#9270c0";}}>
-              <div className="sn" style={{ fontSize:"clamp(1.5rem,3vw,2.3rem)", fontWeight:900, color:"#7c3aed", lineHeight:1, letterSpacing:"-1px", transition:"color 0.32s" }}>{s.num}</div>
-              <div className="sl" style={{ fontSize:"11px", color:"#9270c0", marginTop:"5px", fontWeight:600, fontFamily:"'Outfit',sans-serif", transition:"color 0.32s" }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-        <div className="placement-bars-row" style={{ display:"flex", gap:"48px", alignItems:"flex-start", flexWrap:"wrap" }}>
-          <div style={{ flex:"0 0 clamp(200px,28%,280px)", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-28px)", transition:"all 0.8s ease" }}>
-            <h3 style={{ fontSize:"clamp(1.2rem,2.5vw,1.9rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", lineHeight:1.15, letterSpacing:"-0.02em", marginBottom:"12px" }}>Course-wise<br/><span style={{ color:"#7c3aed" }}>Placement Rate</span></h3>
-            <p style={{ fontSize:"13.5px", color:"#9270c0", lineHeight:1.75, fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>Every course at Skillra is backed by dedicated placement cells and active employer relationships.</p>
-          </div>
-          <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"12px" }}>
-            {PLACEMENT_BARS.map((b,i) => (
-              <div key={i} style={{ background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"14px", padding:"14px 18px", cursor:"default", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-30px)", transition:`opacity 0.6s ease ${i*0.1}s, transform 0.6s ease ${i*0.1}s, border-color 0.22s, box-shadow 0.22s` }}
-                onMouseEnter={e=>{e.currentTarget.style.borderColor=b.color;e.currentTarget.style.boxShadow=`0 4px 20px ${b.color}22`;e.currentTarget.style.transform="translateX(6px)";}}
-                onMouseLeave={e=>{e.currentTarget.style.borderColor="#e4d9ff";e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="translateX(0)";}}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"10px" }}>
-                  <span style={{ fontSize:"clamp(12px,1.3vw,13.5px)", fontWeight:700, color:"#1a0640", fontFamily:"'Outfit',sans-serif" }}>{b.course}</span>
-                  <div style={{ display:"flex", gap:"14px", alignItems:"center" }}>
-                    <span style={{ fontSize:"11px", color:"#9270c0", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>{b.placed} placed · {b.avg}</span>
-                    <span style={{ fontSize:"15px", fontWeight:900, color:b.color, fontFamily:"'Outfit',sans-serif", minWidth:"42px", textAlign:"right" }}>{b.rate}%</span>
-                  </div>
-                </div>
-                <div style={{ height:"8px", background:"#ede8ff", borderRadius:"99px", overflow:"hidden" }}>
-                  <div style={{ height:"100%", width:`${barWidths[i]}%`, background:`linear-gradient(90deg,${b.color},${b.color}aa)`, borderRadius:"99px", transition:"width 1.1s cubic-bezier(0.4,0,0.2,1)", boxShadow:`0 2px 8px ${b.color}44` }}/>
+    <>
+      <style>{styles}</style>
+      <section
+        id="testimonials"
+        ref={ref}
+        style={{
+          background: "#ede9ff",
+          padding: "clamp(48px,8vw,88px) 0 clamp(56px,10vw,96px)",
+          fontFamily: "'Outfit', sans-serif",
+        }}
+      >
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,40px)" }}>
+          <div className="testi-inner">
+
+            {/* ── LEFT: testimonial carousel ── */}
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateX(0)" : "translateX(-24px)",
+                transition: "all 0.7s ease 0.1s",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "clamp(1.8rem,4vw,3rem)",
+                  fontWeight: 900,
+                  color: "#7c3aed",
+                  fontFamily: "'Outfit', sans-serif",
+                  margin: "0 0 8px",
+                }}
+              >
+                Testimonials
+              </h2>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: "#5c4a80",
+                  fontFamily: "'Outfit', sans-serif",
+                  margin: "0 0 32px",
+                  fontStyle: "italic",
+                }}
+              >
+                Every Story Matters. Every Success Counts.
+              </p>
+
+              <div style={{ marginBottom: "18px" }}>
+                <svg width="48" height="36" viewBox="0 0 52 38" fill="none">
+                  <path
+                    d="M0 38V23C0 15.3 2.8 9.6 8.4 5.8 14 2 20.7 0.2 28.5 0.2V7.4C25 7.4 22 8.3 19.4 10 16.8 11.6 15.5 14 15.3 17.2H24V38H0ZM28 38V23C28 15.3 30.8 9.6 36.4 5.8 42 2 48.7 0.2 56.5 0.2V7.4C53 7.4 50 8.3 47.4 10 44.8 11.6 43.5 14 43.3 17.2H52V38H28Z"
+                    fill="#7c3aed"
+                    opacity="0.18"
+                  />
+                </svg>
+              </div>
+
+              {/* Slide text */}
+              <div key={activeIdx} style={{ minHeight: "110px", marginBottom: "28px" }}>
+                <p
+                  style={{
+                    fontSize: "clamp(13px,1.4vw,15px)",
+                    color: "#374151",
+                    fontFamily: "'Outfit', sans-serif",
+                    lineHeight: 1.85,
+                    margin: 0,
+                  }}
+                >
+                  {TESTIMONIALS[activeIdx].text}
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#7c3aed",
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 700,
+                    marginTop: "14px",
+                    marginBottom: 0,
+                  }}
+                >
+                  — {TESTIMONIALS[activeIdx].name}
+                </p>
+              </div>
+
+              {/* Avatar dots + play/pause */}
+              <div className="testi-avatar-row">
+                {TESTIMONIALS.map((t, i) => (
+                  <div
+  key={i}
+  onClick={() => handleAvatar(i)}
+  style={{
+    width: "42px",
+    height: "42px",
+    borderRadius: "50%",
+    background: t.color,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "12px",
+    fontWeight: 700,
+    color: "#fff",
+    fontFamily: "'Outfit', sans-serif",
+    cursor: "pointer",
+    flexShrink: 0,
+    border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
+    boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
+    transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
+    transition: "all 0.22s",
+    overflow: "hidden", // 👈 add this so image respects border-radius
+  }}
+>
+  <img
+    src={t.image}
+    alt={t.name}
+    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    onError={e => { e.target.style.display = "none"; }}
+  />
+</div>
+                ))}
+
+                {/* Play / Pause button */}
+                <div
+                  onClick={handlePlay}
+                  style={{
+                    width: "42px",
+                    height: "42px",
+                    borderRadius: "50%",
+                    border: `2px solid ${isPlaying ? "#7c3aed" : "#c4b5fd"}`,
+                    background: isPlaying ? "#f3f0ff" : "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    marginLeft: "4px",
+                    transition: "all 0.22s",
+                    flexShrink: 0,
+                  }}
+                >
+                  {isPlaying ? (
+                    <svg width="11" height="13" viewBox="0 0 12 14" fill="none">
+                      <rect x="1" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" />
+                      <rect x="7.5" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" />
+                    </svg>
+                  ) : (
+                    <svg width="12" height="14" viewBox="0 0 14 16" fill="none">
+                      <path d="M1 1l12 7-12 7V1z" fill="#9ca3af" />
+                    </svg>
+                  )}
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* ── RIGHT: contact form ── */}
+            <div
+              className="testi-form-card"
+              style={{
+                background: "#fff",
+                borderRadius: "20px",
+                padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)",
+                boxShadow: "0 8px 40px rgba(109,40,217,0.10)",
+                border: "1.5px solid rgba(124,58,237,0.08)",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateX(0)" : "translateX(24px)",
+                transition: "all 0.7s ease 0.2s",
+                boxSizing: "border-box",
+              }}
+            >
+              {submitted ? (
+  <div style={{ textAlign: "center", padding: "32px 0" }}>
+    <div style={{ fontSize: "44px", marginBottom: "14px" }}>🎉</div>
+    <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", margin: "0 0 8px" }}>
+      Message Sent!
+    </h3>
+    <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit', sans-serif", margin: 0 }}>
+      We'll get back to you shortly.
+    </p>
+    <button
+      onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", desc: "" }); setFormErrors({}); }}
+      style={{ marginTop: "20px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 24px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}
+    >
+      Send another
+    </button>
+  </div>
+) : (
+  <>
+    <h3 style={{ fontSize: "clamp(16px,2vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", margin: "0 0 6px" }}>
+      We're here to help!
+    </h3>
+    <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit', sans-serif", margin: "0 0 24px" }}>
+      Please contact us in case of any query.
+    </p>
+
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      {[
+        { key: "name",  placeholder: "Your name",         type: "text",  maxLength: 50  },
+        { key: "email", placeholder: "Your email address", type: "email", maxLength: 254 },
+        { key: "phone", placeholder: "Your phone number",  type: "tel",   maxLength: 10  },
+        { key: "desc",  placeholder: "Description",        type: "text",  maxLength: 300 },
+      ].map(field => (
+        <div key={field.key} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+          <input
+            type={field.type}
+            placeholder={field.placeholder}
+            value={formData[field.key]}
+            maxLength={field.maxLength}
+            onChange={e => {
+              setFormData(p => ({ ...p, [field.key]: e.target.value }));
+              if (formErrors[field.key]) setFormErrors(p => ({ ...p, [field.key]: "" }));
+            }}
+            style={{
+              ...inputStyle,
+              borderColor: formErrors[field.key] ? "#ef4444" : "#e5e7eb",
+              background: formErrors[field.key] ? "#fff5f5" : "#fafafa",
+            }}
+            onFocus={e => {
+              e.currentTarget.style.borderColor = formErrors[field.key] ? "#ef4444" : "#a78bfa";
+              e.currentTarget.style.background = "#fff";
+            }}
+            onBlur={e => {
+              e.currentTarget.style.borderColor = formErrors[field.key] ? "#ef4444" : "#e5e7eb";
+              e.currentTarget.style.background = formErrors[field.key] ? "#fff5f5" : "#fafafa";
+            }}
+          />
+          {/* Inline error */}
+          {formErrors[field.key] && (
+            <span style={{ fontSize: "11px", color: "#ef4444", fontFamily: "'Outfit',sans-serif", fontWeight: 600, paddingLeft: "4px" }}>
+              ⚠ {formErrors[field.key]}
+            </span>
+          )}
+        </div>
+      ))}
+
+      <button
+        disabled={sending} // 👈 disables after first click
+        onClick={async () => {
+          if (sending) return; // 👈 extra guard
+          const errs = validateForm();
+          if (Object.keys(errs).length) { setFormErrors(errs); return; }
+          setSending(true);
+          try {
+            await fetch(SHEETS_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain" },
+              body: JSON.stringify({
+                type:  "enquiry",
+                name:  formData.name.trim(),
+                email: formData.email.trim(),
+                phone: formData.phone.trim(),
+                desc:  formData.desc.trim(),
+              }),
+            });
+          } catch (err) {
+            console.error("Sheet error:", err);
+          } finally {
+            setSending(false);
+            setSubmitted(true);
+          }
+        }}
+        style={{
+          background: sending
+            ? "linear-gradient(135deg,#a78bfa,#7c3aed)"  // 👈 dimmed while sending
+            : "linear-gradient(135deg,#7c3aed,#5b21b6)",
+          color: "#fff", border: "none", borderRadius: "50px",
+          padding: "13px 24px", fontSize: "14px", fontWeight: 700,
+          cursor: sending ? "not-allowed" : "pointer",
+          fontFamily: "'Outfit', sans-serif",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: "8px",
+          boxShadow: "0 6px 18px rgba(124,58,237,0.32)",
+          transition: "all 0.22s", marginTop: "4px", width: "100%",
+          opacity: sending ? 0.8 : 1,
+        }}
+        onMouseEnter={e => { if (!sending) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.46)"; } }}
+        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 18px rgba(124,58,237,0.32)"; }}
+      >
+        {/* 👇 Spinner shown while sending */}
+        {sending ? (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              style={{ animation: "spin 0.8s linear infinite" }}>
+              <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+            </svg>
+            Sending...
+          </>
+        ) : (
+          <>
+            Get in Touch
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+              <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </>
+        )}
+      </button>
+    </div>
+  </>
+)}
+            </div>
+
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
-/* ═══════════════ NEWSLETTER ═══════════════ */
+
+// /* ═══════════════ PLACEMENT ═══════════════ */
+// const PLACEMENT_BARS = [
+//   { course:"AI Medical Coding",  rate:98, placed:142, avg:"3.8 LPA", color:"#1e3a8a" },
+//   { course:"AI Medical Billing", rate:97, placed:88,  avg:"3.5 LPA", color:"#7c3aed" },
+//   { course:"Full Stack Dev",     rate:96, placed:118, avg:"5.2 LPA", color:"#c2410c" },
+//   { course:"SAP Development",    rate:95, placed:61,  avg:"6.0 LPA", color:"#14532d" },
+//   { course:"Data Analytics",     rate:94, placed:95,  avg:"4.5 LPA", color:"#0ea5e9" },
+//   { course:"UI/UX Design",       rate:92, placed:74,  avg:"4.8 LPA", color:"#ec4899" },
+// ];
+
+// function PlacementSection() {
+//   const [ref, inView] = useInView(0.1);
+//   const [barWidths, setBarWidths] = useState(PLACEMENT_BARS.map(()=>0));
+//   useEffect(() => {
+//     if (!inView) return;
+//     PLACEMENT_BARS.forEach((b,i) => { setTimeout(()=>{ setBarWidths(prev=>{const n=[...prev];n[i]=b.rate;return n;}); }, 300+i*180); });
+//   },[inView]);
+//   return (
+//     <section id="placement" ref={ref} style={{ padding:"clamp(48px,8vw,80px) 0", background:"#F3F4F4", borderTop:"1px solid #e5e7eb", position:"relative" }}>
+//       <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
+//       <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"0 clamp(16px,4%,48px)", position:"relative", zIndex:1 }}>
+//         <div style={{ textAlign:"center", marginBottom:"48px", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(24px)", transition:"all 0.7s ease" }}>
+//           <SectionLabel text="PLACEMENT"/>
+//           <h2 style={{ fontSize:"clamp(1.6rem,3.5vw,2.6rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", letterSpacing:"-0.02em" }}>
+//             Your Dream Job <span style={{ color:"#7c3aed" }}>Starts Here</span>
+//           </h2>
+//           <p style={{ fontSize:"clamp(13px,1.4vw,15px)", color:"#9270c0", marginTop:"10px", fontWeight:500, maxWidth:"500px", margin:"10px auto 0", fontFamily:"'Outfit',sans-serif" }}>
+//             We don't just train you — we place you. 100% placement assistance, 30+ hiring partners.
+//           </p>
+//         </div>
+//         <div style={{ display:"flex", gap:"18px", flexWrap:"wrap", marginBottom:"48px" }}>
+//           {[{num:"500+",label:"Students Placed"},{num:"100%",label:"Placement Rate"},{num:"120+",label:"Hiring Partners"},{num:"4.2L",label:"Avg. Package"}].map((s,i) => (
+//             <div key={i} style={{ flex:"1 1 120px", minWidth:"120px", background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"20px", padding:"clamp(16px,3%,24px) 18px", textAlign:"center", boxShadow:"0 4px 16px rgba(124,58,237,0.07)", transition:"all 0.32s", cursor:"default", opacity:inView?1:0, transform:inView?"translateY(0)":"translateY(20px)", transitionDelay:`${i*0.1}s` }}
+//               onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px) scale(1.03)";e.currentTarget.style.background="linear-gradient(135deg,#7c3aed,#5b21b6)";e.currentTarget.querySelector(".sn").style.color="#fff";e.currentTarget.querySelector(".sl").style.color="rgba(255,255,255,0.75)";}}
+//               onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0) scale(1)";e.currentTarget.style.background="#fff";e.currentTarget.querySelector(".sn").style.color="#7c3aed";e.currentTarget.querySelector(".sl").style.color="#9270c0";}}>
+//               <div className="sn" style={{ fontSize:"clamp(1.5rem,3vw,2.3rem)", fontWeight:900, color:"#7c3aed", lineHeight:1, letterSpacing:"-1px", transition:"color 0.32s" }}>{s.num}</div>
+//               <div className="sl" style={{ fontSize:"11px", color:"#9270c0", marginTop:"5px", fontWeight:600, fontFamily:"'Outfit',sans-serif", transition:"color 0.32s" }}>{s.label}</div>
+//             </div>
+//           ))}
+//         </div>
+//         <div className="placement-bars-row" style={{ display:"flex", gap:"48px", alignItems:"flex-start", flexWrap:"wrap" }}>
+//           <div style={{ flex:"0 0 clamp(200px,28%,280px)", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-28px)", transition:"all 0.8s ease" }}>
+//             <h3 style={{ fontSize:"clamp(1.2rem,2.5vw,1.9rem)", fontWeight:900, fontFamily:"'Outfit',sans-serif", color:"#0f0426", lineHeight:1.15, letterSpacing:"-0.02em", marginBottom:"12px" }}>Course-wise<br/><span style={{ color:"#7c3aed" }}>Placement Rate</span></h3>
+//             <p style={{ fontSize:"13.5px", color:"#9270c0", lineHeight:1.75, fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>Every course at Skillra is backed by dedicated placement cells and active employer relationships.</p>
+//           </div>
+//           <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"12px" }}>
+//             {PLACEMENT_BARS.map((b,i) => (
+//               <div key={i} style={{ background:"#fff", border:"1.5px solid #e4d9ff", borderRadius:"14px", padding:"14px 18px", cursor:"default", opacity:inView?1:0, transform:inView?"translateX(0)":"translateX(-30px)", transition:`opacity 0.6s ease ${i*0.1}s, transform 0.6s ease ${i*0.1}s, border-color 0.22s, box-shadow 0.22s` }}
+//                 onMouseEnter={e=>{e.currentTarget.style.borderColor=b.color;e.currentTarget.style.boxShadow=`0 4px 20px ${b.color}22`;e.currentTarget.style.transform="translateX(6px)";}}
+//                 onMouseLeave={e=>{e.currentTarget.style.borderColor="#e4d9ff";e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="translateX(0)";}}>
+//                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"10px" }}>
+//                   <span style={{ fontSize:"clamp(12px,1.3vw,13.5px)", fontWeight:700, color:"#1a0640", fontFamily:"'Outfit',sans-serif" }}>{b.course}</span>
+//                   <div style={{ display:"flex", gap:"14px", alignItems:"center" }}>
+//                     <span style={{ fontSize:"11px", color:"#9270c0", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>{b.placed} placed · {b.avg}</span>
+//                     <span style={{ fontSize:"15px", fontWeight:900, color:b.color, fontFamily:"'Outfit',sans-serif", minWidth:"42px", textAlign:"right" }}>{b.rate}%</span>
+//                   </div>
+//                 </div>
+//                 <div style={{ height:"8px", background:"#ede8ff", borderRadius:"99px", overflow:"hidden" }}>
+//                   <div style={{ height:"100%", width:`${barWidths[i]}%`, background:`linear-gradient(90deg,${b.color},${b.color}aa)`, borderRadius:"99px", transition:"width 1.1s cubic-bezier(0.4,0,0.2,1)", boxShadow:`0 2px 8px ${b.color}44` }}/>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+/* ═══════════════════════════════════════════
+   NEWSLETTER — STRICT INPUT VALIDATION
+═══════════════════════════════════════════ */
+
+/* Disposable / throwaway email domains to reject */
+const BLOCKED_DOMAINS = new Set([
+  "mailinator.com","guerrillamail.com","tempmail.com","throwam.com",
+  "yopmail.com","sharklasers.com","guerrillamailblock.com","grr.la",
+  "guerrillamail.info","spam4.me","trashmail.com","trashmail.me",
+  "fakeinbox.com","maildrop.cc","dispostable.com","mailnull.com",
+  "spamgourmet.com","trashmail.at","discard.email","getnada.com",
+  "tempinbox.com","33mail.com","spamgourmet.net","spamgourmet.org",
+]);
+
+/* Strict RFC-5321-aligned regex — no consecutive dots, no leading/trailing dot in local */
+const EMAIL_REGEX = /^(?![.\-])(?!.*[.\-]{2})[a-zA-Z0-9._%+\-]{1,64}(?<![.\-])@[a-zA-Z0-9\-]{1,63}(?:\.[a-zA-Z0-9\-]{1,63})*\.[a-zA-Z]{2,}$/;
+
+/* Strip any HTML / script injection attempts from the value */
+function sanitise(raw) {
+  return raw
+    .replace(/[<>"'`]/g, "")   // remove tag/attribute chars
+    .replace(/javascript:/gi, "") // kill JS protocol
+    .trim()
+    .slice(0, 254);             // hard cap at RFC max length
+}
+
+function validateEmail(raw) {
+  const val = sanitise(raw);
+  if (!val)                        return "Email address is required.";
+  if (val.length > 254)            return "Email address is too long (max 254 characters).";
+  if (!EMAIL_REGEX.test(val))      return "Please enter a valid email address (e.g. name@example.com).";
+  const domain = val.split("@")[1].toLowerCase();
+  if (BLOCKED_DOMAINS.has(domain)) return "Disposable email addresses are not accepted. Please use a real email.";
+  if (domain.split(".").pop().length < 2) return "Email domain extension is invalid.";
+  return null; // valid
+}
+
+const MAX_ATTEMPTS = 3; // rate-limit: 3 failed attempts → locked for session
+
 function NewsletterSection() {
-  const [ref, inView] = useInView(0.3);
-  const [email, setEmail]             = useState("");
+  const [ref, inView]           = useInView(0.3);
+  const [email, setEmail]       = useState("");
+  const [error, setError]       = useState("");        // inline validation message
+  const [touched, setTouched]   = useState(false);     // only show error after first blur/submit
   const [subscribed, setSubscribed]   = useState(false);
   const [subscribing, setSubscribing] = useState(false);
-  const [nlError, setNlError]         = useState("");
+  const [attempts, setAttempts] = useState(0);         // failed-submit counter
+  const [locked, setLocked]     = useState(false);     // too many bad attempts
+
+  /* Live-validate once the field has been touched */
+  useEffect(() => {
+    if (touched) setError(validateEmail(email) || "");
+  }, [email, touched]);
+
+  const handleChange = (e) => {
+    const clean = sanitise(e.target.value);
+    setEmail(clean);
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+    setError(validateEmail(email) || "");
+  };
 
   const handleSubscribe = async () => {
-    if (!email.trim()) { setNlError("Please enter your email"); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setNlError("Please enter a valid email address"); return; }
-    setNlError(""); setSubscribing(true);
-    try {
-      const res = await fetch(SHEETS_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ type:"subscriber", email:email.trim().toLowerCase() }) });
-      const data = await res.json();
-      if (data.success) setSubscribed(true);
-      else if (data.reason === "duplicate") setNlError("This email is already subscribed!");
-      else setNlError("Something went wrong. Please try again.");
-    } catch { setNlError("Network error. Please try again."); }
-    finally { setSubscribing(false); }
-  };
+  if (locked || subscribing) return;
+  setTouched(true);
+  const err = validateEmail(email);
+  if (err) {
+    setError(err);
+    const next = attempts + 1;
+    setAttempts(next);
+    if (next >= MAX_ATTEMPTS) {
+      setLocked(true);
+      setError("Too many invalid attempts. Please refresh the page to try again.");
+    }
+    return;
+  }
+  setError("");
+  setSubscribing(true);
+
+  try {
+    await fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ type: "subscriber", email: email.trim() }),
+    });
+
+    // ✅ no-cors = can't read response, if no error thrown = success
+    setSubscribed(true);
+
+  } catch (err) {
+    setError("Something went wrong. Please try again.");
+    setTouched(true);
+  } finally {
+    setSubscribing(false);
+  }
+};
+
+  const inputBorderColor = !touched
+    ? "rgba(255,255,255,0.7)"
+    : error
+      ? "#f87171"
+      : "#4ade80";
 
   return (
     <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
-      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }}/>
-      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }}/>
-      <div className="nl-inner" style={{ maxWidth:"1200px", margin:"0 auto", padding:"clamp(24px,4vw,36px) clamp(16px,4%,48px)", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"clamp(20px,3%,36px)", flexWrap:"wrap", position:"relative", zIndex:1, opacity:inView?1:0, transition:"opacity 0.8s ease" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"20px" }}>
+      <style>{`@keyframes spinRingAnim { to { transform:rotate(360deg); } }`}</style>
+
+      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
+      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
+
+      <div style={{
+        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
+        display:"flex", alignItems:"flex-start", justifyContent:"space-between",
+        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
+        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
+      }}>
+        {/* Left — branding */}
+        <div style={{ display:"flex", alignItems:"center", gap:"20px", paddingTop:"6px" }}>
           <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
-            <svg width="40" height="40" viewBox="0 0 46 46" fill="none"><path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/></svg>
+            <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+            </svg>
           </div>
           <div>
-            <h2 style={{ fontSize:"clamp(1.1rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>Join Our Newsletter</h2>
-            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>Subscribe to get our latest updates &amp; news.</p>
+            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
+              Join Our Newsletter
+            </h2>
+            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
+              Subscribe to get our latest updates &amp; news.
+            </p>
           </div>
         </div>
+
+        {/* Right — form / success */}
         {subscribed ? (
           <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
             <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
             </div>
-            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed! 🎉</span>
+            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
-            <div className="nl-form" style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-              <input type="email" value={email} onChange={e=>{setEmail(e.target.value);setNlError("");}} onKeyDown={e=>e.key==="Enter"&&handleSubscribe()} placeholder="Enter your email"
-                style={{ height:"48px", width:"clamp(180px,26vw,300px)", padding:"0 16px", fontSize:"14px", fontFamily:"'Outfit',sans-serif", fontWeight:500, color:"#1a0640", background:nlError?"rgba(255,220,220,0.96)":"rgba(255,255,255,0.96)", border:`2px solid ${nlError?"#f87171":"rgba(255,255,255,0.7)"}`, borderRadius:"12px", outline:"none", transition:"border-color 0.2s, background 0.2s" }}
-                onFocus={e=>{e.target.style.borderColor="#fff";e.target.style.background="rgba(255,255,255,0.98)";}}
-                onBlur={e=>{e.target.style.borderColor=nlError?"#f87171":"rgba(255,255,255,0.7)";}}
-              />
-              <button onClick={handleSubscribe} disabled={subscribing}
-                style={{ height:"48px", background:"#111", color:"#fff", border:"none", borderRadius:"12px", padding:"0 24px", fontSize:"14px", fontWeight:700, fontFamily:"'Outfit',sans-serif", cursor:subscribing?"not-allowed":"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:"8px", transition:"all 0.22s", opacity:subscribing?0.7:1 }}
-                onMouseEnter={e=>{if(!subscribing){e.currentTarget.style.background="#2d1b69";e.currentTarget.style.transform="translateY(-2px)";}}}
-                onMouseLeave={e=>{e.currentTarget.style.background="#111";e.currentTarget.style.transform="translateY(0)";}}>
-                {subscribing?"Subscribing…":"Subscribe Now"}
-                {!subscribing&&<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-              </button>
-            </div>
-            {nlError && (
-              <div style={{ display:"flex", alignItems:"center", gap:"6px", background:"rgba(255,255,255,0.15)", border:"1px solid rgba(255,100,100,0.4)", borderRadius:"8px", padding:"6px 12px" }}>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.5"/><path d="M8 5v4M8 11v.5" stroke="#fca5a5" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                <span style={{ fontSize:"13px", color:"#fca5a5", fontWeight:600, fontFamily:"'Outfit',sans-serif" }}>{nlError}</span>
+          <div style={{ display:"flex", flexDirection:"column", gap:"6px", flex:"0 0 auto" }}>
+            <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
+              {/* Email input */}
+              <div style={{ display:"flex", flexDirection:"column", gap:"4px" }}>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  aria-label="Email address"
+                  aria-describedby={error ? "nl-error" : undefined}
+                  aria-invalid={touched && !!error}
+                  value={email}
+                  disabled={locked}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onKeyDown={e => e.key === "Enter" && handleSubscribe()}
+                  placeholder="Enter your email"
+                  maxLength={254}
+                  style={{
+                    height:"48px",
+                    width:"clamp(200px,26vw,300px)",
+                    padding:"0 16px",
+                    fontSize:"14px",
+                    fontFamily:"'Outfit',sans-serif",
+                    fontWeight:500,
+                    color: locked ? "#999" : "#1a0640",
+                    background: locked ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.96)",
+                    border:`2px solid ${inputBorderColor}`,
+                    borderRadius:"12px",
+                    outline:"none",
+                    cursor: locked ? "not-allowed" : "text",
+                    transition:"border-color 0.2s",
+                  }}
+                />
               </div>
+
+              {/* Submit button */}
+              <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+              <button
+                onClick={handleSubscribe}
+                disabled={subscribing || locked}
+                aria-disabled={subscribing || locked}
+                style={{
+                  height:"48px",
+                  background: locked ? "#555" : "#111",
+                  color:"#fff",
+                  border:"none",
+                  borderRadius:"12px",
+                  padding:"0 24px",
+                  fontSize:"14px",
+                  fontWeight:700,
+                  fontFamily:"'Outfit',sans-serif",
+                  cursor: (subscribing || locked) ? "not-allowed" : "pointer",
+                  whiteSpace:"nowrap",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"8px",
+                  transition:"all 0.22s",
+                  opacity: locked ? 0.6 : 1,
+                  alignSelf:"flex-start",
+                }}
+                onMouseEnter={e => { if (!locked && !subscribing) { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; } }}
+                onMouseLeave={e => { e.currentTarget.style.background= locked ? "#555" : "#111"; e.currentTarget.style.transform="translateY(0)"; }}
+              >
+                {subscribing ? "Subscribing…" : "Subscribe Now"}
+                {!subscribing && !locked && (
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+              </a>
+            </div>
+
+            {/* Inline error message */}
+            {touched && error && (
+              <p
+                id="nl-error"
+                role="alert"
+                style={{
+                  margin:0,
+                  fontSize:"12px",
+                  fontWeight:600,
+                  fontFamily:"'Outfit',sans-serif",
+                  color:"#fca5a5",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"5px",
+                  animation:"fadeIn 0.2s ease",
+                }}
+              >
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
+                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8"/>
+                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/>
+                </svg>
+                {error}
+              </p>
+            )}
+
+            {/* Attempt counter hint */}
+            {touched && error && !locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
+              <p style={{ margin:0, fontSize:"11px", color:"rgba(255,255,255,0.5)", fontFamily:"'Outfit',sans-serif" }}>
+                {MAX_ATTEMPTS - attempts} attempt{MAX_ATTEMPTS - attempts !== 1 ? "s" : ""} remaining.
+              </p>
             )}
           </div>
         )}
@@ -1954,11 +2774,516 @@ function NewsletterSection() {
   );
 }
 
+/* ═══════════════ PROMO BANNER ═══════════════ */
+function PromoBanner({ onClose }) {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [captchaAnswer, setCaptchaAnswer] = useState(() => ({  // 👈 add this
+  a: Math.floor(Math.random() * 9) + 1,
+  b: Math.floor(Math.random() * 9) + 1,
+}));
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  // 1. Define your images array
+const BANNER_IMAGES = [
+  `${PUB}/skillraoffer.png`,
+  `${PUB}/Skillraoffer1.png`,
+  `${PUB}/Skillraoffer2.png`,
+];
+
+// 2. Add state inside your popup component
+const [bannerIdx, setBannerIdx] = useState(0);
+
+// 1. Add this ref at the top of your component
+const captchaCanvasRef = useRef(null);
+
+// 2. Add this effect to draw on canvas whenever captchaAnswer changes
+useEffect(() => {
+  const canvas = captchaCanvasRef.current;
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  // Background noise
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = "#f0ebff";
+  ctx.fillRect(0, 0, W, H);
+
+  // Random noise dots
+  for (let i = 0; i < 80; i++) {
+    ctx.beginPath();
+    ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 2, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${Math.random()*360},60%,70%)`;
+    ctx.fill();
+  }
+
+  // Random crossing lines
+  for (let i = 0; i < 5; i++) {
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * W, Math.random() * H);
+    ctx.lineTo(Math.random() * W, Math.random() * H);
+    ctx.strokeStyle = `hsl(${Math.random()*360},50%,60%)`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw the math text with distortion
+  const text = `${captchaAnswer.a} + ${captchaAnswer.b} = ?`;
+  ctx.font = "bold 22px 'Courier New', monospace";
+  ctx.textBaseline = "middle";
+
+  // Draw each character with slight rotation and offset
+  let x = 10;
+  for (let i = 0; i < text.length; i++) {
+    ctx.save();
+    const offsetY = H / 2 + (Math.random() * 8 - 4); // ±4px vertical jitter
+    ctx.translate(x, offsetY);
+    ctx.rotate((Math.random() * 0.4) - 0.2);          // ±0.2 rad rotation
+    ctx.fillStyle = `hsl(${260 + Math.random()*40},60%,35%)`;
+    ctx.fillText(text[i], 0, 0);
+    ctx.restore();
+    x += ctx.measureText(text[i]).width + 2;
+  }
+}, [captchaAnswer]);
+
+useEffect(() => {
+  const timer = setInterval(() => {
+    setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length);
+  }, 5000);
+  return () => clearInterval(timer); // cleanup on close
+}, []);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim() || form.name.trim().length < 2) e.name = "Enter your full name";
+    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email";
+    if (!form.phone.trim() || !/^\d{10,}$/.test(form.phone.replace(/[\s\-+]/g, ""))) e.phone = "Enter a valid 10-digit number";
+    if (!form.message.trim()) e.message = "Please enter a message";
+    if (parseInt(captchaInput) !== captchaAnswer.a + captchaAnswer.b) e.captcha = `Wrong! ${captchaAnswer.a} + ${captchaAnswer.b} = ?`;
+    return e;
+  };
+
+  const handleSubmit = async () => {
+    const e = validate();
+    if (Object.keys(e).length) { setErrors(e); return; }
+    setSubmitting(true);
+    try {
+      await fetch(SHEETS_URL, {
+  method: "POST",
+  mode: "no-cors",          // ← ADD THIS
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    type: "popup",
+    name: form.name.trim(),
+    email: form.email.trim(),
+    phone: form.phone.trim(),
+    message: form.message.trim(),
+  }),
+});
+    } catch (_) {}
+    setSubmitting(false);
+    setSubmitted(true);
+    setTimeout(() => onClose(), 3000);
+  };
+
+  const inputBase = (hasError) => ({
+    width: "100%",
+    padding: "11px 14px",
+    fontSize: "13.5px",
+    fontFamily: "'Outfit',sans-serif",
+    fontWeight: 500,
+    color: "#1a0640",
+    background: hasError ? "#fff5f5" : "#f8f5ff",
+    border: `1.5px solid ${hasError ? "#ef4444" : "#ddd6fe"}`,
+    borderRadius: "10px",
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 0.2s, background 0.2s",
+    display: "block",
+  });
+
+  return (
+    <>
+      <style>{`
+        .pb-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 99997;
+          background: rgba(8,3,25,0.78);
+          backdrop-filter: blur(7px);
+        }
+        .pb-close {
+          position: fixed;
+          z-index: 99999;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          background: #fff;
+          border: 2.5px solid #7c3aed;
+          color: #7c3aed;
+          font-size: 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Outfit',sans-serif;
+          line-height: 1;
+          box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+          transition: background 0.2s, color 0.2s;
+        }
+        .pb-close:hover {
+          background: #7c3aed;
+          color: #fff;
+        }
+        .pb-wrap {
+          position: fixed;
+          z-index: 99998;
+          display: flex;
+          background: #fff;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 32px 90px rgba(109,40,217,0.38);
+        }
+        .pb-left {
+          position: relative;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+        .pb-right {
+          flex: 1;
+          overflow-y: auto;
+          background: #fff;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+        }
+        .pb-shimmer {
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 4px;
+          background: linear-gradient(90deg,#7c3aed,#a78bfa,#ff6b35,#7c3aed);
+          background-size: 300% 100%;
+          animation: shimmer 3s linear infinite;
+        }
+        .pb-field-wrap { margin-bottom: 9px; }
+        .pb-err { font-size: 11px; color: #ef4444; margin-top: 3px; font-family:'Outfit',sans-serif; }
+        .pb-submit {
+          width: 100%;
+          background: linear-gradient(135deg,#ff6b35,#f03e00);
+          color: #fff;
+          border: none;
+          border-radius: 50px;
+          padding: 13px 20px;
+          font-size: 14px;
+          font-weight: 800;
+          font-family: 'Outfit',sans-serif;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          box-shadow: 0 6px 22px rgba(255,80,0,0.35);
+          transition: transform 0.2s, box-shadow 0.2s;
+          letter-spacing: 0.3px;
+          margin-top: 4px;
+        }
+        .pb-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,80,0,0.48); }
+        .pb-submit:disabled { background: #d1d5db; box-shadow: none; cursor: not-allowed; }
+
+        /* ── DESKTOP ── */
+        @media (min-width: 640px) {
+          .pb-close  { top: 14px; right: 14px; }
+          .pb-wrap   { top: 50%; left: 50%; transform: translate(-50%,-50%); width: min(800px, calc(100vw - 40px)); height: min(510px, calc(100vh - 60px)); flex-direction: row; }
+          .pb-left   { width: 42%; height: 100%; }
+          .pb-right  { padding: 30px 28px 26px; }
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 639px) {
+          .pb-close  { top: 10px; right: 10px; width:30px; height:30px; font-size:14px; }
+          .pb-wrap   { top: 50%; left: 50%; transform: translate(-50%,-50%); width: calc(100vw - 24px); max-height: calc(100vh - 40px); flex-direction: column; border-radius: 16px; }
+          .pb-left   { width: 100%; height: 160px; flex-shrink: 0; }
+          .pb-right  { padding: 18px 16px 20px; }
+        }
+      `}</style>
+
+      {/* overlay */}
+      <div className="pb-overlay" onClick={onClose} />
+
+      {/* ✕ close button */}
+      <button className="pb-close" onClick={onClose}>✕</button>
+
+      {/* modal */}
+      <div className="pb-wrap">
+
+        {/* ── LEFT — full cover image ── */}
+        <div className="pb-left">
+          {/* offer badge */}
+          <div style={{
+            position: "absolute", top: "14px", left: "14px", zIndex: 3,
+            background: "#ff6b35", color: "#fff",
+            fontSize: "10.5px", fontWeight: 800,
+            fontFamily: "'Outfit',sans-serif",
+            padding: "5px 11px", borderRadius: "20px",
+            letterSpacing: "0.06em",
+            boxShadow: "0 3px 12px rgba(255,80,0,0.45)",
+            animation: "pulse 2s ease-in-out infinite",
+          }}>LIMITED OFFER</div>
+
+<img
+  src={BANNER_IMAGES[bannerIdx]}
+  alt="Free Counseling"
+  style={{
+    position: "absolute", inset: 0,
+    width: "100%", height: "100%",
+    objectFit: "cover",
+    objectPosition: "center top",   // 👈 pushed up
+    transition: "opacity 0.5s ease", // smooth fade
+    marginTop: "-40px",
+  }}
+/>
+
+          {/* bottom gradient */}
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            height: "55%",
+            background: "linear-gradient(to top, rgba(60,20,130,0.90) 0%, transparent 100%)",
+            zIndex: 2,
+          }} />
+
+          {/* bottom text */}
+          <div style={{
+            position: "absolute", bottom: "16px",
+            left: 0, right: 0,
+            zIndex: 3, textAlign: "center", padding: "0 12px",
+          }}>
+            <div style={{ fontSize: "26px", fontWeight: 900, color: "#fff", fontFamily: "'Outfit',sans-serif", letterSpacing: "-1px", lineHeight: 1 }}>FREE</div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "rgba(255,255,255,0.92)", fontFamily: "'Outfit',sans-serif", marginTop: "3px" }}>Counseling Session</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", justifyContent: "center", marginTop: "9px" }}>
+              {["✓ 100% Placement", "✓ Expert Mentors", "✓ Live Projects"].map((b, i) => (
+                <span key={i} style={{
+                  background: "rgba(255,255,255,0.18)",
+                  border: "1px solid rgba(255,255,255,0.30)",
+                  color: "#fff", fontSize: "9.5px", fontWeight: 700,
+                  fontFamily: "'Outfit',sans-serif",
+                  padding: "3px 8px", borderRadius: "20px",
+                }}>{b}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT — form ── */}
+        <div className="pb-right">
+          <div className="pb-shimmer" />
+
+          {submitted ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, textAlign: "center", padding: "20px 0" }}>
+              <div style={{
+                width: "58px", height: "58px", borderRadius: "50%",
+                background: "linear-gradient(135deg,#7c3aed,#5b21b6)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 14px",
+                animation: "pulse 2s ease-in-out infinite",
+              }}>
+                <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+                  <path d="M7 16l7 7 11-12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 style={{ fontSize: "19px", fontWeight: 900, color: "#1a0640", marginBottom: "7px", fontFamily: "'Outfit',sans-serif" }}>We'll Call You Soon!</h3>
+              <p style={{ fontSize: "13px", color: "#6b5a9e", lineHeight: 1.7, fontFamily: "'Outfit',sans-serif" }}>Our counselors will reach you within 24 hours. 🚀</p>
+            </div>
+          ) : (
+            <>
+              {/* heading */}
+              <div style={{ marginBottom: "14px" }}>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", gap: "6px",
+                  background: "#f3f0ff", border: "1.5px solid #e4d9ff",
+                  borderRadius: "8px", padding: "4px 11px",
+                  fontSize: "10.5px", color: "#7c3aed", fontWeight: 700,
+                  marginBottom: "8px", letterSpacing: "0.08em",
+                  fontFamily: "'Outfit',sans-serif",
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#7c3aed">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  BOOK FREE SESSION
+                </div>
+                <h3 style={{ fontSize: "clamp(16px,2.5vw,20px)", fontWeight: 900, color: "#1a0640", marginBottom: "3px", letterSpacing: "-0.3px", fontFamily: "'Outfit',sans-serif" }}>
+                  Get Expert Guidance
+                </h3>
+                <p style={{ fontSize: "12.5px", color: "#9270c0", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>
+                  Fill the form — we'll call you within 24 hours.
+                </p>
+              </div>
+
+              {/* Name */}
+              <div className="pb-field-wrap">
+                <input
+                  type="text" placeholder="Your full name"
+                  value={form.name}
+                  onChange={e => { setForm(p => ({ ...p, name: e.target.value })); setErrors(p => ({ ...p, name: "" })); }}
+                  style={inputBase(errors.name)}
+                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
+                  onBlur={e => { e.target.style.borderColor = errors.name ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.name ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
+                />
+                {errors.name && <div className="pb-err">{errors.name}</div>}
+              </div>
+
+              {/* Email */}
+              <div className="pb-field-wrap">
+                <input
+                  type="email" placeholder="Email address"
+                  value={form.email}
+                  onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setErrors(p => ({ ...p, email: "" })); }}
+                  style={inputBase(errors.email)}
+                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
+                  onBlur={e => { e.target.style.borderColor = errors.email ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.email ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
+                />
+                {errors.email && <div className="pb-err">{errors.email}</div>}
+              </div>
+
+              {/* Phone */}
+              <div className="pb-field-wrap">
+                <input
+                  type="tel" placeholder="Phone number (10 digits)"
+                  value={form.phone}
+                  onChange={e => { setForm(p => ({ ...p, phone: e.target.value })); setErrors(p => ({ ...p, phone: "" })); }}
+                  style={inputBase(errors.phone)}
+                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
+                  onBlur={e => { e.target.style.borderColor = errors.phone ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.phone ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
+                />
+                {errors.phone && <div className="pb-err">{errors.phone}</div>}
+              </div>
+
+              {/* Message */}
+              <div className="pb-field-wrap">
+                <textarea
+                  placeholder="Message us…"
+                  value={form.message}
+                  rows={3}
+                  onChange={e => { setForm(p => ({ ...p, message: e.target.value })); setErrors(p => ({ ...p, message: "" })); }}
+                  style={{ ...inputBase(errors.message), resize: "none" }}
+                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
+                  onBlur={e => { e.target.style.borderColor = errors.message ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.message ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
+                />
+                {errors.message && <div className="pb-err">{errors.message}</div>}
+              </div>
+
+              {/* Captcha */}
+<div className="pb-field-wrap">
+  <div style={{
+    display: "flex", flexDirection: "column", gap: "8px",
+    background: errors.captcha ? "#fff5f5" : "#f8f5ff",
+    border: `1.5px solid ${errors.captcha ? "#ef4444" : "#ddd6fe"}`,
+    borderRadius: "10px", padding: "9px 13px",
+    transition: "border-color 0.2s",
+  }}>
+    {/* Canvas row with refresh button */}
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <canvas
+        ref={captchaCanvasRef}
+        width={220}
+        height={48}
+        style={{
+          borderRadius: "6px",
+          flex: 1,
+          userSelect: "none",
+          pointerEvents: "none",
+          filter: "contrast(1.1)",
+        }}
+      />
+      {/* Refresh button */}
+      <button
+        type="button"
+        onClick={() => {
+          setCaptchaAnswer({ a: Math.floor(Math.random()*9)+1, b: Math.floor(Math.random()*9)+1 });
+          setCaptchaInput("");
+          setErrors(p => ({ ...p, captcha: "" }));
+        }}
+        title="Refresh CAPTCHA"
+        style={{
+          flexShrink: 0,
+          width: "32px", height: "32px",
+          borderRadius: "50%",
+          border: "1.5px solid #ddd6fe",
+          background: "#fff",
+          cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.2s",
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = "#7c3aed";
+          e.currentTarget.style.borderColor = "#7c3aed";
+          e.currentTarget.querySelector("svg").style.stroke = "#fff";
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = "#fff";
+          e.currentTarget.style.borderColor = "#ddd6fe";
+          e.currentTarget.querySelector("svg").style.stroke = "#7c3aed";
+        }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style={{ stroke: "#7c3aed", transition: "stroke 0.2s" }}>
+          <path d="M1 4v6h6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <input
+      type="number"
+      placeholder="Enter answer"
+      value={captchaInput}
+      onChange={e => { setCaptchaInput(e.target.value); setErrors(p => ({ ...p, captcha: "" })); }}
+      style={{
+        border: "none",
+        borderTop: "1.5px solid #ede9fe",
+        background: "transparent",
+        fontSize: "13.5px",
+        fontFamily: "'Outfit',sans-serif",
+        fontWeight: 700,
+        color: "#1a0640",
+        outline: "none",
+        padding: "6px 4px 2px",
+        width: "100%",
+      }}
+    />
+  </div>
+  {errors.captcha && <div className="pb-err">{errors.captcha}</div>}
+</div>
+
+              {/* Submit */}
+              <button className="pb-submit" onClick={handleSubmit} disabled={submitting}>
+                {submitting ? "Submitting…" : "Submit & Book My Session"}
+                {!submitting && (
+                  <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+                    <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
 /* ═══════════════ MAIN ═══════════════ */
 export default function HomePage() {
   const scrollRef = useRef(null);
   const [showModal,   setShowModal]   = useState(false);
   const [showReviews, setShowReviews] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
+
+
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -1971,6 +3296,7 @@ export default function HomePage() {
 
   return (
     <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, overflowX:"hidden", background:"#F3F4F4" }}>
+      {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
       <title>Skillra — AI Medical Coding, IT &amp; Finance Training with 100% Placement</title>
       <meta name="description" content="Skillra offers industry-aligned training in AI Medical Coding, Medical Billing, Full Stack Development, Data Analytics, SAP, Tally & GST with 100% placement assistance."/>
 
@@ -2059,7 +3385,7 @@ export default function HomePage() {
       <CoursesSection />
       <ServicesSection />
       <CollegesSection />        {/* ← new */}
-      <PlacementSection />
+      {/* <PlacementSection /> */}
       <TestimonialsSection />
       <BlogsSection />           {/* ← new */}
       <NewsletterSection />

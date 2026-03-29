@@ -24,25 +24,32 @@ const SOCIALS = [
   { Icon: IcoYouTube,   color: "#ff0000", label: "YouTube",   url: "https://www.youtube.com/@skillratechnologies"           },
 ];
 
-const COURSES = [
-  { label: "AI Medical Coding",    path: "/courses" },
-  { label: "AI Medical Billing",   path: "/courses" },
-  { label: "AI Medical Scribing",  path: "/courses" },
-  { label: "Full Stack Development", path: "/courses" },
-  { label: "Data Analytics",       path: "/courses" },
+const COURSES_COL1 = [
+  { label: "AI Medical Coding Course",   path: "/courses/ai-medical-coding"   },
+  { label: "AI Medical Billing Course",  path: "/courses/ai-medical-billing"  },
+  { label: "AI Medical Scribing Course", path: "/courses/ai-medical-scribing" },
+  { label: "Tally & GST Course",         path: "/courses/tally-gst"           },
+  { label: "SAP Development Course",     path: "/courses/sap-development"     },
+  { label: "Data Analytics Course",      path: "/courses/data-analytics"      },
 ];
 
-/* All quick links — current page is filtered out at render time */
+const COURSES_COL2 = [
+  { label: "Personality Development Course", path: "/courses/personality-development" },
+  { label: "MERN / MEAN Stack Course",       path: "/courses/full-stack-development"  },
+  { label: "UI/UX Designing Course",         path: "/courses/ui-ux-design"         },
+  { label: "AI & Machine Learning Course",   path: "/courses/ai-machine-learning"     },
+];
+
 const QUICK_LINKS = [
-  { label: "Home",           path: "/"          },
-  { label: "About Us",       path: "/about"     },
-  { label: "Campus",         path: "/campus"    },
-  { label: "Placement",      path: "/placement" },
-  { label: "Career Guidance",path: "/career"    },
-  { label: "Course Offered", path: "/courses"   },
-  { label: "Books",          path: "/books"     },
-  { label: "Contact Us",     path: "/contact"   },
-  { label: "Privacy & Policy", path: "/privacy" },
+  { label: "Home",             path: "/"          },
+  { label: "About Us",         path: "/about"     },
+  { label: "Campus",           path: "/campus"    },
+  { label: "Placement",        path: "/placement" },
+  { label: "Career Guidance",  path: "/career"    },
+  { label: "Course Offered",   path: "/courses"   },
+  { label: "Books",            path: "/books"     },
+  { label: "Contact Us",       path: "/contact"   },
+  { label: "Privacy & Policy", path: "/privacy"   },
 ];
 
 /* ═══════════════════════════════════════════
@@ -51,8 +58,13 @@ const QUICK_LINKS = [
 function SocialBtn({ Icon, color, label, url }) {
   const [hov, setHov] = useState(false);
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={label}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
       style={{
         width: 34, height: 34, borderRadius: "50%",
         background: hov ? color : "rgba(255,255,255,0.10)",
@@ -63,33 +75,40 @@ function SocialBtn({ Icon, color, label, url }) {
         transition: "all 0.22s cubic-bezier(.4,0,.2,1)",
         boxShadow: hov ? `0 6px 18px ${color}55` : "none",
         flexShrink: 0,
-      }}>
+      }}
+    >
       <Icon />
     </a>
   );
 }
 
 /* ═══════════════════════════════════════════
-   NAV LINK
+   FOOTER LINK
 ═══════════════════════════════════════════ */
-function FooterLink({ label, onClick }) {
+function FooterLink({ label, href, onClick }) {
   const [hov, setHov] = useState(false);
   return (
-    <li onClick={onClick}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{
-        display: "flex", alignItems: "center", gap: "8px",
-        fontSize: "13.5px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
-        color: hov ? "#a78bfa" : "rgba(255,255,255,0.68)",
-        cursor: "pointer",
-        transform: hov ? "translateX(4px)" : "translateX(0)",
-        transition: "all 0.22s ease",
-        listStyle: "none", marginBottom: "12px",
-      }}>
-      <span style={{ color: hov ? "#a78bfa" : "rgba(255,255,255,0.40)", transition: "color 0.22s", flexShrink: 0 }}>
-        <IcoChevron />
-      </span>
-      {label}
+    <li style={{ listStyle: "none", marginBottom: "10px" }}>
+      <a
+        href={href}
+        onClick={onClick}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+        style={{
+          display: "flex", alignItems: "center", gap: "8px",
+          fontSize: "13px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
+          color: hov ? "#a78bfa" : "rgba(255,255,255,0.68)",
+          cursor: "pointer",
+          transform: hov ? "translateX(4px)" : "translateX(0)",
+          transition: "all 0.22s ease",
+          textDecoration: "none",
+        }}
+      >
+        <span style={{ color: hov ? "#a78bfa" : "rgba(255,255,255,0.40)", transition: "color 0.22s", flexShrink: 0 }}>
+          <IcoChevron />
+        </span>
+        {label}
+      </a>
     </li>
   );
 }
@@ -98,22 +117,29 @@ function FooterLink({ label, onClick }) {
    FOOTER
 ═══════════════════════════════════════════ */
 export default function Footer() {
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [logoErr, setLogoErr] = useState(false);
 
-  /* Filter out the current page from quick links */
   const visibleQuickLinks = QUICK_LINKS.filter(
-    link => link.path !== location.pathname
+    (link) => link.path !== location.pathname
   );
 
+  const goTo = (e, path) => {
+    e.preventDefault();
+    navigate(path);
+  };
+
   return (
-    <footer style={{
-      background: "#111118", position: "relative",
-      overflow: "hidden", fontFamily: "'Outfit', sans-serif",
-    }}>
+    <footer
+      style={{
+        background: "#111118",
+        position: "relative",
+        overflow: "hidden",
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
       <style>{`
-        /* ── Dot grid ── */
         .ft-dots {
           position: absolute; inset: 0; pointer-events: none;
           background-image: radial-gradient(rgba(124,58,237,0.08) 1px, transparent 1px);
@@ -124,53 +150,37 @@ export default function Footer() {
           background: linear-gradient(90deg, transparent, rgba(124,58,237,0.6), transparent);
           pointer-events: none;
         }
-
-        /* ── Main layout ── */
         .ft-main {
-          max-width: 1200px; margin: 0 auto;
-          padding: 52px clamp(16px,4%,48px) 36px;
-          display: flex; gap: 48px; flex-wrap: wrap;
+          max-width: 1400px; margin: 0 auto;
+          padding: 52px clamp(16px,3%,40px) 36px;
+          display: flex; gap: 200px; flex-wrap: wrap;
           position: relative; z-index: 1;
+          align-items: flex-start;
         }
-
-        /* ── Brand column ── */
-        .ft-brand { flex: 0 0 400px; min-width: 200px; }
-
-        /* ── Spacer ── */
-        .ft-spacer { flex: 1; min-width: 0; }
-
-        /* ── Link columns ── */
-        .ft-cols {
-          display: flex; gap: 48px; flex-wrap: wrap;
+        .ft-brand { flex: 0 0 260px; min-width: 200px; }
+        .ft-courses-wrap {
+          flex: 0 0 auto;
+          display: flex;
+          gap: 30px;
         }
-        .ft-col { flex: 0 0 auto; min-width: 150px; }
-
-        /* ── Bottom bar ── */
+        .ft-col { flex: 0 0 auto; min-width: 190px; }
         .ft-bottom {
           border-top: 1px solid rgba(255,255,255,0.07);
           padding: 18px clamp(16px,4%,48px);
           display: flex; align-items: center; justify-content: center;
           position: relative; z-index: 1;
         }
-
-        /* ══ TABLET ≤ 900px ══ */
-        @media (max-width: 900px) {
-          .ft-spacer { display: none !important; }
-          .ft-main   { gap: 32px; }
-          .ft-brand  { flex: 0 0 100%; }
-          .ft-cols   { gap: 28px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+        @media (max-width: 1100px) {
+          .ft-brand { flex: 0 0 100%; }
+          .ft-courses-wrap { flex-wrap: wrap; }
         }
-
-        /* ══ MOBILE ≤ 600px ══ */
-        @media (max-width: 600px) {
-          .ft-brand  { flex: 0 0 100%; }
-          .ft-cols   { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
-          .ft-main   { padding: 36px 16px 28px !important; gap: 24px !important; }
+        @media (max-width: 700px) {
+          .ft-courses-wrap { gap: 16px; }
+          .ft-col { min-width: 140px; }
+          .ft-main { gap: 24px; padding: 36px 16px 28px !important; }
         }
-
-        /* ══ SMALL MOBILE ≤ 400px ══ */
-        @media (max-width: 400px) {
-          .ft-cols { grid-template-columns: 1fr !important; }
+        @media (max-width: 420px) {
+          .ft-courses-wrap { flex-direction: column; gap: 8px; }
         }
       `}</style>
 
@@ -181,9 +191,11 @@ export default function Footer() {
 
         {/* ── Brand ── */}
         <div className="ft-brand">
-          {/* Logo */}
-          <div onClick={() => navigate("/")}
-            style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "18px", cursor: "pointer" }}>
+          <a
+            href="/"
+            onClick={(e) => goTo(e, "/")}
+            style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px", cursor: "pointer", textDecoration: "none" }}
+          >
             <div style={{
               width: 36, height: 36, borderRadius: "10px",
               background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
@@ -192,67 +204,93 @@ export default function Footer() {
               overflow: "hidden", flexShrink: 0,
             }}>
               {logoErr
-                ? <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M15 6.5C15 4.57 13.43 3 11.5 3H8C5.79 3 4 4.79 4 7c0 1.86 1.28 3.41 3 3.87V11C5.12 11.46 4 12.84 4 14.5 4 16.43 5.57 18 7.5 18H11c2.21 0 4-1.79 4-4 0-1.86-1.28-3.41-3-3.87V10c1.88-.46 3-1.84 3-3.5z" fill="white" fillOpacity="0.9"/></svg>
-                : <img src={`${PUB}/logo.png`} alt="Skillra logo"
+                ? (
+                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                    <path d="M15 6.5C15 4.57 13.43 3 11.5 3H8C5.79 3 4 4.79 4 7c0 1.86 1.28 3.41 3 3.87V11C5.12 11.46 4 12.84 4 14.5 4 16.43 5.57 18 7.5 18H11c2.21 0 4-1.79 4-4 0-1.86-1.28-3.41-3-3.87V10c1.88-.46 3-1.84 3-3.5z" fill="white" fillOpacity="0.9" />
+                  </svg>
+                )
+                : (
+                  <img
+                    src={`${PUB}/logo.png`}
+                    alt="Skillra logo"
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    onError={() => setLogoErr(true)} />
+                    onError={() => setLogoErr(true)}
+                  />
+                )
               }
             </div>
             <span style={{ fontSize: "18px", fontWeight: 900, color: "#fff", letterSpacing: "0.06em", fontFamily: "'Outfit', sans-serif" }}>
               SKILLRA
             </span>
-          </div>
+          </a>
 
-          {/* Description */}
           <p style={{
-  fontSize: "13.5px", 
-  color: "rgba(255,255,255,0.58)",
-  lineHeight: 1.8, 
-  fontWeight: 400, 
-  marginBottom: "24px",
-  width: "100%",
-  maxWidth: "460px",
-  fontFamily: "'Outfit', sans-serif",
-}}>
-            Skillra delivers industry-aligned training to help students build strong careers in Medical Coding, IT, and Finance.
+            fontSize: "13px",
+            color: "rgba(255,255,255,0.55)",
+            lineHeight: 1.75,
+            fontWeight: 400,
+            marginBottom: "22px",
+            fontFamily: "'Outfit', sans-serif",
+          }}>
+            Skillra delivers industry-aligned training to help students build strong careers in Medical Coding, IT, and Finance. Learn with confidence and step into your future with job-ready skills.
           </p>
 
-          {/* Socials */}
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-            {SOCIALS.map((s, i) => <SocialBtn key={i} {...s} />)}
+            {SOCIALS.map((s, i) => (
+              <SocialBtn key={i} {...s} />
+            ))}
           </div>
         </div>
 
-        <div className="ft-spacer" />
-
-        {/* ── Link Columns ── */}
-        <div className="ft-cols">
-
-          {/* Our Courses */}
+        {/* ── Courses — two sub-columns ── */}
+        <div className="ft-courses-wrap">
           <div className="ft-col">
-            <h4 style={{ fontSize: "15px", fontWeight: 800, color: "#fff", marginBottom: "20px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
-              Our Course :
+            <h4 style={{ fontSize: "14px", fontWeight: 800, color: "#fff", marginBottom: "18px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
+              Our Courses
             </h4>
             <ul style={{ padding: 0, margin: 0 }}>
-              {COURSES.map((c, i) => (
-                <FooterLink key={i} label={c.label} onClick={() => navigate(c.path)} />
+              {COURSES_COL1.map((c, i) => (
+                <FooterLink
+                  key={i}
+                  label={c.label}
+                  href={c.path}
+                  onClick={(e) => goTo(e, c.path)}
+                />
               ))}
             </ul>
           </div>
 
-          {/* Quick Links — current page hidden */}
-          <div className="ft-col">
-            <h4 style={{ fontSize: "15px", fontWeight: 800, color: "#fff", marginBottom: "20px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
-              Quick Links:
-            </h4>
+          <div className="ft-col" style={{ paddingTop: "38px" }}>
             <ul style={{ padding: 0, margin: 0 }}>
-              {visibleQuickLinks.map((link, i) => (
-                <FooterLink key={i} label={link.label} onClick={() => navigate(link.path)} />
+              {COURSES_COL2.map((c, i) => (
+                <FooterLink
+                  key={i}
+                  label={c.label}
+                  href={c.path}
+                  onClick={(e) => goTo(e, c.path)}
+                />
               ))}
             </ul>
           </div>
-
         </div>
+
+        {/* ── Quick Links ── */}
+        <div className="ft-col">
+          <h4 style={{ fontSize: "14px", fontWeight: 800, color: "#fff", marginBottom: "18px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
+            Quick Links
+          </h4>
+          <ul style={{ padding: 0, margin: 0 }}>
+            {visibleQuickLinks.map((link, i) => (
+              <FooterLink
+                key={i}
+                label={link.label}
+                href={link.path}
+                onClick={(e) => goTo(e, link.path)}
+              />
+            ))}
+          </ul>
+        </div>
+
       </div>
 
       {/* ── Bottom bar ── */}

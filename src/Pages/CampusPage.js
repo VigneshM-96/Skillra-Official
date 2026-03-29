@@ -74,7 +74,7 @@ function ActiveStudentsBadge({ style, delay = 0, className = ""}) {
         </svg>
       </div>
       <div>
-        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>1k</div>
+        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>1000+</div>
         <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit', sans-serif" }}>Active Students</div>
       </div>
     </div>
@@ -118,12 +118,14 @@ function CampusHero({ onJoinClick }) {
       Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
     </p>
     <div className="cp-v4 campus-btn-desktop">
+      <a href="/Skillra-Official/campus" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
       <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "clamp(13px,1.3vw,14px)", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(124,58,237,0.38)"; }}>
         Join Skillra Campus
         <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
+      </a>
     </div>
   </div>
 
@@ -154,8 +156,8 @@ function CampusHero({ onJoinClick }) {
     <img src={`${PUB}/campusboy.png`} alt="Campus Student"
       style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" }}
     />
-    <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="Lifetime Access" style={{ top: "12%", right: "2%" }} delay={600} />
-    <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="4+ online Courses" style={{ bottom: "24%", right: "2%" }} delay={800} />
+    <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="50+ Workshops" style={{ top: "12%", right: "2%" }} delay={600} />
+    <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="20+ Colleges" style={{ bottom: "24%", right: "2%" }} delay={800} />
     <ActiveStudentsBadge className="hero-badge" style={{ bottom: "40%", left: "2%" }} delay={1000} />
   </div>
 
@@ -201,25 +203,34 @@ function CampusCard({ heading, body, delay, inView }) {
         ].join(", "),
       }}
     >
-      <h3 style={{ fontSize: "clamp(15px,1.6vw,18px)", fontWeight: 800, color: hovered ? "#fff" : "#7c3aed", fontFamily: "'Outfit', sans-serif", marginBottom: "18px", transition: "color 0.28s ease" }}>
+      <h3 style={{
+        fontSize: "clamp(15px,1.6vw,18px)", fontWeight: 800,
+        color: hovered ? "#fff" : "#7c3aed",
+        fontFamily: "'Outfit', sans-serif", marginBottom: "18px",
+        transition: "color 0.28s ease",
+        textAlign: "center",   // 👈 heading centered
+      }}>
         {heading}
       </h3>
-      <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: hovered ? "rgba(255,255,255,0.85)" : "#6b7280", fontFamily: "'Outfit', sans-serif", lineHeight: 1.8, fontWeight: 400, transition: "color 0.28s ease" }}>
+      <p style={{
+        fontSize: "clamp(12px,1.3vw,13.5px)",
+        color: hovered ? "rgba(255,255,255,0.85)" : "#6b7280",
+        fontFamily: "'Outfit', sans-serif", lineHeight: 1.8, fontWeight: 400,
+        transition: "color 0.28s ease",
+        textAlign: "justify",  // 👈 body justified
+      }}>
         {body}
       </p>
     </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   SECTION 2 — ABOUT SKILLRA CAMPUS
-═══════════════════════════════════════════════════ */
 function AboutCampusSection() {
   const [ref, inView] = useInView(0.08);
   const CARDS = [
-    { heading: "Heading", body: "Skillra Campus brings together education, industry insight, and student leadership to create meaningful opportunities within college campuses." },
-    { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
-    { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
+    { heading: "Where Education Meets Opportunity", body: "Skillra Campus brings together education, industry insight, and student leadership to create meaningful opportunities within college campuses." },
+    { heading: "Learn Beyond the Classroom", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
+    { heading: "Build Confidence. Grow Your Career.", body: "Through Skillra Campus, students gain access to experiences that help them build confidence, expand their professional network, and prepare for career opportunities." },
   ];
   return (
     <section ref={ref} id="about-campus" style={{ background: "#fff", padding: "clamp(48px,8vw,88px) 0", borderTop: "1px solid #f0ebff", position: "relative" }}>
@@ -228,10 +239,10 @@ function AboutCampusSection() {
         <div style={{ textAlign: "center", marginBottom: "52px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
           <h2 style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>About Skillra Campus</h2>
           <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit', sans-serif", maxWidth: "580px", margin: "0 auto", lineHeight: 1.7 }}>
-            Powerful natural language processing capabilities, that can understand and respond to customer inquiries in real-time &amp; improve customer satisfaction.
+            Trusted by medical coding students across India to build skills, crack certifications, and launch successful careers.
           </p>
         </div>
-        <div className="campus-cards-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+        <div className="campus-cards-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>  {/* 👈 removed textAlign from grid */}
           {CARDS.map((card, i) => (
             <CampusCard key={i} heading={card.heading} body={card.body} delay={0.1 + i * 0.1} inView={inView} />
           ))}
@@ -338,10 +349,10 @@ scrollBehavior: "smooth",
    SECTION 4 — TESTIMONIALS + CONTACT FORM
 ═══════════════════════════════════════════════════ */
 const TESTIMONIALS = [
-  { name: "Aria Zinario", text: "I am very helped by this E-wallet application , my days are very easy to use this application and its very helpful in my life , even I can pay a short time 😊", avatar: "AZ" },
-  { name: "Rahul Sharma", text: "Skillra Campus transformed my career path completely. The placement support was exceptional and I got 3 offers within a month of completing the course.", avatar: "RS" },
-  { name: "Priya Nair",   text: "The mentors at Skillra are incredibly supportive. Real industry experience combined with structured learning made all the difference for me.", avatar: "PN" },
-  { name: "Karthik V",    text: "Best decision I ever made. The hands-on projects gave me the confidence to clear technical interviews at top product companies.", avatar: "KV" },
+  { name: "Aria Zinario", text: "I am very helped by this E-wallet application , my days are very easy to use this application and its very helpful in my life , even I can pay a short time 😊", avatar: "AZ", image: "https://randomuser.me/api/portraits/women/44.jpg", },
+  { name: "Rahul Sharma", text: "Skillra Campus transformed my career path completely. The placement support was exceptional and I got 3 offers within a month of completing the course.", avatar: "RS", image: "https://randomuser.me/api/portraits/men/32.jpg", },
+  { name: "Priya Nair",   text: "The mentors at Skillra are incredibly supportive. Real industry experience combined with structured learning made all the difference for me.", avatar: "PN", image: "https://randomuser.me/api/portraits/women/67.jpg", },
+  { name: "Karthik V",    text: "Best decision I ever made. The hands-on projects gave me the confidence to clear technical interviews at top product companies.", avatar: "KV", image: "https://randomuser.me/api/portraits/men/44.jpg", },
 ];
 const AVATAR_COLORS = ["#7c3aed", "#059669", "#dc2626", "#d97706"];
 
@@ -408,39 +419,43 @@ function TestimonialsContactSection() {
   };
 
   const handleSubmit = async () => {
-    // Validate all fields
-    const newErrors = {};
-    let hasError = false;
-    Object.keys(validators).forEach(f => {
-      const err = validators[f](formData[f]);
-      newErrors[f] = err;
-      if (err) hasError = true;
+  const newErrors = {};
+  let hasError = false;
+  Object.keys(validators).forEach(f => {
+    const err = validators[f](formData[f]);
+    newErrors[f] = err;
+    if (err) hasError = true;
+  });
+  setErrors(newErrors);
+  if (hasError) return;
+
+  setSubmitting(true);
+  try {
+    const now = new Date();
+    const date = now.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const time = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({
+        type: "campus",          // ← lowercase to match Apps Script
+        date,
+        time,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone,
+        source: formData.source,
+        purpose: formData.purpose.trim(),
+      }),
     });
-    setErrors(newErrors);
-    if (hasError) return;
-
-    setSubmitting(true);
-    try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({
-          type: "contact",
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone,
-          source: formData.source,
-          purpose: formData.purpose.trim(),
-        }),
-      });
-      setSubmitted(true);
-    } catch {
-      setErrors(prev => ({ ...prev, _form: "Something went wrong. Please try again." }));
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
+    setSubmitted(true);
+  } catch {
+    setErrors(prev => ({ ...prev, _form: "Something went wrong. Please try again." }));
+  } finally {
+    setSubmitting(false);
+  }
+};
   const inputStyle = (field) => ({
     width: "100%", padding: "13px 16px",
     border: `1.5px solid ${errors[field] ? "#ef4444" : errors[field] === "" ? "#22c55e" : "#e5e7eb"}`,
@@ -486,16 +501,36 @@ function TestimonialsContactSection() {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
               {TESTIMONIALS.map((t, i) => (
-                <div key={i} onClick={() => handleAvatarClick(i)} style={{
-                  width: "44px", height: "44px", borderRadius: "50%", background: AVATAR_COLORS[i],
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "13px", fontWeight: 700, color: "#fff",
-                  fontFamily: "'Outfit',sans-serif", cursor: "pointer", flexShrink: 0,
-                  border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
-                  boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
-                  transition: "all 0.22s", transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
-                }}>{t.avatar}</div>
-              ))}
+  <div
+    key={i}
+    onClick={() => handleAvatarClick(i)}
+    style={{
+      width: "44px", height: "44px", borderRadius: "50%",
+      overflow: "hidden", cursor: "pointer", flexShrink: 0,
+      border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
+      boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
+      transition: "all 0.22s",
+      transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
+    }}
+  >
+    <img
+      src={t.image}
+      alt={t.name}
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        display: "block",
+      }}
+      onError={e => {
+        // fallback to initials if image fails to load
+        e.currentTarget.style.display = "none";
+        e.currentTarget.parentElement.style.background = AVATAR_COLORS[i];
+        e.currentTarget.parentElement.innerHTML = `<span style="color:#fff;font-size:13px;font-weight:700;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;width:100%;height:100%">${t.avatar}</span>`;
+      }}
+    />
+  </div>
+))}
               <div onClick={handlePlay} style={{
                 width: "44px", height: "44px", borderRadius: "50%",
                 border: `2px solid ${isPlaying ? "#7c3aed" : "#d1d5db"}`,

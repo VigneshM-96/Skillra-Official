@@ -5,6 +5,9 @@ import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
+
+
 function useInView(threshold = 0.08) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -19,18 +22,68 @@ function useInView(threshold = 0.08) {
   return [ref, inView];
 }
 
-/* ══════════════════════════════════════════════════════
-   SECTION 1 — HERO
-   Mobile order: 1. Title+arc  2. Image  3. Desc+button
-   Then purple quote band
-══════════════════════════════════════════════════════ */
 function CareerHero() {
   const [arcReady, setArcReady] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+
   useEffect(() => {
     const t = setTimeout(() => setArcReady(true), 500);
     return () => clearTimeout(t);
   }, []);
 
+const [errors, setErrors] = useState({});
+
+const validate = () => {
+  const e = {};
+  if (!form.name.trim()) {
+    e.name = "Name is required";
+  } else if (form.name.trim().length < 2) {
+    e.name = "Name must be at least 2 characters";
+  }
+
+  if (!form.email.trim()) {
+    e.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    e.email = "Enter a valid email address";
+  }
+
+  if (!form.phone.trim()) {
+    e.phone = "Phone number is required";
+  } else if (!/^[6-9]\d{9}$/.test(form.phone.trim())) {
+    e.phone = "Enter a valid 10-digit Indian mobile number";
+  }
+
+  return e;
+};
+
+const handleSubmit = async () => {
+  const e = validate();
+  if (Object.keys(e).length > 0) { setErrors(e); return; }
+  setErrors({});
+  setStatus("loading");
+  try {
+    await fetch(SHEETS_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        type: "popup",
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        message: form.message.trim(),
+      }),
+    });
+    setStatus("success");
+    setTimeout(() => {
+      setShowPopup(false);
+      setStatus("idle");
+      setForm({ name: "", email: "", phone: "", message: "" });
+    }, 2000);
+  } catch {
+    setStatus("error");
+  }
+};
   return (
     <section style={{
       background: "#ede9ff",
@@ -39,52 +92,327 @@ function CareerHero() {
       minHeight: "100vh",
       display: "flex", flexDirection: "column",
     }}>
-      {/* dot grid */}
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, backgroundImage: `radial-gradient(rgba(124,58,237,0.08) 1px,transparent 1px)`, backgroundSize: "28px 28px" }} />
 
-      {/* Hero row — flex-wrap for mobile reorder */}
+      <style>{`
+        /* ── Arc animation ── */
+        .career-arc {
+          stroke-dasharray: 320;
+          stroke-dashoffset: 320;
+          transition: stroke-dashoffset 1.1s cubic-bezier(0.4,0,0.2,1) 0.2s;
+        }
+        .career-arc-animate { stroke-dashoffset: 0; }
+
+        /* ── Desktop: show desktop els, hide mobile bottom ── */
+        .career-desc-desktop { display: block; }
+        .career-btn-desktop  { display: block; }
+        .career-bottom       { display: none;  }
+
+        /* ── Mobile ── */
+        @media(max-width: 768px) {
+          .career-desc-desktop { display: none !important; }
+          .career-btn-desktop  { display: none !important; }
+
+          .career-bottom {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 0 16px 24px !important;
+            margin: 0 !important;
+          }
+
+          .career-hero-left {
+            width: 100% !important;
+            align-items: center !important;
+            text-align: center !important;
+            padding-top: 150px !important;
+          }
+
+          .career-title { text-align: center !important; }
+
+          .career-hero-right {
+            width: 100% !important;
+            flex: unset !important;
+            min-height: unset !important;
+            height: auto !important;
+          }
+
+          .career-hero-img {
+            max-height: 440px !important;
+            width: 90% !important;
+          }
+
+          .career-hero-inner {
+            padding-top: 88px !important;
+            padding-bottom: 0 !important;
+            gap: 8px !important;
+          }
+
+          .cr-v5 { margin-top: 0 !important; }
+        }
+
+        /* ── Popup ── */
+        .consult-overlay {
+          position: fixed; inset: 0; z-index: 9999;
+          background: rgba(15,5,40,0.55);
+          display: flex; align-items: center; justify-content: center;
+          padding: 16px;
+          animation: fadeInOverlay 0.2s ease;
+        }
+        @keyframes fadeInOverlay { from{opacity:0} to{opacity:1} }
+
+        .consult-modal {
+          background: #fff;
+          border-radius: 24px;
+          padding: 36px 32px 32px;
+          width: 100%; max-width: 460px;
+          position: relative;
+          box-shadow: 0 24px 64px rgba(124,58,237,0.18);
+          animation: slideUpModal 0.28s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes slideUpModal {
+          from{opacity:0;transform:translateY(32px) scale(0.97)}
+          to{opacity:1;transform:translateY(0) scale(1)}
+        }
+
+        .consult-close {
+          position: absolute; top: 16px; right: 16px;
+          background: #f3f0ff; border: none; border-radius: 50%;
+          width: 32px; height: 32px; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          color: #7c3aed; font-size: 18px; line-height: 1;
+          transition: background 0.18s;
+        }
+        .consult-close:hover { background: #ede9ff; }
+
+        .consult-input {
+          width: 100%; padding: 12px 16px;
+          border: 1.5px solid #e5e0f8;
+          border-radius: 12px; font-size: 14px;
+          font-family: 'Outfit', sans-serif;
+          color: #1a0640; outline: none;
+          transition: border-color 0.18s;
+          box-sizing: border-box;
+          background: #faf9ff;
+        }
+        .consult-input:focus { border-color: #7c3aed; background: #fff; }
+        .consult-input::placeholder { color: #b0a0d0; }
+
+        .consult-submit {
+          width: 100%; padding: 14px;
+          background: #7c3aed; color: #fff;
+          border: none; border-radius: 50px;
+          font-size: 15px; font-weight: 700;
+          font-family: 'Outfit', sans-serif;
+          cursor: pointer; margin-top: 8px;
+          transition: all 0.22s;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .consult-submit:hover { background: #6d28d9; transform: translateY(-2px); }
+        .consult-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+      `}</style>
+
+      {/* ── Popup Modal ── */}
+      {showPopup && (
+        <div className="consult-overlay" onClick={e => { if (e.target === e.currentTarget) setShowPopup(false); }}>
+          <div className="consult-modal">
+            <button className="consult-close" onClick={() => setShowPopup(false)}>×</button>
+
+            {status === "success" ? (
+              <div style={{ textAlign: "center", padding: "24px 0" }}>
+                <div style={{ fontSize: "48px", marginBottom: "12px" }}>🎉</div>
+                <h3 style={{ color: "#1a0640", fontFamily: "'Outfit',sans-serif", fontWeight: 800, marginBottom: "8px" }}>
+                  Booking Confirmed!
+                </h3>
+                <p style={{ color: "#6b5a9e", fontFamily: "'Outfit',sans-serif", fontSize: "14px" }}>
+                  We'll get back to you shortly.
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Header */}
+                <div style={{ marginBottom: "24px" }}>
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", gap: "8px",
+                    background: "#f3f0ff", borderRadius: "50px",
+                    padding: "5px 14px", marginBottom: "12px",
+                  }}>
+                    <span style={{ fontSize: "14px" }}>📅</span>
+                    <span style={{ fontSize: "12px", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", letterSpacing: "0.06em" }}>
+                      BOOK A CONSULTATION
+                    </span>
+                  </div>
+                  <h2 style={{
+                    fontSize: "22px", fontWeight: 900, color: "#1a0640",
+                    fontFamily: "'Outfit',sans-serif", lineHeight: 1.2, margin: 0,
+                  }}>
+                    Let's Plan Your Career
+                  </h2>
+                  <p style={{ fontSize: "13px", color: "#6b5a9e", fontFamily: "'Outfit',sans-serif", marginTop: "6px" }}>
+                    Fill in your details and we'll reach out to you.
+                  </p>
+                </div>
+<div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+
+  {/* Name */}
+  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+    <input
+      className="consult-input"
+      placeholder="Your Name"
+      value={form.name}
+      onChange={e => { setForm(f => ({ ...f, name: e.target.value })); setErrors(p => ({ ...p, name: "" })); }}
+      style={{ borderColor: errors.name ? "#ef4444" : undefined, background: errors.name ? "#fff5f5" : undefined }}
+    />
+    {errors.name && (
+      <div style={{ display: "flex", alignItems: "center", gap: "5px", paddingLeft: "4px" }}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <circle cx="6" cy="6" r="5.5" fill="#ef4444"/>
+          <text x="6" y="9" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold" fontFamily="sans-serif">!</text>
+        </svg>
+        <span style={{ color: "#ef4444", fontSize: "12px", fontFamily: "'Outfit',sans-serif" }}>{errors.name}</span>
+      </div>
+    )}
+  </div>
+
+  {/* Email */}
+  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+    <input
+      className="consult-input"
+      placeholder="Email Address"
+      type="email"
+      value={form.email}
+      onChange={e => { setForm(f => ({ ...f, email: e.target.value })); setErrors(p => ({ ...p, email: "" })); }}
+      style={{ borderColor: errors.email ? "#ef4444" : undefined, background: errors.email ? "#fff5f5" : undefined }}
+    />
+    {errors.email && (
+      <div style={{ display: "flex", alignItems: "center", gap: "5px", paddingLeft: "4px" }}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <circle cx="6" cy="6" r="5.5" fill="#ef4444"/>
+          <text x="6" y="9" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold" fontFamily="sans-serif">!</text>
+        </svg>
+        <span style={{ color: "#ef4444", fontSize: "12px", fontFamily: "'Outfit',sans-serif" }}>{errors.email}</span>
+      </div>
+    )}
+  </div>
+
+  {/* Phone */}
+  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+    <input
+      className="consult-input"
+      placeholder="Phone Number"
+      type="tel"
+      value={form.phone}
+      onChange={e => { setForm(f => ({ ...f, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })); setErrors(p => ({ ...p, phone: "" })); }}
+      style={{ borderColor: errors.phone ? "#ef4444" : undefined, background: errors.phone ? "#fff5f5" : undefined }}
+    />
+    {errors.phone && (
+      <div style={{ display: "flex", alignItems: "center", gap: "5px", paddingLeft: "4px" }}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <circle cx="6" cy="6" r="5.5" fill="#ef4444"/>
+          <text x="6" y="9" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold" fontFamily="sans-serif">!</text>
+        </svg>
+        <span style={{ color: "#ef4444", fontSize: "12px", fontFamily: "'Outfit',sans-serif" }}>{errors.phone}</span>
+      </div>
+    )}
+  </div>
+
+  {/* Message */}
+  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+    <textarea
+      className="consult-input"
+      placeholder="Your Message (optional)"
+      rows={3}
+      value={form.message}
+      onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+      style={{ resize: "none" }}
+    />
+  </div>
+
+</div>
+
+                {status === "error" && (
+                  <p style={{ color: "#ef4444", fontSize: "13px", fontFamily: "'Outfit',sans-serif", marginTop: "8px" }}>
+                    Something went wrong. Please try again.
+                  </p>
+                )}
+
+                <button
+                  className="consult-submit"
+                  onClick={handleSubmit}
+                  disabled={status === "loading"}
+                >
+                  {status === "loading" ? "Sending..." : "Book Consultation"}
+                  {status !== "loading" && (
+                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+                      <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Dot grid */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+        backgroundImage: "radial-gradient(rgba(124,58,237,0.08) 1px,transparent 1px)",
+        backgroundSize: "28px 28px",
+      }} />
+
+      {/* Hero row */}
       <div className="career-hero-inner" style={{
         flex: 1,
         display: "flex", alignItems: "center",
         flexWrap: "wrap",
         maxWidth: "1280px", margin: "0 auto", width: "100%",
-        padding: "70px clamp(16px,5%,72px) 0",
-        gap: "0", position: "relative", zIndex: 1,
+        padding: "100px clamp(16px,5%,72px) 0",
+        gap: "0", position: "relative", zIndex: 1, marginTop: "-100px",
       }}>
 
-        {/* ── 1st on mobile: Title + arc ── */}
+        {/* ── 1st: Title + arc ── */}
         <div className="career-hero-left" style={{
           flex: "0 0 auto", width: "clamp(280px,44%,520px)", maxWidth: "100%",
           display: "flex", flexDirection: "column", alignItems: "flex-start",
-          paddingTop: "20px",
+          paddingTop: "180px",
         }}>
           <h1 className="cr-v1 career-title" style={{
             fontSize: "clamp(2rem,4vw,3.5rem)", fontWeight: 900,
             lineHeight: 1.08, letterSpacing: "-1.5px",
             marginBottom: "12px", fontFamily: "'Outfit', sans-serif",
           }}>
-            <span style={{ color: "#1a0640" }}>Unlock Your Career</span><br />
-            <span style={{ color: "#f97316" }}>Potential</span>
+            <span style={{ color: "#1a0640" }}>Best Career Guidance for</span><br />
+            <span style={{ color: "#f97316" }}>Students and Job Seekers</span>
           </h1>
+
           <div className="cr-v2" style={{ marginBottom: "22px" }}>
-            <svg viewBox="0 0 300 16" style={{ width: "clamp(180px,26vw,300px)", height: "10px", overflow: "visible", display: "block" }} preserveAspectRatio="none">
-              <path className={`career-arc${arcReady ? " career-arc-animate" : ""}`}
+            <svg viewBox="0 0 300 16"
+              style={{ width: "clamp(180px,26vw,300px)", height: "10px", overflow: "visible", display: "block" }}
+              preserveAspectRatio="none"
+            >
+              <path
+                className={`career-arc${arcReady ? " career-arc-animate" : ""}`}
                 d="M 4 12 C 65 2, 200 1, 296 10"
-                fill="none" stroke="#7c3aed" strokeWidth="4.5" strokeLinecap="round" />
+                fill="none" stroke="#7c3aed" strokeWidth="4.5" strokeLinecap="round"
+              />
             </svg>
           </div>
 
-          {/* Desktop — desc + button */}
+          {/* Desktop only — desc */}
           <p className="cr-v3 career-desc-desktop" style={{
             fontSize: "clamp(13px,1.3vw,14.5px)", color: "#5c4a80",
             lineHeight: 1.78, fontWeight: 400, marginBottom: "36px",
             maxWidth: "380px", fontFamily: "'Outfit', sans-serif",
           }}>
-            Make smarter career decisions with expert guidance,
-            personalized roadmaps, and real-world insights.
+            Get best career guidance for students and job seekers with personalized
+            planning, skill development, and placement support.
           </p>
+
+          {/* Desktop only — button */}
           <div className="cr-v4 career-btn-desktop">
-            <button className="career-cta-btn" style={{
+            <button className="career-cta-btn" onClick={() => setShowPopup(true)} style={{
               background: "#7c3aed", color: "#fff", border: "none",
               borderRadius: "50px", padding: "14px 32px",
               fontSize: "clamp(13px,1.3vw,14.5px)", fontWeight: 700,
@@ -104,15 +432,16 @@ function CareerHero() {
           </div>
         </div>
 
-        {/* ── 2nd on mobile: Image ── */}
+        {/* ── 2nd: Image ── */}
         <div className="career-hero-right cr-vR" style={{
           flex: 1, position: "relative",
           display: "flex", alignItems: "flex-end", justifyContent: "center",
           minHeight: "380px", overflow: "visible",
         }}>
-          {/* Topographic contour lines */}
-          <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }}
-            viewBox="0 0 480 500" preserveAspectRatio="xMidYMid slice" fill="none">
+          <svg
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0 }}
+            viewBox="0 0 480 500" preserveAspectRatio="xMidYMid slice" fill="none"
+          >
             {[
               "M 80 10 C 140 30, 320 20, 420 80 C 460 120, 470 200, 430 280 C 400 340, 320 390, 240 420 C 160 450, 60 440, 20 380 C -20 320, 10 200, 50 130 C 70 80, 80 10, 80 10Z",
               "M 100 30 C 160 50, 300 40, 390 95 C 430 130, 445 210, 410 285 C 385 340, 310 385, 235 410 C 165 435, 75 425, 38 368 C 0 310, 28 205, 68 138 C 88 92, 100 30, 100 30Z",
@@ -125,10 +454,14 @@ function CareerHero() {
               <path key={i} d={d} stroke="#9b7fe8" strokeWidth={1.4 - i * 0.08} opacity={0.55 - i * 0.04} />
             ))}
           </svg>
-          <img src={`${PUB}/career-hero.png`} alt="Career Guidance"
+
+          <img
+            src={`${PUB}/career-hero.png`}
+            alt="Career Guidance"
+            className="career-hero-img"
             style={{
               position: "relative", zIndex: 2,
-              maxHeight: "clamp(260px,48vw,520px)",
+              maxHeight: "clamp(260px,48vw,820px)",
               maxWidth: "100%", objectFit: "contain",
               objectPosition: "bottom center", display: "block",
               filter: "drop-shadow(0 16px 40px rgba(109,40,217,0.14))",
@@ -136,23 +469,24 @@ function CareerHero() {
           />
         </div>
 
-        {/* ── 3rd on mobile: Desc + button (mobile only) ── */}
-        <div className="career-bottom" style={{
-          display: "flex", flexDirection: "column",
-          alignItems: "center", gap: "20px", width: "100%",
-          paddingBottom: "24px",
-        }}>
-          <p style={{ color: "#5c4a80", fontSize: "14.5px", lineHeight: 1.78, maxWidth: "360px", fontFamily: "'Outfit', sans-serif", fontWeight: 400, textAlign: "center" }}>
-            Make smarter career decisions with expert guidance,
-            personalized roadmaps, and real-world insights.
+        {/* ── 3rd on mobile only: Desc + button ── */}
+        <div className="career-bottom">
+          <p style={{
+            fontSize: "14px", color: "#5c4a80",
+            lineHeight: 1.78, fontWeight: 400,
+            maxWidth: "380px", fontFamily: "'Outfit', sans-serif",
+            textAlign: "center", margin: 0,
+          }}>
+            Get best career guidance for students and job seekers with personalized
+            planning, skill development, and placement support.
           </p>
-          <button className="career-cta-btn" style={{
+          <button className="career-cta-btn" onClick={() => setShowPopup(true)} style={{
             background: "#7c3aed", color: "#fff", border: "none",
-            borderRadius: "50px", padding: "14px 32px", fontSize: "14px", fontWeight: 700,
+            borderRadius: "50px", padding: "13px 28px", fontSize: "14px", fontWeight: 700,
             cursor: "pointer", fontFamily: "'Outfit', sans-serif",
             display: "inline-flex", alignItems: "center", gap: "10px",
             boxShadow: "0 6px 24px rgba(124,58,237,0.40)",
-            transition: "all 0.22s", position: "relative", overflow: "hidden",
+            transition: "all 0.22s",
           }}>
             Book Consultation
             <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
@@ -168,6 +502,7 @@ function CareerHero() {
         background: "#7c3aed",
         padding: "clamp(22px,4vw,38px) clamp(20px,6%,80px)",
         position: "relative", zIndex: 1,
+        marginTop: "clamp(8px, 8vw, 90px)",
       }}>
         <p style={{
           fontSize: "clamp(13px,1.6vw,17px)", color: "#fff",
@@ -175,23 +510,54 @@ function CareerHero() {
           fontWeight: 400, lineHeight: 1.75, textAlign: "center",
           maxWidth: "920px", margin: "0 auto",
         }}>
-          "Choosing the right career is one of the most important decisions in life. Our career
-          guidance program helps you identify your strengths, explore opportunities, and
-          build a future-ready career path."
+          "With the right guidance, you can understand your strengths,
+           explore career options, and build the skills needed to succeed with confidence."
         </p>
       </div>
+
     </section>
   );
 }
+
 /* ══════════════════════════════════════════════════════
-   PROCESS SECTION — matches CareerPage design system
+   PROCESS SECTION — Curved Roadmap, Light Theme
 ══════════════════════════════════════════════════════ */
 const PROCESS_STEPS = [
-  { label: "Discover Yourself",     img: "process-1.png", emoji: "🤔", desc: "Uncover your strengths, passions, and potential through guided self-assessments." },
-  { label: "Explore Opportunities", img: "process-2.png", emoji: "🔍", desc: "Browse industry paths, salary insights, and real-world career options." },
-  { label: "Decide Your Path",      img: "process-3.png", emoji: "✅", desc: "Lock in your specialization with mentor guidance and data-driven clarity." },
-  { label: "Build Skills",          img: "process-4.png", emoji: "🛠️", desc: "Train with hands-on projects, live sessions, and industry certifications." },
-  { label: "Achieve Your Goal",     img: "process-5.png", emoji: "🏆", desc: "Land your dream role with placement support and a 100% success guarantee." },
+  {
+    label: "Confused About Your Future",
+    lottie: `${PUB}/lottie/CONFUSION.json`,
+    desc: "Too many options and no clear direction this is where most students start.",
+    color: "#7c3aed",
+    side: "top",
+  },
+  {
+    label: "Understanding Your Strengths",
+    lottie: `${PUB}/lottie/STUDENT.json`,
+    desc: "We identify what suits you based on your interests and goals.",
+    color: "#f97316",
+    side: "bottom",
+  },
+  {
+    label: "Exploring the Right Careers",
+    lottie: `${PUB}/lottie/EXPLORE.json`,
+    desc: "We show you relevant career options that match your profile.",
+    color: "#0ea5e9",
+    side: "top",
+  },
+  {
+    label: "Skill Development & Preparation",
+    lottie: `${PUB}/lottie/SKILL.json`,
+    desc: "Develop skills with training, resume, and interview support.",
+    color: "#10b981",
+    side: "bottom",
+  },
+  {
+    label: "Placement & Career Launch",
+    lottie: `${PUB}/lottie/PLACEMENT.json`,
+    desc: "We support you in securing jobs and starting your career.",
+    color: "#f59e0b",
+    side: "top",
+  },
 ];
 
 function ProcessSection() {
@@ -199,44 +565,62 @@ function ProcessSection() {
 
   return (
     <section ref={ref} style={{
-      background: "#ede9ff",
+      background: "#f8f5ff",
       padding: "clamp(56px,8vw,88px) 0 clamp(64px,10vw,100px)",
       fontFamily: "'Outfit',sans-serif",
       overflow: "hidden",
       position: "relative",
+      borderTop: "1px solid #ede9ff",
     }}>
 
-      {/* Same dot grid as rest of page */}
+      {/* Dot grid — matches rest of site */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        backgroundImage: "radial-gradient(rgba(124,58,237,0.08) 1px,transparent 1px)",
-        backgroundSize: "28px 28px",
+        backgroundImage: `
+          linear-gradient(rgba(124,58,237,0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(124,58,237,0.035) 1px, transparent 1px)
+        `,
+        backgroundSize: "32px 32px",
       }}/>
 
       <style>{`
-        @keyframes proc-fadeUp  { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes proc-floatA  { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-10px)} }
+        @keyframes proc-fadeUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes proc-floatA  { 0%,100%{transform:translateY(0)}    50%{transform:translateY(-10px)} }
         @keyframes proc-floatB  { 0%,100%{transform:translateY(-6px)} 50%{transform:translateY(6px)}  }
-        @keyframes proc-lineGrow{ from{width:0} to{width:100%} }
-        @keyframes proc-popIn   { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+        @keyframes proc-popIn   { from{transform:scale(0) rotate(-180deg);opacity:0} to{transform:scale(1) rotate(0deg);opacity:1} }
         .proc-float-a { animation: proc-floatA 3.8s ease-in-out infinite; }
         .proc-float-b { animation: proc-floatB 4.3s ease-in-out infinite; }
+        .proc-card-inner {
+          transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease !important;
+        }
+        .proc-card-inner:hover {
+          transform: translateY(-6px) scale(1.03) !important;
+        }
+        .proc-desktop { display: block; }
+        .proc-mobile  { display: none;  }
+        @media(max-width: 768px) {
+        .cr-v5 {
+    margin-top: -80px; /* 👈 increase negative value to pull it up more e.g. -30px, -40px */
+  }
+          .proc-desktop { display: none  !important; }
+          .proc-mobile  { display: flex  !important; }
+        }
       `}</style>
 
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(16px,4%,48px)", position: "relative", zIndex: 1 }}>
 
-        {/* ── Header — same style as CareerHero h2 ── */}
+        {/* ── Header ── */}
         <div style={{
           textAlign: "center",
-          marginBottom: "clamp(40px,6vw,64px)",
+          marginBottom: "clamp(40px,6vw,72px)",
           opacity: inView ? 1 : 0,
           transform: inView ? "translateY(0)" : "translateY(20px)",
           transition: "all 0.7s ease",
         }}>
           <div style={{
             display: "inline-block",
-            background: "rgba(124,58,237,0.1)",
-            border: "1px solid rgba(124,58,237,0.25)",
+            background: "rgba(124,58,237,0.08)",
+            border: "1px solid rgba(124,58,237,0.2)",
             borderRadius: "50px",
             padding: "5px 16px",
             fontSize: "11px", fontWeight: 800,
@@ -251,156 +635,349 @@ function ProcessSection() {
             letterSpacing: "-0.03em", lineHeight: 1.08,
             marginBottom: "12px",
           }}>
-            The Process{" "}
-            <span style={{ color: "#f97316" }}>We Do</span>
+            From Confusion to{" "}
+            <span style={{ color: "#f97316" }}>Career Clarity</span>
           </h2>
           <p style={{
             fontSize: "clamp(13px,1.3vw,14.5px)",
-            color: "#5c4a80", maxWidth: "480px",
+            color: "#6b5a9e", maxWidth: "480px",
             margin: "0 auto", lineHeight: 1.78,
           }}>
-            A clear, structured path from self-discovery to your dream career — guided every step of the way.
+            Our proven process helps you identify the right path, build a plan, and take confident steps toward your future.
           </p>
         </div>
 
-        {/* ── Connector line (desktop) ── */}
-        <div style={{ position: "relative" }}>
-          <div style={{
-            position: "absolute",
-            top: "clamp(52px,7vw,72px)",
-            left: "10%", right: "10%",
-            height: "3px",
-            background: "linear-gradient(90deg,#c4b5fd,#7c3aed,#c4b5fd)",
-            borderRadius: "3px",
-            transformOrigin: "left center",
-            animation: inView ? "proc-lineGrow 1.4s ease 0.4s forwards" : "none",
-            width: inView ? undefined : "0",
-            opacity: 0.5,
-          }}/>
+        {/* ══════════════════════════
+            DESKTOP — Curved Roadmap
+        ══════════════════════════ */}
+        <div className="proc-desktop" style={{ position: "relative", height: "560px" }}>
 
-          {/* ── Steps grid ── */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5,1fr)",
-            gap: "clamp(12px,2vw,24px)",
-          }}>
-            {PROCESS_STEPS.map((step, i) => {
-              const delay = `${0.5 + i * 0.15}s`;
-              const floatClass = i % 2 === 0 ? "proc-float-a" : "proc-float-b";
-              return (
+          {/* SVG curved road */}
+          <svg
+            viewBox="0 0 1100 300"
+            preserveAspectRatio="xMidYMid meet"
+            style={{
+              position: "absolute",
+              top: "50%", left: 0,
+              transform: "translateY(-50%)",
+              width: "100%",
+              height: "300px",
+              overflow: "visible",
+              zIndex: 0,
+            }}
+          >
+            <defs>
+              <filter id="pathShadow" x="-20%" y="-40%" width="140%" height="180%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#7c3aed" floodOpacity="0.12"/>
+              </filter>
+              <linearGradient id="roadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stopColor="#7c3aed"/>
+                <stop offset="25%"  stopColor="#f97316"/>
+                <stop offset="50%"  stopColor="#0ea5e9"/>
+                <stop offset="75%"  stopColor="#10b981"/>
+                <stop offset="100%" stopColor="#f59e0b"/>
+              </linearGradient>
+            </defs>
+
+            {/* Road shadow base */}
+            <path
+              d="M 55 150 C 155 150, 175 55, 275 55 C 375 55, 395 245, 550 245 C 705 245, 725 55, 825 55 C 925 55, 945 150, 1045 150"
+              fill="none"
+              stroke="#ddd6fe"
+              strokeWidth="34"
+              strokeLinecap="round"
+              filter="url(#pathShadow)"
+            />
+
+            {/* Road fill — white */}
+            <path
+              d="M 55 150 C 155 150, 175 55, 275 55 C 375 55, 395 245, 550 245 C 705 245, 725 55, 825 55 C 925 55, 945 150, 1045 150"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="28"
+              strokeLinecap="round"
+            />
+
+            {/* Animated gradient top stroke — draws in on inView */}
+            <path
+              d="M 55 150 C 155 150, 175 55, 275 55 C 375 55, 395 245, 550 245 C 705 245, 725 55, 825 55 C 925 55, 945 150, 1045 150"
+              fill="none"
+              stroke="url(#roadGrad)"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray="1500"
+              strokeDashoffset={inView ? "0" : "1500"}
+              style={{ transition: inView ? "stroke-dashoffset 2.4s ease 0.6s" : "none" }}
+            />
+
+            {/* Dashed center lane */}
+            <path
+              d="M 55 150 C 155 150, 175 55, 275 55 C 375 55, 395 245, 550 245 C 705 245, 725 55, 825 55 C 925 55, 945 150, 1045 150"
+              fill="none"
+              stroke="rgba(124,58,237,0.15)"
+              strokeWidth="2"
+              strokeDasharray="10 14"
+              strokeLinecap="round"
+            />
+
+            {/* Node circles on path */}
+            {[
+              { cx: 55,   cy: 150 },
+              { cx: 275,  cy: 55  },
+              { cx: 550,  cy: 245 },
+              { cx: 825,  cy: 55  },
+              { cx: 1045, cy: 150 },
+            ].map((pt, i) => (
+              <g key={i} style={{
+                opacity: inView ? 1 : 0,
+                transition: `opacity 0.4s ease ${0.8 + i * 0.2}s`,
+              }}>
+                {/* Outer ring */}
+                <circle cx={pt.cx} cy={pt.cy} r="26"
+                  fill="none"
+                  stroke={PROCESS_STEPS[i].color}
+                  strokeWidth="1.5"
+                  opacity="0.3"
+                />
+                {/* White fill with colored border */}
+                <circle cx={pt.cx} cy={pt.cy} r="20"
+                  fill="#fff"
+                  stroke={PROCESS_STEPS[i].color}
+                  strokeWidth="3"
+                  style={{ filter: `drop-shadow(0 4px 10px ${PROCESS_STEPS[i].color}44)` }}
+                />
+                {/* Step number */}
+                <text x={pt.cx} y={pt.cy + 5}
+                  textAnchor="middle"
+                  fill={PROCESS_STEPS[i].color}
+                  fontSize="13"
+                  fontWeight="900"
+                  fontFamily="'Outfit',sans-serif"
+                >
+                  {i + 1}
+                </text>
+              </g>
+            ))}
+          </svg>
+
+          {/* ── Step cards positioned above/below curve ── */}
+          {[
+            { left: "0%",    isTop: true  },
+            { left: "22.5%", isTop: false },
+            { left: "45%",   isTop: true  },
+            { left: "67.5%", isTop: false },
+            { left: "90%",   isTop: true  },
+          ].map((pos, i) => {
+            const step = PROCESS_STEPS[i];
+            const delay = `${0.5 + i * 0.18}s`;
+            return (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: pos.left,
+                  top:    pos.isTop ? "0px"  : "auto",
+                  bottom: pos.isTop ? "auto" : "0px",
+                  width: "190px",
+                  transform: "translateX(-38%)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  zIndex: 2,
+                  opacity: inView ? 1 : 0,
+                  transition: `opacity 0.6s ease ${delay}`,
+                }}
+              >
+                {/* Top connector stem */}
+                {pos.isTop && (
+                  <div style={{
+                    width: "2px", height: "26px",
+                    background: `linear-gradient(180deg, transparent, ${step.color}66)`,
+                    order: 2,
+                  }} />
+                )}
+
+                {/* Card */}
                 <div
-                  key={i}
+                  className={`proc-card-inner ${i % 2 === 0 ? "proc-float-a" : "proc-float-b"}`}
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
+                    background: "#fff",
+                    border: `1.5px solid ${step.color}28`,
+                    borderRadius: "18px",
+                    padding: "16px 14px 14px",
+                    width: "100%",
+                    boxSizing: "border-box",
+                    boxShadow: `0 8px 28px ${step.color}16, 0 2px 8px rgba(0,0,0,0.05)`,
+                    order: pos.isTop ? 1 : 3,
                     textAlign: "center",
-                    opacity: inView ? 1 : 0,
-                    animation: inView ? `proc-fadeUp 0.55s ease ${delay} forwards` : "none",
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
-                  {/* Image / emoji */}
-                  <div className={floatClass} style={{ marginBottom: "16px", position: "relative" }}>
-                    <img
-                      src={`${PUB}/${step.img}`}
-                      alt={step.label}
-                      style={{
-                        width: "clamp(64px,8vw,96px)",
-                        height: "clamp(64px,8vw,96px)",
-                        objectFit: "contain",
-                        display: "block",
-                        filter: "drop-shadow(0 10px 24px rgba(109,40,217,0.22))",
-                      }}
-                      onError={e => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "block";
-                      }}
-                    />
-                    <span style={{ fontSize: "clamp(44px,7vw,64px)", display: "none", lineHeight: 1 }}>
-                      {step.emoji}
-                    </span>
-                  </div>
-
-                  {/* Node dot — sits on the connector line */}
+                  {/* Colored top bar */}
                   <div style={{
-                    width: "clamp(40px,4.5vw,52px)",
-                    height: "clamp(40px,4.5vw,52px)",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg,#7c3aed,#a78bfa)",
-                    border: "4px solid #ede9ff",
-                    boxShadow: "0 6px 22px rgba(124,58,237,0.38)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    marginBottom: "16px",
-                    animation: inView ? `proc-popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) ${delay} forwards` : "none",
-                    opacity: 0,
-                    zIndex: 2, position: "relative",
-                  }}>
-                    <span style={{
-                      fontSize: "clamp(13px,1.4vw,16px)",
-                      fontWeight: 900, color: "#fff",
-                      fontFamily: "'Outfit',sans-serif",
-                    }}>
-                      {i + 1}
-                    </span>
-                  </div>
+                    position: "absolute",
+                    top: 0, left: 0, right: 0,
+                    height: "3px",
+                    background: step.color,
+                    borderRadius: "18px 18px 0 0",
+                  }} />
+
+                  {/* Lottie */}
+                  <div dangerouslySetInnerHTML={{ __html: `
+                    <dotlottie-player
+                      src="${step.lottie}"
+                      autoplay loop
+                      style="width:76px;height:76px;margin:0 auto"
+                    ></dotlottie-player>
+                  `}} />
 
                   {/* Label */}
-                  <span style={{
-                    fontSize: "clamp(12px,1.2vw,15px)",
-                    fontWeight: 800, color: "#1a0640",
+                  <div style={{
+                    fontSize: "12px", fontWeight: 800,
+                    color: "#1a0640",
                     fontFamily: "'Outfit',sans-serif",
-                    lineHeight: 1.3, marginBottom: "8px",
+                    lineHeight: 1.3,
+                    marginTop: "8px", marginBottom: "5px",
                   }}>
                     {step.label}
-                  </span>
+                  </div>
 
                   {/* Desc */}
-                  <span style={{
-                    fontSize: "clamp(10px,0.95vw,12.5px)",
-                    color: "#5c4a80",
+                  <div style={{
+                    fontSize: "10.5px", color: "#6b5a9e",
                     fontFamily: "'Outfit',sans-serif",
-                    lineHeight: 1.65,
+                    lineHeight: 1.6,
                   }}>
                     {step.desc}
-                  </span>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Bottom connector stem */}
+                {!pos.isTop && (
+                  <div style={{
+                    width: "2px", height: "26px",
+                    background: `linear-gradient(0deg, transparent, ${step.color}66)`,
+                    order: 2,
+                  }} />
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* ── Mobile: 2-col grid ── */}
-        <style>{`
-          @media(max-width:640px){
-            .proc-5-grid {
-              grid-template-columns: repeat(2,1fr) !important;
-              gap: 24px 16px !important;
-            }
-            .proc-connector { display: none !important; }
-          }
-          @media(max-width:360px){
-            .proc-5-grid { grid-template-columns: 1fr !important; }
-          }
-        `}</style>
+        {/* ══════════════════════════
+            MOBILE — Vertical timeline
+        ══════════════════════════ */}
+        <div
+          className="proc-mobile"
+          style={{ flexDirection: "column", gap: 0, position: "relative" }}
+        >
+          {/* Vertical line */}
+          <div style={{
+            position: "absolute",
+            left: "24px", top: "28px", bottom: "28px",
+            width: "3px",
+            background: "linear-gradient(180deg,#7c3aed,#f97316,#0ea5e9,#10b981,#f59e0b)",
+            borderRadius: "3px",
+            opacity: 0.3,
+          }} />
 
-        {/* ── Bottom quote band — same as purple band in CareerHero ── */}
+          {PROCESS_STEPS.map((step, i) => (
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "16px",
+                paddingBottom: i < PROCESS_STEPS.length - 1 ? "20px" : "0",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateX(0)" : "translateX(-20px)",
+                transition: `all 0.55s ease ${0.3 + i * 0.15}s`,
+                position: "relative",
+              }}
+            >
+              {/* Node dot */}
+              <div style={{
+                flexShrink: 0,
+                width: "48px", height: "48px",
+                borderRadius: "50%",
+                background: "#fff",
+                border: `3px solid ${step.color}`,
+                boxShadow: `0 4px 16px ${step.color}33`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                zIndex: 2, position: "relative",
+              }}>
+                <span style={{
+                  fontSize: "15px", fontWeight: 900,
+                  color: step.color,
+                  fontFamily: "'Outfit',sans-serif",
+                }}>
+                  {i + 1}
+                </span>
+              </div>
+
+              {/* Mobile card */}
+              <div style={{
+                flex: 1,
+                background: "#fff",
+                border: `1.5px solid ${step.color}22`,
+                borderRadius: "16px",
+                padding: "12px 14px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                boxShadow: `0 4px 16px ${step.color}12, 0 1px 4px rgba(0,0,0,0.04)`,
+              }}>
+                <div dangerouslySetInnerHTML={{ __html: `
+                  <dotlottie-player
+                    src="${step.lottie}"
+                    autoplay loop
+                    style="width:56px;height:56px;flex-shrink:0"
+                  ></dotlottie-player>
+                `}} />
+                <div>
+                  <div style={{
+                    fontSize: "13px", fontWeight: 800,
+                    color: "#1a0640",
+                    fontFamily: "'Outfit',sans-serif",
+                    marginBottom: "3px", lineHeight: 1.3,
+                  }}>
+                    {step.label}
+                  </div>
+                  <div style={{
+                    fontSize: "11px", color: "#6b5a9e",
+                    fontFamily: "'Outfit',sans-serif",
+                    lineHeight: 1.6,
+                  }}>
+                    {step.desc}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Bottom quote band ── */}
         <div style={{
           marginTop: "clamp(48px,7vw,72px)",
-          background: "#7c3aed",
+          background: "linear-gradient(135deg,#7c3aed,#5b21b6)",
           borderRadius: "20px",
           padding: "clamp(22px,4vw,36px) clamp(24px,5%,64px)",
           opacity: inView ? 1 : 0,
           transition: "opacity 0.8s ease 1.2s",
           textAlign: "center",
+          boxShadow: "0 12px 40px rgba(124,58,237,0.22)",
         }}>
           <p style={{
             fontSize: "clamp(13px,1.5vw,16px)",
-            color: "#fff", fontFamily: "'Outfit',sans-serif",
+            color: "#fff",
+            fontFamily: "'Outfit',sans-serif",
             fontStyle: "italic", fontWeight: 400,
-            lineHeight: 1.75, margin: 0, maxWidth: "780px",
-            display: "inline-block",
+            lineHeight: 1.75, margin: 0,
+            maxWidth: "780px", display: "inline-block",
           }}>
-            "100% of our students who follow this process land their dream job within 90 days of course completion — with our full support every step of the way."
+            "Students who follow a structured career guidance approach make informed decisions, build relevant skills, and achieve their goals with confidence."
           </p>
         </div>
 
@@ -416,23 +993,23 @@ function ProcessSection() {
 ══════════════════════════════════════════════════════ */
 const SERVICES = [
   {
-    bg: "#7c3aed", title: "Personalized Assessment",
-    items: ["Skill & interest evaluation", "Career compatibility insights", "Strength mapping"],
+    bg: "#7c3aed", title: "Career Clarity",
+    para: "Making the best academic and professional choices starts with having a clear career. It starts with recognizing your strengths, which will help you comprehend your fundamental skills and passions. After gaining this knowledge, you can investigate the best choices that complement your abilities and long-term objectives. You are better equipped to make assured decisions and select a career path with certainty when you have a clear understanding of the options.",
     decor: "stars",
   },
   {
-    bg: "#f97316", title: "Expert Counseling",
-    items: ["Skill & interest evaluation", "Career compatibility insights", "Strength mapping"],
+    bg: "#f97316", title: "Personalized Guidance",
+    para: "Individualized counseling guarantees that career choices are grounded in personal strengths, passions, and objectives rather than broad presumptions. Students receive targeted assistance to address their particular career concerns and goals through one-on-one mentoring. Evaluation of skills, preferences, and possible career paths is aided by a thorough profile-based analysis. A personalized career plan is developed based on these insights.",
     decor: "dots",
   },
   {
-    bg: "#5b9d55", title: "Career Roadmap",
-    items: ["Step-by-step planning", "Skill development", "Certification guidance"],
+    bg: "#5b9d55", title: "Skill-Based Roadmap",
+    para: "The goal of a skill-based roadmap is to develop the competencies needed in the modern labor market. Students can better understand what they need to succeed in their chosen field by identifying skills that are relevant to the industry. By using real-world situations and practical experience, a practical learning approach guarantees that knowledge is applied. Students can progress from novices to professionals who are prepared for the workforce.",
     decor: "circle",
   },
   {
-    bg: "#111827", title: "Market Insight",
-    items: ["High-demand careers", "Salary trends", "Future-proof roles"],
+    bg: "#111827", title: "Career Success Support",
+    para: "Success in the workplace requires more than just knowledge; it also requires the appropriate planning and direction. Building a portfolio and resume makes it easier to showcase accomplishments and abilities to prospective employers. Students who prepare for interviews gain the self-assurance and skills necessary to succeed in selection procedures. Placement assistance helps students apply for opportunities and get off to a good start in their careers..",
     decor: "stars2",
   },
 ];
@@ -476,20 +1053,19 @@ function ServiceCard({ card, inView, delay }) {
       <h3 style={{ fontSize: "clamp(13px,1.4vw,15px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit',sans-serif", marginBottom: "14px", lineHeight: 1.3, position: "relative", zIndex: 1 }}>
         {card.title}
       </h3>
-      <ul style={{ listStyle: "none", padding: 0, margin: "0 0 auto 0", display: "flex", flexDirection: "column", gap: "8px", position: "relative", zIndex: 1 }}>
-        {card.items.map((item, i) => (
-          <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "clamp(11px,1.1vw,12.5px)", color: "rgba(255,255,255,0.75)", fontFamily: "'Outfit',sans-serif", lineHeight: 1.5 }}>
-            <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255,255,255,0.55)", flexShrink: 0, marginTop: "5px" }} />
-            {item}
-          </li>
-        ))}
-      </ul>
-      <div style={{ marginTop: "22px", display: "flex", alignItems: "center", gap: "8px", position: "relative", zIndex: 1, cursor: "pointer" }}>
-        <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.82)", fontFamily: "'Outfit',sans-serif" }}>Discover more</span>
-        <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "rgba(255,255,255,0.18)", border: "1.5px solid rgba(255,255,255,0.30)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.22s", transform: hov ? "translateX(4px)" : "translateX(0)" }}>
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </div>
-      </div>
+      <p style={{
+  fontSize: "clamp(11px,1.1vw,12.5px)",
+  color: "rgba(255,255,255,0.78)",
+  fontFamily: "'Outfit',sans-serif",
+  lineHeight: 1.75,
+  margin: 0,
+  textAlign: "justify",
+  position: "relative",
+  zIndex: 1,
+}}>
+  {card.para}
+</p>
+      
     </div>
   );
 }
@@ -602,16 +1178,14 @@ export default function CareerPage() {
             order: 2 !important;
             width: 100% !important;
             min-height: 200px !important;
-            max-height: 260px !important;
+            max-height: 360px !important;
           }
-          .career-hero-right img { max-height: 240px !important; }
+          .career-hero-right img { max-height: 400px !important; }
 
           /* 3rd — desc + button */
           .career-bottom { order: 3 !important; }
 
-          /* Hide desktop desc+button */
-          .career-desc-desktop { display: none !important; }
-          .career-btn-desktop  { display: none !important; }
+          
 
           /* Testimonials */
           .testi-inner { flex-direction: column !important; }

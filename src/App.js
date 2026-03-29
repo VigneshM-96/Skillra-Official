@@ -7,6 +7,7 @@ import CampusPage     from "./Pages/CampusPage";
 import PlacementPage  from "./Pages/PlacementPage";
 import CareerPage     from "./Pages/CareerPage";
 import BooksPage     from "./Pages/BooksPage";
+import BlogPage     from "./Pages/BlogPage";
 import NavBar from "./Pages/NavBar";
 import ChatBot from "./components/ChatBot";
 import ScrollToTop from "./components/ScrollToTop";
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/placement"  element={<PlacementPage />} />
         <Route path="/career"     element={<CareerPage />} />
         <Route path="/books"     element={<BooksPage />} />
+        <Route path="/blog" element={<BlogPage />} />
         {/* Uncomment each route as you build the page:
         
         <Route path="/elearnings" element={<ELearningsPage />} />

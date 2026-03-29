@@ -212,83 +212,84 @@ export const COURSES = {
         ],
       },
     },
-    otherCourses: ["ai-medical-coding", "ai-medical-billing", "ai-in-healthcare"],
-  },
+    otherCourses: ["ai-medical-coding", "ai-medical-billing"],
 
-  "ai-in-healthcare": {
-    title: "AI In Healthcare",
-    category: "Healthcare",
-    rating: 4.6,
-    lessons: 14,
-    timing: "2:00 PM – 5:00 PM",
-    students: "400+",
-    duration: "4 Months",
-    color: "#7c3aed",
-    heroImage: "students.jpg",
-    tabs: {
-      Overview: {
-        sections: [
-          {
-            heading: "COURSE DESCRIPTION",
-            paras: [
-              "AI in Healthcare is a comprehensive program covering how artificial intelligence, machine learning, and data science are transforming the healthcare industry. Topics include AI diagnostics, predictive analytics, clinical decision support, and health data management.",
-              "This course is ideal for healthcare professionals, IT graduates, and anyone who wants to work at the intersection of technology and medicine.",
-            ],
-          },
-          {
-            heading: "WHAT WILL I LEARN FROM THIS COURSE?",
-            paras: [
-              "You will learn how AI is used in medical imaging, drug discovery, patient monitoring, and hospital operations. You will also get exposure to Python-based health data analysis and AI model evaluation.",
-              "By the end, you will understand how to evaluate, implement, and work with AI solutions in healthcare settings — a skill set that is rapidly becoming essential in the industry.",
-            ],
-          },
-        ],
-      },
-      Curriculum: {
-        sections: [
-          {
-            heading: "COURSE MODULES",
-            paras: [
-              "Module 1: Introduction to AI & ML — Basics of artificial intelligence and machine learning for non-programmers.",
-              "Module 2: AI in Medical Imaging — How AI reads X-rays, MRIs, and CT scans.",
-              "Module 3: Predictive Analytics in Healthcare — Predicting patient outcomes and readmission risks.",
-              "Module 4: NLP in Clinical Documentation — Natural language processing for EHR data extraction.",
-              "Module 5: AI Ethics & Regulation — FDA guidelines, bias in AI, and responsible AI deployment.",
-              "Module 6: Capstone Project — Build a mini AI use-case for a real healthcare scenario.",
-            ],
-          },
-        ],
-      },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Your instructor holds a Masters in Health Informatics and has worked with AI health startups and hospital innovation labs for over 8 years.",
-              "They make complex AI concepts approachable for non-technical learners and have been recognized as one of the top healthcare AI educators in South India.",
-            ],
-          },
-        ],
-      },
-      Reviews: {
-        sections: [
-          {
-            heading: "STUDENT REVIEWS",
-            paras: [
-              "⭐⭐⭐⭐⭐ — \"Mind-blowing course. Changed how I think about my career in healthcare IT completely.\" — Vikram N.",
-              "⭐⭐⭐⭐ — \"Very well structured. The capstone project gave me something real to show in interviews.\" — Sneha L.",
-              "⭐⭐⭐⭐⭐ — \"The instructor explains AI without all the confusing jargon. Perfect for healthcare professionals.\" — Dr. Ramesh A.",
-            ],
-          },
-        ],
-      },
-    },
-    otherCourses: ["ai-medical-coding", "ai-medical-billing", "ai-medical-scribing"],
   },
 
   /* ══════════════════════════════════════════════════
      INFORMATION TECHNOLOGY
   ══════════════════════════════════════════════════ */
+  "ui-ux-design": {
+  title: "UI/UX Design",
+  category: "Information Technology",
+  rating: 4.7,
+  lessons: 16,
+  timing: "10:00 AM – 1:00 PM",
+  students: "75+",
+  duration: "4 Months",
+  color: "#f97316",
+  heroImage: "students.jpg",
+  tabs: {
+    Overview: {
+      sections: [
+        {
+          heading: "COURSE DESCRIPTION",
+          paras: [
+            "UI/UX Design at Skillra covers the full design process — from user research and wireframing to high-fidelity prototyping and usability testing. Students work with industry-standard tools like Figma, Adobe XD, and Maze to create real-world digital products.",
+            "UI/UX designers are in high demand across startups, product companies, and agencies. This course prepares you to build a strong portfolio and land roles as a Product Designer, UX Researcher, or Interaction Designer.",
+          ],
+        },
+        {
+          heading: "WHAT WILL I LEARN FROM THIS COURSE?",
+          paras: [
+            "You will learn user research methods, information architecture, wireframing, prototyping, visual design principles, typography, color theory, and accessibility standards. You will also learn how to conduct usability tests and iterate based on feedback.",
+            "By the end you will have a professional portfolio of 3–5 case studies, hands-on experience with Figma, and the skills to collaborate effectively with developers and product managers in agile teams.",
+          ],
+        },
+      ],
+    },
+    Curriculum: {
+      sections: [
+        {
+          heading: "COURSE MODULES",
+          paras: [
+            "Module 1: Design Thinking & UX Fundamentals — Empathy mapping, user personas, problem statements, and the design thinking framework.",
+            "Module 2: User Research — Interviews, surveys, competitive analysis, and synthesizing insights into actionable findings.",
+            "Module 3: Information Architecture & Wireframing — Sitemaps, user flows, low-fidelity wireframes using Figma.",
+            "Module 4: Visual Design & UI Principles — Typography, color systems, grids, spacing, and building a consistent design language.",
+            "Module 5: Prototyping & Interaction Design — High-fidelity prototypes, micro-interactions, and animation basics in Figma.",
+            "Module 6: Usability Testing & Portfolio Building — Conducting tests, iterating on feedback, and presenting case studies professionally.",
+          ],
+        },
+      ],
+    },
+    Instructor: {
+      sections: [
+        {
+          heading: "ABOUT YOUR INSTRUCTOR",
+          paras: [
+            "Your instructor is a senior UI/UX designer with 9 years of experience working with product-based companies and design agencies across e-commerce, fintech, and healthcare domains.",
+            "They bring real client projects into the classroom, teaching students how to handle briefs, manage feedback, and deliver polished designs under real-world constraints — exactly what employers expect from day one.",
+          ],
+        },
+      ],
+    },
+    Reviews: {
+      sections: [
+        {
+          heading: "STUDENT REVIEWS",
+          paras: [
+            "⭐⭐⭐⭐⭐ — \"I had zero design experience but landed a junior UI designer role within 2 months of completing this course. The portfolio guidance was invaluable!\" — Divya M.",
+            "⭐⭐⭐⭐ — \"The Figma modules are incredibly detailed and the instructor explains design decisions really well. Worth every rupee.\" — Karthik S.",
+            "⭐⭐⭐⭐⭐ — \"Best design course in Coimbatore. Small batches, real projects, and honest feedback made all the difference.\" — Ananya P.",
+          ],
+        },
+      ],
+    },
+  },
+  otherCourses: ["full-stack-development", "data-analytics", "sap-development"],
+},
+
   "full-stack-development": {
     title: "Full Stack Development",
     category: "Information Technology",
@@ -433,76 +434,7 @@ export const COURSES = {
     otherCourses: ["full-stack-development", "sap-development", "ai-machine-learning"],
   },
 
-  "sap-development": {
-    title: "SAP Development",
-    category: "Information Technology",
-    rating: 4.6,
-    lessons: 18,
-    timing: "9:00 AM – 1:00 PM",
-    students: "80+",
-    duration: "5 Months",
-    color: "#f97316",
-    heroImage: "students.jpg",
-    tabs: {
-      Overview: {
-        sections: [
-          {
-            heading: "COURSE DESCRIPTION",
-            paras: [
-              "SAP Development at Skillra covers SAP ABAP programming, SAP Fiori UI development, and SAP S/4HANA fundamentals. Students learn to build custom reports, enhancements, and Fiori apps used in enterprise environments.",
-              "SAP professionals are among the highest-paid IT workers globally. This course prepares you for SAP developer roles in consulting firms, manufacturing companies, and large enterprises.",
-            ],
-          },
-          {
-            heading: "WHAT WILL I LEARN FROM THIS COURSE?",
-            paras: [
-              "You will learn ABAP programming fundamentals, data dictionary, reports, forms, function modules, BAPIs, and user exits. You will also learn SAP Fiori app development using SAPUI5.",
-              "By the end you will be able to develop custom SAP solutions, debug ABAP programs, and build responsive Fiori applications — skills that command premium salaries in the job market.",
-            ],
-          },
-        ],
-      },
-      Curriculum: {
-        sections: [
-          {
-            heading: "COURSE MODULES",
-            paras: [
-              "Module 1: SAP Overview & Navigation — SAP landscape, modules, and system navigation basics.",
-              "Module 2: ABAP Programming — Data types, control statements, modularization, and internal tables.",
-              "Module 3: SAP Data Dictionary — Tables, views, structures, and domain configuration.",
-              "Module 4: Reports & Forms — Classical/ALV reports, SmartForms, and Adobe forms.",
-              "Module 5: Enhancements & BAPIs — User exits, BADIs, BAPIs, and RFC.",
-              "Module 6: SAP Fiori & SAPUI5 — Building modern Fiori apps and OData services.",
-            ],
-          },
-        ],
-      },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Your instructor is a certified SAP ABAP consultant with 11 years of project experience across SAP ECC and S/4HANA implementations for Fortune 500 companies.",
-              "They bring live project scenarios into class and guide students through exactly the kind of problems they will face in real SAP development roles.",
-            ],
-          },
-        ],
-      },
-      Reviews: {
-        sections: [
-          {
-            heading: "STUDENT REVIEWS",
-            paras: [
-              "⭐⭐⭐⭐⭐ — \"SAP jobs pay very well. This course gave me the foundation to crack my first SAP consultant interview!\" — Venkat R.",
-              "⭐⭐⭐⭐ — \"The ABAP modules are thorough and the Fiori section is a great bonus. Highly recommended.\" — Preethi S.",
-              "⭐⭐⭐⭐⭐ — \"Best SAP training in the city. Small batch size means individual attention from the instructor.\" — Naveen K.",
-            ],
-          },
-        ],
-      },
-    },
-    otherCourses: ["full-stack-development", "data-analytics", "ai-machine-learning"],
-  },
+  
 
   "ai-machine-learning": {
     title: "AI & Machine Learning",
@@ -512,7 +444,7 @@ export const COURSES = {
     timing: "6:00 PM – 9:00 PM",
     students: "90+",
     duration: "6 Months",
-    color: "#7c3aed",
+    color: "#f97316",
     heroImage: "students.jpg",
     tabs: {
       Overview: {
@@ -649,15 +581,15 @@ export const COURSES = {
     otherCourses: ["financial-modeling", "full-stack-development", "data-analytics"],
   },
 
-  "financial-modeling": {
-    title: "Financial Modeling",
-    category: "Finance",
+  "sap-development": {
+    title: "SAP Development",
+    category: "Information Technology",
     rating: 4.6,
-    lessons: 12,
-    timing: "2:00 PM – 5:00 PM",
-    students: "60+",
-    duration: "3 Months",
-    color: "#10b981",
+    lessons: 18,
+    timing: "9:00 AM – 1:00 PM",
+    students: "80+",
+    duration: "5 Months",
+    color: "#f97316",
     heroImage: "students.jpg",
     tabs: {
       Overview: {
@@ -665,15 +597,15 @@ export const COURSES = {
           {
             heading: "COURSE DESCRIPTION",
             paras: [
-              "Financial Modeling at Skillra teaches students to build dynamic financial models in Excel used for business valuation, budgeting, forecasting, and investment analysis. Students work with real company financials from NSE-listed companies.",
-              "This course is ideal for MBA graduates, finance professionals, and anyone aspiring to work in investment banking, equity research, or corporate finance.",
+              "SAP Development at Skillra covers SAP ABAP programming, SAP Fiori UI development, and SAP S/4HANA fundamentals. Students learn to build custom reports, enhancements, and Fiori apps used in enterprise environments.",
+              "SAP professionals are among the highest-paid IT workers globally. This course prepares you for SAP developer roles in consulting firms, manufacturing companies, and large enterprises.",
             ],
           },
           {
             heading: "WHAT WILL I LEARN FROM THIS COURSE?",
             paras: [
-              "You will learn to build 3-statement financial models (Income Statement, Balance Sheet, Cash Flow), DCF valuation, LBO modeling, and scenario analysis from scratch in Excel.",
-              "By the end you will have 3 financial models in your portfolio and the confidence to take on financial analyst roles in investment banks, NBFCs, and corporate treasury departments.",
+              "You will learn ABAP programming fundamentals, data dictionary, reports, forms, function modules, BAPIs, and user exits. You will also learn SAP Fiori app development using SAPUI5.",
+              "By the end you will be able to develop custom SAP solutions, debug ABAP programs, and build responsive Fiori applications — skills that command premium salaries in the job market.",
             ],
           },
         ],
@@ -683,12 +615,12 @@ export const COURSES = {
           {
             heading: "COURSE MODULES",
             paras: [
-              "Module 1: Excel for Finance — Advanced Excel, formulas, and financial functions.",
-              "Module 2: Financial Statement Analysis — Reading and interpreting annual reports and ratios.",
-              "Module 3: 3-Statement Modeling — Integrated income statement, balance sheet, and cash flow model.",
-              "Module 4: DCF Valuation — Free cash flow, WACC, terminal value, and sensitivity analysis.",
-              "Module 5: Comparable Company Analysis — Trading comps and precedent transactions.",
-              "Module 6: LBO Modeling — Leveraged buyout basics and private equity returns analysis.",
+              "Module 1: SAP Overview & Navigation — SAP landscape, modules, and system navigation basics.",
+              "Module 2: ABAP Programming — Data types, control statements, modularization, and internal tables.",
+              "Module 3: SAP Data Dictionary — Tables, views, structures, and domain configuration.",
+              "Module 4: Reports & Forms — Classical/ALV reports, SmartForms, and Adobe forms.",
+              "Module 5: Enhancements & BAPIs — User exits, BADIs, BAPIs, and RFC.",
+              "Module 6: SAP Fiori & SAPUI5 — Building modern Fiori apps and OData services.",
             ],
           },
         ],
@@ -698,8 +630,8 @@ export const COURSES = {
           {
             heading: "ABOUT YOUR INSTRUCTOR",
             paras: [
-              "Your instructor is a CFA charterholder with experience in equity research and investment banking at leading firms. They have valued companies across healthcare, technology, and consumer sectors.",
-              "Their models are used as templates by finance teams at mid-sized Indian companies — bringing real institutional quality to the classroom.",
+              "Your instructor is a certified SAP ABAP consultant with 11 years of project experience across SAP ECC and S/4HANA implementations for Fortune 500 companies.",
+              "They bring live project scenarios into class and guide students through exactly the kind of problems they will face in real SAP development roles.",
             ],
           },
         ],
@@ -709,15 +641,15 @@ export const COURSES = {
           {
             heading: "STUDENT REVIEWS",
             paras: [
-              "⭐⭐⭐⭐⭐ — \"The DCF model we built in class is exactly what I was asked to do in my equity research interview. Got the job!\" — Rohan A.",
-              "⭐⭐⭐⭐ — \"Very professional content. The instructor's industry experience really shows in the quality of teaching.\" — Priya C.",
-              "⭐⭐⭐⭐⭐ — \"Best finance course in the city by far. Every module builds on the last in a very logical way.\" — Madhav R.",
+              "⭐⭐⭐⭐⭐ — \"SAP jobs pay very well. This course gave me the foundation to crack my first SAP consultant interview!\" — Venkat R.",
+              "⭐⭐⭐⭐ — \"The ABAP modules are thorough and the Fiori section is a great bonus. Highly recommended.\" — Preethi S.",
+              "⭐⭐⭐⭐⭐ — \"Best SAP training in the city. Small batch size means individual attention from the instructor.\" — Naveen K.",
             ],
           },
         ],
       },
     },
-    otherCourses: ["tally-gst", "data-analytics", "ai-machine-learning"],
+    otherCourses: ["tally-gst"],
   },
 
   /* ══════════════════════════════════════════════════
@@ -791,7 +723,7 @@ export const COURSES = {
         ],
       },
     },
-    otherCourses: ["communication-skills", "ai-medical-coding", "full-stack-development"],
+    otherCourses: ["ai-medical-coding", "full-stack-development"],
   },
 
   

@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
-const PUB = process.env.PUBLIC_URL || "";
+
+// ── Replace with your deployed Apps Script Web App URL ──
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
 /* ═══════════════════════════════════════════════════
    useInView hook
@@ -134,6 +135,7 @@ const ContactSection = () => {
   const [sent,    setSent]    = useState(false);
   const [sending, setSending] = useState(false);
   const [shake,   setShake]   = useState(false);
+  const [apiError, setApiError] = useState(""); // ← new: for duplicate / network errors
   const [cardVisible, setCardVisible] = useState(false);
   const [headVisible, setHeadVisible] = useState(false);
   const [mapVisible,  setMapVisible]  = useState(false);
@@ -153,11 +155,51 @@ const ContactSection = () => {
   const isValid = Object.values(errors).every(e => e === "");
   const touch = (f) => setTouched(t => ({ ...t, [f]: true }));
 
-  const submit = () => {
+  // ── Submit: validate → POST to Apps Script ──
+  const submit = async () => {
     setTouched({ name: true, email: true, phone: true, description: true });
-    if (!isValid) { setShake(true); setTimeout(() => setShake(false), 520); return; }
+    setApiError("");
+
+    if (!isValid) {
+      setShake(true);
+      setTimeout(() => setShake(false), 520);
+      return;
+    }
+
     setSending(true);
-    setTimeout(() => { setSending(false); setSent(true); }, 1500);
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          type:    "contact",
+          name:    form.name.trim(),
+          email:   form.email.trim(),
+          phone:   form.phone.trim(),
+          purpose: form.description.trim(),
+        }),
+      });
+
+      const json = await res.json();
+
+      if (json.success) {
+        setSent(true);
+      } else if (json.reason === "duplicate") {
+        setApiError("This email has already been submitted. Please use a different email.");
+        setShake(true);
+        setTimeout(() => setShake(false), 520);
+      } else {
+        setApiError("Something went wrong. Please try again.");
+        setShake(true);
+        setTimeout(() => setShake(false), 520);
+      }
+    } catch {
+      setApiError("Network error. Please check your connection and try again.");
+      setShake(true);
+      setTimeout(() => setShake(false), 520);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -203,6 +245,10 @@ const ContactSection = () => {
           72%{ transform:translateX(5px); }
           88%{ transform:translateX(-2px); }
         }
+        @keyframes errSlide {
+          from { opacity:0; transform:translateY(-6px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
 
         .skl-card-wrap         { opacity:0; transition:none; }
         .skl-card-wrap.visible { animation:cardEnter .65s cubic-bezier(.22,1,.36,1) forwards; }
@@ -239,6 +285,22 @@ const ContactSection = () => {
         .skl-btn:active:not(:disabled) { transform:translateY(0); }
         .skl-btn:disabled { opacity:.7; cursor:not-allowed; }
 
+        .skl-api-error {
+          animation: errSlide .28s ease both;
+          background: #fff5f5;
+          border: 1.5px solid #fca5a5;
+          border-radius: 10px;
+          padding: 10px 14px;
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-family: 'Poppins', sans-serif;
+          font-size: 12.5px;
+          color: #dc2626;
+          font-weight: 500;
+        }
+
         .skl-map-wrap {
           border-radius:16px; overflow:hidden;
           box-shadow:0 8px 40px rgba(108,43,217,.16);
@@ -247,9 +309,8 @@ const ContactSection = () => {
         }
         .skl-map-wrap:hover { box-shadow:0 16px 56px rgba(108,43,217,.25); }
 
-        /* ── Contact section responsive ── */
         .contact-head h1 { font-size: clamp(24px, 5vw, 36px) !important; }
-        .contact-head p  { font-size: clamp(13px, 2vw, 14px) !important; text-align: justify}
+        .contact-head p  { font-size: clamp(13px, 2vw, 14px) !important; text-align: justify }
 
         .skl-form-card { padding: 48px 52px !important; }
         @media(max-width: 600px) {
@@ -257,7 +318,6 @@ const ContactSection = () => {
           .skl-btn { padding: 13px 24px !important; font-size: 13px !important; }
         }
 
-        /* map height responsive */
         .skl-map-iframe { height: 380px; }
         @media(max-width: 768px) { .skl-map-iframe { height: 260px; } }
         @media(max-width: 480px) { .skl-map-iframe { height: 200px; } }
@@ -280,10 +340,10 @@ const ContactSection = () => {
         {/* Heading */}
         <div className={`skl-head-wrap contact-head${headVisible ? " visible" : ""}`}
           style={{ padding: "0 8px" }}>
-          <h1 style={{ color:"#6C2BD9", fontWeight:700, fontFamily:"'Poppins',sans-serif", marginBottom:"14px" }}>
+          <h1 style={{ color:"#6C2BD9", fontWeight:700, fontFamily:"'Poppins',sans-serif", marginBottom:"14px", textAlign : "center"}}>
             Contact Us
           </h1>
-          <p className={"contact-description"} style={{ color:"#555", lineHeight:"1.7", fontFamily:"'Poppins',sans-serif", marginBottom:"44px", maxWidth:"1700px" }}>
+          <p style={{ color:"#555", lineHeight:"1.7", fontFamily:"'Poppins',sans-serif", marginBottom:"44px", maxWidth:"1700px" }}>
             At Skillra, we're here to support your learning, career, and organizational growth.
             Whether you have questions about our courses, need guidance for enrollment, or want to
             explore partnership opportunities, our team is ready to assist you.
@@ -320,6 +380,7 @@ const ContactSection = () => {
                       setSent(false);
                       setForm({ name:"", email:"", phone:"", description:"" });
                       setTouched({});
+                      setApiError("");
                     }}>Send Another →</button>
                   </div>
                 </div>
@@ -332,16 +393,24 @@ const ContactSection = () => {
                     All fields are required. Please fill them in correctly.
                   </p>
 
+                  {/* API / duplicate error banner */}
+                  {apiError && (
+                    <div className="skl-api-error">
+                      <span style={{ fontSize:"16px" }}>⚠</span>
+                      {apiError}
+                    </div>
+                  )}
+
                   <Field label="Your Name" value={form.name}
                     onChange={e => { setForm({...form, name:e.target.value}); touch("name"); }}
                     error={errors.name} touched={touched.name} />
                   <Field label="Email Address" type="email" value={form.email}
-                    onChange={e => { setForm({...form, email:e.target.value}); touch("email"); }}
+                    onChange={e => { setForm({...form, email:e.target.value}); touch("email"); setApiError(""); }}
                     error={errors.email} touched={touched.email} />
                   <Field label="Phone Number" type="tel" value={form.phone}
                     onChange={e => { setForm({...form, phone:e.target.value}); touch("phone"); }}
                     error={errors.phone} touched={touched.phone} />
-                  <Field label="Description" value={form.description}
+                  <Field label="Purpose" value={form.description}
                     onChange={e => { setForm({...form, description:e.target.value}); touch("description"); }}
                     error={errors.description} touched={touched.description} textarea />
 
@@ -363,6 +432,7 @@ const ContactSection = () => {
                     </div>
                   </div>
 
+                  <a href="/Skillra-Official/contact" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
                   <button className="skl-btn" onClick={submit} disabled={sending}>
                     {sending ? (
                       <>
@@ -371,6 +441,7 @@ const ContactSection = () => {
                       </>
                     ) : <>Get In Touch →</>}
                   </button>
+                  </a>
                 </>
               )}
             </div>
@@ -378,22 +449,22 @@ const ContactSection = () => {
         </div>
 
         {/* Google Map */}
-<div style={{ display:"flex", justifyContent:"center", marginTop:"52px", padding:"0 8px" }}>
-  <div className={`skl-map-wrap-anim${mapVisible ? " visible" : ""}`} style={{ width:"100%", maxWidth:"900px" }}>
-    <div className="skl-map-wrap">
-      <iframe
-        title="Skillra Technologies — Chennai"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.8634002039066!2d80.19374959999999!3d13.0443657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf593a54ba3c9787%3A0xd3f59dcb324aec!2sSkillra%20Technologies!5e0!3m2!1sen!2sin!4v1774248356803!5m2!1sen!2sin"
-        width="100%"
-        className="skl-map-iframe"
-        style={{ border: 0, display: "block" }}
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-      />
-    </div>
-  </div>
-</div>
+        <div style={{ display:"flex", justifyContent:"center", marginTop:"52px", padding:"0 8px" }}>
+          <div className={`skl-map-wrap-anim${mapVisible ? " visible" : ""}`} style={{ width:"100%", maxWidth:"900px" }}>
+            <div className="skl-map-wrap">
+              <iframe
+                title="Skillra Technologies — Chennai"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.8634002039066!2d80.19374959999999!3d13.0443657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf593a54ba3c9787%3A0xd3f59dcb324aec!2sSkillra%20Technologies!5e0!3m2!1sen!2sin!4v1774248356803!5m2!1sen!2sin"
+                width="100%"
+                className="skl-map-iframe"
+                style={{ border: 0, display: "block" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>
@@ -401,7 +472,7 @@ const ContactSection = () => {
 };
 
 /* ═══════════════════════════════════════════════════
-   Contact Info Section
+   Contact Info Section  (unchanged)
 ═══════════════════════════════════════════════════ */
 const ContactInfoSection = () => (
   <section style={{ background:"white", padding:"48px 16px", borderTop:"1px solid #f0f0f0" }}>
@@ -433,13 +504,14 @@ const ContactInfoSection = () => (
           support@skillra.com / admin@skillra.com
         </p>
         <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#999", marginTop:"12px", fontWeight:600 }}>Assistance hours:</p>
-        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#666" }}>Monday – Friday 6 am to 8 pm EST</p>
+        <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#666" }}>Monday – Saturday: 9:30 AM to 7:00 PM <br></br>
+Sunday : Closed</p>
       </div>
       <div>
         <h4 style={{ fontFamily:"'Poppins',sans-serif", fontSize:"15px", fontWeight:700, color:"#111", marginBottom:"8px" }}>Number &amp; Address</h4>
         <div style={{ width:"40px", height:"2px", background:"#6C2BD9", marginBottom:"16px" }} />
         <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"13px", color:"#6C2BD9", marginBottom:"12px" }}>
-          74486 65622 · +91 8779487948
+          +91 74486 65622 · +91 8779487948
         </p>
         <p style={{ fontFamily:"'Poppins',sans-serif", fontSize:"12px", color:"#666", lineHeight:"1.7" }}>
           FIRST FLOOR, 92/A19, PV Rajamannar Salai,<br />
@@ -452,77 +524,6 @@ const ContactInfoSection = () => (
   </section>
 );
 
-/* ═══════════════════════════════════════════════════
-   Newsletter Section
-═══════════════════════════════════════════════════ */
-function NewsletterSection() {
-  const [ref, inView] = useInView(0.3);
-  const [email, setEmail]           = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-  const [subscribing, setSubscribing] = useState(false);
-
-  const handleSubscribe = () => {
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return;
-    setSubscribing(true);
-    setTimeout(() => { setSubscribing(false); setSubscribed(true); }, 1400);
-  };
-
-  return (
-    <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
-      <style>{`
-        @keyframes spinRingAnim { to { transform:rotate(360deg); } }
-      `}</style>
-      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
-      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
-      <div style={{
-        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
-        display:"flex", alignItems:"center", justifyContent:"space-between",
-        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
-        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
-      }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"20px" }}>
-          <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
-            <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
-              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
-            </svg>
-          </div>
-          <div>
-            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
-              Join Our Newsletter
-            </h2>
-            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
-              Subscribe to get our latest updates &amp; news.
-            </p>
-          </div>
-        </div>
-        {subscribed ? (
-          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
-            <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
-            </div>
-            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
-          </div>
-        ) : (
-          <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleSubscribe()} placeholder="Enter your email"
-              style={{ height:"48px", width:"clamp(200px,26vw,300px)", padding:"0 16px", fontSize:"14px", fontFamily:"'Outfit',sans-serif", fontWeight:500, color:"#1a0640", background:"rgba(255,255,255,0.96)", border:"2px solid rgba(255,255,255,0.7)", borderRadius:"12px", outline:"none" }}
-              onFocus={e => e.target.style.borderColor="#fff"}
-              onBlur={e => e.target.style.borderColor="rgba(255,255,255,0.7)"} />
-            <button onClick={handleSubscribe} disabled={subscribing}
-              style={{ height:"48px", background:"#111", color:"#fff", border:"none", borderRadius:"12px", padding:"0 24px", fontSize:"14px", fontWeight:700, fontFamily:"'Outfit',sans-serif", cursor:"pointer", whiteSpace:"nowrap", display:"flex", alignItems:"center", gap:"8px", transition:"all 0.22s" }}
-              onMouseEnter={e => { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background="#111"; e.currentTarget.style.transform="translateY(0)"; }}>
-              {subscribing ? "Subscribing…" : "Subscribe Now"}
-              {!subscribing && <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 
 /* ═══════════════════════════════════════════════════
    ROOT EXPORT
@@ -533,7 +534,6 @@ export default function SkillraContactPage() {
       <SocialSidebar />
       <ContactSection />
       <ContactInfoSection />
-      <NewsletterSection />
       <Footer />
     </div>
   );

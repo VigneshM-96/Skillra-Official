@@ -3,8 +3,11 @@ import Navbar from "./NavBar";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
 
-
 const PUB = process.env.PUBLIC_URL || "";
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
+
+const currentYear = new Date().getFullYear();
+const YEAR_OPTIONS = Array.from({ length: currentYear - 2019 }, (_, i) => 2020 + i);
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -21,25 +24,276 @@ function useInView(threshold = 0.12) {
 }
 
 /* ═══════════════════════════════════════════════════
+   POPUP FORM
+═══════════════════════════════════════════════════ */
+function PlacementPopup({ onClose }) {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", yearOut: "", qualification: "" });
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState("idle");
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = "Name is required";
+    else if (form.name.trim().length < 2) e.name = "Name must be at least 2 characters";
+    else if (!/^[a-zA-Z\s.'-]+$/.test(form.name.trim())) e.name = "Name can only contain letters";
+
+    if (!form.email.trim()) e.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim())) e.email = "Enter a valid email address";
+
+    if (!form.phone.trim()) e.phone = "Phone number is required";
+    else if (!/^[6-9]\d{9}$/.test(form.phone.trim())) e.phone = "Enter a valid 10-digit Indian mobile number";
+
+    if (!form.yearOut) e.yearOut = "Please select your year of passout";
+    if (!form.qualification.trim()) e.qualification = "Qualification is required";
+    else if (form.qualification.trim().length < 2) e.qualification = "Enter a valid qualification";
+
+    return e;
+  };
+
+  const handleChange = (field, value) => {
+    setForm(f => ({ ...f, [field]: value }));
+    setErrors(p => ({ ...p, [field]: "" }));
+  };
+
+  const handleSubmit = async () => {
+    const e = validate();
+    if (Object.keys(e).length > 0) { setErrors(e); return; }
+    setErrors({});
+    setStatus("loading");
+    try {
+      await fetch(SHEETS_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "placement",
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          yearOut: form.yearOut,
+          qualification: form.qualification.trim(),
+        }),
+      });
+      setStatus("success");
+      setTimeout(() => { onClose(); }, 2800);
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  const ErrorMsg = ({ field }) => errors[field] ? (
+    <div style={{ display: "flex", alignItems: "center", gap: "5px", marginTop: "4px", paddingLeft: "2px" }}>
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <circle cx="6.5" cy="6.5" r="6" fill="#ef4444" />
+        <text x="6.5" y="10" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" fontFamily="sans-serif">!</text>
+      </svg>
+      <span style={{ color: "#ef4444", fontSize: "11.5px", fontFamily: "'Outfit',sans-serif" }}>{errors[field]}</span>
+    </div>
+  ) : null;
+
+  const inputStyle = (field) => ({
+    width: "100%", padding: "11px 14px",
+    border: `1.5px solid ${errors[field] ? "#ef4444" : "#e5e0f8"}`,
+    borderRadius: "10px", fontSize: "13.5px",
+    fontFamily: "'Outfit',sans-serif", color: "#1a0640",
+    outline: "none", background: errors[field] ? "#fff5f5" : "#faf9ff",
+    transition: "border-color 0.18s, background 0.18s",
+    boxSizing: "border-box",
+  });
+
+  return (
+    <div
+      style={{
+        position: "fixed", inset: 0, zIndex: 9999,
+        background: "rgba(15,5,40,0.60)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "16px",
+        animation: "fadeInOverlay 0.2s ease",
+      }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{
+        background: "#fff", borderRadius: "22px",
+        padding: "clamp(24px,4vw,36px) clamp(20px,4vw,32px) clamp(20px,4vw,30px)",
+        width: "100%", maxWidth: "480px",
+        position: "relative",
+        boxShadow: "0 24px 64px rgba(124,58,237,0.20)",
+        animation: "slideUpModal 0.28s cubic-bezier(0.34,1.56,0.64,1)",
+        maxHeight: "90vh", overflowY: "auto",
+      }}>
+        {/* Close */}
+        <button onClick={onClose} style={{
+          position: "absolute", top: "14px", right: "14px",
+          background: "#f3f0ff", border: "none", borderRadius: "50%",
+          width: "30px", height: "30px", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#7c3aed", fontSize: "17px", fontWeight: 700,
+        }}>×</button>
+
+        {status === "success" ? (
+          <div style={{ textAlign: "center", padding: "28px 0" }}>
+            <div style={{ fontSize: "52px", marginBottom: "14px" }}>🎉</div>
+            <h3 style={{ color: "#1a0640", fontFamily: "'Outfit',sans-serif", fontWeight: 800, fontSize: "20px", marginBottom: "8px" }}>
+              Application Submitted!
+            </h3>
+            <p style={{ color: "#6b5a9e", fontFamily: "'Outfit',sans-serif", fontSize: "13.5px", lineHeight: 1.6 }}>
+              We'll review your details and get back to you shortly.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Header */}
+            <div style={{ marginBottom: "20px" }}>
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: "7px",
+                background: "#f3f0ff", borderRadius: "50px",
+                padding: "4px 12px", marginBottom: "10px",
+              }}>
+                <span style={{ fontSize: "13px" }}>🎓</span>
+                <span style={{ fontSize: "11px", fontWeight: 800, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", letterSpacing: "0.08em" }}>
+                  PLACEMENT ASSISTANCE
+                </span>
+              </div>
+              <h2 style={{ fontSize: "clamp(18px,3vw,22px)", fontWeight: 900, color: "#1a0640", fontFamily: "'Outfit',sans-serif", lineHeight: 1.2, margin: 0 }}>
+                Apply for Placement Support
+              </h2>
+              <p style={{ fontSize: "12.5px", color: "#6b5a9e", fontFamily: "'Outfit',sans-serif", marginTop: "5px" }}>
+                Fill in your details — all fields are required.
+              </p>
+            </div>
+
+            {/* Fields */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+
+              {/* Name */}
+              <div>
+                <label style={{ fontSize: "11.5px", fontWeight: 700, color: "#5c4a80", fontFamily: "'Outfit',sans-serif", display: "block", marginBottom: "4px" }}>Full Name *</label>
+                <input
+                  style={inputStyle("name")}
+                  placeholder="e.g. Priya Sharma"
+                  value={form.name}
+                  onChange={e => handleChange("name", e.target.value)}
+                />
+                <ErrorMsg field="name" />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label style={{ fontSize: "11.5px", fontWeight: 700, color: "#5c4a80", fontFamily: "'Outfit',sans-serif", display: "block", marginBottom: "4px" }}>Email Address *</label>
+                <input
+                  style={inputStyle("email")}
+                  placeholder="e.g. priya@gmail.com"
+                  type="email"
+                  value={form.email}
+                  onChange={e => handleChange("email", e.target.value)}
+                />
+                <ErrorMsg field="email" />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label style={{ fontSize: "11.5px", fontWeight: 700, color: "#5c4a80", fontFamily: "'Outfit',sans-serif", display: "block", marginBottom: "4px" }}>Phone Number *</label>
+                <input
+                  style={inputStyle("phone")}
+                  placeholder="10-digit mobile number"
+                  type="tel"
+                  value={form.phone}
+                  onChange={e => handleChange("phone", e.target.value.replace(/\D/g, "").slice(0, 10))}
+                />
+                <ErrorMsg field="phone" />
+              </div>
+
+              {/* Year of Passout */}
+              <div>
+                <label style={{ fontSize: "11.5px", fontWeight: 700, color: "#5c4a80", fontFamily: "'Outfit',sans-serif", display: "block", marginBottom: "4px" }}>Year of Passout *</label>
+                <select
+                  style={{ ...inputStyle("yearOut"), appearance: "none", cursor: "pointer", color: form.yearOut ? "#1a0640" : "#9ca3af" }}
+                  value={form.yearOut}
+                  onChange={e => handleChange("yearOut", e.target.value)}
+                >
+                  <option value="" disabled>Select year</option>
+                  {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+                <ErrorMsg field="yearOut" />
+              </div>
+
+              {/* Qualification */}
+              <div>
+                <label style={{ fontSize: "11.5px", fontWeight: 700, color: "#5c4a80", fontFamily: "'Outfit',sans-serif", display: "block", marginBottom: "4px" }}>Qualification *</label>
+                <input
+                  style={inputStyle("qualification")}
+                  placeholder="e.g. B.Pharm, B.E CSE, MBA"
+                  value={form.qualification}
+                  onChange={e => handleChange("qualification", e.target.value)}
+                />
+                <ErrorMsg field="qualification" />
+              </div>
+            </div>
+
+            {status === "error" && (
+              <p style={{ color: "#ef4444", fontSize: "12px", fontFamily: "'Outfit',sans-serif", marginTop: "10px" }}>
+                Something went wrong. Please try again.
+              </p>
+            )}
+
+            <button
+              onClick={handleSubmit}
+              disabled={status === "loading"}
+              style={{
+                width: "100%", padding: "13px",
+                background: status === "loading" ? "#a78bfa" : "#7c3aed",
+                color: "#fff", border: "none", borderRadius: "50px",
+                fontSize: "14.5px", fontWeight: 700,
+                fontFamily: "'Outfit',sans-serif",
+                cursor: status === "loading" ? "not-allowed" : "pointer",
+                marginTop: "16px",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                transition: "all 0.22s",
+                boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
+              }}
+            >
+              {status === "loading" ? "Submitting..." : "Submit Application"}
+              {status !== "loading" && (
+                <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+                  <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    FLOATING BADGES
 ═══════════════════════════════════════════════════ */
 function FloatingBadge({ icon, label, style, delay = 0 }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t); }, [delay]);
   return (
-    <div style={{
-      position: "absolute", display: "flex", alignItems: "center", gap: "10px",
+    <div className="hero-badge" style={{
+      position: "absolute", display: "flex", alignItems: "center", gap: "8px",
       background: "rgba(255,255,255,0.95)", backdropFilter: "blur(18px) saturate(1.6)",
       WebkitBackdropFilter: "blur(18px) saturate(1.6)",
-      border: "1.5px solid rgba(255,255,255,0.98)", borderRadius: "14px", padding: "10px 18px",
-      boxShadow: "0 8px 32px rgba(109,40,217,0.14), 0 1px 0 rgba(255,255,255,0.9) inset",
+      border: "1.5px solid rgba(255,255,255,0.98)", borderRadius: "12px",
+      padding: "clamp(6px,1vw,10px) clamp(10px,2vw,16px)",
+      boxShadow: "0 8px 28px rgba(109,40,217,0.13), 0 1px 0 rgba(255,255,255,0.9) inset",
       opacity: visible ? 1 : 0,
       transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)",
       transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`,
       zIndex: 20, ...style,
     }}>
-      <div style={{ width: "34px", height: "34px", borderRadius: "10px", background: "linear-gradient(135deg,rgba(124,58,237,0.10),rgba(167,139,250,0.18))", border: "1px solid rgba(124,58,237,0.18)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</div>
-      <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a0640", lineHeight: 1.2, fontFamily: "'Outfit',sans-serif", whiteSpace: "nowrap" }}>{label}</div>
+      <div style={{
+        width: "clamp(26px,3.5vw,34px)", height: "clamp(26px,3.5vw,34px)",
+        borderRadius: "8px",
+        background: "linear-gradient(135deg,rgba(124,58,237,0.10),rgba(167,139,250,0.18))",
+        border: "1px solid rgba(124,58,237,0.18)",
+        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+      }}>{icon}</div>
+      <div style={{
+        fontSize: "clamp(10px,1.2vw,13px)", fontWeight: 700, color: "#1a0640",
+        lineHeight: 1.2, fontFamily: "'Outfit',sans-serif", whiteSpace: "nowrap",
+      }}>{label}</div>
     </div>
   );
 }
@@ -48,13 +302,30 @@ function ActiveStudentsBadge({ style, delay = 0 }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t); }, [delay]);
   return (
-    <div style={{ position: "absolute", display: "flex", alignItems: "center", gap: "10px", background: "#1a1035", borderRadius: "50px", padding: "8px 16px 8px 8px", boxShadow: "0 8px 28px rgba(20,8,56,0.35)", opacity: visible ? 1 : 0, transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)", transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`, zIndex: 20, ...style }}>
-      <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="white" strokeWidth="1.8" /><path d="M3 17c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" /></svg>
+    <div className="hero-badge" style={{
+      position: "absolute", display: "flex", alignItems: "center", gap: "8px",
+      background: "#1a1035", borderRadius: "50px",
+      padding: "clamp(5px,1vw,8px) clamp(10px,2vw,16px) clamp(5px,1vw,8px) clamp(5px,1vw,8px)",
+      boxShadow: "0 8px 28px rgba(20,8,56,0.35)",
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.93)",
+      transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`,
+      zIndex: 20, ...style,
+    }}>
+      <div style={{
+        width: "clamp(26px,3.5vw,34px)", height: "clamp(26px,3.5vw,34px)",
+        borderRadius: "50%",
+        background: "linear-gradient(135deg,#7c3aed,#a78bfa)",
+        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+      }}>
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="7" r="3.5" stroke="white" strokeWidth="1.8" />
+          <path d="M3 17c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
+        </svg>
       </div>
       <div>
-        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit',sans-serif" }}>1k</div>
-        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>Active Students</div>
+        <div style={{ fontSize: "clamp(11px,1.4vw,14px)", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit',sans-serif" }}>1k</div>
+        <div style={{ fontSize: "clamp(8px,1vw,10px)", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>Active Students</div>
       </div>
     </div>
   );
@@ -64,27 +335,51 @@ function PlacedBadge({ style, delay = 0 }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), delay); return () => clearTimeout(t); }, [delay]);
   return (
-    <div style={{ position: "absolute", background: "#f5c518", borderRadius: "12px", padding: "10px 20px", boxShadow: "0 8px 28px rgba(245,197,24,0.40)", opacity: visible ? 1 : 0, transform: visible ? "rotate(-2deg) scale(1)" : "rotate(-2deg) scale(0.88) translateY(10px)", transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`, zIndex: 20, ...style }}>
-      <div style={{ fontSize: "15px", fontWeight: 900, color: "#1a0640", fontFamily: "'Outfit',sans-serif", letterSpacing: "0.3px" }}>Placed ✓</div>
+    <div className="hero-badge" style={{
+      position: "absolute", background: "#f5c518", borderRadius: "10px",
+      padding: "clamp(6px,1vw,10px) clamp(12px,2vw,20px)",
+      boxShadow: "0 8px 28px rgba(245,197,24,0.40)",
+      opacity: visible ? 1 : 0,
+      transform: visible ? "rotate(-2deg) scale(1)" : "rotate(-2deg) scale(0.88) translateY(10px)",
+      transition: `opacity 0.6s ease ${delay}ms, transform 0.55s cubic-bezier(.34,1.56,.64,1) ${delay}ms`,
+      zIndex: 20, ...style,
+    }}>
+      <div style={{ fontSize: "clamp(11px,1.4vw,15px)", fontWeight: 900, color: "#1a0640", fontFamily: "'Outfit',sans-serif", letterSpacing: "0.3px" }}>Placed ✓</div>
     </div>
   );
 }
 
-function DiamondPattern() {
+function DiamondPattern({ isMobile = false }) {
+  const patId = isMobile ? "diamondPatMobile" : "diamondPatDesktop";
   return (
-    <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "min(490px, 90%)", aspectRatio: "490/530", borderRadius: "50% 50% 0 0 / 48% 48% 0 0", background: "rgba(195,180,255,0.25)", overflow: "hidden", zIndex: 1 }}>
-      <svg viewBox="0 0 490 530" style={{ width: "100%", height: "100%" }}>
-        <defs><pattern id="diamondPat" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse"><rect x="14" y="2" width="11" height="11" rx="1.5" transform="rotate(45 14 7.5)" fill="none" stroke="rgba(124,58,237,0.26)" strokeWidth="1.5" /></pattern></defs>
-        <rect x="0" y="0" width="490" height="530" fill="url(#diamondPat)" />
+    <div style={{
+      position: "absolute", bottom: 0, left: "50%",
+      transform: "translateX(-50%)",
+      width: isMobile ? "min(340px, 85%)" : "min(490px, 90%)",
+      aspectRatio: "490/530",
+      borderRadius: "50% 50% 0 0 / 48% 48% 0 0",
+      background: "rgba(195,180,255,0.25)", marginBottom : "100px",
+      overflow: "hidden",
+      zIndex: 1,
+    }}>
+      <svg viewBox="0 0 490 530" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <pattern id={patId} x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+            <rect
+              x="14" y="2" width="11" height="11" rx="1.5"
+              transform="rotate(45 14 7.5)"
+              fill="none"
+              stroke="rgba(124,58,237,0.5)"
+              strokeWidth="1.5"
+            />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="490" height="530" fill={`url(#${patId})`} />
       </svg>
     </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   SECTION 1 — HERO
-   Order on mobile: 1. Title+arc  2. Image  3. Desc+button
-═══════════════════════════════════════════════════ */
 function AboutHero({ onCtaClick }) {
   return (
     <section id="about-home" style={{
@@ -92,38 +387,40 @@ function AboutHero({ onCtaClick }) {
       minHeight: "100vh", display: "flex", alignItems: "center",
       position: "relative", overflow: "hidden",
     }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, backgroundImage: `radial-gradient(rgba(124,58,237,0.08) 1px,transparent 1px)`, backgroundSize: "28px 28px" }} />
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+        backgroundImage: `radial-gradient(rgba(124,58,237,0.08) 1px,transparent 1px)`,
+        backgroundSize: "28px 28px"
+      }} />
 
-      <div className="about-inner" style={{
+      {/* ── Desktop Layout ── */}
+      <div className="about-inner about-desktop" style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        flexWrap: "wrap",
+        flexWrap: "nowrap",
         padding: "0 5%", width: "100%", gap: "16px",
         position: "relative", zIndex: 1, maxWidth: "1280px", margin: "0 auto",
       }}>
 
-        {/* ── 1st on mobile: Title + arc ── */}
+        {/* Left: Title */}
         <div className="about-left" style={{ flex: "0 0 auto", width: "500px", maxWidth: "100%" }}>
           <h1 className="cr-v1 about-title" style={{
             fontSize: "clamp(2rem,4vw,3.5rem)", fontWeight: 900,
             lineHeight: 1.08, letterSpacing: "-1.5px",
             marginBottom: "12px", fontFamily: "'Outfit', sans-serif",
           }}>
-            <span style={{ color: "#7c3aed" }}>Your </span>
-            <span style={{ color: "#ff6b35" }}>Skills Deserve</span><br />
-            <span style={{ color: "#ff6b35" }}>the Right</span><br />
-            <span style={{ color: "#16a34a" }}>Opportunity</span>
+            <span style={{ color: "#1a0640" }}>Your Skills Deserve</span><br />
+            <span style={{ color: "#f97316" }}>the Right</span><br />
+            <span style={{ color: "#f97316" }}>Opportunity</span>
           </h1>
           <div className="ab-v1" style={{ marginBottom: "24px" }}>
             <svg viewBox="0 0 320 20" style={{ width: "min(320px,100%)", height: "14px", overflow: "visible" }} preserveAspectRatio="none">
               <path className="about-arc" d="M 4 14 C 60 2, 200 0, 316 12" fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
             </svg>
           </div>
-
-          {/* Desktop — desc + button */}
-          <p className="ab-v2 about-desc-desktop" style={{ color: "#5c4a80", fontSize: "clamp(13px,1.5vw,14.5px)", lineHeight: 1.8, marginBottom: "34px", maxWidth: "420px", fontFamily: "'Outfit',sans-serif", fontWeight: 400 }}>
+          <p className="about-desc-desktop" style={{ color: "#5c4a80", fontSize: "clamp(13px,1.5vw,14.5px)", lineHeight: 1.8, marginBottom: "34px", maxWidth: "420px", fontFamily: "'Outfit',sans-serif", fontWeight: 400 }}>
             At Skillra, we don't just teach skills — we help you turn them into real careers. Our Placement Assistance Program is designed to help students land internships and jobs with confidence.
           </p>
-          <div className="ab-v3 about-btn-desktop">
+          <div className="about-btn-desktop">
             <button className="about-cta-btn" onClick={onCtaClick}
               style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
@@ -134,48 +431,151 @@ function AboutHero({ onCtaClick }) {
           </div>
         </div>
 
-        {/* ── 2nd on mobile: Image ── */}
+        {/* Right: Image */}
         <div className="about-right ab-vR" style={{
           flex: 1, display: "flex", justifyContent: "center", alignItems: "flex-end",
           position: "relative", minWidth: 0,
-          height: "clamp(300px, 60vw, 700px)",
+          height: "clamp(500px, 80vw, 950px)",
+          overflow: "visible",
+          marginTop: "-60px",
         }}>
           <DiamondPattern />
-          <img src={`${PUB}/aboutusgirl.png`} alt="About Us"
-            style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.18))" }}
+          <img
+            src={`${PUB}/aboutusgirl.png`}
+            alt="About Us"
+            style={{
+              position: "relative", zIndex: 5,
+              height: "1300px",
+              width: "auto", maxWidth: "120%",
+              objectFit: "contain", objectPosition: "bottom center",
+              display: "block", alignSelf: "flex-end",
+              filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.18))", marginBottom : "100px"
+            }}
           />
           <FloatingBadge
-            icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2C6.13 2 3 5.13 3 9c0 2.38 1.19 4.47 3 5.74V17h8v-2.26C15.81 13.47 17 11.38 17 9c0-3.87-3.13-7-7-7z" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 17h4" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" /></svg>}
-            label="Lifetime Support" style={{ top: "21%", right: "3%" }} delay={600}
+            icon={<svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 2C6.13 2 3 5.13 3 9c0 2.38 1.19 4.47 3 5.74V17h8v-2.26C15.81 13.47 17 11.38 17 9c0-3.87-3.13-7-7-7z" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 17h4" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" /></svg>}
+            label="Lifetime Support" style={{ top: "38%", right: "2%" }} delay={600}
           />
-          <ActiveStudentsBadge style={{ bottom: "42%", left: "4%" }} delay={800} />
-          <PlacedBadge style={{ bottom: "34%", right: "6%" }} delay={700} />
+          <ActiveStudentsBadge style={{ bottom: "44%", left: "2%" }} delay={800} />
+          <PlacedBadge style={{ bottom: "32%", right: "5%" }} delay={700} />
           <FloatingBadge
-            icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>}
-            label="4+ offers" style={{ bottom: "16%", right: "73%" }} delay={1000}
+            icon={<svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>}
+            label="4+ offers" style={{ bottom: "18%", left: "4%" }} delay={1000}
           />
         </div>
-
-        {/* ── 3rd on mobile: Desc + button (mobile only) ── */}
-        <div className="about-bottom" style={{
-          display: "flex", flexDirection: "column",
-          alignItems: "center", gap: "24px", width: "100%",
-        }}>
-          <p style={{ color: "#5c4a80", fontSize: "14.5px", lineHeight: 1.8, maxWidth: "380px", fontFamily: "'Outfit',sans-serif", fontWeight: 400, textAlign: "center" }}>
-            At Skillra, we don't just teach skills — we help you turn them into real careers. Our Placement Assistance Program is designed to help students land internships and jobs with confidence.
-          </p>
-          <button className="about-cta-btn" onClick={onCtaClick}
-            style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", transition: "all 0.22s", position: "relative", overflow: "hidden" }}>
-            Get Placement Assistance
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
-        </div>
-
       </div>
+
+      {/* ── Mobile Layout ── */}
+      <div className="about-mobile" style={{
+        display: "none", flexDirection: "column", alignItems: "center",
+        width: "100%", position: "relative", zIndex: 1,
+        padding: "60px 5% 40px", gap: "0",
+      }}>
+
+        {/* 1. Title + Arc */}
+        <div style={{ width: "100%", textAlign: "center", marginBottom: "24px", marginTop : "40px"}}>
+          <h1 style={{
+            fontSize: "clamp(1.8rem,7vw,2.6rem)", fontWeight: 900,
+            lineHeight: 1.1, letterSpacing: "-1px",
+            marginBottom: "10px", fontFamily: "'Outfit', sans-serif",
+          }}>
+            <span style={{ color: "#1a0640" }}>Your Skills Deserve</span><br />
+            <span style={{ color: "#f97316" }}>the Right Opportunity</span>
+          </h1>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <svg viewBox="0 0 320 20" style={{ width: "min(260px,80%)", height: "12px", overflow: "visible" }} preserveAspectRatio="none">
+              <path d="M 4 14 C 60 2, 200 0, 316 12" fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        {/* 2. Image with Diamond background + Badges */}
+<div style={{
+  position: "relative", width: "100%",
+  height: "clamp(380px, 95vw, 520px)", // ⬆️ taller container
+  display: "flex", justifyContent: "center", alignItems: "flex-end",
+  marginTop: "-150px", marginBottom : "20px",
+}}>
+  {/* Smaller diamond bg */}
+  <div style={{
+    position: "absolute", bottom: 0, left: "50%",
+    transform: "translateX(-50%)",
+    width: "min(240px, 65%)", // ⬇️ smaller than before (was 340px/85%)
+    aspectRatio: "490/530",
+    borderRadius: "50% 50% 0 0 / 48% 48% 0 0",
+    background: "rgba(195,180,255,0.25)",
+    overflow: "hidden",
+    zIndex: 1,
+  }}>
+    <svg viewBox="0 0 490 530" style={{ width: "100%", height: "100%", display: "block" }}>
+      <defs>
+        <pattern id="diamondPatMobile" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+          <rect x="14" y="2" width="11" height="11" rx="1.5" transform="rotate(45 14 7.5)"
+            fill="none" stroke="rgba(124,58,237,0.5)" strokeWidth="1.5" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="490" height="530" fill="url(#diamondPatMobile)" />
+    </svg>
+  </div>
+
+  {/* Bigger image */}
+  <img
+    src={`${PUB}/aboutusgirl.png`}
+    alt="About Us"
+    style={{
+      position: "relative", zIndex: 5,
+      height: "55%", // ⬆️ overflows container to look bigger
+      width: "auto",
+      maxWidth: "100%",
+      objectFit: "contain", objectPosition: "bottom center",
+      display: "block", alignSelf: "flex-end",
+      filter: "drop-shadow(0 16px 36px rgba(109,40,217,0.18))",
+    }}
+  />
+
+  {/* Badges */}
+  <FloatingBadge
+  icon={<svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M10 2C6.13 2 3 5.13 3 9c0 2.38 1.19 4.47 3 5.74V17h8v-2.26C15.81 13.47 17 11.38 17 9c0-3.87-3.13-7-7-7z" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" /><path d="M8 17h4" stroke="#7c3aed" strokeWidth="1.6" strokeLinecap="round" /></svg>}
+  label="Lifetime Support" style={{ top: "44%", right: "8%", transform: "scale(0.82)", transformOrigin: "top right" }} delay={600}
+/>
+<ActiveStudentsBadge style={{ bottom: "40%", left: "8%", transform: "scale(0.82)", transformOrigin: "left center" }} delay={800} />
+<PlacedBadge style={{ bottom: "28%", right: "8%", transform: "scale(0.82)", transformOrigin: "right center" }} delay={700} />
+<FloatingBadge
+  icon={<svg width="11" height="11" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>}
+  label="4+ offers" style={{ bottom: "16%", left: "8%", transform: "scale(0.82)", transformOrigin: "left bottom" }} delay={1000}
+/>
+</div>
+
+        {/* 3. Short Description */}
+        <p style={{
+          color: "#5c4a80", fontSize: "14px", lineHeight: 1.8,
+          maxWidth: "360px", fontFamily: "'Outfit',sans-serif",
+          fontWeight: 400, textAlign: "center", marginBottom: "24px",
+        }}>
+          At Skillra, we don't just teach skills — we help you turn them into real careers. Our Placement Assistance Program is designed to help students land internships and jobs with confidence.
+        </p>
+
+        {/* 4. Button */}
+        <button className="about-cta-btn" onClick={onCtaClick}
+          style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "14px 30px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", transition: "all 0.22s" }}>
+          Get Placement Assistance
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </button>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .about-desktop { display: none !important; }
+          .about-mobile { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .about-desktop { display: flex !important; }
+          .about-mobile { display: none !important; }
+        }
+      `}</style>
     </section>
   );
 }
-
 /* ═══════════════════════════════════════════════════
    WHY STUDENTS TRUST SKILLRA
 ═══════════════════════════════════════════════════ */
@@ -204,7 +604,7 @@ function TrustCard({ feat }) {
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       className="trust-card"
-      style={{ flex: 1, padding: "32px 28px", background: hovered ? "#faf8ff" : "#fff", transition: "background 0.2s", cursor: "default", minWidth: 0 }}>
+      style={{ flex: 1, padding: "clamp(20px,3vw,32px) clamp(16px,2.5vw,28px)", background: hovered ? "#faf8ff" : "#fff", transition: "background 0.2s", cursor: "default", minWidth: 0 }}>
       <div style={{ marginBottom: "14px" }}>{feat.icon}</div>
       <h3 style={{ fontSize: "clamp(13px,1.4vw,14.5px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "8px", lineHeight: 1.3 }}>{feat.title}</h3>
       <p style={{ fontSize: "clamp(12px,1.2vw,13px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.75, fontWeight: 400 }}>{feat.desc}</p>
@@ -215,11 +615,11 @@ function TrustCard({ feat }) {
 function WhyTrustSection() {
   const [ref, inView] = useInView(0.08);
   return (
-    <section ref={ref} style={{ background: "#fff", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden", padding: "clamp(48px,8vw,80px) 0 clamp(48px,8vw,90px)" }}>
+    <section ref={ref} style={{ background: "#fff", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden", padding: "clamp(40px,7vw,80px) 0 clamp(40px,7vw,90px)" }}>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.035) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
       <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: "52px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
-          <h2 style={{ fontSize: "clamp(1.5rem,3.2vw,2.5rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "14px" }}>Why Students Trust Skillra</h2>
+        <div style={{ textAlign: "center", marginBottom: "clamp(32px,5vw,52px)", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.4rem,3.2vw,2.5rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "14px" }}>Why Students Trust Skillra</h2>
           <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", fontWeight: 400 }}>We focus on career outcomes, not just courses.</p>
         </div>
         <div className="trust-top" style={{ border: "1px solid #e5e7eb", borderRadius: "16px 16px 0 0", overflow: "hidden", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)", transition: "all 0.65s ease 0.1s" }}>
@@ -253,11 +653,11 @@ function WhyTrustSection() {
    HOW WE HELP — STEPS
 ═══════════════════════════════════════════════════ */
 const PLACEMENT_STEPS = [
-  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>, title: "Build In-Demand Skills", desc: "Learn practical skills that companies are hiring for.", position: "bottom" },
-  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2H3v16h5l3 3 3-3h7V2z" /><path d="M7 8h10M7 12h6" /></svg>, title: "Create Your Professional Profile", desc: "Build your resume, portfolio, and LinkedIn presence.", position: "top" },
-  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>, title: "Prepare for Interviews", desc: "Practice with mock interviews and expert feedback.", position: "bottom" },
-  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>, title: "Apply for Opportunities", desc: "Access internships and job openings through Skillra.", position: "top" },
-  { icon: <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>, title: "Get Hired", desc: "Land the job with full placement support.", position: "bottom" },
+  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>, title: "Build In-Demand Skills", desc: "Learn practical skills that companies are hiring for.", position: "bottom" },
+  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2H3v16h5l3 3 3-3h7V2z" /><path d="M7 8h10M7 12h6" /></svg>, title: "Create Your Professional Profile", desc: "Build your resume, portfolio, and LinkedIn presence.", position: "top" },
+  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>, title: "Prepare for Interviews", desc: "Practice with mock interviews and expert feedback.", position: "bottom" },
+  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>, title: "Apply for Opportunities", desc: "Access internships and job openings through Skillra.", position: "top" },
+  { icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" /></svg>, title: "Get Hired", desc: "Land the job with full placement support.", position: "bottom" },
 ];
 
 function StepNode({ step, index, inView }) {
@@ -265,133 +665,247 @@ function StepNode({ step, index, inView }) {
   const isTop = step.position === "top";
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative", opacity: inView ? 1 : 0, transform: inView ? "translateY(0) scale(1)" : "translateY(32px) scale(0.9)", transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s` }}>
-      {isTop && (
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <p style={{ fontSize: "clamp(11px,1.2vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "6px", lineHeight: 1.3 }}>{step.title}</p>
-          <p style={{ fontSize: "clamp(10px,1vw,12px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, maxWidth: "140px" }}>{step.desc}</p>
-        </div>
-      )}
-      <div style={{ width: "clamp(52px,6vw,72px)", height: "clamp(52px,6vw,72px)", borderRadius: "50%", background: hovered ? "linear-gradient(135deg,#4c1d95,#6d28d9)" : "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: hovered ? "0 12px 40px rgba(109,40,217,0.55),0 0 0 6px rgba(124,58,237,0.15)" : "0 8px 28px rgba(109,40,217,0.30),0 0 0 6px rgba(124,58,237,0.10)", transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)", transform: hovered ? "scale(1.14)" : "scale(1)", cursor: "default", flexShrink: 0, zIndex: 2, position: "relative" }}>
+      style={{
+        display: "flex", flexDirection: "column", alignItems: "center",
+        position: "relative", flex: 1,
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0) scale(1)" : "translateY(32px) scale(0.9)",
+        transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s`
+      }}>
+
+      {/* TOP LABEL — fixed 100px height always */}
+      <div style={{
+        height: "100px",
+        display: "flex", flexDirection: "column",
+        justifyContent: "flex-end", alignItems: "center",
+        paddingBottom: "14px", textAlign: "center",
+        visibility: isTop ? "visible" : "hidden",
+      }}>
+        <p style={{ fontSize: "clamp(10px,1.1vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px", lineHeight: 1.3, maxWidth: "110px" }}>{step.title}</p>
+        <p style={{ fontSize: "clamp(9px,0.9vw,11px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.5, maxWidth: "100px" }}>{step.desc}</p>
+      </div>
+
+      {/* STEP NUMBER BADGE */}
+      <div style={{
+        position: "absolute",
+        top: "100px", // exactly at top of circle
+        left: "50%", transform: "translateX(-50%) translateY(-8px)",
+        width: "18px", height: "18px", borderRadius: "50%",
+        background: "#7c3aed", color: "#fff",
+        fontSize: "10px", fontWeight: 800,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontFamily: "'Outfit',sans-serif",
+        zIndex: 4, boxShadow: "0 2px 8px rgba(124,58,237,0.4)",
+      }}>{index + 1}</div>
+
+      {/* CIRCLE NODE */}
+      <div style={{
+        width: "clamp(52px,5.5vw,66px)", height: "clamp(52px,5.5vw,66px)",
+        borderRadius: "50%",
+        background: hovered
+          ? "linear-gradient(135deg,#4c1d95,#6d28d9)"
+          : "linear-gradient(135deg,#7c3aed,#a78bfa)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        boxShadow: hovered
+          ? "0 12px 40px rgba(109,40,217,0.55),0 0 0 6px rgba(124,58,237,0.15)"
+          : "0 8px 28px rgba(109,40,217,0.28),0 0 0 6px rgba(124,58,237,0.10)",
+        transition: "all 0.28s cubic-bezier(0.34,1.56,0.64,1)",
+        transform: hovered ? "scale(1.12)" : "scale(1)",
+        cursor: "default", flexShrink: 0,
+        zIndex: 3, position: "relative",
+      }}>
         {step.icon}
       </div>
-      {!isTop && (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <p style={{ fontSize: "clamp(11px,1.2vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "6px", lineHeight: 1.3 }}>{step.title}</p>
-          <p style={{ fontSize: "clamp(10px,1vw,12px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, maxWidth: "140px" }}>{step.desc}</p>
-        </div>
-      )}
+
+      {/* BOTTOM LABEL — fixed 100px height always */}
+      <div style={{
+        height: "100px",
+        display: "flex", flexDirection: "column",
+        justifyContent: "flex-start", alignItems: "center",
+        paddingTop: "14px", textAlign: "center",
+        visibility: isTop ? "hidden" : "visible",
+      }}>
+        <p style={{ fontSize: "clamp(10px,1.1vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px", lineHeight: 1.3, maxWidth: "110px" }}>{step.title}</p>
+        <p style={{ fontSize: "clamp(9px,0.9vw,11px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.5, maxWidth: "100px" }}>{step.desc}</p>
+      </div>
+
     </div>
   );
 }
 
 function HowWeHelpSection() {
   const [ref, inView] = useInView(0.08);
+
+  // Total height = topLabel(100px) + circle(~66px) + bottomLabel(100px) = 266px
+  // Circle center is at 100 + 33 = 133px from top = 133/266 = ~50%
+  // So top: "50%" on the SVG is correct — but we use exact px offset below
+
   return (
-    <section ref={ref} style={{ background: "linear-gradient(160deg,#f3eeff 0%,#ede8f8 50%,#e8e0f8 100%)", padding: "clamp(48px,8vw,88px) 0 clamp(56px,10vw,100px)", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.07) 1px,transparent 1px)`, backgroundSize: "30px 30px" }} />
-      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: "72px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
-          <h2 style={{ fontSize: "clamp(1.5rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>How We Help You Get Placed</h2>
-          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>Powerful natural language processing capabilities, that can understand and respond to customer inquiries in real-time &amp; improve customer satisfaction.</p>
+    <section ref={ref} style={{
+      background: "#ffffff",
+      padding: "clamp(40px,7vw,88px) 0 clamp(48px,8vw,100px)",
+      position: "relative", overflow: "hidden",
+    }}>
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        backgroundImage: `radial-gradient(rgba(124,58,237,0.07) 1px,transparent 1px)`,
+        backgroundSize: "30px 30px"
+      }} />
+
+      <div className="sec-wrap" style={{
+        maxWidth: "1100px", margin: "0 auto",
+        padding: "0 clamp(16px,4%,40px)",
+        position: "relative", zIndex: 1,
+      }}>
+
+        {/* Heading */}
+        <div style={{
+          textAlign: "center", marginBottom: "clamp(32px,5vw,60px)",
+          opacity: inView ? 1 : 0,
+          transform: inView ? "translateY(0)" : "translateY(20px)",
+          transition: "all 0.65s ease"
+        }}>
+          <h2 style={{ fontSize: "clamp(1.4rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>
+            How We Help You Get Placed
+          </h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>
+            A structured path from skill-building to landing your dream role — with full support at every stage.
+          </p>
         </div>
-        {/* Desktop S-curve */}
-        <div className="steps-desktop" style={{ position: "relative" }}>
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" style={{ position: "absolute", top: "50%", left: 0, width: "100%", height: "120px", transform: "translateY(-50%)", zIndex: 0, opacity: inView ? 1 : 0, transition: "opacity 0.8s ease 0.3s" }}>
-            <defs><linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#a78bfa" stopOpacity="0.5" /><stop offset="50%" stopColor="#7c3aed" stopOpacity="0.8" /><stop offset="100%" stopColor="#a78bfa" stopOpacity="0.5" /></linearGradient></defs>
-            <path d="M 100 60 C 160 60, 190 10, 250 10 C 310 10, 340 110, 400 110 C 460 110, 490 10, 550 10 C 610 10, 640 110, 700 110 C 760 110, 830 60, 900 60" fill="none" stroke="url(#pathGrad)" strokeWidth="2.5" strokeDasharray="6 5" strokeLinecap="round" />
+
+        {/* ── Desktop Steps ── */}
+        <div className="steps-desktop" style={{ position: "relative", display: "flex" }}>
+
+          {/* SVG Roadmap — sits behind nodes, top offset = topLabel height = 100px, circle center = 100 + 33 = 133px */}
+          <svg
+            viewBox="0 0 1000 266"
+            preserveAspectRatio="none"
+            style={{
+              position: "absolute",
+              top: 0, left: 0,
+              width: "100%", height: "100%",
+              zIndex: 0,
+              opacity: inView ? 1 : 0,
+              transition: "opacity 0.8s ease 0.4s",
+            }}>
+            <defs>
+              <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="#7c3aed" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.4" />
+              </linearGradient>
+              <linearGradient id="pathGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.15" />
+                <stop offset="50%" stopColor="#7c3aed" stopOpacity="0.08" />
+                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.15" />
+              </linearGradient>
+            </defs>
+
+            {/*
+              5 nodes evenly spaced at x = 100, 300, 500, 700, 900
+              positions (top=bottom): bottom, top, bottom, top, bottom
+              bottom node circle center y = 100 + 33 = 133
+              top    node circle center y = 100 + 33 = 133  (same! labels are hidden)
+              So all circles are at y=133 in 266px viewBox = 50%
+              Zigzag goes: node1(bottom)→node2(top)→node3(bottom)→node4(top)→node5(bottom)
+              y values: bottom=170, top=96  (visual zigzag above/below center line)
+            */}
+
+            {/* Shadow/glow path */}
+            <path
+              d="M 100 133 C 150 133, 200 133, 250 133 C 300 133, 350 133, 400 133 C 450 133, 500 133, 550 133 C 600 133, 650 133, 700 133 C 750 133, 800 133, 900 133"
+              fill="none"
+              stroke="url(#pathGrad2)"
+              strokeWidth="12"
+              strokeLinecap="round"
+            />
+
+            {/* Main zigzag dashed path */}
+            <path
+              d="M 100 170 C 160 170, 190 96, 250 96 C 310 96, 340 170, 400 170 C 460 170, 490 96, 550 96 C 610 96, 640 170, 700 170 C 760 170, 830 170, 900 170"
+              fill="none"
+              stroke="url(#pathGrad)"
+              strokeWidth="2.5"
+              strokeDasharray="7 5"
+              strokeLinecap="round"
+            />
+
+            {/* Arrow heads at each transition */}
+            {[[250,96],[400,170],[550,96],[700,170]].map(([x,y], i) => (
+              <circle key={i} cx={x} cy={y} r="4" fill="#7c3aed" opacity="0.6" />
+            ))}
           </svg>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 1, minHeight: "260px" }}>
-            {PLACEMENT_STEPS.map((step, i) => <StepNode key={i} step={step} index={i} inView={inView} />)}
+
+          {/* Nodes */}
+          <div style={{
+            display: "flex", alignItems: "stretch",
+            justifyContent: "space-between",
+            position: "relative", zIndex: 1,
+            width: "100%",
+          }}>
+            {PLACEMENT_STEPS.map((step, i) => (
+              <StepNode key={i} step={step} index={i} inView={inView} />
+            ))}
           </div>
         </div>
-        {/* Mobile vertical */}
-        <div className="steps-mobile" style={{ flexDirection: "column", gap: "24px" }}>
+
+        {/* ── Mobile Steps ── */}
+        <div className="steps-mobile" style={{ flexDirection: "column", gap: "0px" }}>
           {PLACEMENT_STEPS.map((step, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "16px", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-20px)", transition: `opacity 0.5s ease ${0.1 + i * 0.1}s, transform 0.5s ease ${0.1 + i * 0.1}s` }}>
-              <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed,#a78bfa)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 6px 20px rgba(109,40,217,0.30)" }}>{step.icon}</div>
-              <div style={{ paddingTop: "4px" }}>
-                <p style={{ fontSize: "14px", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px" }}>{step.title}</p>
-                <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6 }}>{step.desc}</p>
+            <div key={i} style={{
+              display: "flex", alignItems: "flex-start", gap: "16px",
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateX(0)" : "translateX(-20px)",
+              transition: `opacity 0.5s ease ${0.1 + i * 0.1}s, transform 0.5s ease ${0.1 + i * 0.1}s`
+            }}>
+              {/* Left: icon + connector */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                <div style={{
+                  width: "46px", height: "46px", borderRadius: "50%",
+                  background: "linear-gradient(135deg,#7c3aed,#a78bfa)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 6px 20px rgba(109,40,217,0.28)",
+                  fontSize: "11px", fontWeight: 800, color: "#fff",
+                  fontFamily: "'Outfit',sans-serif", position: "relative",
+                }}>
+                  {step.icon}
+                  <span style={{
+                    position: "absolute", top: "-4px", right: "-4px",
+                    width: "16px", height: "16px", borderRadius: "50%",
+                    background: "#f97316", color: "#fff",
+                    fontSize: "9px", fontWeight: 800,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>{i + 1}</span>
+                </div>
+                {i < PLACEMENT_STEPS.length - 1 && (
+                  <div style={{
+                    width: "2px", height: "36px",
+                    background: "linear-gradient(to bottom,#a78bfa,rgba(167,139,250,0.1))",
+                    marginTop: "4px", marginBottom: "4px",
+                  }} />
+                )}
+              </div>
+              {/* Right: text */}
+              <div style={{ paddingTop: "8px", paddingBottom: i < PLACEMENT_STEPS.length - 1 ? "0" : "0" }}>
+                <p style={{ fontSize: "13.5px", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px" }}>{step.title}</p>
+                <p style={{ fontSize: "12.5px", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, marginBottom: "16px" }}>{step.desc}</p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
-    </section>
-  );
-}
 
-/* ═══════════════════════════════════════════════════
-   CAMPUS CARDS SECTION
-═══════════════════════════════════════════════════ */
-const CAMPUS_CARDS = [
-  { heading: "Heading", body: "Skillra Campus brings together education, industry insight, and student leadership to create meaningful opportunities within college campuses." },
-  { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
-  { heading: "Heading", body: "The program enables students to go beyond academic learning by participating in skill development initiatives, collaborative activities, and professional growth programs." },
-];
-
-function CampusCard({ heading, body, delay, inView }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: hovered ? "linear-gradient(145deg,#6d28d9,#4c1d95)" : "#fff", border: hovered ? "1.5px solid transparent" : "1.5px solid #e5e7eb", borderRadius: "20px", padding: "32px 26px", boxShadow: hovered ? "0 20px 52px rgba(109,40,217,0.38)" : "0 4px 20px rgba(124,58,237,0.06)", opacity: inView ? 1 : 0, transform: inView ? (hovered ? "translateY(-10px) scale(1.02)" : "translateY(0) scale(1)") : "translateY(30px)", transition: [`opacity 0.65s ease ${delay}s`, "transform 0.30s cubic-bezier(0.34,1.56,0.64,1)", "background 0.28s ease", "border-color 0.28s ease", "box-shadow 0.28s ease"].join(", "), cursor: "default" }}>
-      <h3 style={{ fontSize: "clamp(15px,1.6vw,18px)", fontWeight: 800, color: hovered ? "#fff" : "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "14px", transition: "color 0.28s ease" }}>{heading}</h3>
-      <p style={{ fontSize: "clamp(12.5px,1.3vw,13.5px)", color: hovered ? "rgba(255,255,255,0.85)" : "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.8, fontWeight: 400, transition: "color 0.28s ease" }}>{body}</p>
-    </div>
-  );
-}
-
-function AboutCampusSection() {
-  const [ref, inView] = useInView(0.08);
-  return (
-    <section ref={ref} id="campus" style={{ background: "#fff", padding: "clamp(48px,8vw,88px) 0", borderTop: "1px solid #f0ebff", position: "relative" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
-      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: "52px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
-          <h2 style={{ fontSize: "clamp(1.5rem,3.2vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>About Skillra Campus</h2>
-          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "560px", margin: "0 auto", lineHeight: 1.7 }}>Powerful natural language processing capabilities, that can understand and respond to customer inquiries in real-time &amp; improve customer satisfaction.</p>
-        </div>
-        <div className="campus-grid">
-          {CAMPUS_CARDS.map((card, i) => <CampusCard key={i} heading={card.heading} body={card.body} delay={0.1 + i * 0.1} inView={inView} />)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
-   OPPORTUNITIES
-═══════════════════════════════════════════════════ */
-function OpportunitiesSection() {
-  const [ref, inView] = useInView(0.08);
-  return (
-    <section ref={ref} style={{ background: "#0e0e0e", position: "relative", overflow: "hidden" }}>
-      <div className="opp-row" style={{ display: "flex", minHeight: "480px", alignItems: "stretch" }}>
-        <div className="opp-left" style={{ flex: "0 0 42%", position: "relative", overflow: "hidden", padding: "clamp(40px,6vw,72px) clamp(24px,4%,52px)", display: "flex", flexDirection: "column", justifyContent: "center", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-30px)", transition: "all 0.7s ease 0.1s" }}>
-          <div className="opp-bg-design" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "220px", overflow: "hidden" }}>
-            <svg viewBox="0 0 500 220" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
-              {Array.from({ length: 14 }).map((_, row) => (
-                <polyline key={row} points={Array.from({ length: 28 }).map((_, i) => `${i * 19},${row * 16 + (i % 2 === 0 ? 0 : 10)}`).join(" ")} fill="none" stroke={row % 2 === 0 ? "#b8962a" : "#d4aa40"} strokeWidth="2.2" strokeLinejoin="round" opacity={0.55 + row * 0.03} />
-              ))}
-            </svg>
-          </div>
-          <h2 style={{ fontSize: "clamp(1.6rem,3.5vw,3rem)", fontWeight: 900, color: "#fff", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", lineHeight: 1.1, position: "relative", zIndex: 2, marginBottom: "auto", paddingBottom: "clamp(60px,10vw,120px)" }}>
-            Opportunities<br />Through Skillra<br />Campus
-          </h2>
-        </div>
-        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", padding: "clamp(40px,6vw,72px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,44px)", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s" }}>
-          {[
-            { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
-            { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions." },
-          ].map((item, i) => (
-            <div key={i}>
-              <h3 style={{ fontSize: "clamp(14px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit',sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
-              <p style={{ fontSize: "clamp(12.5px,1.3vw,13.5px)", color: "rgba(255,255,255,0.6)", fontFamily: "'Outfit',sans-serif", lineHeight: 1.85, fontWeight: 400 }}>{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <style>{`
+        @media (min-width: 769px) {
+          .steps-desktop { display: flex !important; }
+          .steps-mobile { display: none !important; }
+        }
+        @media (max-width: 768px) {
+          .steps-desktop { display: none !important; }
+          .steps-mobile { display: flex !important; }
+        }
+      `}</style>
     </section>
   );
 }
@@ -411,12 +925,12 @@ function StudentCard({ student, index, inView }) {
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(36px)", transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s`, cursor: "default" }}>
-      <div style={{ width: "clamp(120px,15vw,180px)", height: "clamp(150px,18vw,220px)", borderRadius: "90px 90px 12px 12px", background: hovered ? "linear-gradient(180deg,#c4b5fd 0%,#ddd6fe 100%)" : "linear-gradient(180deg,#e9e3ff 0%,#f3f0ff 100%)", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center", boxShadow: hovered ? "0 20px 48px rgba(109,40,217,0.22)" : "0 8px 32px rgba(109,40,217,0.10)", transition: "all 0.30s cubic-bezier(0.34,1.56,0.64,1)", transform: hovered ? "translateY(-8px) scale(1.03)" : "translateY(0) scale(1)", position: "relative" }}>
+      <div style={{ width: "clamp(100px,14vw,180px)", height: "clamp(130px,17vw,220px)", borderRadius: "90px 90px 12px 12px", background: hovered ? "linear-gradient(180deg,#c4b5fd 0%,#ddd6fe 100%)" : "linear-gradient(180deg,#e9e3ff 0%,#f3f0ff 100%)", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center", boxShadow: hovered ? "0 20px 48px rgba(109,40,217,0.22)" : "0 8px 32px rgba(109,40,217,0.10)", transition: "all 0.30s cubic-bezier(0.34,1.56,0.64,1)", transform: hovered ? "translateY(-8px) scale(1.03)" : "translateY(0) scale(1)", position: "relative" }}>
         <img src={`${PUB}/${student.img}`} alt={student.name} style={{ width: "85%", height: "95%", objectFit: "cover", objectPosition: "top center", display: "block" }}
           onError={e => { e.target.style.display = "none"; }} />
       </div>
-      <p style={{ marginTop: "14px", fontSize: "clamp(12px,1.3vw,14.5px)", fontWeight: 600, color: "#111827", fontFamily: "'Outfit',sans-serif" }}>{student.name}</p>
-      <p style={{ marginTop: "4px", fontSize: "clamp(13px,1.4vw,16px)", fontWeight: 900, color: student.companyColor, fontFamily: "'Outfit',sans-serif" }}>{student.company}</p>
+      <p style={{ marginTop: "12px", fontSize: "clamp(11px,1.3vw,14px)", fontWeight: 600, color: "#111827", fontFamily: "'Outfit',sans-serif" }}>{student.name}</p>
+      <p style={{ marginTop: "3px", fontSize: "clamp(12px,1.4vw,16px)", fontWeight: 900, color: student.companyColor, fontFamily: "'Outfit',sans-serif" }}>{student.company}</p>
     </div>
   );
 }
@@ -424,12 +938,12 @@ function StudentCard({ student, index, inView }) {
 function StudentsPlacedSection() {
   const [ref, inView] = useInView(0.08);
   return (
-    <section ref={ref} style={{ background: "#fff", padding: "clamp(48px,8vw,88px) 0 clamp(56px,10vw,96px)", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden" }}>
+    <section ref={ref} style={{ background: "#fff", padding: "clamp(40px,7vw,88px) 0 clamp(48px,8vw,96px)", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
       <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: "60px", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
-          <h2 style={{ fontSize: "clamp(1.5rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>Students Placed</h2>
-          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>Our students have been placed in top companies across India. Here are some of their success stories.</p>
+        <div style={{ textAlign: "center", marginBottom: "clamp(32px,5vw,60px)", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.4rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>Students Placed</h2>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>Our students have been placed in top companies across India.</p>
         </div>
         <div className="students-grid">
           {PLACED_STUDENTS.map((student, i) => <StudentCard key={i} student={student} index={i} inView={inView} />)}
@@ -440,89 +954,12 @@ function StudentsPlacedSection() {
 }
 
 /* ═══════════════════════════════════════════════════
-   TESTIMONIALS + CONTACT FORM
-═══════════════════════════════════════════════════ */
-const TESTIMONIALS = [
-  { name: "Aria Zinario", text: "I am very helped by this E-wallet application, my days are very easy to use this application and its very helpful in my life, even I can pay a short time 😊", avatar: "AZ" },
-  { name: "Rahul Sharma", text: "Skillra transformed my career path completely. The placement support was exceptional and I got 3 offers within a month of completing the course.", avatar: "RS" },
-  { name: "Priya Nair", text: "The mentors at Skillra are incredibly supportive. Real industry experience combined with structured learning made all the difference for me.", avatar: "PN" },
-  { name: "Karthik V", text: "Best decision I ever made. The hands-on projects gave me the confidence to clear technical interviews at top product companies.", avatar: "KV" },
-];
-const AVATAR_COLORS = ["#7c3aed", "#059669", "#dc2626", "#d97706"];
-
-function TestimonialsContactSection() {
-  const [ref, inView] = useInView(0.06);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const handleSubmit = () => { if (formData.name && formData.email) setSubmitted(true); };
-  return (
-    <section ref={ref} id="contact" style={{ background: "#f8f7ff", borderTop: "1px solid #f0ebff", padding: "clamp(48px,8vw,88px) 0", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.05) 1px,transparent 1px)`, backgroundSize: "32px 32px" }} />
-      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
-        <div className="tc-row" style={{ display: "flex", gap: "clamp(24px,5%,60px)", alignItems: "flex-start" }}>
-          <div className="tc-left" style={{ flex: 1, minWidth: 0, opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-24px)", transition: "all 0.7s ease 0.1s" }}>
-            <h2 style={{ fontSize: "clamp(1.5rem,3.5vw,2.8rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "8px" }}>Testimonials</h2>
-            <p style={{ fontSize: "14px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "32px", fontStyle: "italic" }}>Every Story Matters. Every Success Counts.</p>
-            <div style={{ marginBottom: "16px" }}>
-              <svg width="48" height="36" viewBox="0 0 48 36" fill="none"><path d="M0 36V22C0 14.8 2.6 9.4 7.8 5.8 13 2.2 19.2 0.4 26.4 0.4V7C23.2 7 20.4 7.8 18 9.4 15.8 11 14.6 13.2 14.4 16H22V36H0ZM26 36V22C26 14.8 28.6 9.4 33.8 5.8 39 2.2 45.2 0.4 52.4 0.4V7C49.2 7 46.4 7.8 44 9.4 41.8 11 40.6 13.2 40.4 16H48V36H26Z" fill="#7c3aed" opacity="0.15" /></svg>
-            </div>
-            <div style={{ minHeight: "100px", marginBottom: "28px" }}>
-              <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#374151", fontFamily: "'Outfit',sans-serif", lineHeight: 1.85, fontWeight: 400 }}>{TESTIMONIALS[activeIdx].text}</p>
-              <p style={{ fontSize: "13px", color: "#7c3aed", fontFamily: "'Outfit',sans-serif", fontWeight: 700, marginTop: "16px" }}>— {TESTIMONIALS[activeIdx].name}</p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-              {TESTIMONIALS.map((t, i) => (
-                <div key={i} onClick={() => setActiveIdx(i)} style={{ width: "44px", height: "44px", borderRadius: "50%", background: AVATAR_COLORS[i], display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 700, color: "#fff", fontFamily: "'Outfit',sans-serif", cursor: "pointer", flexShrink: 0, border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent", boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none", transition: "all 0.2s", transform: activeIdx === i ? "scale(1.1)" : "scale(1)" }}>{t.avatar}</div>
-              ))}
-            </div>
-          </div>
-          <div className="tc-right" style={{ flex: "0 0 clamp(280px,36%,380px)", minWidth: 0, background: "#fff", borderRadius: "24px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: "0 8px 48px rgba(124,58,237,0.10)", border: "1.5px solid #e9e4ff", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(24px)", transition: "all 0.7s ease 0.2s" }}>
-            {submitted ? (
-              <div style={{ textAlign: "center", padding: "40px 0" }}>
-                <div style={{ fontSize: "48px", marginBottom: "16px" }}>🎉</div>
-                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "10px" }}>Message Sent!</h3>
-                <p style={{ fontSize: "14px", color: "#6b7280", fontFamily: "'Outfit',sans-serif" }}>We'll get back to you shortly.</p>
-                <button onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", course: "" }); }} style={{ marginTop: "24px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 28px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif" }}>Send another</button>
-              </div>
-            ) : (
-              <>
-                <h3 style={{ fontSize: "clamp(16px,1.8vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "6px" }}>We're here to help!</h3>
-                <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "24px" }}>Please contact us in case of any query.</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {[{ key: "name", placeholder: "Your name", type: "text" }, { key: "email", placeholder: "Your email address", type: "email" }, { key: "phone", placeholder: "Your phone number", type: "tel" }].map(field => (
-                    <input key={field.key} type={field.type} placeholder={field.placeholder} value={formData[field.key]} onChange={e => setFormData(p => ({ ...p, [field.key]: e.target.value }))}
-                      style={{ width: "100%", padding: "13px 16px", border: "1.5px solid #e5e7eb", borderRadius: "12px", fontSize: "13.5px", fontFamily: "'Outfit',sans-serif", color: "#374151", outline: "none", background: "#fafafa", transition: "border-color 0.2s", boxSizing: "border-box" }}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.background = "#fafafa"; }} />
-                  ))}
-                  <select value={formData.course} onChange={e => setFormData(p => ({ ...p, course: e.target.value }))} style={{ width: "100%", padding: "13px 16px", border: "1.5px solid #e5e7eb", borderRadius: "12px", fontSize: "13.5px", fontFamily: "'Outfit',sans-serif", color: formData.course ? "#374151" : "#9ca3af", outline: "none", background: "#fafafa", appearance: "none", cursor: "pointer", boxSizing: "border-box" }}>
-                    <option value="">Select Course</option>
-                    <option value="medical-coding">Medical Coding</option>
-                    <option value="full-stack">Full Stack</option>
-                    <option value="data">Data Analytics</option>
-                  </select>
-                  <button onClick={handleSubmit} style={{ background: "linear-gradient(135deg,#7c3aed,#5b21b6)", color: "#fff", border: "none", borderRadius: "50px", padding: "14px 28px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxShadow: "0 6px 20px rgba(124,58,237,0.35)", transition: "all 0.22s", marginTop: "4px", width: "100%" }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.48)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)"; }}>
-                    Get in Touch
-                    <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════
    MAIN EXPORT
 ═══════════════════════════════════════════════════ */
 export default function PlacementPage() {
-  const handleCtaClick = () => { const el = document.getElementById("contact"); if (el) el.scrollIntoView({ behavior: "smooth" }); };
+  const [showPopup, setShowPopup] = useState(false);
+  const handleCtaClick = () => setShowPopup(true);
+
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
@@ -530,6 +967,8 @@ export default function PlacementPage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
 
+        @keyframes fadeInOverlay { from{opacity:0} to{opacity:1} }
+        @keyframes slideUpModal  { from{opacity:0;transform:translateY(32px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
         @keyframes fadeUp    { from{opacity:0;transform:translateY(26px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeRight { from{opacity:0;transform:translateX(-22px)} to{opacity:1;transform:translateX(0)} }
         @keyframes fadeScale { from{opacity:0;transform:scale(0.88)} to{opacity:1;transform:scale(1)} }
@@ -560,32 +999,29 @@ export default function PlacementPage() {
         .opp-row       { display:flex; }
         .opp-left      { flex:0 0 42%; }
         .opp-right     { flex:1; }
-        .tc-row        { display:flex; }
-        .tc-left       { flex:1; min-width:0; }
-        .tc-right      { flex:0 0 clamp(280px,36%,380px); min-width:0; }
         .trust-top     { display:flex; }
         .trust-bottom  { display:flex; }
 
-        input::placeholder { color:#9ca3af; }
-        input:focus, select:focus { outline:none; }
-        select option { color:#374151; }
+        input::placeholder, select::placeholder { color:#9ca3af; }
+        input:focus, select:focus { outline:none; border-color:#7c3aed !important; background:#fff !important; }
 
         /* ════════════════════════════════
            LARGE ≥ 1400px
         ════════════════════════════════ */
         @media (min-width:1400px) {
-          .about-left    { width:560px !important; }
-          .campus-grid   { gap:28px; }
+          .about-left  { width:580px !important; }
+          .about-right { height:780px !important; }
+          .campus-grid { gap:28px; }
           .students-grid { gap:40px; }
         }
 
         /* ════════════════════════════════
            TABLET 769–1100px
         ════════════════════════════════ */
-        @media (max-width:1100px) {
-          .about-inner { padding:0 4% !important; }
-          .about-left  { width:420px !important; }
-          .campus-grid { gap:16px; }
+        @media (max-width:1100px) and (min-width:769px) {
+          .about-inner { padding:0 4% !important; gap:12px !important; }
+          .about-left  { width:380px !important; }
+          .about-right { height:clamp(340px,55vw,580px) !important; }
         }
 
         /* ════════════════════════════════
@@ -596,9 +1032,6 @@ export default function PlacementPage() {
           .opp-row       { flex-direction:column !important; }
           .opp-left      { flex:unset !important; width:100% !important; }
           .opp-right     { flex:unset !important; width:100% !important; }
-          .tc-row        { flex-direction:column !important; gap:36px !important; }
-          .tc-left       { width:100% !important; }
-          .tc-right      { flex:unset !important; width:100% !important; max-width:500px !important; }
           .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:24px !important; }
           .steps-desktop { display:none !important; }
           .steps-mobile  { display:flex !important; }
@@ -610,70 +1043,57 @@ export default function PlacementPage() {
            MOBILE ≤ 768px
         ════════════════════════════════ */
         @media (max-width:768px) {
-
-          /* ── Hero: 1. title+arc  2. image  3. desc+button ── */
           .about-inner {
-            flex-direction: column !important;
-            align-items: center !important;
-            padding: 10px 20px 32px !important;
-            text-align: center !important;
-            gap: 20px !important;
+            flex-direction:column !important;
+            align-items:center !important;
+            padding:90px 16px 28px !important;
+            text-align:center !important;
+            gap:0 !important;
           }
           .about-left {
-            order: 1 !important;
-            width: 100% !important;
-            max-width: 100% !important;
+            order:1 !important;
+            width:100% !important;
+            max-width:100% !important;
           }
           .about-right {
-            order: 2 !important;
-            width: 100% !important;
-            height: 240px !important;
+            order:2 !important;
+            width:100% !important;
+            height:clamp(260px,68vw,360px) !important;
+            min-width:0 !important;
+            margin-top:8px !important;
           }
-          .about-right img {
-            height: 220px !important;
-            width: auto !important;
-            max-width: 100% !important;
-          }
-          .about-right > div:first-child {
-            width: 60% !important;
-            max-width: 220px !important;
-            bottom: -20px !important;
-          }
+          
           .about-bottom {
-            order: 3 !important;
+            order:3 !important;
+            margin-top:20px !important;
           }
 
-          /* Hide desktop desc+button in about-left on mobile */
-          .about-desc-desktop { display: none !important; }
-          .about-btn-desktop  { display: none !important; }
+          /* Hide desktop desc+button */
+          .about-desc-desktop { display:none !important; }
+          .about-btn-desktop  { display:none !important; }
 
-          /* Hide badges on mobile */
-          .about-right > div[style*="Lifetime"],
-          .about-right > div[style*="offers"],
-          .about-right > div[style*="Active"],
-          .about-right > div[style*="Placed"] { display: none !important; }
+          /* Shrink badges significantly on mobile */
+          .hero-badge {
+            transform:scale(0.78) !important;
+            transform-origin:top left !important;
+          }
 
           /* Campus */
-          .campus-grid { grid-template-columns:1fr !important; gap:14px !important; }
-          .campus-grid > div { padding:24px 18px !important; border-radius:14px !important; }
+          .campus-grid { grid-template-columns:1fr !important; gap:12px !important; }
 
           /* Opportunities */
           .opp-row   { flex-direction:column !important; }
-          .opp-left  { flex:unset !important; width:100% !important; padding:36px 20px !important; }
-          .opp-right { flex:unset !important; width:100% !important; padding:36px 20px !important; gap:24px !important; }
-          .opp-bg-design { height:80px !important; opacity:0.5 !important; }
-
-          /* Testimonials */
-          .tc-row  { flex-direction:column !important; gap:32px !important; }
-          .tc-right { flex:unset !important; width:100% !important; max-width:100% !important; }
+          .opp-left  { flex:unset !important; width:100% !important; padding:32px 18px !important; }
+          .opp-right { flex:unset !important; width:100% !important; padding:32px 18px !important; gap:20px !important; }
+          .opp-bg-design { height:70px !important; opacity:0.4 !important; }
 
           /* Students */
-          .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:16px !important; }
+          .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:14px !important; }
 
           /* Trust cards */
           .trust-top    { flex-direction:column !important; }
           .trust-bottom { flex-direction:column !important; }
-          .trust-card   { padding:24px 18px !important; }
+          .trust-card   { padding:20px 16px !important; }
         }
 
         /* Hide mobile-bottom on desktop */
@@ -685,33 +1105,32 @@ export default function PlacementPage() {
            SMALL MOBILE ≤ 480px
         ════════════════════════════════ */
         @media (max-width:480px) {
-          .about-inner   { padding:80px 16px 28px !important; }
-          .about-right   { height:200px !important; }
-          .about-right img { height:185px !important; }
-          .about-right > div:first-child { width:55% !important; max-width:180px !important; }
-          .about-title   { font-size:1.8rem !important; }
-          .students-grid { gap:12px !important; }
+          .about-inner { padding:80px 14px 24px !important; }
+          .about-right { height:clamp(220px,65vw,300px) !important; }
+          .about-title { font-size:1.75rem !important; }
+          .students-grid { gap:10px !important; }
+          .hero-badge { transform:scale(0.70) !important; }
         }
 
         /* ════════════════════════════════
            VERY SMALL ≤ 360px
         ════════════════════════════════ */
         @media (max-width:360px) {
-          .about-inner { padding:70px 12px 24px !important; }
-          .about-title { font-size:1.6rem !important; }
-          .about-right { height:170px !important; }
-          .about-right img { height:155px !important; }
-          .sec-wrap { padding-left:12px !important; padding-right:12px !important; }
+          .about-inner { padding:70px 12px 20px !important; }
+          .about-title { font-size:1.5rem !important; }
+          .about-right { height:200px !important; }
+          .sec-wrap    { padding-left:12px !important; padding-right:12px !important; }
+          .hero-badge  { transform:scale(0.62) !important; }
         }
       `}</style>
 
       <Navbar />
       <SocialSidebar />
+      {showPopup && <PlacementPopup onClose={() => setShowPopup(false)} />}
       <AboutHero onCtaClick={handleCtaClick} />
       <WhyTrustSection />
       <HowWeHelpSection />
-      <StudentsPlacedSection /> 
-    
+      <StudentsPlacedSection />
       <Footer />
     </div>
   );
