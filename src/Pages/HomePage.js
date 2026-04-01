@@ -12,49 +12,59 @@ const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_Vyy
 const PUB = process.env.PUBLIC_URL || "";
 
 const COMPANIES = [
-  { name: "Unsplash",   logo: `${PUB}/CORRO.png`   },
-  { name: "Notion",     logo: `${PUB}/R1.png`     },
-  { name: "Intercom",   logo: `${PUB}/FIRSTSOURCE.png`   },
-  { name: "Descript",   logo: `${PUB}/CLARUS.png`   },
-  { name: "Grammarly",  logo: `${PUB}/SAVISTA.png`  },
-  { name: "Slack",      logo: `${PUB}/S10.png`      },
-  { name: "Figma",      logo: `${PUB}/VEE HEALTHTEK.png`      },
-  { name: "Linear",     logo: `${PUB}/MEDCODE.png`     },
-  { name: "Vercel",     logo: `${PUB}/OPTUM.png`     },
-  { name: "Stripe",     logo: `${PUB}/AANEEL.png`     },
-  { name: "Stripe",     logo: `${PUB}/ACCESSHEALTH.png`},
-  { name: "Stripe",     logo: `${PUB}/REVEELER.png` },
-  { name: "Stripe",     logo: `${PUB}/SUTHERLAND.png` },
-  { name: "Stripe",     logo: `${PUB}/HURON.png` },
-  { name: "Stripe",     logo: `${PUB}/COGNIZANT.png` },
+  { name: "Unsplash",   logo: `${PUB}/HiringPartners/CORRO.png`   },
+  { name: "Notion",     logo: `${PUB}/HiringPartners/R1.png`     },
+  { name: "Intercom",   logo: `${PUB}/HiringPartners/FIRSTSOURCE.png`   },
+  { name: "Descript",   logo: `${PUB}/HiringPartners/CLARUS.png`   },
+  { name: "Grammarly",  logo: `${PUB}/HiringPartners/SAVISTA.png`  },
+  { name: "Slack",      logo: `${PUB}/HiringPartners/S10.png`      },
+  { name: "Figma",      logo: `${PUB}/HiringPartners/VEE HEALTHTEK.png`      },
+  { name: "Linear",     logo: `${PUB}/HiringPartners/MEDCODE.png`     },
+  { name: "Vercel",     logo: `${PUB}/HiringPartners/OPTUM.png`     },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/AANEEL.png`     },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/ACCESSHEALTH.png`},
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/REVEELER.png` },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/SUTHERLAND.png` },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/HURON.png` },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/COGNIZANT.png` },
 ];
 
 const SLIDES = [
   {
-    img: `${PUB}/landingPageFrontImg.png` ,
+    img: `${PUB}/HomeImages/MedicalCodingHero.png` ,
     // 👩‍⚕️ Female doctor/nurse in medical setting — white coat, slight purple-cool tone
     bg: "linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)",
     shadow: "rgba(79,28,200,.55)",
     ring: "rgba(124,58,237,.30)"
   },
   {
-    img: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&auto=format&fit=crop&crop=top",
+    img: `${PUB}/HomeImages/TechnologyHero.png`,
     // 👨‍💻 Male developer/tech professional with screens/code background — warm orange tone
     bg: "linear-gradient(145deg,#c2410c,#ea580c,#9a3412)",
     shadow: "rgba(194,65,12,.55)",
-    ring: "rgba(234,88,12,.30)"
+    ring: "rgba(234,88,12,.30)",
+    imgStyle: {
+      transform: "scale(1.2) translateY(-5%)",
+      transformOrigin: "center top",
+      objectFit: "cover"
+    }
   },
   {
-    img: "https://images.unsplash.com/photo-1598550874175-4d0ef436c909?w=800&auto=format&fit=crop&crop=top",
+    img: `${PUB}/HomeImages/FinanceHero.png`,
     // 👩‍💼 Female finance professional with charts/office background — green tone
     bg: "linear-gradient(145deg,#14532d,#15803d,#166534)",
     shadow: "rgba(20,83,45,.55)",
-    ring: "rgba(21,128,61,.30)"
+    ring: "rgba(21,128,61,.30)",
+    imgStyle: {
+      transform: "scale(1.2) translateY(-5%)",
+      transformOrigin: "center top",
+      objectFit: "cover"
+    }
   },
 ];
 const COURSES_DATA = {
   healthcare: {
-    label: "Healthcare Courses",
+    label: "Healthcare",
     activeColor: "#1e3a8a", tagColor: "#1e3a8a", btnColor: "#1e3a8a", badgeBg: "#1e3a8a",
     cardBg: "linear-gradient(145deg,#eff6ff 0%,#dbeafe 100%)",
     courses: [
@@ -62,7 +72,7 @@ const COURSES_DATA = {
         id: "ai-medical-coding",
         title: "AI Medical Coding Course",
         description: "Get certified and learn AI-powered coding skills with real case studies.",
-        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop",
+        image: `${PUB}/coursemedicalcoding.jpg`,
         // Doctor reviewing digital patient records / medical data on screen
       },
       {
@@ -83,7 +93,7 @@ const COURSES_DATA = {
   },
 
   technology: {
-    label: "Technology Course",
+    label: "Technology",
     activeColor: "#c2410c", tagColor: "#c2410c", btnColor: "#c2410c", badgeBg: "#c2410c",
     cardBg: "linear-gradient(145deg,#fff7ed 0%,#ffedd5 100%)",
     courses: [
@@ -120,7 +130,7 @@ const COURSES_DATA = {
   },
 
   finance: {
-    label: "Finance Course",
+    label: "Finance",
     activeColor: "#14532d", tagColor: "#14532d", btnColor: "#14532d", badgeBg: "#14532d",
     cardBg: "linear-gradient(145deg,#f0fdf4 0%,#dcfce7 100%)",
     courses: [
@@ -522,7 +532,7 @@ function ReviewAvatars({ centered = false, onViewAll }) {
   );
 }
 
-function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
+function HeroSection({ scrollRef, pausedRef, onCounselorClick, onViewReviews }) {
   const activeIdx = useSlideRotation();
   return (
     <section id="home" style={{ background:`radial-gradient(ellipse 80% 70% at 70% 40%,rgba(167,139,250,0.18) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 10% 80%,rgba(124,58,237,0.1) 0%,transparent 65%),#faf8ff`, minHeight:"calc(100vh - 84px)", display:"flex", flexDirection:"column", justifyContent:"center", position:"relative", overflow:"hidden", paddingTop:"40px" }}>
@@ -577,7 +587,18 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
             <div className="circle-size" style={{ borderRadius:"50%", overflow:"hidden", position:"relative", boxShadow:`0 40px 100px ${SLIDES[activeIdx].shadow}, 0 0 0 14px ${SLIDES[activeIdx].ring}`, transition:"box-shadow 0.8s ease" }}>
               {SLIDES.map((slide, i) => (
                 <div key={i} style={{ position:"absolute", inset:0, background:slide.bg, opacity:i===activeIdx?1:0, transition:"opacity 0.8s ease-in-out", zIndex:i===activeIdx?2:1 }}>
-                  <img src={slide.img} alt={`slide-${i}`} style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"top center", display:"block" }}/>
+                  <img
+  src={slide.img}
+  alt={`slide-${i}`}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "top center",
+    display: "block",
+    ...slide.imgStyle
+  }}
+/>
                 </div>
               ))}
             </div>
@@ -588,7 +609,7 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
         </div>
         <div className="hero-bottom" style={{ width:"100%", display:"flex", flexDirection:"column", alignItems:"center", gap:"16px" }}>
           <p style={{ color:"#5c4a80", fontSize:"14.5px", lineHeight:1.8, maxWidth:"400px", textAlign:"center" }}>
-            Advance your career with <strong style={{ color:"#120630" }}>AI Medical Coding</strong>, IT, and Finance courses with 100% placement support.
+            Advance your career with <strong style={{ color:"#120630" }}>AI Medical Coding, Medical Billing, IT, and Finance courses </strong> with 100% placement support.
           </p>
           <div style={{ display:"flex", gap:"10px", flexWrap:"wrap", justifyContent:"center" }}>
             {["✓ 15+ Years Experienced Trainers","✓ Tamper-Proof Digital Certificate"].map((b,i) => (
@@ -605,7 +626,7 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
         <div className="partners-title" style={{ textAlign:"center", fontWeight:900, fontSize:"clamp(18px,3vw,26px)", color:"#120630", marginBottom:"24px", letterSpacing:"-0.3px" }}>
           More than <span style={{ color:"#7c3aed" }}>25 +</span> Hiring Partners
         </div>
-        <div style={{ overflow:"hidden", width:"100%", userSelect:"none" }} ref={scrollRef}>
+        <div style={{ overflow:"hidden", width:"100%", userSelect:"none" }} ref={scrollRef} onMouseEnter={()=>{ if(pausedRef) pausedRef.current=true; }} onMouseLeave={()=>{ if(pausedRef) pausedRef.current=false; }}>
           <div style={{ display:"flex", width:"max-content" }}>
             {[...COMPANIES,...COMPANIES,...COMPANIES].map((c,i) => (
   <div key={i} className="company-item" style={{ display:"flex", alignItems:"center", padding:"0 clamp(16px,2.5vw,32px)" }}>
@@ -658,15 +679,66 @@ function AboutSection() {
     <section id="about" ref={ref} style={{ padding:"clamp(48px,8vw,80px) 0", background:"#fff", borderTop:"1px solid #e5e7eb", position:"relative" }}>
       <div style={{ position:"absolute", inset:0, pointerEvents:"none", backgroundImage:`linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px)`, backgroundSize:"32px 32px" }}/>
       <div className="about-inner" style={{ maxWidth:"1180px", margin:"0 auto", padding:"0 clamp(16px,4%,48px)", display:"flex", alignItems:"center", gap:"clamp(32px,6%,80px)", flexWrap:"wrap", position:"relative", zIndex:1 }}>
-        <div className="about-images" style={{ position:"relative", width:"clamp(260px,40%,460px)", minWidth:"260px", height:"400px", flexShrink:0 }}>
-          <ImageCard src={`${PUB}/abtimg3.jpg`} alt="Instructor" delay={100} style={{ position:"absolute", top:0, left:0, width:"220px", height:"170px" }}/>
-          <ImageCard src={`${PUB}/abtimg2.jpg`} alt="Campus" delay={250} style={{ position:"absolute", top:0, right:0, width:"180px", height:"170px" }}/>
-          <ImageCard src={`${PUB}/abtimg1.jpg`} alt="Students" delay={400} style={{ position:"absolute", top:"182px", left:0, width:"100%", height:"210px" }}/>
-          <div style={{ position:"absolute", left:"50%", top:"178px", transform:"translate(-50%,-50%)", width:"110px", height:"110px", borderRadius:"50%", background:"linear-gradient(135deg,#7c3aed,#4c1d95)", boxShadow:"0 0 0 6px rgba(124,58,237,0.12),0 8px 32px rgba(108,43,217,0.38)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", zIndex:10 }}>
-            <span style={{ fontWeight:900, fontSize:"1.8rem", color:"#fff", lineHeight:1 }}>25+</span>
-            <span style={{ fontWeight:500, fontSize:"0.62rem", color:"rgba(255,255,255,0.88)", marginTop:"4px", textAlign:"center", lineHeight:1.4 }}>Hiring<br/>Partners</span>
-          </div>
-        </div>
+        <>
+  <style>{`
+    .about-images {
+      position: relative;
+      width: clamp(260px, 40%, 460px);
+      min-width: 260px;
+      height: 400px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .about-images {
+        width: 100% !important;
+        min-width: unset !important;
+        height: 300px !important;
+      }
+      .about-images [data-abt="i1"] { height: 130px !important; }
+      .about-images [data-abt="i2"] { height: 130px !important; }
+      .about-images [data-abt="i3"] { top: 140px !important; height: 155px !important; }
+      .about-images [data-abt="badge"] {
+        top: 136px !important;
+        width: 90px !important; height: 90px !important;
+      }
+      .about-images [data-abt="badge"] .abt-num { font-size: 1.5rem !important; }
+      .about-images [data-abt="badge"] .abt-label { font-size: 0.55rem !important; }
+    }
+
+    @media (max-width: 480px) {
+      .about-images { height: 240px !important; }
+      .about-images [data-abt="i1"] { height: 105px !important; }
+      .about-images [data-abt="i2"] { height: 105px !important; }
+      .about-images [data-abt="i3"] { top: 113px !important; height: 122px !important; }
+      .about-images [data-abt="badge"] {
+        top: 109px !important;
+        width: 76px !important; height: 76px !important;
+      }
+      .about-images [data-abt="badge"] .abt-num { font-size: 1.3rem !important; }
+      .about-images [data-abt="badge"] .abt-label { font-size: 0.5rem !important; }
+    }
+  `}</style>
+
+  <div className="about-images">
+    <div data-abt="i1" style={{ position:"absolute", top:0, left:0, width:"57%", height:"170px", borderRadius:"12px", overflow:"hidden" }}>
+      <ImageCard src={`${PUB}/HomeImages/abtimg3.jpg`} alt="Instructor" delay={100} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+    </div>
+
+    <div data-abt="i2" style={{ position:"absolute", top:0, right:0, width:"41%", height:"170px", borderRadius:"12px", overflow:"hidden" }}>
+      <ImageCard src={`${PUB}/HomeImages/abtimg2.jpg`} alt="Campus" delay={250} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+    </div>
+
+    <div data-abt="i3" style={{ position:"absolute", top:"182px", left:0, width:"100%", height:"210px", borderRadius:"12px", overflow:"hidden" }}>
+      <ImageCard src={`${PUB}/HomeImages/abtimg1.jpg`} alt="Students" delay={400} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+    </div>
+
+    <div data-abt="badge" style={{ position:"absolute", left:"50%", top:"178px", transform:"translate(-50%,-50%)", width:"110px", height:"110px", borderRadius:"50%", background:"linear-gradient(135deg,#7c3aed,#4c1d95)", boxShadow:"0 0 0 6px rgba(124,58,237,0.12),0 8px 32px rgba(108,43,217,0.38)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", zIndex:10 }}>
+      <span className="abt-num" style={{ fontWeight:900, fontSize:"1.8rem", color:"#fff", lineHeight:1 }}>25+</span>
+      <span className="abt-label" style={{ fontWeight:500, fontSize:"0.62rem", color:"rgba(255,255,255,0.88)", marginTop:"4px", textAlign:"center", lineHeight:1.4 }}>Hiring<br/>Partners</span>
+    </div>
+  </div>
+</>
         <div style={{ flex:1, minWidth:"260px", opacity:cv?1:0, transform:cv?"translateY(0)":"translateY(24px)", transition:"all 0.9s cubic-bezier(.4,0,.2,1) 0.15s" }}>
           <SectionLabel text="ABOUT US"/>
           <h2 style={{ fontFamily:"'Outfit',sans-serif", fontWeight:900, fontSize:"clamp(1.8rem,3.5vw,2.6rem)", color:"#1a1035", lineHeight:1.15, marginBottom:"22px", letterSpacing:"-0.02em" }}>
@@ -824,9 +896,9 @@ function CoursesSection() {
 
   const cat = COURSES_DATA[activeTab];
   const TAB_META = {
-    healthcare: { active: "#4c1d95", label: "Healthcare Courses" },
-    technology: { active: "#c2410c", label: "Technology Course"  },
-    finance:    { active: "#14532d", label: "Finance Course"     },
+    healthcare: { active: "#4c1d95", label: "Healthcare" },
+    technology: { active: "#c2410c", label: "Technology"  },
+    finance:    { active: "#14532d", label: "Finance"     },
     others:     { active: "#b45309", label: "Others"             },
   };
 
@@ -1251,14 +1323,12 @@ function CoursesSection() {
   );
 }
 const COLLEGES = [
-  { name: "IIT Madras",                          logo: `${PUB}/college1.png` },
-  { name: "Anna University",                     logo: `${PUB}/college2.png` },
-  { name: "Loyola College",                      logo: `${PUB}/college3.png` },
-  { name: "Madras Medical College",              logo: `${PUB}/college4.png` },
-  { name: "SRM Institute of Science & Technology", logo: `${PUB}/college5.png` },
-  { name: "Vellore Institute of Technology",     logo: `${PUB}/college6.png` },
-  { name: "Madras Christian College",            logo: `${PUB}/college7.png` },
-  { name: "PSG College of Technology",           logo: `${PUB}/college8.png` },
+  { name: "Agurchand Manmull Jain College",                          logo: `${PUB}/CollegePartners/AMJcollege.webp` },
+  { name: "GRT College of Engineering",                     logo: `${PUB}/CollegePartners/GRTcollege.jpg` },
+  { name: "GRD College",                      logo: `${PUB}/CollegePartners/GRDcollege.png` },
+  { name: "KP College",              logo: `${PUB}/CollegePartners/KPNcollege.png` },
+  { name: "Apollo college of Pharmacy",              logo: `${PUB}/CollegePartners/APOLLOcollege.jpg` },
+  
 ];
 
 function CollegesSection() {
@@ -1583,7 +1653,7 @@ function BlogCard({ post, inView, delay }) {
         </p>
  
         {/* Read more — navigates to BlogPage */}
-        <a href="/Skillra/blog" style={{ textDecoration: "none" }}>
+        <a href="/blog" style={{ textDecoration: "none" }}>
         <button
           onClick={() => navigate(`/blog`)}
           style={{
@@ -2786,86 +2856,89 @@ function NewsletterSection() {
 function PromoBanner({ onClose }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [captchaInput, setCaptchaInput] = useState("");
-  const [captchaAnswer, setCaptchaAnswer] = useState(() => ({  // 👈 add this
-  a: Math.floor(Math.random() * 9) + 1,
-  b: Math.floor(Math.random() * 9) + 1,
-}));
+  const [captchaAnswer, setCaptchaAnswer] = useState(() => ({
+    a: Math.floor(Math.random() * 9) + 1,
+    b: Math.floor(Math.random() * 9) + 1,
+  }));
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  // 1. Define your images array
-const BANNER_IMAGES = [
-  `${PUB}/skillraoffer.png`,
-  `${PUB}/Skillraoffer1.png`,
-  `${PUB}/Skillraoffer2.png`,
-];
 
-// 2. Add state inside your popup component
-const [bannerIdx, setBannerIdx] = useState(0);
+  const BANNER_IMAGES = [
+    `${PUB}/skillraoffer.png`,
+    `${PUB}/Skillraoffer1.png`,
+    `${PUB}/Skillraoffer2.png`,
+  ];
 
-// 1. Add this ref at the top of your component
-const captchaCanvasRef = useRef(null);
+  const [bannerIdx, setBannerIdx] = useState(0);
+  const captchaCanvasRef = useRef(null);
+  const touchStartX = useRef(null);
 
-// 2. Add this effect to draw on canvas whenever captchaAnswer changes
-useEffect(() => {
-  const canvas = captchaCanvasRef.current;
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const W = canvas.width, H = canvas.height;
+  // Auto-slide
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
-  // Background noise
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = "#f0ebff";
-  ctx.fillRect(0, 0, W, H);
-
-  // Random noise dots
-  for (let i = 0; i < 80; i++) {
-    ctx.beginPath();
-    ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 2, 0, Math.PI * 2);
-    ctx.fillStyle = `hsl(${Math.random()*360},60%,70%)`;
-    ctx.fill();
-  }
-
-  // Random crossing lines
-  for (let i = 0; i < 5; i++) {
-    ctx.beginPath();
-    ctx.moveTo(Math.random() * W, Math.random() * H);
-    ctx.lineTo(Math.random() * W, Math.random() * H);
-    ctx.strokeStyle = `hsl(${Math.random()*360},50%,60%)`;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  // Draw the math text with distortion
-  const text = `${captchaAnswer.a} + ${captchaAnswer.b} = ?`;
-  ctx.font = "bold 22px 'Courier New', monospace";
-  ctx.textBaseline = "middle";
-
-  // Draw each character with slight rotation and offset
-  let x = 10;
-  for (let i = 0; i < text.length; i++) {
-    ctx.save();
-    const offsetY = H / 2 + (Math.random() * 8 - 4); // ±4px vertical jitter
-    ctx.translate(x, offsetY);
-    ctx.rotate((Math.random() * 0.4) - 0.2);          // ±0.2 rad rotation
-    ctx.fillStyle = `hsl(${260 + Math.random()*40},60%,35%)`;
-    ctx.fillText(text[i], 0, 0);
-    ctx.restore();
-    x += ctx.measureText(text[i]).width + 2;
-  }
-}, [captchaAnswer]);
-
-useEffect(() => {
-  const timer = setInterval(() => {
-    setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length);
-  }, 5000);
-  return () => clearInterval(timer); // cleanup on close
-}, []);
+  // Captcha canvas
+  useEffect(() => {
+    const canvas = captchaCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#f0ebff";
+    ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 80; i++) {
+      ctx.beginPath();
+      ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 2, 0, Math.PI * 2);
+      ctx.fillStyle = `hsl(${Math.random()*360},60%,70%)`;
+      ctx.fill();
+    }
+    for (let i = 0; i < 5; i++) {
+      ctx.beginPath();
+      ctx.moveTo(Math.random() * W, Math.random() * H);
+      ctx.lineTo(Math.random() * W, Math.random() * H);
+      ctx.strokeStyle = `hsl(${Math.random()*360},50%,60%)`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    const text = `${captchaAnswer.a} + ${captchaAnswer.b} = ?`;
+    ctx.font = "bold 22px 'Courier New', monospace";
+    ctx.textBaseline = "middle";
+    let x = 10;
+    for (let i = 0; i < text.length; i++) {
+      ctx.save();
+      const offsetY = H / 2 + (Math.random() * 8 - 4);
+      ctx.translate(x, offsetY);
+      ctx.rotate((Math.random() * 0.4) - 0.2);
+      ctx.fillStyle = `hsl(${260 + Math.random()*40},60%,35%)`;
+      ctx.fillText(text[i], 0, 0);
+      ctx.restore();
+      x += ctx.measureText(text[i]).width + 2;
+    }
+  }, [captchaAnswer]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
+
+  // Swipe handlers for image carousel
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      setBannerIdx(prev => diff > 0
+        ? (prev + 1) % BANNER_IMAGES.length
+        : (prev - 1 + BANNER_IMAGES.length) % BANNER_IMAGES.length
+      );
+    }
+    touchStartX.current = null;
+  };
 
   const validate = () => {
     const e = {};
@@ -2883,17 +2956,17 @@ useEffect(() => {
     setSubmitting(true);
     try {
       await fetch(SHEETS_URL, {
-  method: "POST",
-  mode: "no-cors",          // ← ADD THIS
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    type: "popup",
-    name: form.name.trim(),
-    email: form.email.trim(),
-    phone: form.phone.trim(),
-    message: form.message.trim(),
-  }),
-});
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "popup",
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          message: form.message.trim(),
+        }),
+      });
     } catch (_) {}
     setSubmitting(false);
     setSubmitted(true);
@@ -2920,38 +2993,32 @@ useEffect(() => {
     <>
       <style>{`
         .pb-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 99997;
+          position: fixed; inset: 0; z-index: 99997;
           background: rgba(8,3,25,0.78);
           backdrop-filter: blur(7px);
         }
         .pb-close {
-          position: fixed;
-          z-index: 99999;
-          width: 34px;
-          height: 34px;
+          position: absolute; z-index: 10;
+          top: 10px; right: 10px;
+          width: 32px; height: 32px;
           border-radius: 50%;
-          background: #fff;
-          border: 2.5px solid #7c3aed;
+          background: rgba(255,255,255,0.92);
+          border: 2px solid #7c3aed;
           color: #7c3aed;
-          font-size: 16px;
+          font-size: 15px;
           cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          display: flex; align-items: center; justify-content: center;
           font-family: 'Outfit',sans-serif;
           line-height: 1;
-          box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+          box-shadow: 0 2px 12px rgba(0,0,0,0.2);
           transition: background 0.2s, color 0.2s;
         }
-        .pb-close:hover {
-          background: #7c3aed;
-          color: #fff;
-        }
+        .pb-close:hover { background: #7c3aed; color: #fff; }
+
         .pb-wrap {
-          position: fixed;
-          z-index: 99998;
+          position: fixed; z-index: 99998;
+          top: 50%; left: 50%;
+          transform: translate(-50%,-50%);
           display: flex;
           background: #fff;
           border-radius: 20px;
@@ -2959,22 +3026,16 @@ useEffect(() => {
           box-shadow: 0 32px 90px rgba(109,40,217,0.38);
         }
         .pb-left {
-          position: relative;
-          overflow: hidden;
-          flex-shrink: 0;
+          position: relative; overflow: hidden; flex-shrink: 0;
+          cursor: grab;
         }
+        .pb-left:active { cursor: grabbing; }
         .pb-right {
-          flex: 1;
-          overflow-y: auto;
-          background: #fff;
-          position: relative;
-          display: flex;
-          flex-direction: column;
+          flex: 1; background: #fff; position: relative;
+          display: flex; flex-direction: column;
         }
         .pb-shimmer {
-          position: absolute;
-          top: 0; left: 0; right: 0;
-          height: 4px;
+          position: absolute; top: 0; left: 0; right: 0; height: 4px;
           background: linear-gradient(90deg,#7c3aed,#a78bfa,#ff6b35,#7c3aed);
           background-size: 300% 100%;
           animation: shimmer 3s linear infinite;
@@ -2984,18 +3045,13 @@ useEffect(() => {
         .pb-submit {
           width: 100%;
           background: linear-gradient(135deg,#ff6b35,#f03e00);
-          color: #fff;
-          border: none;
+          color: #fff; border: none;
           border-radius: 50px;
           padding: 13px 20px;
-          font-size: 14px;
-          font-weight: 800;
+          font-size: 14px; font-weight: 800;
           font-family: 'Outfit',sans-serif;
           cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
           box-shadow: 0 6px 22px rgba(255,80,0,0.35);
           transition: transform 0.2s, box-shadow 0.2s;
           letter-spacing: 0.3px;
@@ -3004,37 +3060,79 @@ useEffect(() => {
         .pb-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,80,0,0.48); }
         .pb-submit:disabled { background: #d1d5db; box-shadow: none; cursor: not-allowed; }
 
+        /* dots */
+        .pb-dots {
+          position: absolute; bottom: 10px; left: 50%;
+          transform: translateX(-50%); z-index: 5;
+          display: flex; gap: 6px;
+        }
+        .pb-dot {
+          width: 8px; height: 8px; border-radius: 50%;
+          border: none; padding: 0; cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        /* arrow buttons */
+        .pb-arrow {
+          position: absolute; top: 50%; transform: translateY(-50%);
+          z-index: 5; width: 30px; height: 30px;
+          border-radius: 50%; border: none;
+          background: rgba(255,255,255,0.85);
+          color: #7c3aed; font-size: 14px;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          transition: background 0.2s;
+          backdrop-filter: blur(4px);
+        }
+        .pb-arrow:hover { background: #fff; }
+        .pb-arrow-l { left: 8px; }
+        .pb-arrow-r { right: 8px; }
+
         /* ── DESKTOP ── */
         @media (min-width: 640px) {
-          .pb-close  { top: 14px; right: 14px; }
-          .pb-wrap   { top: 50%; left: 50%; transform: translate(-50%,-50%); width: min(800px, calc(100vw - 40px)); height: min(510px, calc(100vh - 60px)); flex-direction: row; }
-          .pb-left   { width: 42%; height: 100%; }
-          .pb-right  { padding: 30px 28px 26px; }
+          .pb-wrap {
+            width: min(870px, calc(100vw - 40px));
+            height: min(510px, calc(100vh - 60px));
+            flex-direction: row;
+          }
+          .pb-left { width: 50%; height: 100%; }
+          .pb-right { padding: 30px 28px 26px; overflow-y: auto; }
         }
 
         /* ── MOBILE ── */
         @media (max-width: 639px) {
-          .pb-close  { top: 10px; right: 10px; width:30px; height:30px; font-size:14px; }
-          .pb-wrap   { top: 50%; left: 50%; transform: translate(-50%,-50%); width: calc(100vw - 24px); max-height: calc(100vh - 40px); flex-direction: column; border-radius: 16px; }
-          .pb-left   { width: 100%; height: 160px; flex-shrink: 0; }
-          .pb-right  { padding: 18px 16px 20px; }
+          .pb-wrap {
+            width: calc(100vw - 20px);
+            max-height: calc(100vh - 30px);
+            flex-direction: column;
+            border-radius: 16px;
+          }
+          .pb-left { width: 100%; aspect-ratio: 16/9; flex-shrink: 0; }
+          .pb-right { padding: 12px 14px 16px; overflow-y: auto; }
+          .pb-field-wrap { margin-bottom: 5px; }
+          .pb-mob-compact { padding: 8px 11px !important; font-size: 12.5px !important; }
+          .pb-mob-row { display: flex; gap: 6px; }
+          .pb-mob-row > .pb-field-wrap { flex: 1; min-width: 0; }
+          .pb-arrow { width: 26px; height: 26px; font-size: 12px; }
+          .pb-dot { width: 6px; height: 6px; }
         }
       `}</style>
 
-      {/* overlay */}
       <div className="pb-overlay" onClick={onClose} />
 
-      {/* ✕ close button */}
-      <button className="pb-close" onClick={onClose}>✕</button>
-
-      {/* modal */}
       <div className="pb-wrap">
+        <button className="pb-close" onClick={onClose}>✕</button>
 
-        {/* ── LEFT — full cover image ── */}
-        <div className="pb-left">
+        {/* ── LEFT — image carousel with swipe + arrows + dots ── */}
+        <div
+          className="pb-left"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {/* offer badge */}
           <div style={{
-            position: "absolute", top: "14px", left: "14px", zIndex: 3,
+            position: "absolute", top: "14px", left: "14px", zIndex: 5,
             background: "#ff6b35", color: "#fff",
             fontSize: "10.5px", fontWeight: 800,
             fontFamily: "'Outfit',sans-serif",
@@ -3044,25 +3142,66 @@ useEffect(() => {
             animation: "pulse 2s ease-in-out infinite",
           }}>LIMITED OFFER</div>
 
-<img
-  src={BANNER_IMAGES[bannerIdx]}
-  alt="Free Counseling"
-  style={{
-    position: "absolute", inset: 0,
-    width: "100%", height: "100%",
-    objectFit: "cover",
-    objectPosition: "center top",   // 👈 pushed up
-    transition: "opacity 0.5s ease", // smooth fade
-    marginTop: "-40px",
-  }}
-/>
+          {/* images */}
+          {BANNER_IMAGES.map((src, idx) => (
+            <img
+              key={idx}
+              src={src}
+              alt={`Offer ${idx + 1}`}
+              style={{
+                position: "absolute", inset: 0,
+                width: "100%", height: "100%",
+                objectFit: "cover",
+                objectPosition: "center center",
+                display: "block",
+                opacity: idx === bannerIdx ? 1 : 0,
+                transition: "opacity 0.6s ease",
+              }}
+            />
+          ))}
+
+          {/* left arrow */}
+          <button
+            className="pb-arrow pb-arrow-l"
+            onClick={() => setBannerIdx(prev => (prev - 1 + BANNER_IMAGES.length) % BANNER_IMAGES.length)}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+
+          {/* right arrow */}
+          <button
+            className="pb-arrow pb-arrow-r"
+            onClick={() => setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length)}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+
+          {/* dots */}
+          <div className="pb-dots">
+            {BANNER_IMAGES.map((_, idx) => (
+              <button
+                key={idx}
+                className="pb-dot"
+                onClick={() => setBannerIdx(idx)}
+                style={{
+                  background: idx === bannerIdx ? "#fff" : "rgba(255,255,255,0.45)",
+                  transform: idx === bannerIdx ? "scale(1.25)" : "scale(1)",
+                  boxShadow: idx === bannerIdx ? "0 0 6px rgba(255,255,255,0.6)" : "none",
+                }}
+              />
+            ))}
+          </div>
 
           {/* bottom gradient */}
           <div style={{
             position: "absolute", bottom: 0, left: 0, right: 0,
             height: "55%",
             background: "linear-gradient(to top, rgba(60,20,130,0.90) 0%, transparent 100%)",
-            zIndex: 2,
+            zIndex: 2, pointerEvents: "none",
           }} />
 
           {/* bottom text */}
@@ -3070,6 +3209,7 @@ useEffect(() => {
             position: "absolute", bottom: "16px",
             left: 0, right: 0,
             zIndex: 3, textAlign: "center", padding: "0 12px",
+            pointerEvents: "none",
           }}>
             <div style={{ fontSize: "26px", fontWeight: 900, color: "#fff", fontFamily: "'Outfit',sans-serif", letterSpacing: "-1px", lineHeight: 1 }}>FREE</div>
             <div style={{ fontSize: "12.5px", fontWeight: 700, color: "rgba(255,255,255,0.92)", fontFamily: "'Outfit',sans-serif", marginTop: "3px" }}>Counseling Session</div>
@@ -3135,6 +3275,7 @@ useEffect(() => {
               {/* Name */}
               <div className="pb-field-wrap">
                 <input
+                  className="pb-mob-compact"
                   type="text" placeholder="Your full name"
                   value={form.name}
                   onChange={e => { setForm(p => ({ ...p, name: e.target.value })); setErrors(p => ({ ...p, name: "" })); }}
@@ -3148,6 +3289,7 @@ useEffect(() => {
               {/* Email */}
               <div className="pb-field-wrap">
                 <input
+                  className="pb-mob-compact"
                   type="email" placeholder="Email address"
                   value={form.email}
                   onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setErrors(p => ({ ...p, email: "" })); }}
@@ -3161,6 +3303,7 @@ useEffect(() => {
               {/* Phone */}
               <div className="pb-field-wrap">
                 <input
+                  className="pb-mob-compact"
                   type="tel" placeholder="Phone number (10 digits)"
                   value={form.phone}
                   onChange={e => { setForm(p => ({ ...p, phone: e.target.value })); setErrors(p => ({ ...p, phone: "" })); }}
@@ -3174,6 +3317,7 @@ useEffect(() => {
               {/* Message */}
               <div className="pb-field-wrap">
                 <textarea
+                  className="pb-mob-compact"
                   placeholder="Message us…"
                   value={form.message}
                   rows={3}
@@ -3185,87 +3329,83 @@ useEffect(() => {
                 {errors.message && <div className="pb-err">{errors.message}</div>}
               </div>
 
-              {/* Captcha */}
-<div className="pb-field-wrap">
-  <div style={{
-    display: "flex", flexDirection: "column", gap: "8px",
-    background: errors.captcha ? "#fff5f5" : "#f8f5ff",
-    border: `1.5px solid ${errors.captcha ? "#ef4444" : "#ddd6fe"}`,
-    borderRadius: "10px", padding: "9px 13px",
-    transition: "border-color 0.2s",
-  }}>
-    {/* Canvas row with refresh button */}
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-      <canvas
-        ref={captchaCanvasRef}
-        width={220}
-        height={48}
-        style={{
-          borderRadius: "6px",
-          flex: 1,
-          userSelect: "none",
-          pointerEvents: "none",
-          filter: "contrast(1.1)",
-        }}
-      />
-      {/* Refresh button */}
-      <button
-        type="button"
-        onClick={() => {
-          setCaptchaAnswer({ a: Math.floor(Math.random()*9)+1, b: Math.floor(Math.random()*9)+1 });
-          setCaptchaInput("");
-          setErrors(p => ({ ...p, captcha: "" }));
-        }}
-        title="Refresh CAPTCHA"
-        style={{
-          flexShrink: 0,
-          width: "32px", height: "32px",
-          borderRadius: "50%",
-          border: "1.5px solid #ddd6fe",
-          background: "#fff",
-          cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          transition: "all 0.2s",
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = "#7c3aed";
-          e.currentTarget.style.borderColor = "#7c3aed";
-          e.currentTarget.querySelector("svg").style.stroke = "#fff";
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = "#fff";
-          e.currentTarget.style.borderColor = "#ddd6fe";
-          e.currentTarget.querySelector("svg").style.stroke = "#7c3aed";
-        }}
-      >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style={{ stroke: "#7c3aed", transition: "stroke 0.2s" }}>
-          <path d="M1 4v6h6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M3.51 15a9 9 0 1 0 .49-3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
-    </div>
-
-    <input
-      type="number"
-      placeholder="Enter answer"
-      value={captchaInput}
-      onChange={e => { setCaptchaInput(e.target.value); setErrors(p => ({ ...p, captcha: "" })); }}
-      style={{
-        border: "none",
-        borderTop: "1.5px solid #ede9fe",
-        background: "transparent",
-        fontSize: "13.5px",
-        fontFamily: "'Outfit',sans-serif",
-        fontWeight: 700,
-        color: "#1a0640",
-        outline: "none",
-        padding: "6px 4px 2px",
-        width: "100%",
-      }}
-    />
-  </div>
-  {errors.captcha && <div className="pb-err">{errors.captcha}</div>}
-</div>
+              {/* Captcha — compact single row */}
+              <div className="pb-field-wrap">
+                <div style={{
+                  display: "flex", alignItems: "center", gap: "8px",
+                  background: errors.captcha ? "#fff5f5" : "#f8f5ff",
+                  border: `1.5px solid ${errors.captcha ? "#ef4444" : "#ddd6fe"}`,
+                  borderRadius: "10px", padding: "6px 10px",
+                  transition: "border-color 0.2s",
+                }}>
+                  <canvas
+                    ref={captchaCanvasRef}
+                    width={160}
+                    height={36}
+                    style={{
+                      borderRadius: "6px",
+                      userSelect: "none",
+                      pointerEvents: "none",
+                      filter: "contrast(1.1)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCaptchaAnswer({ a: Math.floor(Math.random()*9)+1, b: Math.floor(Math.random()*9)+1 });
+                      setCaptchaInput("");
+                      setErrors(p => ({ ...p, captcha: "" }));
+                    }}
+                    title="Refresh CAPTCHA"
+                    style={{
+                      flexShrink: 0,
+                      width: "28px", height: "28px",
+                      borderRadius: "50%",
+                      border: "1.5px solid #ddd6fe",
+                      background: "#fff",
+                      cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      transition: "all 0.2s",
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = "#7c3aed";
+                      e.currentTarget.style.borderColor = "#7c3aed";
+                      e.currentTarget.querySelector("svg").style.stroke = "#fff";
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = "#fff";
+                      e.currentTarget.style.borderColor = "#ddd6fe";
+                      e.currentTarget.querySelector("svg").style.stroke = "#7c3aed";
+                    }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ stroke: "#7c3aed", transition: "stroke 0.2s" }}>
+                      <path d="M1 4v6h6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M3.51 15a9 9 0 1 0 .49-3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <input
+                    type="number"
+                    placeholder="Answer"
+                    value={captchaInput}
+                    onChange={e => { setCaptchaInput(e.target.value); setErrors(p => ({ ...p, captcha: "" })); }}
+                    style={{
+                      border: "none",
+                      borderLeft: "1.5px solid #ede9fe",
+                      background: "transparent",
+                      fontSize: "13px",
+                      fontFamily: "'Outfit',sans-serif",
+                      fontWeight: 700,
+                      color: "#1a0640",
+                      outline: "none",
+                      padding: "4px 8px",
+                      width: "80px",
+                      flexShrink: 0,
+                    }}
+                  />
+                </div>
+                {errors.captcha && <div className="pb-err">{errors.captcha}</div>}
+              </div>
 
               {/* Submit */}
               <button className="pb-submit" onClick={handleSubmit} disabled={submitting}>
@@ -3287,6 +3427,7 @@ useEffect(() => {
 /* ═══════════════ MAIN ═══════════════ */
 export default function HomePage() {
   const scrollRef = useRef(null);
+  const pausedRef = useRef(false);
   const [showModal,   setShowModal]   = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
@@ -3297,7 +3438,7 @@ export default function HomePage() {
     const el = scrollRef.current;
     if (!el) return;
     let af, pos=0;
-    const step=()=>{ pos+=0.55; if(pos>=el.scrollWidth/2)pos=0; el.scrollLeft=pos; af=requestAnimationFrame(step); };
+    const step=()=>{ if(!pausedRef.current){ pos+=0.55; if(pos>=el.scrollWidth/2)pos=0; el.scrollLeft=pos; } af=requestAnimationFrame(step); };
     af=requestAnimationFrame(step);
     return ()=>cancelAnimationFrame(af);
   },[]);
@@ -3360,7 +3501,7 @@ export default function HomePage() {
           .hero-desc-desktop{display:none!important;}
           .hero-bullets-desktop{display:none!important;}
           .hero-cta-desktop{display:none!important;}
-          .about-images{width:100%!important;min-width:unset!important;height:400px!important;max-width:360px!important;margin:0 auto!important;}
+          
           .about-inner{justify-content:center!important;}
           .nl-form{width:100%!important;flex-direction:column!important;}
           .nl-form input{width:100%!important;}
@@ -3382,12 +3523,15 @@ export default function HomePage() {
 
         input::placeholder{color:#9ca3af;}
         input:focus,select:focus{outline:none;}
+
+        
+    }
       `}</style>
 
       {showModal   && <CounselorModal onClose={()=>setShowModal(false)}/>}
       {showReviews && <ReviewsModal   onClose={()=>setShowReviews(false)}/>}
 
-      <HeroSection scrollRef={scrollRef} onCounselorClick={()=>setShowModal(true)} onViewReviews={()=>setShowReviews(true)}/>
+      <HeroSection scrollRef={scrollRef} pausedRef={pausedRef} onCounselorClick={()=>setShowModal(true)} onViewReviews={()=>setShowReviews(true)}/>
       <SocialSidebar />
       <AboutSection />
       <CoursesSection />

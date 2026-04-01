@@ -143,7 +143,6 @@ function BlogDetail({ blog, onBack }) {
           </div>
           <a
             href="/contact"
-            onClick={(e) => e.preventDefault()}
             style={{
               textDecoration: "none",
               background: blog.tagColor, color: "#fff",

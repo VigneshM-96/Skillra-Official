@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const NAV_LINKS = [
-  { label: "About Us",        path: "/about"     },
+  { label: "About Us",        path: "/about us"     },
   { label: "Course Offered",  path: "/courses",   hasMega: true },
   { label: "Career Guidance", path: "/career"    },
   { label: "Placement",       path: "/placement" },
   { label: "Campus",          path: "/campus"    },
   { label: "Books",           path: "/books"     },
   { label: "Blogs",           path: "/blog"      },
-  { label: "Contact Us",      path: "/contact"   },
+  { label: "Contact Us",      path: "/contact us"   },
 ];
 
 const MEGA_MENU = [
@@ -38,14 +38,15 @@ const MEGA_MENU = [
     color: "#10b981",
     courses: [
       { name: "Tally & GST",        count: "200 + Registered", icon: "📒", slug: "tally-gst"          },
-      { name: "SAP APAB", count: "60 + Registered",  icon: "📈", slug: "financial-modeling" },
+      { name: "SAP APAB", count: "60 + Registered",  icon: "📈", slug: "sap-development" },
     ],
   },
   {
-    category: "Self Development",
+    category: "Others",
     color: "#f97316",
     courses: [
       { name: "Personality Development", count: "250 + Registered", icon: "🌟", slug: "personality-development" },
+      { name: "Digital Marketing", count: "200 + Registered", icon: "⚙️", slug: "digital-marketing" },
     ],
   },
 ];

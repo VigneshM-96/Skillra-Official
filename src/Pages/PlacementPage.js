@@ -475,7 +475,7 @@ function AboutHero({ onCtaClick }) {
       }}>
 
         {/* 1. Title + Arc */}
-        <div style={{ width: "100%", textAlign: "center", marginBottom: "24px", marginTop : "40px"}}>
+        <div style={{ width: "100%", textAlign: "center", marginBottom: "24px", marginTop : "20px"}}>
           <h1 style={{
             fontSize: "clamp(1.8rem,7vw,2.6rem)", fontWeight: 900,
             lineHeight: 1.1, letterSpacing: "-1px",

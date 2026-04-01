@@ -23,10 +23,10 @@ export default function App() {
        <NavBar />
       <Routes>
         <Route path="/"          element={<HomePage />} />
-        <Route path="/about"     element={<AboutUsPage />} />
+        <Route path="/about us"     element={<AboutUsPage />} />
         <Route path="/courses/:courseId" element={<CoursesPage />} />
         <Route path="/courses"           element={<CoursesPage />} />
-        <Route path="/contact"    element={<ContactPage />} />
+        <Route path="/contact us"    element={<ContactPage />} />
         <Route path="/campus"     element={<CampusPage />} />
         <Route path="/placement"  element={<PlacementPage />} />
         <Route path="/career"     element={<CareerPage />} />

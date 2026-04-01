@@ -1,3 +1,5 @@
+const PUB = process.env.PUBLIC_URL || "";
+
 export const COURSES = {
 
   /* ══════════════════════════════════════════════════
@@ -5,13 +7,13 @@ export const COURSES = {
   ══════════════════════════════════════════════════ */
   "ai-medical-coding": {
     title: "AI Medical Coding Course",
-    category: "Healthcare",
+    category: "AI Medical Coding Course",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "200+",
     duration: "3 Months",
     color: "#7c3aed",
-    heroImage: "students.jpg",
+    heroImage: "coursehealthcare.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -126,13 +128,13 @@ export const COURSES = {
 
   "ai-medical-billing": {
     title: "AI Medical Billing Course",
-    category: "Healthcare",
+    category: "AI Medical Billing Course",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "200+",
     duration: "3 Months",
     color: "#7c3aed",
-    heroImage: "students.jpg",
+    heroImage: "coursehealthcare.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -246,13 +248,13 @@ export const COURSES = {
 
   "ai-medical-scribing": {
     title: "AI Medical Scribing Course",
-    category: "Healthcare",
+    category: "AI Medical Scribing Course",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "200+",
     duration: "3 Months",
     color: "#7c3aed",
-    heroImage: "students.jpg",
+    heroImage: "coursehealthcare.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -372,11 +374,11 @@ export const COURSES = {
     title: "UI/UX Designing Course",
     category: "Information Technology",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "300+",
     duration: "3–4 Months",
     color: "#f97316",
-    heroImage: "students.jpg",
+    heroImage: "courseuiux.avif",
     tabs: {
       Overview: {
         sections: [
@@ -493,11 +495,11 @@ export const COURSES = {
     title: "MERN / MEAN Stack Course",
     category: "Information Technology",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "350+",
     duration: "3–5 Months",
     color: "#f97316",
-    heroImage: "students.jpg",
+    heroImage: "coursetechnology.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -615,11 +617,11 @@ export const COURSES = {
     title: "Data Analytics Course",
     category: "Information Technology",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "300+",
     duration: "3–4 Months",
     color: "#f97316",
-    heroImage: "students.jpg",
+    heroImage: "coursetechnology.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -736,26 +738,41 @@ export const COURSES = {
     title: "AI & Machine Learning",
     category: "Information Technology",
     rating: 4.9,
-    timing: "online / offline",
-    students: "90+",
-    duration: "6 Months",
+    timing: "Online / Offline",
+    students: "350+",
+    duration: "4–6 Months",
     color: "#f97316",
-    heroImage: "students.jpg",
+    heroImage: "coursetechnology.jpg",
     tabs: {
       Overview: {
         sections: [
           {
             heading: "COURSE DESCRIPTION",
             paras: [
-              "AI & Machine Learning at Skillra is a rigorous program covering supervised and unsupervised learning, deep learning, NLP, and computer vision. Students work with Python, TensorFlow, and scikit-learn on real-world datasets.",
-              "This course is designed for IT graduates and working professionals who want to enter the AI field — one of the fastest-growing and highest-paying domains in tech.",
+              "The AI & Machine Learning Course is a comprehensive program that teaches you how to build smart systems that can learn from data, make predictions, and automate decision-making.",
+              "This course covers Python programming, data analysis, machine learning algorithms, deep learning basics, and AI applications — along with real-world projects and case studies.",
+              "With hands-on training, live projects, and internship support, this course prepares you for high-demand roles in IT, healthcare, finance, e-commerce, and more.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHY CHOOSE THIS COURSE?",
             paras: [
-              "You will learn regression, classification, clustering, neural networks, CNNs, RNNs, and transformer models. You will also learn model evaluation, hyperparameter tuning, and MLOps basics.",
-              "By the end you will have built 5 ML projects including an image classifier, sentiment analyzer, and recommendation system — ready to showcase to top AI employers.",
+              "Industry-relevant AI & ML curriculum with hands-on training using real-world datasets. Internship included for practical exposure with a beginner-friendly learning path.",
+              "High-demand career opportunities with a focus on real-time project development. 100% practical training with an updated AI curriculum and placement assistance support.",
+            ],
+          },
+          {
+            heading: "WHAT YOU WILL LEARN",
+            paras: [
+              "Understand the fundamentals of Artificial Intelligence and Machine Learning. Learn Python programming for data science and perform data preprocessing and analysis.",
+              "Build machine learning models including supervised and unsupervised learning. Understand deep learning basics and work with libraries like Pandas, NumPy, and Scikit-learn.",
+              "Evaluate and optimize ML models using accuracy, precision, recall, cross-validation, and hyperparameter tuning. Gain real-time experience through projects and internship.",
+            ],
+          },
+          {
+            heading: "WHO CAN JOIN THIS COURSE?",
+            paras: [
+              "This course is ideal for students of any degree, IT & non-IT graduates, career switchers, job seekers in tech, and anyone interested in AI & data science. No prior experience is required.",
             ],
           },
         ],
@@ -763,14 +780,45 @@ export const COURSES = {
       Curriculum: {
         sections: [
           {
-            heading: "COURSE MODULES",
+            heading: "MODULE 1: INTRODUCTION TO AI & MACHINE LEARNING",
             paras: [
-              "Module 1: Python for ML — NumPy, Pandas, Matplotlib, and Seaborn.",
-              "Module 2: Supervised Learning — Linear regression, logistic regression, SVM, and decision trees.",
-              "Module 3: Unsupervised Learning — K-means, DBSCAN, and PCA.",
-              "Module 4: Deep Learning — Neural networks, CNNs with TensorFlow/Keras.",
-              "Module 5: NLP — Text preprocessing, sentiment analysis, and transformers (BERT).",
-              "Module 6: MLOps & Deployment — Model deployment with FastAPI and Docker basics.",
+              "What is AI and Machine Learning? Types of Machine Learning. Real-world applications of AI. Understanding AI vs ML concepts and their differences.",
+            ],
+          },
+          {
+            heading: "MODULE 2: PYTHON FOR DATA SCIENCE",
+            paras: [
+              "Python basics and data structures. Working with essential libraries including NumPy and Pandas. Data handling techniques for machine learning workflows.",
+            ],
+          },
+          {
+            heading: "MODULE 3: DATA PREPROCESSING & ANALYSIS",
+            paras: [
+              "Data cleaning and handling missing values. Exploratory Data Analysis (EDA) techniques. Data visualization for understanding patterns and trends in datasets.",
+            ],
+          },
+          {
+            heading: "MODULE 4: MACHINE LEARNING ALGORITHMS",
+            paras: [
+              "Supervised learning — Regression and Classification. Unsupervised learning — Clustering techniques. Model training & evaluation. Feature engineering for improved model performance.",
+            ],
+          },
+          {
+            heading: "MODULE 5: MODEL EVALUATION & OPTIMIZATION",
+            paras: [
+              "Accuracy, precision, and recall metrics. Cross-validation techniques for robust model evaluation. Hyperparameter tuning to optimize model performance.",
+            ],
+          },
+          {
+            heading: "MODULE 6: INTRODUCTION TO DEEP LEARNING",
+            paras: [
+              "Neural networks basics and architecture. Introduction to deep learning frameworks. AI model concepts and their real-world applications.",
+            ],
+          },
+          {
+            heading: "MODULE 7: PROJECTS & INTERNSHIP",
+            paras: [
+              "Real-time ML projects using industry datasets. Capstone project development with end-to-end implementation. Internship exposure for hands-on professional experience.",
             ],
           },
         ],
@@ -780,20 +828,52 @@ export const COURSES = {
           {
             heading: "ABOUT YOUR INSTRUCTOR",
             paras: [
-              "Your instructor holds a PhD in Machine Learning and has published research in top AI conferences. They have worked as an AI engineer at two well-funded startups.",
-              "Their teaching philosophy is learning-by-building — every algorithm is taught by implementing it from scratch, ensuring deep understanding rather than surface-level familiarity.",
+              "Learn from experienced AI professionals with 8+ years of experience in machine learning & AI development, data science & analytics, and Python programming.",
+              "Their teaching approach focuses on real-time project implementation, ensuring students gain practical skills alongside theoretical knowledge for industry readiness.",
             ],
           },
         ],
       },
-      Reviews: {
+      "Tools & Technologies": {
         sections: [
           {
-            heading: "STUDENT REVIEWS",
+            heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "⭐⭐⭐⭐⭐ — \"Got into an AI startup as a junior ML engineer after this course. Life-changing experience!\" — Abhishek P.",
-              "⭐⭐⭐⭐⭐ — \"The NLP module alone is worth more than any online course I have taken. Exceptional quality.\" — Saranya M.",
-              "⭐⭐⭐⭐ — \"Very demanding but very rewarding. You truly understand ML after this course, not just use libraries blindly.\" — Harish G.",
+              "Python — the primary programming language for AI and ML development. NumPy & Pandas for data manipulation and analysis.",
+              "Scikit-learn for building and evaluating machine learning models. Data visualization tools for interpreting results. ML frameworks for building and deploying models.",
+            ],
+          },
+        ],
+      },
+      "Certification & Career": {
+        sections: [
+          {
+            heading: "CERTIFICATION & INTERNSHIP",
+            paras: [
+              "Receive a Course Completion Certificate and an Internship Certificate upon successful completion. Gain real-time project experience with job-oriented training.",
+            ],
+          },
+          {
+            heading: "CAREER OPPORTUNITIES",
+            paras: [
+              "After completing this course, you can apply for roles such as Machine Learning Engineer, Data Scientist (Entry-Level), AI Engineer, Data Analyst, and Python Developer.",
+              "AI & Machine Learning is one of the fastest-growing and highest-paying domains in tech with opportunities across IT, healthcare, finance, and e-commerce industries.",
+            ],
+          },
+        ],
+      },
+      FAQs: {
+        sections: [
+          {
+            heading: "FREQUENTLY ASKED QUESTIONS",
+            paras: [
+              "Q: What is the Skillra AI & Machine Learning Course? A: It is a job-oriented program that teaches AI concepts, machine learning algorithms, and real-time project development.",
+              "Q: Who can join this course? A: Anyone can join, including beginners, students, and professionals. No prior experience is required.",
+              "Q: Does Skillra provide internship in this course? A: Yes, Skillra offers a hands-on internship program for real-time AI project experience.",
+              "Q: What will I learn? A: You will learn AI & ML fundamentals, Python programming, data analysis, and how to build machine learning models.",
+              "Q: Is this course beginner-friendly? A: Yes, this course is designed for both beginners and advanced learners.",
+              "Q: What are the job opportunities after this course? A: You can work as a Machine Learning Engineer, Data Scientist, AI Developer, Data Analyst, or Python Developer.",
+              "Q: Does Skillra provide placement support? A: Yes, Skillra provides placement assistance and career guidance.",
             ],
           },
         ],
@@ -807,13 +887,13 @@ export const COURSES = {
   ══════════════════════════════════════════════════ */
   "tally-gst": {
     title: "Tally & GST Course",
-    category: "Finance",
+    category: "Tally & GST Course",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "300+",
     duration: "2–3 Months",
     color: "#10b981",
-    heroImage: "students.jpg",
+    heroImage: "coursefinance.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -927,13 +1007,13 @@ export const COURSES = {
 
   "sap-development": {
     title: "SAP Development Course",
-    category: "Information Technology",
+    category: "SAP Development Course",
     rating: 4.8,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "250+",
     duration: "3–4 Months",
     color: "#f97316",
-    heroImage: "students.jpg",
+    heroImage: "coursefinance.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -1053,11 +1133,11 @@ export const COURSES = {
     title: "Personality Development Course",
     category: "Self Development",
     rating: 4.9,
-    timing: "online / offline",
+    timing: "Online / Offline",
     students: "400+",
     duration: "1–2 Months",
-    color: "#f97316",
-    heroImage: "students.jpg",
+    color: "#e11d48",
+    heroImage: "courseothers.jpg",
     tabs: {
       Overview: {
         sections: [
@@ -1170,6 +1250,162 @@ export const COURSES = {
       },
     },
     otherCourses: ["ai-medical-coding", "full-stack-development"],
+  },
+
+  "digital-marketing": {
+    title: "Digital Marketing",
+    category: "Digital Marketing",
+    rating: 4.8,
+    timing: "Online / Offline",
+    students: "500+",
+    duration: "2–4 Months",
+    color: "#e11d48",
+    heroImage: "courseothers.jpg",
+    tabs: {
+      Overview: {
+        sections: [
+          {
+            heading: "COURSE DESCRIPTION",
+            paras: [
+              "The Digital Marketing Course is a comprehensive program that teaches you how to promote brands, products, and services using online channels.",
+              "This course covers SEO, social media marketing (SMM), Google Ads, content marketing, email marketing, and analytics — along with real-time campaign management.",
+              "With hands-on training, live projects, and internship support, this course prepares you for roles in agencies, startups, corporate companies, or even freelance and business opportunities.",
+            ],
+          },
+          {
+            heading: "WHY CHOOSE THIS COURSE?",
+            paras: [
+              "Industry-relevant marketing curriculum with hands-on training using live campaigns. Internship included for real-time exposure with a beginner-friendly learning path — no technical background required.",
+              "Covers all major digital marketing channels with freelancing and business opportunities. 100% practical training with an updated marketing curriculum and placement assistance support.",
+            ],
+          },
+          {
+            heading: "WHAT YOU WILL LEARN",
+            paras: [
+              "Understand the fundamentals of digital marketing. Learn Search Engine Optimization (SEO) techniques and run Google Ads and paid campaigns.",
+              "Manage social media marketing (SMM) across platforms and create content marketing strategies. Execute email marketing campaigns and analyze performance using analytics tools.",
+              "Gain real-time experience through live projects and internship exposure.",
+            ],
+          },
+          {
+            heading: "WHO CAN JOIN THIS COURSE?",
+            paras: [
+              "This course is ideal for students of any degree, job seekers, career switchers, business owners & entrepreneurs, and freelancers. No prior experience is required.",
+            ],
+          },
+        ],
+      },
+      Curriculum: {
+        sections: [
+          {
+            heading: "MODULE 1: INTRODUCTION TO DIGITAL MARKETING",
+            paras: [
+              "What is digital marketing? Types of digital marketing. Marketing funnel basics and industry overview to build a strong foundation.",
+            ],
+          },
+          {
+            heading: "MODULE 2: SEARCH ENGINE OPTIMIZATION (SEO)",
+            paras: [
+              "On-page SEO and off-page SEO techniques. Technical SEO basics and keyword research strategies to improve website rankings and organic traffic.",
+            ],
+          },
+          {
+            heading: "MODULE 3: SOCIAL MEDIA MARKETING (SMM)",
+            paras: [
+              "Platform strategies for Instagram, Facebook, and LinkedIn. Content creation & planning, engagement strategies, and social media analytics for measurable growth.",
+            ],
+          },
+          {
+            heading: "MODULE 4: GOOGLE ADS & PAID MARKETING",
+            paras: [
+              "PPC advertising fundamentals. Search ads & display ads setup. Campaign setup, optimization, and budget management for maximum ROI.",
+            ],
+          },
+          {
+            heading: "MODULE 5: CONTENT MARKETING",
+            paras: [
+              "Blog writing and copywriting basics. Content strategy development and branding techniques to build a strong online presence.",
+            ],
+          },
+          {
+            heading: "MODULE 6: EMAIL MARKETING & AUTOMATION",
+            paras: [
+              "Email campaign creation and audience segmentation. Automation tools for streamlined workflows and performance tracking for continuous improvement.",
+            ],
+          },
+          {
+            heading: "MODULE 7: ANALYTICS & TOOLS",
+            paras: [
+              "Google Analytics basics for data-driven decisions. Campaign performance tracking, data interpretation, and reporting to measure marketing effectiveness.",
+            ],
+          },
+          {
+            heading: "MODULE 8: PROJECTS & INTERNSHIP",
+            paras: [
+              "Live campaign execution with real-time projects. Case studies from industry scenarios and internship exposure for hands-on professional experience.",
+            ],
+          },
+        ],
+      },
+      Instructor: {
+        sections: [
+          {
+            heading: "ABOUT YOUR INSTRUCTOR",
+            paras: [
+              "Learn from experienced marketers with 8+ years of experience in SEO & paid marketing, social media growth strategies, and campaign management.",
+              "Their teaching approach focuses on real-time client projects, ensuring students gain practical skills alongside theoretical knowledge for industry readiness.",
+            ],
+          },
+        ],
+      },
+      "Tools & Platforms": {
+        sections: [
+          {
+            heading: "TOOLS & PLATFORMS COVERED",
+            paras: [
+              "Google Ads for running paid search and display campaigns. Google Analytics for tracking website traffic and campaign performance.",
+              "SEO tools including Ahrefs and SEMrush basics for keyword research and competitor analysis. Social media platforms for content management and engagement.",
+              "Email marketing tools for creating automated campaigns and tracking subscriber engagement.",
+            ],
+          },
+        ],
+      },
+      "Certification & Career": {
+        sections: [
+          {
+            heading: "CERTIFICATION & INTERNSHIP",
+            paras: [
+              "Receive a Course Completion Certificate and an Internship Certificate upon successful completion. Gain real-time campaign experience with job-oriented training.",
+            ],
+          },
+          {
+            heading: "CAREER OPPORTUNITIES",
+            paras: [
+              "After completing this course, you can apply for roles such as Digital Marketing Executive, SEO Analyst, Social Media Manager, PPC Specialist, and Content Marketer.",
+              "Digital marketing offers unlimited career and business opportunities across agencies, startups, corporate companies, and freelancing.",
+            ],
+          },
+        ],
+      },
+      FAQs: {
+        sections: [
+          {
+            heading: "FREQUENTLY ASKED QUESTIONS",
+            paras: [
+              "Q: What is the Skillra Digital Marketing Course? A: It is a job-oriented program that teaches online marketing strategies, tools, and real-time campaign management.",
+              "Q: Who can join this course? A: Anyone can join, including students, professionals, and business owners. No prior experience is required.",
+              "Q: Does Skillra provide internship in this course? A: Yes, Skillra offers a hands-on internship program with real campaign experience.",
+              "Q: What will I learn? A: You will learn SEO, social media marketing, Google Ads, content marketing, and email marketing.",
+              "Q: Will I get certification? A: Yes, you will receive both course completion and internship certificates.",
+              "Q: Why choose Skillra for Digital Marketing? A: Skillra offers practical training, industry-relevant curriculum, real-time projects, internship opportunity, and job assistance.",
+              "Q: Can I start freelancing after this course? A: Yes, this course helps you start freelancing or even your own digital marketing business.",
+              "Q: How can I enroll? A: You can enroll through Skillra's official website or contact the support team.",
+            ],
+          },
+        ],
+      },
+    },
+    otherCourses: ["full-stack-development", "data-analytics", "ai-machine-learning"],
   },
 
 };

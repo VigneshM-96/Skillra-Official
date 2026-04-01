@@ -127,8 +127,8 @@ The Chennai & India Opportunity: India is positioning itself as a global AI tale
 
 Skillra's AI & ML foundation course is built for working professionals and recent graduates who want to future-proof their careers. No prior coding experience is required for the foundation track — just the drive to stay ahead.`,
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
-    author: "Rahul V.",
-    authorInitial: "R",
+    author: "Vignesh M.",
+    authorInitial: "V",
     authorColor: "#d97706",
   },
 ];

@@ -49,7 +49,6 @@ const QUICK_LINKS = [
   { label: "Course Offered",   path: "/courses"   },
   { label: "Books",            path: "/books"     },
   { label: "Contact Us",       path: "/contact"   },
-  { label: "Privacy & Policy", path: "/privacy"   },
 ];
 
 /* ═══════════════════════════════════════════

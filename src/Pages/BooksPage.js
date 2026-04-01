@@ -205,7 +205,7 @@ function BuyBookModal({ onClose }) {
                 {key:"name",    label:"Full Name",      placeholder:"Your full name",     type:"text"},
                 {key:"email",   label:"Email Address",  placeholder:"your@email.com",     type:"email"},
                 {key:"contact", label:"Contact Number", placeholder:"10-digit mobile no", type:"tel"},
-                {key:"orders",  label:"No. of Books",   placeholder:"How many copies?",   type:"number"},
+                {key:"orders",  label:"No. of Bundle",   placeholder:"How many Bundle package?",   type:"number"},
               ].map(f => (
                 <div key={f.key}>
                   <label style={{fontSize:"12px",fontWeight:700,color:"#374151",display:"block",marginBottom:"5px",letterSpacing:"0.03em"}}>
@@ -1104,12 +1104,12 @@ function ReviewRow({ review, index, inView }) {
    SECTION 4 — BUNDLE
 ══════════════════════════════════════════════════════ */
 const BUNDLE_ITEMS = [
-  "Volume I: Fundamentals (400+ Questions)",
-  "Volume II: Advanced Practice (2000+ Questions)",
-  "Volume III: 10 Full-Length Mock Tests",
-  "Detailed Answer Keys & Explanations",
-  "AAPC 2025-2026 Exam Blueprint Aligned",
-  "Ideal for Freshers & Repeat Exam Takers",
+  "Covers All Key CPC Exam Domains",
+  "Real Operative Note Practice",
+  "Answers Included with Every Question",
+  "Builds from Basics to Advanced",
+  "Mock Tests Simulate Exam Conditions",
+  "Compliance & Regulatory Questions Included",
 ];
 
 function BundleSection({ onBuyClick }) {
@@ -1124,7 +1124,7 @@ function BundleSection({ onBuyClick }) {
         <img src={`${PUB}/bgbooks.png`} alt="" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",transform:"scale(2.0)",transformOrigin:"center top",top:"-120px",objectPosition:"center top",opacity:0.18,pointerEvents:"none",zIndex:0}}/>
         <div style={{maxWidth:"860px",margin:"0 auto",padding:"0 clamp(16px,4%,40px)",position:"relative",zIndex:1}}>
           <div style={{background:"#fff",width:"min(400px,100%)",margin:"0 auto",borderRadius:"16px 16px 80px 80px",padding:"clamp(28px,5%,44px) clamp(24px,6%,52px) clamp(32px,6%,52px)",boxShadow:"0 12px 60px rgba(109,40,217,0.12),0 2px 8px rgba(0,0,0,0.06)",border:"1.5px solid rgba(124,58,237,0.10)",opacity:inView?1:0,transform:inView?"translateY(0) scale(1)":"translateY(30px) scale(0.97)",transition:"opacity 0.7s ease 0.15s,transform 0.7s ease 0.15s",position:"relative",zIndex:1}}>
-            <h3 style={{fontSize:"18px",fontWeight:800,color:"#7c3aed",fontFamily:"'Outfit',sans-serif",textAlign:"center",marginBottom:"28px"}}>Bundle Package</h3>
+            <h3 style={{fontSize:"18px",fontWeight:800,color:"#7c3aed",fontFamily:"'Outfit',sans-serif",textAlign:"center",marginBottom:"28px"}}>CPC Question Bank Sample</h3>
             <ul style={{listStyle:"none",padding:0,margin:"0 0 36px 0",display:"flex",flexDirection:"column",gap:"14px"}}>
               {BUNDLE_ITEMS.map((item,i) => (
                 <li key={i} style={{display:"flex",alignItems:"center",gap:"12px",fontSize:"clamp(13px,1.3vw,14.5px)",color:"#374151",fontFamily:"'Outfit',sans-serif",lineHeight:1.5}}>
@@ -1136,8 +1136,8 @@ function BundleSection({ onBuyClick }) {
               <button
   onClick={() => {
     const link = document.createElement('a');
-    link.href = '/books.png';
-    link.download = 'books.png';
+    link.href = '/CPC QUESTION BANK BOOK SAMPLE.pdf';
+    link.download = 'CPC QUESTION BANK BOOK SAMPLE.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

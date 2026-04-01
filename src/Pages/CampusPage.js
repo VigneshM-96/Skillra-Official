@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
@@ -93,90 +93,85 @@ function CampusHero({ onJoinClick }) {
     }}>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, backgroundImage: `radial-gradient(rgba(124,58,237,0.10) 1px, transparent 1px)`, backgroundSize: "28px 28px" }} />
       <div className="campus-inner" style={{
-  display: "flex", alignItems: "center", justifyContent: "space-between",
-  flexWrap: "wrap",
-  padding: "30px 5%", width: "100%", gap: "80px",
-  position: "relative", zIndex: 1, maxWidth: "1280px", margin: "0 auto"
-}}>
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        flexWrap: "wrap",
+        padding: "30px 5%", width: "100%", gap: "80px",
+        position: "relative", zIndex: 1, maxWidth: "1280px", margin: "0 auto"
+      }}>
 
-  {/* ── 1st on mobile: Title + arc only ── */}
-  <div className="campus-left" style={{ flex: "0 0 auto", width: "500px", maxWidth: "100%" }}>
-    <h1 className="cp-v1 campus-title" style={{ fontSize: "clamp(2rem, 5vw, 3.8rem)", fontWeight: 900, lineHeight: 1.1, color: "#1a0640", marginBottom: "6px", letterSpacing: "-1.5px", fontFamily: "'Outfit', sans-serif" }}>
-      Step Beyond <span style={{ display: "inline-block", animation: "capHat 2.4s ease-in-out infinite" }}>🎓</span>
-    </h1>
-    <h2 className="cp-v2 campus-subtitle" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2.9rem)", fontWeight: 900, lineHeight: 1.15, marginBottom: "18px", letterSpacing: "-1px", fontFamily: "'Outfit', sans-serif", color: "#1a0640" }}>
-      Academics with <span style={{ color: "#ff6b35" }}>Skillra</span><br /><span style={{ color: "#ff6b35" }}>Campus</span>
-    </h2>
-    <div className="cp-v2" style={{ marginBottom: "24px" }}>
-      <svg viewBox="0 0 320 20" style={{ width: "min(320px, 90%)", maxWidth: "100%", height: "14px", overflow: "visible" }} preserveAspectRatio="none">
-        <path className="campus-arc" d="M 4 14 C 60 2, 200 0, 316 12" fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
-      </svg>
-    </div>
+        <div className="campus-left" style={{ flex: "0 0 auto", width: "500px", maxWidth: "100%" }}>
+          <h1 className="cp-v1 campus-title" style={{ fontSize: "clamp(2rem, 5vw, 3.8rem)", fontWeight: 900, lineHeight: 1.1, color: "#1a0640", marginBottom: "6px", letterSpacing: "-1.5px", fontFamily: "'Outfit', sans-serif" }}>
+            Step Beyond <span style={{ display: "inline-block", animation: "capHat 2.4s ease-in-out infinite" }}>🎓</span>
+          </h1>
+          <h2 className="cp-v2 campus-subtitle" style={{ fontSize: "clamp(1.4rem, 3.5vw, 2.9rem)", fontWeight: 900, lineHeight: 1.15, marginBottom: "18px", letterSpacing: "-1px", fontFamily: "'Outfit', sans-serif", color: "#1a0640" }}>
+            Academics with <span style={{ color: "#ff6b35" }}>Skillra</span><br /><span style={{ color: "#ff6b35" }}>Campus</span>
+          </h2>
+          <div className="cp-v2" style={{ marginBottom: "24px" }}>
+            <svg viewBox="0 0 320 20" style={{ width: "min(320px, 90%)", maxWidth: "100%", height: "14px", overflow: "visible" }} preserveAspectRatio="none">
+              <path className="campus-arc" d="M 4 14 C 60 2, 200 0, 316 12" fill="none" stroke="#7c3aed" strokeWidth="5" strokeLinecap="round" />
+            </svg>
+          </div>
 
-    {/* Desktop only — paragraph + button */}
-    <p className="cp-v3 campus-desc-desktop" style={{ color: "#5c4a80", fontSize: "clamp(13px,1.4vw,14.5px)", lineHeight: 1.8, marginBottom: "34px", maxWidth: "400px", fontFamily: "'Outfit', sans-serif", fontWeight: 400 }}>
-      Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
-    </p>
-    <div className="cp-v4 campus-btn-desktop">
-      <a href="/campus" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-      
-      <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "clamp(13px,1.3vw,14px)", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
-        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(124,58,237,0.38)"; }}>
-        Join Skillra Campus
-        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </button>
-      </a>
-    </div>
-  </div>
+          <p className="cp-v3 campus-desc-desktop" style={{ color: "#5c4a80", fontSize: "clamp(13px,1.4vw,14.5px)", lineHeight: 1.8, marginBottom: "34px", maxWidth: "400px", fontFamily: "'Outfit', sans-serif", fontWeight: 400 }}>
+            Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
+          </p>
+          <div className="cp-v4 campus-btn-desktop">
+            <a href="/campus" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+              <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "clamp(13px,1.3vw,14px)", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(124,58,237,0.38)"; }}>
+                Join Skillra Campus
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+            </a>
+          </div>
+        </div>
 
-  {/* ── 2nd on mobile: Image ── */}
-  <div className="campus-right cp-vR" style={{
-    flex: 1, display: "flex", justifyContent: "center", alignItems: "flex-end",
-    position: "relative", minWidth: 0,
-    height: "clamp(320px, 60vw, 700px)",
-  }}>
-    <div style={{
-      position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)",
-      width: "90%", maxWidth: "580px",
-      aspectRatio: "580 / 630",
-      borderRadius: "50% 50% 0 0 / 48% 48% 0 0",
-      background: "rgba(195,180,255,0.28)",
-      overflow: "hidden", zIndex: 1,
-    }}>
-      <svg viewBox="0 0 580 630" style={{ width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <pattern id="chevInner" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
-            <polyline points="0,18 18,0 36,18" fill="none" stroke="rgba(124,58,237,0.22)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-            <polyline points="0,36 18,18 36,36" fill="none" stroke="rgba(124,58,237,0.22)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          </pattern>
-        </defs>
-        <rect x="0" y="0" width="580" height="630" fill="url(#chevInner)" />
-      </svg>
-    </div>
-    <img src={`${PUB}/campusboy.png`} alt="Campus Student"
-      style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" }}
-    />
-    <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="50+ Workshops" style={{ top: "12%", right: "2%" }} delay={600} />
-    <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="20+ Colleges" style={{ bottom: "24%", right: "2%" }} delay={800} />
-    <ActiveStudentsBadge className="hero-badge" style={{ bottom: "40%", left: "2%" }} delay={1000} />
-  </div>
+        <div className="campus-right cp-vR" style={{
+          flex: 1, display: "flex", justifyContent: "center", alignItems: "flex-end",
+          position: "relative", minWidth: 0,
+          height: "clamp(320px, 60vw, 700px)",
+        }}>
+          <div style={{
+            position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)",
+            width: "90%", maxWidth: "580px",
+            aspectRatio: "580 / 630",
+            borderRadius: "50% 50% 0 0 / 48% 48% 0 0",
+            background: "rgba(195,180,255,0.28)",
+            overflow: "hidden", zIndex: 1,
+          }}>
+            <svg viewBox="0 0 580 630" style={{ width: "100%", height: "100%" }} preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <pattern id="chevInner" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+                  <polyline points="0,18 18,0 36,18" fill="none" stroke="rgba(124,58,237,0.22)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="0,36 18,18 36,36" fill="none" stroke="rgba(124,58,237,0.22)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </pattern>
+              </defs>
+              <rect x="0" y="0" width="580" height="630" fill="url(#chevInner)" />
+            </svg>
+          </div>
+          <img src={`${PUB}/campusboy.png`} alt="Campus Student"
+            style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" }}
+          />
+          <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="50+ Workshops" style={{ top: "12%", right: "2%" }} delay={600} />
+          <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="20+ Colleges" style={{ bottom: "24%", right: "2%" }} delay={800} />
+          <ActiveStudentsBadge className="hero-badge" style={{ bottom: "40%", left: "2%" }} delay={1000} />
+        </div>
 
-  {/* ── 3rd on mobile: Paragraph + button (mobile only) ── */}
-  <div className="campus-bottom" style={{
-    display: "flex", flexDirection: "column",
-    alignItems: "center", gap: "24px", width: "100%",
-  }}>
-    <p style={{ color: "#5c4a80", fontSize: "14.5px", lineHeight: 1.8, maxWidth: "360px", fontFamily: "'Outfit', sans-serif", fontWeight: 400, textAlign: "center" }}>
-      Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
-    </p>
-    <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", transition: "all 0.22s", position: "relative", overflow: "hidden" }}>
-      Join Skillra Campus
-      <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-    </button>
-  </div>
+        <div className="campus-bottom" style={{
+          display: "flex", flexDirection: "column",
+          alignItems: "center", gap: "24px", width: "100%",
+        }}>
+          <p style={{ color: "#5c4a80", fontSize: "14.5px", lineHeight: 1.8, maxWidth: "360px", fontFamily: "'Outfit', sans-serif", fontWeight: 400, textAlign: "center" }}>
+            Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
+          </p>
+          <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", transition: "all 0.22s", position: "relative", overflow: "hidden" }}>
+            Join Skillra Campus
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+        </div>
 
-</div>
+      </div>
     </section>
   );
 }
@@ -209,7 +204,7 @@ function CampusCard({ heading, body, delay, inView }) {
         color: hovered ? "#fff" : "#7c3aed",
         fontFamily: "'Outfit', sans-serif", marginBottom: "18px",
         transition: "color 0.28s ease",
-        textAlign: "center",   // 👈 heading centered
+        textAlign: "center",
       }}>
         {heading}
       </h3>
@@ -218,7 +213,7 @@ function CampusCard({ heading, body, delay, inView }) {
         color: hovered ? "rgba(255,255,255,0.85)" : "#6b7280",
         fontFamily: "'Outfit', sans-serif", lineHeight: 1.8, fontWeight: 400,
         transition: "color 0.28s ease",
-        textAlign: "justify",  // 👈 body justified
+        textAlign: "justify",
       }}>
         {body}
       </p>
@@ -243,7 +238,7 @@ function AboutCampusSection() {
             Trusted by medical coding students across India to build skills, crack certifications, and launch successful careers.
           </p>
         </div>
-        <div className="campus-cards-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>  {/* 👈 removed textAlign from grid */}
+        <div className="campus-cards-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
           {CARDS.map((card, i) => (
             <CampusCard key={i} heading={card.heading} body={card.body} delay={0.1 + i * 0.1} inView={inView} />
           ))}
@@ -258,13 +253,154 @@ function AboutCampusSection() {
 ═══════════════════════════════════════════════════ */
 function OpportunitiesSection() {
   const [ref, inView] = useInView(0.08);
+  const scrollRef = useRef(null);
+  const [activePage, setActivePage] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const idx = Math.round(el.scrollTop / el.clientHeight);
+    setActivePage(Math.min(idx, 2));
+  }, []);
+
+  const goToPage = (idx) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: idx * el.clientHeight, behavior: "smooth" });
+  };
+
+  const oppPages = [
+    [
+      { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
+      { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions. This experience helps students develop leadership, communication, and organizational skills that are valuable in professional environments." },
+    ],
+    [
+      { title: "Industry Mentorship Access", desc: "Students get direct access to working professionals and industry mentors who guide them through real challenges. These sessions bridge the gap between theoretical knowledge and practical workplace expectations." },
+      { title: "Internship & Project Exposure", desc: "Skillra connects campus students with live internship projects from partner companies. Working on real briefs with deadlines gives students a head start in understanding professional work culture and deliverables." },
+    ],
+    [
+      { title: "Certification & Career Placement", desc: "Upon completing Skillra's campus programs, students receive industry-recognized certifications and gain access to our dedicated placement cell. With 100+ hiring partners, we actively connect graduates to job opportunities that match their newly acquired skills." },
+    ],
+  ];
+
+  /* ── MOBILE — uses "mob-opp-*" classNames to avoid global CSS conflicts ── */
+  if (isMobile) {
+    return (
+      <section
+        ref={ref}
+        className="mob-opp-section"
+        style={{
+          background: "#0e0e0e",
+          position: "relative",
+          display: "block",
+          overflow: "visible",
+          height: "auto",
+          minHeight: "auto",
+          maxHeight: "none",
+        }}
+      >
+        {/* Title block */}
+        <div
+          className="mob-opp-title"
+          style={{
+            position: "relative",
+            padding: "44px 22px 32px",
+            overflow: "hidden",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(24px)",
+            transition: "all 0.6s ease 0.1s",
+          }}
+        >
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "120px", overflow: "hidden", pointerEvents: "none", opacity: 0.45 }}>
+            <svg viewBox="0 0 520 240" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
+              {Array.from({ length: 16 }).map((_, row) => {
+                const numCols = 30;
+                const pts = Array.from({ length: numCols }).map((__, i) => `${(i / (numCols - 1)) * 520},${row * 15 + (i % 2 === 0 ? 0 : 10)}`).join(" ");
+                return <polyline key={row} points={pts} fill="none" stroke={row % 2 === 0 ? "#c9a227" : "#e6b830"} strokeWidth="2" strokeLinejoin="round" opacity={0.45 + row * 0.025} />;
+              })}
+            </svg>
+          </div>
+          <h2 style={{
+            fontSize: "clamp(1.35rem, 6vw, 1.9rem)",
+            fontWeight: 900,
+            color: "#fff",
+            fontFamily: "'Outfit', sans-serif",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.18,
+            position: "relative",
+            zIndex: 2,
+            margin: 0,
+            padding: 0,
+          }}>
+            Opportunities<br />Through Skillra<br />Campus
+          </h2>
+        </div>
+
+        {/* Content items — simple block layout, no flex parent */}
+        <div
+          className="mob-opp-content"
+          style={{
+            background: "#1a1a1a",
+            padding: "28px 22px 44px",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(18px)",
+            transition: "all 0.6s ease 0.2s",
+          }}
+        >
+          {oppPages.flat().map((item, i, arr) => (
+            <div
+              key={i}
+              style={{
+                display: "block",
+                paddingBottom: i < arr.length - 1 ? "28px" : "0",
+                marginBottom: i < arr.length - 1 ? "28px" : "0",
+                borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.07)" : "none",
+              }}
+            >
+              <div style={{
+                width: 26, height: 3, borderRadius: 2,
+                background: "linear-gradient(90deg, #e6b830, #c9a227)",
+                marginBottom: 12,
+              }} />
+              <h3 style={{
+                fontSize: "15px",
+                fontWeight: 800,
+                color: "#fff",
+                fontFamily: "'Outfit', sans-serif",
+                marginBottom: 8,
+                marginTop: 0,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.3,
+                padding: 0,
+              }}>{item.title}</h3>
+              <p style={{
+                fontSize: "13px",
+                color: "rgba(255,255,255,0.52)",
+                fontFamily: "'Outfit', sans-serif",
+                lineHeight: 1.75,
+                fontWeight: 400,
+                margin: 0,
+                padding: 0,
+              }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  /* ── DESKTOP ── */
   return (
     <section ref={ref} style={{ background: "#0e0e0e", position: "relative", overflow: "hidden" }}>
-      <div className="opp-inner" style={{ 
-  display: "flex", 
-  height: "clamp(420px, 65vh, 600px)",   // ✅ controlled height
-  alignItems: "stretch" 
-}}>
+      <div className="opp-inner" style={{ display: "flex", height: "clamp(420px, 65vh, 600px)", alignItems: "stretch" }}>
         <div className="opp-left" style={{ flex: "0 0 42%", position: "relative", overflow: "hidden", padding: "clamp(40px,6vw,80px) clamp(24px,4%,52px)", display: "flex", flexDirection: "column", justifyContent: "center", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-30px)", transition: "all 0.7s ease 0.1s" }}>
           <div className="opp-bg-design" style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "240px", overflow: "hidden" }}>
             <svg viewBox="0 0 520 240" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
@@ -279,64 +415,30 @@ function OpportunitiesSection() {
             Opportunities<br />Through Skillra<br />Campus
           </h2>
         </div>
-        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", display: "flex", flexDirection: "column", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s", overflow: "hidden" }}>
+        <div className="opp-right" style={{ flex: 1, background: "#1a1a1a", display: "flex", flexDirection: "column", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(30px)", transition: "all 0.7s ease 0.2s", overflow: "hidden", position: "relative" }}>
 
-          {/* Scrollable inner — snaps page by page */}
-          <div style={{
-            height: "100%",
-overflowY: "auto",              // ✅ smoother
-WebkitOverflowScrolling: "touch", // ✅ mobile smooth
-scrollBehavior: "smooth",
-            scrollSnapType: "y mandatory",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
+          <div ref={scrollRef} onScroll={handleScroll} className="opp-scroll" style={{
+            height: "100%", overflowY: "auto", WebkitOverflowScrolling: "touch",
+            scrollBehavior: "smooth", scrollSnapType: "y mandatory",
+            scrollbarWidth: "none", msOverflowStyle: "none",
           }}>
             <style>{`.opp-scroll::-webkit-scrollbar { display: none; }`}</style>
 
-            {/* Page 1 */}
-            <div style={{ scrollSnapAlign: "start", minHeight: "100%",height: "100%",   padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
-              {[
-                { title: "Skill Development Programs", desc: "Skillra Campus organizes learning initiatives focused on in-demand skills and emerging industry trends. Students gain exposure to practical knowledge that supports their academic learning with real-world relevance." },
-                { title: "Campus Leadership Experience", desc: "Selected students can represent Skillra as Campus Leaders, contributing to community engagement and learning initiatives within their institutions. This experience helps students develop leadership, communication, and organizational skills that are valuable in professional environments." },
-              ].map((item, i) => (
-                <div key={i}>
-                  <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                  <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Page 2 */}
-            <div style={{ scrollSnapAlign: "start", minHeight: "100%",height: "100%",   padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
-              {[
-                { title: "Industry Mentorship Access", desc: "Students get direct access to working professionals and industry mentors who guide them through real challenges. These sessions bridge the gap between theoretical knowledge and practical workplace expectations." },
-                { title: "Internship & Project Exposure", desc: "Skillra connects campus students with live internship projects from partner companies. Working on real briefs with deadlines gives students a head start in understanding professional work culture and deliverables." },
-              ].map((item, i) => (
-                <div key={i}>
-                  <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                  <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Page 3 */}
-            <div style={{ scrollSnapAlign: "start", minHeight: "100%",height: "100%",   padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
-              {[
-                { title: "Certification & Career Placement", desc: "Upon completing Skillra's campus programs, students receive industry-recognized certifications and gain access to our dedicated placement cell. With 100+ hiring partners, we actively connect graduates to job opportunities that match their newly acquired skills." },
-              ].map((item, i) => (
-                <div key={i}>
-                  <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                  <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
+            {oppPages.map((page, pageIdx) => (
+              <div key={pageIdx} style={{ scrollSnapAlign: "start", minHeight: "100%", height: "100%", padding: "clamp(40px,6vw,80px) clamp(24px,5%,60px)", display: "flex", flexDirection: "column", justifyContent: "center", gap: "clamp(24px,4vw,48px)" }}>
+                {page.map((item, i) => (
+                  <div key={i}>
+                    <h3 style={{ fontSize: "clamp(15px,1.6vw,17px)", fontWeight: 800, color: "#fff", fontFamily: "'Outfit', sans-serif", marginBottom: "14px", letterSpacing: "-0.01em" }}>{item.title}</h3>
+                    <p style={{ fontSize: "clamp(12px,1.3vw,13.5px)", color: "rgba(255,255,255,0.58)", fontFamily: "'Outfit', sans-serif", lineHeight: 1.9, fontWeight: 400 }}>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
 
-          {/* Scroll indicator dots */}
           <div style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "7px", zIndex: 10 }}>
-            {[0,1,2].map(i => (
-              <div key={i} style={{ width: "5px", height: "5px", borderRadius: "50%", background: i === 0 ? "#e6b830" : "rgba(255,255,255,0.2)" }}/>
+            {[0, 1, 2].map(i => (
+              <div key={i} onClick={() => goToPage(i)} style={{ width: "6px", height: "6px", borderRadius: "50%", background: i === activePage ? "#e6b830" : "rgba(255,255,255,0.2)", cursor: "pointer", transition: "background 0.3s ease" }} />
             ))}
           </div>
 
@@ -381,7 +483,6 @@ function TestimonialsContactSection() {
   };
   useEffect(() => () => clearInterval(autoRef.current), []);
 
-  // ── Validators ──
   const validators = {
     name: (v) => {
       if (!v.trim()) return "Name is required";
@@ -420,43 +521,44 @@ function TestimonialsContactSection() {
   };
 
   const handleSubmit = async () => {
-  const newErrors = {};
-  let hasError = false;
-  Object.keys(validators).forEach(f => {
-    const err = validators[f](formData[f]);
-    newErrors[f] = err;
-    if (err) hasError = true;
-  });
-  setErrors(newErrors);
-  if (hasError) return;
-
-  setSubmitting(true);
-  try {
-    const now = new Date();
-    const date = now.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
-    const time = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
-
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({
-        type: "campus",          // ← lowercase to match Apps Script
-        date,
-        time,
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone,
-        source: formData.source,
-        purpose: formData.purpose.trim(),
-      }),
+    const newErrors = {};
+    let hasError = false;
+    Object.keys(validators).forEach(f => {
+      const err = validators[f](formData[f]);
+      newErrors[f] = err;
+      if (err) hasError = true;
     });
-    setSubmitted(true);
-  } catch {
-    setErrors(prev => ({ ...prev, _form: "Something went wrong. Please try again." }));
-  } finally {
-    setSubmitting(false);
-  }
-};
+    setErrors(newErrors);
+    if (hasError) return;
+
+    setSubmitting(true);
+    try {
+      const now = new Date();
+      const date = now.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+      const time = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+          type: "campus",
+          date,
+          time,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone,
+          source: formData.source,
+          purpose: formData.purpose.trim(),
+        }),
+      });
+      setSubmitted(true);
+    } catch {
+      setErrors(prev => ({ ...prev, _form: "Something went wrong. Please try again." }));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const inputStyle = (field) => ({
     width: "100%", padding: "13px 16px",
     border: `1.5px solid ${errors[field] ? "#ef4444" : errors[field] === "" ? "#22c55e" : "#e5e7eb"}`,
@@ -483,7 +585,7 @@ function TestimonialsContactSection() {
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,48px)", position: "relative", zIndex: 1 }}>
         <div className="tc-inner" style={{ display: "flex", gap: "clamp(24px,5%,64px)", alignItems: "flex-start" }}>
 
-          {/* LEFT — Testimonials (unchanged) */}
+          {/* LEFT — Testimonials */}
           <div style={{ flex: 1, minWidth: 0, opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-24px)", transition: "all 0.7s ease 0.1s" }}>
             <h2 style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "8px" }}>Testimonials</h2>
             <p style={{ fontSize: "14px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "40px", fontStyle: "italic" }}>Every Story Matters. Every Success Counts.</p>
@@ -502,36 +604,30 @@ function TestimonialsContactSection() {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
               {TESTIMONIALS.map((t, i) => (
-  <div
-    key={i}
-    onClick={() => handleAvatarClick(i)}
-    style={{
-      width: "44px", height: "44px", borderRadius: "50%",
-      overflow: "hidden", cursor: "pointer", flexShrink: 0,
-      border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
-      boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
-      transition: "all 0.22s",
-      transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
-    }}
-  >
-    <img
-      src={t.image}
-      alt={t.name}
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        display: "block",
-      }}
-      onError={e => {
-        // fallback to initials if image fails to load
-        e.currentTarget.style.display = "none";
-        e.currentTarget.parentElement.style.background = AVATAR_COLORS[i];
-        e.currentTarget.parentElement.innerHTML = `<span style="color:#fff;font-size:13px;font-weight:700;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;width:100%;height:100%">${t.avatar}</span>`;
-      }}
-    />
-  </div>
-))}
+                <div
+                  key={i}
+                  onClick={() => handleAvatarClick(i)}
+                  style={{
+                    width: "44px", height: "44px", borderRadius: "50%",
+                    overflow: "hidden", cursor: "pointer", flexShrink: 0,
+                    border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
+                    boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
+                    transition: "all 0.22s",
+                    transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
+                  }}
+                >
+                  <img
+                    src={t.image}
+                    alt={t.name}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    onError={e => {
+                      e.currentTarget.style.display = "none";
+                      e.currentTarget.parentElement.style.background = AVATAR_COLORS[i];
+                      e.currentTarget.parentElement.innerHTML = `<span style="color:#fff;font-size:13px;font-weight:700;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;width:100%;height:100%">${t.avatar}</span>`;
+                    }}
+                  />
+                </div>
+              ))}
               <div onClick={handlePlay} style={{
                 width: "44px", height: "44px", borderRadius: "50%",
                 border: `2px solid ${isPlaying ? "#7c3aed" : "#d1d5db"}`,
@@ -568,60 +664,36 @@ function TestimonialsContactSection() {
                 <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "24px" }}>Please contact us in case of any query.</p>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-
-                  {/* Name */}
                   <div>
-                    <input
-                      type="text" placeholder="Your name"
-                      value={formData.name}
+                    <input type="text" placeholder="Your name" value={formData.name}
                       onChange={e => handleChange("name", e.target.value)}
                       onBlur={() => validate("name", formData.name)}
                       onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      style={inputStyle("name")}
-                    />
+                      style={inputStyle("name")} />
                     <ErrorMsg field="name" />
                   </div>
-
-                  {/* Email */}
                   <div>
-                    <input
-                      type="email" placeholder="Your email address"
-                      value={formData.email}
+                    <input type="email" placeholder="Your email address" value={formData.email}
                       onChange={e => handleChange("email", e.target.value)}
                       onBlur={() => validate("email", formData.email)}
                       onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      style={inputStyle("email")}
-                    />
+                      style={inputStyle("email")} />
                     <ErrorMsg field="email" />
                   </div>
-
-                  {/* Phone */}
                   <div>
-                    <input
-                      type="tel" placeholder="Your phone number (10 digits)"
-                      value={formData.phone}
+                    <input type="tel" placeholder="Your phone number (10 digits)" value={formData.phone}
                       onChange={e => handleChange("phone", e.target.value)}
                       onBlur={() => validate("phone", formData.phone)}
                       onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      style={inputStyle("phone")}
-                    />
+                      style={inputStyle("phone")} />
                     <ErrorMsg field="phone" />
                   </div>
-
-                  {/* Where you knew about us */}
                   <div>
                     <div style={{ position: "relative" }}>
-                      <select
-                        value={formData.source}
+                      <select value={formData.source}
                         onChange={e => handleChange("source", e.target.value)}
                         onBlur={() => validate("source", formData.source)}
-                        style={{
-                          ...inputStyle("source"),
-                          appearance: "none", WebkitAppearance: "none",
-                          cursor: "pointer",
-                          color: formData.source ? "#374151" : "#9ca3af",
-                        }}
-                      >
+                        style={{ ...inputStyle("source"), appearance: "none", WebkitAppearance: "none", cursor: "pointer", color: formData.source ? "#374151" : "#9ca3af" }}>
                         <option value="">Where did you hear about us?</option>
                         <option value="Instagram">Instagram</option>
                         <option value="Facebook">Facebook</option>
@@ -640,34 +712,19 @@ function TestimonialsContactSection() {
                     </div>
                     <ErrorMsg field="source" />
                   </div>
-
-                  {/* Purpose of Joining */}
                   <div>
-                    <textarea
-                      placeholder="Purpose of joining (min 10 characters)"
-                      value={formData.purpose}
+                    <textarea placeholder="Purpose of joining (min 10 characters)" value={formData.purpose}
                       onChange={e => handleChange("purpose", e.target.value)}
                       onBlur={() => validate("purpose", formData.purpose)}
                       onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
                       rows={3}
-                      style={{
-                        ...inputStyle("purpose"),
-                        resize: "none",
-                        lineHeight: 1.6,
-                      }}
-                    />
+                      style={{ ...inputStyle("purpose"), resize: "none", lineHeight: 1.6 }} />
                     <ErrorMsg field="purpose" />
                   </div>
-
-                  {/* Form-level error */}
                   {errors._form && (
                     <p style={{ fontSize: "12px", color: "#ef4444", fontFamily: "'Outfit',sans-serif", textAlign: "center" }}>{errors._form}</p>
                   )}
-
-                  {/* Submit */}
-                  <button
-                    onClick={handleSubmit}
-                    disabled={submitting}
+                  <button onClick={handleSubmit} disabled={submitting}
                     style={{
                       background: submitting ? "#a78bfa" : "linear-gradient(135deg,#7c3aed,#5b21b6)",
                       color: "#fff", border: "none", borderRadius: "50px",
@@ -679,8 +736,7 @@ function TestimonialsContactSection() {
                       transition: "all 0.22s", marginTop: "4px",
                     }}
                     onMouseEnter={e => { if (!submitting) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.48)"; }}}
-                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)"; }}
-                  >
+                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)"; }}>
                     {submitting ? (
                       <>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ animation: "spin 1s linear infinite" }}>
@@ -696,7 +752,6 @@ function TestimonialsContactSection() {
                       </>
                     )}
                   </button>
-
                 </div>
               </>
             )}
@@ -732,6 +787,7 @@ export default function CampusPage() {
         @keyframes capHat    { 0%,100%{transform:rotate(-5deg) translateY(0px)} 50%{transform:rotate(5deg) translateY(-6px)} }
         @keyframes tesFadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spinRingAnim { to{transform:rotate(360deg)} }
+        @keyframes spin { to{transform:rotate(360deg)} }
 
         .testi-slide { animation: tesFadeUp 0.38s cubic-bezier(0.22,1,0.36,1) forwards; }
 
@@ -770,7 +826,7 @@ export default function CampusPage() {
         /* ══ TABLET 769–900px ══ */
         @media (max-width:900px) {
           .campus-cards-grid { grid-template-columns:1fr 1fr !important; }
-          .opp-inner         { flex-direction:column !important; }
+          .opp-inner         { flex-direction:column !important; height:auto !important; }
           .opp-left          { flex:unset !important; width:100% !important; min-height:280px !important; }
           .opp-right         { flex:unset !important; width:100% !important; }
           .tc-inner          { flex-direction:column !important; }
@@ -778,99 +834,90 @@ export default function CampusPage() {
         }
 
         /* ══ MOBILE ≤ 768px ══ */
-        /* ══ MOBILE ≤ 768px ══ */
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
 
-  .hero-badge {
-    transform: scale(0.72) !important;
-    transform-origin: right center !important;
-    padding: 6px 10px !important;
-  }
+          .hero-badge {
+            transform: scale(0.72) !important;
+            transform-origin: right center !important;
+            padding: 6px 10px !important;
+          }
 
-  /* keep left badge anchored left */
-  div[style*="bottom: 40%"] .hero-badge,
-  .hero-badge:last-of-type {
-    transform-origin: left center !important;
-  }
+          div[style*="bottom: 40%"] .hero-badge,
+          .hero-badge:last-of-type {
+            transform-origin: left center !important;
+          }
 
-  .campus-inner {
-    flex-direction: column !important;
-    align-items: center !important;
-    padding: 10px 20px 22px !important;
-    text-align: center !important;
-    gap: 20px !important;
-  }
+          .campus-inner {
+            flex-direction: column !important;
+            align-items: center !important;
+            padding: 10px 20px 22px !important;
+            text-align: center !important;
+            gap: 20px !important;
+          }
 
-  /* 1st — Title + arc + subtitle */
-  .campus-left {
-    order: 1 !important;
-    width: 90% !important;
-    max-width: 100% !important;
-    padding: 0 8px !important;
-  }
+          .campus-left {
+            order: 1 !important;
+            width: 90% !important;
+            max-width: 100% !important;
+            padding: 0 8px !important;
+          }
 
-  /* 2nd — Image */
-  .campus-right {
-    order: 2 !important;
-    width: 100% !important;
-    height: 220px !important;
-  }
+          .campus-right {
+            order: 2 !important;
+            width: 100% !important;
+            height: 220px !important;
+          }
 
-  /* 3rd — Paragraph + button */
-  .campus-bottom {
-    order: 3 !important;
-  }
+          .campus-bottom {
+            order: 3 !important;
+          }
 
-  /* Hide desktop paragraph + button */
-  .campus-desc-desktop { display: none !important; }
-  .campus-btn-desktop  { display: none !important; }
+          .campus-desc-desktop { display: none !important; }
+          .campus-btn-desktop  { display: none !important; }
 
-  /* Hide mobile bottom on desktop */
-  .campus-right img { height: 200px !important; }
-  .campus-right > div:first-child { width: 60% !important; max-width: 220px !important; bottom: -20px !important; }
-  .campus-right > div[style*="Lifetime"],
-  .campus-right > div[style*="Courses"],
-  .campus-right > div[style*="Active"] { display: none !important; }
+          .campus-right img { height: 200px !important; }
+          .campus-right > div:first-child { width: 60% !important; max-width: 220px !important; bottom: -20px !important; }
+          .campus-right > div[style*="Lifetime"],
+          .campus-right > div[style*="Courses"],
+          .campus-right > div[style*="Active"] { display: none !important; }
 
-  .campus-cards-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
-  .campus-cards-grid > div { padding: 24px 18px !important; border-radius: 14px !important; }
-  .opp-inner { flex-direction: column !important; }
-  .opp-left  { flex: unset !important; width: 100% !important; min-height: 240px !important; padding: 32px 20px !important; }
-  .opp-right { flex: unset !important; width: 100% !important; padding: 32px 20px !important; gap: 28px !important; }
-  .opp-bg-design { height: 90px !important; opacity: 0.5 !important; }
-  .tc-inner { flex-direction: column !important; gap: 32px !important; }
-  .tc-form  { flex: 0 0 auto !important; width: 100% !important; max-width: 100% !important; }
-  .nl-inner { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
-  .nl-form  { width: 100% !important; flex-direction: column !important; gap: 10px !important; }
-  .nl-form input  { width: 100% !important; }
-  .nl-form button { width: 100% !important; justify-content: center !important; }
-}
+          .campus-cards-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+          .campus-cards-grid > div { padding: 24px 18px !important; border-radius: 14px !important; }
 
-/* Hide mobile-bottom on desktop */
-@media (min-width: 769px) {
-  .campus-bottom { display: none !important; }
-}
-  
-/* ══ SMALL MOBILE ≤ 480px ══ */
-@media (max-width: 480px) {
-  .campus-title    { font-size: 2.8rem !important; }
-  .campus-subtitle { font-size: 2.4rem !important; }
-  .campus-right    { height: 190px !important; }
-  .campus-right img { height: 170px !important; }
-  .campus-right > div:first-child { width: 55% !important; max-width: 180px !important; }
-}
+          /* IMPORTANT: Do NOT style .opp-* on mobile — the mobile branch
+             renders with mob-opp-* classNames instead to avoid conflicts */
 
-/* ══ VERY SMALL ≤ 360px ══ */
-@media (max-width: 360px) {
-  .campus-inner  { padding: 70px 14px 28px !important; }
-  .campus-title  { font-size: 1.5rem !important; }
-  .campus-subtitle { font-size: 1.2rem !important; }
-  .campus-right  { height: 160px !important; }
-  .campus-right img { height: 145px !important; }
-  .campus-right > div:first-child { width: 50% !important; max-width: 155px !important; }
-}
+          .tc-inner { flex-direction: column !important; gap: 32px !important; }
+          .tc-form  { flex: 0 0 auto !important; width: 100% !important; max-width: 100% !important; }
+          .nl-inner { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+          .nl-form  { width: 100% !important; flex-direction: column !important; gap: 10px !important; }
+          .nl-form input  { width: 100% !important; }
+          .nl-form button { width: 100% !important; justify-content: center !important; }
+        }
 
-        
+        /* Hide mobile-bottom on desktop */
+        @media (min-width: 769px) {
+          .campus-bottom { display: none !important; }
+        }
+
+        /* ══ SMALL MOBILE ≤ 480px ══ */
+        @media (max-width: 480px) {
+          .campus-title    { font-size: 2.8rem !important; }
+          .campus-subtitle { font-size: 2.4rem !important; }
+          .campus-right    { height: 190px !important; }
+          .campus-right img { height: 170px !important; }
+          .campus-right > div:first-child { width: 55% !important; max-width: 180px !important; }
+        }
+
+        /* ══ VERY SMALL ≤ 360px ══ */
+        @media (max-width: 360px) {
+          .campus-inner  { padding: 70px 14px 28px !important; }
+          .campus-title  { font-size: 1.5rem !important; }
+          .campus-subtitle { font-size: 1.2rem !important; }
+          .campus-right  { height: 160px !important; }
+          .campus-right img { height: 145px !important; }
+          .campus-right > div:first-child { width: 50% !important; max-width: 155px !important; }
+        }
       `}</style>
 
       <CampusHero onJoinClick={handleJoinClick} />

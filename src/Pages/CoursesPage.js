@@ -153,8 +153,8 @@ function CourseHero({ course }) {
             src={`${PUB}/${course.heroImage || "students.jpg"}`}
             alt={course.title}
             style={{
-              maxHeight: "clamp(240px,38vw,420px)",
-              maxWidth: "100%", objectFit: "contain", marginBottom : "70px",
+              maxHeight: "clamp(240px,58vw,390px)",
+              maxWidth: "150%", objectFit: "contain", marginBottom : "70px",
               objectPosition: "bottom center", display: "block",
               filter: `drop-shadow(0 16px 40px ${accentColor}33)`,
               borderRadius: "20px",
@@ -570,8 +570,8 @@ export default function CoursesPage() {
         }
         @media (max-width: 768px) {
           .hero-flex { flex-direction: column !important; align-items: center !important; gap: 24px !important; }
-          .hero-img-wrap { width: 100% !important; min-height: 200px !important; justify-content: center !important; }
-          .hero-img-wrap img { max-height: 220px !important; }
+          .hero-img-wrap { width: 100% !important; min-height: 200px !important; justify-content: center !important; marginTop : 30px; }
+          .hero-img-wrap img { max-height: 220px !important; marginTop : 30px; }
           .hero-form-wrap { flex: 0 0 auto !important; width: 100% !important; max-width: 100% !important; margin-bottom: 24px !important; }
         }
         @media (max-width: 480px) {
