@@ -471,7 +471,7 @@ export default function ChatBot() {
 
       <div className="cb-root">
         {/* ── Floating Button ── */}
-        <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+        <a href="/Skillra/chatbot" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
         <button
           className={`cb-fab ${open ? "open" : ""}`}
           onClick={() => setOpen((v) => !v)}

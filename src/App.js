@@ -18,7 +18,7 @@ import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
   return (
-    <BrowserRouter basename="/Skillra-Official">
+    <BrowserRouter>
       <ScrollToTop />
        <NavBar />
       <Routes>

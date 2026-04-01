@@ -421,6 +421,7 @@ function AboutHero({ onCtaClick }) {
             At Skillra, we don't just teach skills — we help you turn them into real careers. Our Placement Assistance Program is designed to help students land internships and jobs with confidence.
           </p>
           <div className="about-btn-desktop">
+            <a href="/placement" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
             <button className="about-cta-btn" onClick={onCtaClick}
               style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
@@ -428,6 +429,7 @@ function AboutHero({ onCtaClick }) {
               Get Placement Assistance
               <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
+            </a>
           </div>
         </div>
 

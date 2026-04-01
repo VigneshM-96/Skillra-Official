@@ -118,7 +118,8 @@ function CampusHero({ onJoinClick }) {
       Join a community of students who are <strong style={{ color: "#1a0640", fontWeight: 700 }}>building skills</strong>, leadership experience, and <span style={{ color: "#ff6b35", fontWeight: 600 }}>career readiness</span> beyond the classroom.
     </p>
     <div className="cp-v4 campus-btn-desktop">
-      <a href="/Skillra-Official/campus" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+      <a href="/campus" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+      
       <button className="campus-cta-btn" onClick={onJoinClick} style={{ background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "15px 32px", fontSize: "clamp(13px,1.3vw,14px)", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif", display: "inline-flex", alignItems: "center", gap: "10px", boxShadow: "0 6px 24px rgba(124,58,237,0.38)", letterSpacing: "0.3px", transition: "all 0.22s", position: "relative", overflow: "hidden" }}
         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.55)"; }}
         onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0) scale(1)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(124,58,237,0.38)"; }}>

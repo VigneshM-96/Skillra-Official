@@ -158,8 +158,8 @@ paddingTop: "calc(80px + 70px)", position: "relative", overflow: "hidden",
               <p key={i} className="body-text" style={{
                 lineHeight: 1.85, color: "#4b4466",
                 fontFamily: "'Outfit',sans-serif", fontWeight: 400, margin: 0,
-                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(16px)",
-                transition: `opacity 0.6s ease ${0.25 + i * 0.1}s, transform 0.6s ease ${0.25 + i * 0.1}s`,
+                opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(16px)", textAlign: "justify",
+                transition: `opacity 0.6s ease ${0.25 + i * 0.1}s, transform 0.6s ease ${0.25 + i * 0.1}s`
               }}>
                 {para}
               </p>
@@ -692,7 +692,7 @@ function NewsletterSection() {
               </div>
 
               {/* Submit button */}
-              <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+              <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
               <button
                 onClick={handleSubscribe}
                 disabled={subscribing || locked}

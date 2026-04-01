@@ -315,7 +315,7 @@ function BooksHero({ onBuyClick }) {
   const PARA = "Prepare smarter with the Skillra CPC Exam Practice Book, designed to help medical coding students build strong fundamentals, practice extensively, and approach the CPC exam with confidence.";
 
   const BuyBtn = ({ style={} }) => (
-    <a href="/Skillra-Official/books" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+    <a href="/books" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
     <button onClick={onBuyClick} className="books-cta-btn" style={{
       background:"#fff",color:"#6d28d9",border:"none",
       borderRadius:"50px",padding:"14px 28px",fontSize:"clamp(13px,1.4vw,14.5px)",

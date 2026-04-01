@@ -337,6 +337,7 @@ const handleSubmit = async () => {
                   </p>
                 )}
 
+                <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
                 <button
                   className="consult-submit"
                   onClick={handleSubmit}
@@ -349,6 +350,7 @@ const handleSubmit = async () => {
                     </svg>
                   )}
                 </button>
+                </a>
               </>
             )}
           </div>
@@ -412,6 +414,7 @@ const handleSubmit = async () => {
 
           {/* Desktop only — button */}
           <div className="cr-v4 career-btn-desktop">
+             <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
             <button className="career-cta-btn" onClick={() => setShowPopup(true)} style={{
               background: "#7c3aed", color: "#fff", border: "none",
               borderRadius: "50px", padding: "14px 32px",
@@ -429,6 +432,7 @@ const handleSubmit = async () => {
                 <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
+            </a>
           </div>
         </div>
 

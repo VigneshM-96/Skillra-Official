@@ -31,7 +31,7 @@ const COMPANIES = [
 
 const SLIDES = [
   {
-    img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&auto=format&fit=crop&crop=top",
+    img: `${PUB}/landingPageFrontImg.png` ,
     // 👩‍⚕️ Female doctor/nurse in medical setting — white coat, slight purple-cool tone
     bg: "linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)",
     shadow: "rgba(79,28,200,.55)",
@@ -60,21 +60,21 @@ const COURSES_DATA = {
     courses: [
       {
         id: "ai-medical-coding",
-        title: "AI Medical Coding",
+        title: "AI Medical Coding Course",
         description: "Get certified and learn AI-powered coding skills with real case studies.",
         image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop",
         // Doctor reviewing digital patient records / medical data on screen
       },
       {
         id: "ai-medical-billing",
-        title: "AI Medical Billing",
+        title: "AI Medical Billing Course",
         description: "Become a certified AI Medical Billing professional with job guarantee.",
         image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format&fit=crop",
         // Medical billing / finance paperwork and calculator
       },
       {
         id: "ai-medical-scribing",
-        title: "AI Medical Scribing",
+        title: "AI Medical Scribing Course",
         description: "Learn AI-based medical scribing and clinical documentation.",
         image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=600&auto=format&fit=crop",
         // Medical professional writing/documenting clinical notes
@@ -89,28 +89,28 @@ const COURSES_DATA = {
     courses: [
       {
         id: "full-stack",
-        title: "Full Stack Course",
+        title: "MERN / MEAN Stack Course",
         description: "Become a full-stack web developer with our MERN and MEAN Stack Course.",
         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop",
         // Developer coding on laptop with multiple screens
       },
       {
   id: "ai-machine-learning",
-  title: "AI & Machine Learning",
+  title: "AI & Machine Learning Course",
   description: "Master Python, ML algorithms, and deep learning to build intelligent real-world AI applications.",
   image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&auto=format&fit=crop",
   // AI neural network / machine learning concept with glowing tech background
 },
       {
         id: "data-analytics",
-        title: "Data Analytics",
+        title: "Data Analytics Course",
         description: "Join our Data Analytics Course for high-demand data careers.",
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
         // Data charts and analytics dashboard
       },
       {
         id: "ui-ux-design",
-        title: "UI/UX Design",
+        title: "UI/UX Design Course",
         description: "Join our UI/UX Designing Course to build professional websites.",
         image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop",
         // Designer working on UI wireframes / design mockups
@@ -126,7 +126,7 @@ const COURSES_DATA = {
     courses: [
       {
         id: "sap-development",
-        title: "SAP Development",
+        title: "SAP Development Course",
         description: "Master SAP ABAP and become a certified SAP developer.",
         image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&auto=format&fit=crop",
         // ERP / enterprise software dashboard on screen
@@ -148,11 +148,18 @@ const COURSES_DATA = {
   courses: [
     {
       id: "personality-development",
-      title: "Personality Development",
+      title: "Personality Development Course",
       description: "Build confidence, communication skills, and a winning mindset for personal and professional growth.",
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&auto=format&fit=crop",
       // Group of confident professionals in a training/workshop setting
     },
+    {
+  id: "digital-marketing",
+  title: "Digital Marketing Course",
+  description: "Master SEO, social media, content strategy, and paid advertising to grow brands and drive results in the digital world.",
+  image: "https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=600&auto=format&fit=crop",
+  // Digital marketing professionals analyzing campaign metrics and strategy
+},
   ],
 },
 };
@@ -428,7 +435,7 @@ function SectionLabel({ text }) {
 
 /* ═══════════════ HERO ═══════════════ */
 const StarRating = ({ rating=4.9, max=5 }) => (
-  <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+  <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
   <span style={{ color:"#f5a623", fontSize:"15px", letterSpacing:"2px" }}>
     {Array.from({length:max},(_,i)=>{
       const filled=i+1<=Math.floor(rating), half=!filled&&i<rating;
@@ -506,7 +513,7 @@ function ReviewAvatars({ centered = false, onViewAll }) {
         <StarRating rating={4.9} />
         <div style={{ fontSize: "11px", color: "#9270c0", marginTop: "2px" }}>
           ({TOTAL_COUNT} Reviews){" "}
-          <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+          <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
           <span style={{ color: "#7c3aed", fontWeight: 700 }}>View all →</span>
           </a>
         </div>
@@ -544,7 +551,7 @@ function HeroSection({ scrollRef, onCounselorClick, onViewReviews }) {
             ))}
           </div>
           <div className="v4 hero-cta-desktop" style={{ display:"flex", alignItems:"center", gap:"20px", flexWrap:"wrap" }}>
-            <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+            <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
   <button
   className="cta-btn"
   onClick={() => {
@@ -669,7 +676,7 @@ function AboutSection() {
             Skillra is a leading training institute specializing in <strong style={{ color:"#1e3a8a" }}>AI Medical Coding</strong> &amp; <strong style={{ color:"#1e3a8a" }}>Medical Billing</strong>, <strong style={{ color:"#c2410c" }}>IT development</strong>, <strong style={{ color:"#14532d" }}>Finance training</strong>, and Career oriented programs.
              We focus on bridging the gap between academic learning and industry expectations through practical, real-world training. Our expert mentors guide students with hands-on experience, industry projects, and job-ready skill development. With structured learning pathways, live mentor interactions, and outcome-driven practical training, Skillra empowers learners to outperform industry expectations with confidence and credibility. As a trusted upskilling institute, we prepare students for high-growth job roles in top companies. Our commitment is to ensure every learner moves from classroom to career with ease. Skillra, you learn faster, grow smarter, and succeed with industry-recognized skills.
           </p>
-          <a href="/Skillra-Official/about" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+          <a href="/Skillra/about" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
           <button onClick={() => navigate("/about")} style={{ display:"flex", alignItems:"center", gap:"10px", background:"#f05a00", color:"#fff", border:"none", borderRadius:"50px", padding:"13px 30px", fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:"1rem", cursor:"pointer", boxShadow:"0 4px 18px rgba(240,90,0,0.28)", transition:"all 0.25s" }}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(240,90,0,0.38)";}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 18px rgba(240,90,0,0.28)";}}>
@@ -867,24 +874,25 @@ function CoursesSection() {
             lineHeight: 1.08,
             marginBottom: "8px",
           }}>
-            Our{" "}
+            Build Your{" "}
             <em style={{
               fontStyle: "italic",
               color: TAB_META[activeTab].active,
               transition: "color .3s",
             }}>
-              interactive
-            </em>{" "}Course
+              Career 
+            </em> {" "} with High-Demand Professional Courses
           </h2>
           <p style={{
             fontSize: "clamp(13px,1.3vw,15px)",
             color: "#6b5a9e",
             fontFamily: "'Outfit',sans-serif",
-            maxWidth: "400px",
+            maxWidth: "1400px",
             lineHeight: 1.7,
             margin: "0 auto",
           }}>
-            Excellent courses, intellectual knowledge and industry-ready content.
+           Explore our most popular career-oriented programs designed for students and professionals.
+            Each course includes hands-on training, tools, and certification support for job readiness.
           </p>
           {!isMobile && <HashtagBubblesDesktop />}
         </div>
@@ -1197,7 +1205,7 @@ function CoursesSection() {
                       {course.description}
                     </p>
 
-                    <a href={`/Skillra-Official/courses/${course.id}`} style={{ textDecoration: "none" }}>
+                    <a href={`/courses/${course.id}`} style={{ textDecoration: "none" }}>
                       <button
                         className="know-more-btn"
                         style={{
@@ -1335,7 +1343,7 @@ function CollegesSection() {
             margin: "10px auto 0",
             lineHeight: 1.7,
           }}>
-            We proudly collaborate with 50+ leading institutions across South India
+            We proudly collaborate with 5+ leading institutions across South India
             to deliver industry-ready education directly on campus.
           </p>
         </div>
@@ -1432,9 +1440,8 @@ function CollegesSection() {
           transition: "opacity 0.8s ease 0.4s",
         }}>
           {[
-            { num:"50+",   label:"Partner Colleges"       },
-            { num:"5000+", label:"Campus Students"        },
-            { num:"15+",   label:"Cities Covered"         },
+            { num:"5+",   label:"Partner Colleges"       },
+            { num:"10+",   label:"Courses Covered"         },
             { num:"100%",  label:"Placement from Campus"  },
           ].map((s, i) => (
             <div key={i} style={{
@@ -1576,7 +1583,7 @@ function BlogCard({ post, inView, delay }) {
         </p>
  
         {/* Read more — navigates to BlogPage */}
-        <a href="/Skillra-Official/blog" style={{ textDecoration: "none" }}>
+        <a href="/Skillra/blog" style={{ textDecoration: "none" }}>
         <button
           onClick={() => navigate(`/blog`)}
           style={{
@@ -1885,7 +1892,7 @@ function ServiceCard({ card, delay, inView }) {
 
         {/* Learn More button */}
         
-        <a href={`/Skillra-Official${ROUTES[card.id]}`} style={{ textDecoration: "none" }}>
+        <a href={`/Skillra${ROUTES[card.id]}`} style={{ textDecoration: "none" }}>
   <div
     onClick={e => { e.stopPropagation(); navigate(ROUTES[card.id]); }}
     style={{
@@ -2699,7 +2706,7 @@ function NewsletterSection() {
               </div>
 
               {/* Submit button */}
-              <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+              <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
               <button
                 onClick={handleSubscribe}
                 disabled={subscribing || locked}
@@ -2773,6 +2780,7 @@ function NewsletterSection() {
     </div>
   );
 }
+
 
 /* ═══════════════ PROMO BANNER ═══════════════ */
 function PromoBanner({ onClose }) {

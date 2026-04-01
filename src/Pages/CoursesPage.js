@@ -263,7 +263,7 @@ function CourseHero({ course }) {
                     </p>
                   )}
                 </div>
-
+                <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
                 <button
                   onClick={handleSubmit}
                   style={{
@@ -283,6 +283,7 @@ function CourseHero({ course }) {
                     <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
+                </a>
               </div>
             </>
           )}
@@ -325,7 +326,7 @@ function CourseDetailSection({ course }) {
           {/* Meta info */}
           <div style={{ display: "flex", alignItems: "center", gap: "clamp(12px,3%,28px)", flexWrap: "wrap" }}>
             {[
-              { icon: "📋", label: `Lessons: ${course.lessons}` },
+            
               { icon: "🕐", label: course.timing },
               { icon: "👥", label: `Students: ${course.students}` },
               { icon: "⏱️", label: `Duration: ${course.duration}` },
