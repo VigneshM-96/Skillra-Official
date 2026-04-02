@@ -23,6 +23,7 @@ jobs:
       - name: Build React app
         env:
           REACT_APP_OPENROUTER_API_KEY: ${{ secrets.REACT_APP_OPENROUTER_API_KEY }}
+          CI: false
         run: npm run build
 
       - name: Deploy to GitHub Pages
