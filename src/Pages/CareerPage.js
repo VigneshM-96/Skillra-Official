@@ -132,16 +132,12 @@ const handleSubmit = async () => {
           .career-title { text-align: center !important; }
 
           .career-hero-right {
-            width: 100% !important;
-            flex: unset !important;
-            min-height: unset !important;
-            height: auto !important;
-          }
-
-          .career-hero-img {
-            max-height: 440px !important;
-            width: 90% !important;
-          }
+  order: 2 !important;
+  width: 100% !important;
+  min-height: 280px !important;   /* was 200px */
+  max-height: 560px !important;   /* was 3560px (typo?) */
+}
+.career-hero-right img { max-height: 350px !important; }  /* was 400px */
 
           .career-hero-inner {
             padding-top: 88px !important;
@@ -1155,7 +1151,7 @@ export default function CareerPage() {
         /* Tablet */
         @media(max-width:1024px) and (min-width:769px){
           .career-hero-inner { gap:20px !important; padding:50px clamp(16px,4%,40px) 0 !important; }
-          .career-hero-left  { width:clamp(260px,44%,420px) !important; }
+          .career-hero-left  { width:clamp(360px,44%,420px) !important; }
         }
 
         /* Mobile ≤ 768px — same 3-order pattern as CampusPage */
@@ -1179,12 +1175,12 @@ export default function CareerPage() {
 
           /* 2nd — image */
           .career-hero-right {
-            order: 2 !important;
-            width: 100% !important;
-            min-height: 200px !important;
-            max-height: 360px !important;
-          }
-          .career-hero-right img { max-height: 400px !important; }
+  order: 2 !important;
+  width: 100% !important;
+  min-height: 280px !important;   /* was 200px */
+  max-height: 560px !important;   /* was 3560px (typo?) */
+}
+.career-hero-right img { max-height: 520px !important; }  /* was 400px */
 
           /* 3rd — desc + button */
           .career-bottom { order: 3 !important; }

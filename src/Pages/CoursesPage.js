@@ -6,7 +6,7 @@ import { COURSES, nameToSlug } from "../data/CoursesData";
 import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
-
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 /* ══════════════════════════════════════════════════════
    INTERSECTION OBSERVER HOOK
 ══════════════════════════════════════════════════════ */
@@ -57,9 +57,6 @@ function StarRating({ rating = 4.7, color = "#f59e0b" }) {
   );
 }
 
-/* ══════════════════════════════════════════════════════
-   SECTION 1 — HERO
-══════════════════════════════════════════════════════ */
 function CourseHero({ course }) {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "" });
   const [errors, setErrors]     = useState({});
@@ -91,18 +88,50 @@ function CourseHero({ course }) {
     validate(field, formData[field]);
   };
 
-  const handleSubmit = () => {
-    setTouched({ name:true, email:true, phone:true, course:true });
-    const newErrors = {};
-    let hasError = false;
-    Object.keys(validators).forEach(field => {
-      const err = validators[field](formData[field]);
-      newErrors[field] = err;
-      if (err) hasError = true;
+  const handleSubmit = async () => {
+  let hasError = false;
+  const newTouched = { name: true, email: true, phone: true, course: true };
+  setTouched(newTouched);
+
+  ["name", "email", "phone", "course"].forEach(f => {
+    if (validate(f, formData[f])) hasError = true;
+  });
+  if (hasError) return;
+
+  setSubmitted("loading");
+
+  try {
+    const now = new Date();
+    const date = now.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const time = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
+
+    await fetch(SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({
+        type: "brochure",
+        date,
+        time,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone,
+        course: formData.course,
+      }),
     });
-    setErrors(newErrors);
-    if (!hasError) setSubmitted(true);
-  };
+
+    const link = document.createElement("a");
+    link.href = `${PUB}/brochure.pdf`;
+    link.download = "Skillra_Brochure.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setSubmitted(true);
+  } catch {
+    setSubmitted(false);
+    alert("Something went wrong. Please try again.");
+  }
+};
 
   const borderColor = (field) => {
     if (!touched[field]) return "#e5e7eb";
@@ -154,7 +183,7 @@ function CourseHero({ course }) {
             alt={course.title}
             style={{
               maxHeight: "clamp(240px,58vw,390px)",
-              maxWidth: "150%", objectFit: "contain", marginBottom : "70px",
+              maxWidth: "150%", objectFit: "contain", marginBottom: "70px",
               objectPosition: "bottom center", display: "block",
               filter: `drop-shadow(0 16px 40px ${accentColor}33)`,
               borderRadius: "20px",
@@ -175,8 +204,8 @@ function CourseHero({ course }) {
           {submitted ? (
             <div style={{ textAlign: "center", padding: "28px 0" }}>
               <div style={{ fontSize: "40px", marginBottom: "12px" }}>🎉</div>
-              <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", marginBottom: "8px" }}>Brochure Sent!</h3>
-              <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit', sans-serif" }}>Check your email shortly.</p>
+              <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", marginBottom: "8px" }}>Brochure Downloaded!</h3>
+              <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit', sans-serif" }}>Read. Learnt. Connect.</p>
               <button onClick={() => { setSubmitted(false); setFormData({ name:"",email:"",phone:"",course:"" }); setErrors({}); setTouched({}); }}
                 style={{ marginTop: "18px", background: accentColor, color: "#fff", border: "none", borderRadius: "50px", padding: "10px 24px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}>
                 Submit Again
@@ -263,36 +292,52 @@ function CourseHero({ course }) {
                     </p>
                   )}
                 </div>
-                <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-                <button
-                  onClick={handleSubmit}
-                  style={{
-                    background: accentColor, color: "#fff", border: "none",
-                    borderRadius: "50px", padding: "13px 24px",
-                    fontSize: "14px", fontWeight: 700, cursor: "pointer",
-                    fontFamily: "'Outfit', sans-serif",
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                    boxShadow: `0 6px 20px ${accentColor}44`,
-                    transition: "all 0.22s", marginTop: "4px",
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 12px 30px ${accentColor}66`; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 6px 20px ${accentColor}44`; }}
-                >
-                  Download Brochure
-                  <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-                    <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                </a>
+
+               {/* Submit button */}
+<button
+  onClick={handleSubmit}
+  disabled={submitted === "loading"}
+  style={{
+    background: submitted === "loading" ? "#a78bfa" : accentColor,
+    color: "#fff", border: "none",
+    borderRadius: "50px", padding: "13px 24px",
+    fontSize: "14px", fontWeight: 700,
+    cursor: submitted === "loading" ? "not-allowed" : "pointer",
+    fontFamily: "'Outfit', sans-serif",
+    display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+    boxShadow: `0 6px 20px ${accentColor}44`,
+    transition: "all 0.22s", marginTop: "4px",
+    width: "100%", opacity: submitted === "loading" ? 0.8 : 1,
+  }}
+  onMouseEnter={e => { if (submitted !== "loading") { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 12px 30px ${accentColor}66`; }}}
+  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 6px 20px ${accentColor}44`; }}
+>
+  {submitted === "loading" ? (
+    <>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ animation: "spin 1s linear infinite" }}>
+        <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3"/>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+      </svg>
+      Downloading...
+    </>
+  ) : (
+    <>
+      Download Brochure
+      <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+        <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </>
+  )}
+</button>
               </div>
             </>
           )}
         </div>
+
       </div>
     </section>
   );
 }
-
 /* ══════════════════════════════════════════════════════
    SECTION 2 — COURSE DETAIL TABS
 ══════════════════════════════════════════════════════ */

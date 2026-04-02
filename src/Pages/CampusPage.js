@@ -151,8 +151,19 @@ function CampusHero({ onJoinClick }) {
             </svg>
           </div>
           <img src={`${PUB}/campusboy.png`} alt="Campus Student"
-            style={{ position: "relative", zIndex: 5, height: "92%", width: "auto", maxWidth: "100%", objectFit: "contain", objectPosition: "bottom center", display: "block", alignSelf: "flex-end", filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" }}
-          />
+  style={{ 
+    position: "relative", 
+    zIndex: 5, 
+    height: "clamp(200px, 60vw, 550px)",
+    width: "auto", 
+    maxWidth: "100%", 
+    objectFit: "contain", 
+    objectPosition: "bottom center", 
+    display: "block", 
+    alignSelf: "flex-end", 
+    filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" 
+  }}
+/>
           <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="50+ Workshops" style={{ top: "12%", right: "2%" }} delay={600} />
           <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="20+ Colleges" style={{ bottom: "24%", right: "2%" }} delay={800} />
           <ActiveStudentsBadge className="hero-badge" style={{ bottom: "40%", left: "2%" }} delay={1000} />
@@ -855,6 +866,12 @@ export default function CampusPage() {
             gap: 20px !important;
           }
 
+          .campus-title    { font-size: 2.8rem !important; }
+          .campus-subtitle { font-size: 2.2rem !important; }
+          .campus-right     { height: 30px !important; }
+          .campus-right img { height: 80px !important; }
+          .campus-right > div:first-child { width: 6% !important; max-width: 20px !important; }
+
           .campus-left {
             order: 1 !important;
             width: 90% !important;
@@ -865,7 +882,7 @@ export default function CampusPage() {
           .campus-right {
             order: 2 !important;
             width: 100% !important;
-            height: 220px !important;
+            height: 20px !important;
           }
 
           .campus-bottom {
@@ -876,7 +893,7 @@ export default function CampusPage() {
           .campus-btn-desktop  { display: none !important; }
 
           .campus-right img { height: 200px !important; }
-          .campus-right > div:first-child { width: 60% !important; max-width: 220px !important; bottom: -20px !important; }
+          .campus-right > div:first-child { width: 75% !important; max-width: 380px !important; bottom: -20px !important; }
           .campus-right > div[style*="Lifetime"],
           .campus-right > div[style*="Courses"],
           .campus-right > div[style*="Active"] { display: none !important; }
