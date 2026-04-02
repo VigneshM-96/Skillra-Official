@@ -38,7 +38,7 @@ const SLIDES = [
     ring: "rgba(124,58,237,.30)"
   },
   {
-    img: `${PUB}/HomeImages/TechnologyHero.png`,
+    img: `${PUB}/HomeImages/TechHomeHero.png`,
     // 👨‍💻 Male developer/tech professional with screens/code background — warm orange tone
     bg: "linear-gradient(145deg,#c2410c,#ea580c,#9a3412)",
     shadow: "rgba(194,65,12,.55)",
