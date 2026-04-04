@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const NAV_LINKS = [
-  { label: "About Us",        path: "/about us"     },
+  { label: "About Us",        path: "/about-us"  },
   { label: "Course Offered",  path: "/courses",   hasMega: true },
   { label: "Career Guidance", path: "/career"    },
   { label: "Placement",       path: "/placement" },
   { label: "Campus",          path: "/campus"    },
   { label: "Books",           path: "/books"     },
   { label: "Blogs",           path: "/blog"      },
-  { label: "Contact Us",      path: "/contact us"   },
+  { label: "Contact Us",      path: "/contact-us" },
 ];
 
 const MEGA_MENU = [
@@ -17,36 +17,35 @@ const MEGA_MENU = [
     category: "Healthcare",
     color: "#7c3aed",
     courses: [
-      { name: "AI Medical Coding",   count: "200 + Registered", icon: "🩺", slug: "ai-medical-coding"   },
-      { name: "AI Medical Billing",  count: "100 + Registered", icon: "🧾", slug: "ai-medical-billing"  },
-      { name: "AI Medical Scribing", count: "300 + Registered", icon: "📋", slug: "ai-medical-scribing" },
-      
+      { name: "AI Medical Coding", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>, slug: "ai-medical-coding" },
+      { name: "AI Medical Billing", count: "100 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>, slug: "ai-medical-billing" },
+      { name: "AI Medical Scribing", count: "300 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>, slug: "ai-medical-scribing" },
     ],
   },
   {
     category: "Information Technology",
     color: "#f97316",
     courses: [
-      { name: "Full Stack Development", count: "150 + Registered", icon: "💻", slug: "full-stack-development" },
-      { name: "Data Analytics",         count: "120 + Registered", icon: "📊", slug: "data-analytics"         },
-      { name: "UI/UX Design",        count: "80 + Registered",  icon: "⚙️",  slug: "ui-ux-design"        },
-      { name: "AI & Machine Learning",  count: "90 + Registered",  icon: "🤖", slug: "ai-machine-learning"    },
+      { name: "Full Stack Development", count: "150 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>, slug: "full-stack-development" },
+      { name: "Data Analytics", count: "120 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>, slug: "data-analytics" },
+      { name: "AI & Machine Learning", count: "90 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>, slug: "ai-machine-learning" },
     ],
   },
   {
     category: "Finance",
     color: "#10b981",
     courses: [
-      { name: "Tally & GST",        count: "200 + Registered", icon: "📒", slug: "tally-gst"          },
-      { name: "SAP APAB", count: "60 + Registered",  icon: "📈", slug: "sap-development" },
+      { name: "Tally & GST", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>, slug: "tally-gst" },
+      { name: "SAP ABAP", count: "60 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h4M7 11h2M13 8l2 3-2 3"/></svg>, slug: "sap-development" },
     ],
   },
   {
     category: "Others",
     color: "#f97316",
     courses: [
-      { name: "Personality Development", count: "250 + Registered", icon: "🌟", slug: "personality-development" },
-      { name: "Digital Marketing", count: "200 + Registered", icon: "⚙️", slug: "digital-marketing" },
+      { name: "UI/UX Design", count: "80 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="9" cy="15" r="2"/><path d="M13 13h4M13 17h4"/></svg>, slug: "ui-ux-design" },
+      { name: "Personality Development", count: "250 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v4M10 13h4"/></svg>, slug: "personality-development" },
+      { name: "Digital Marketing", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 3-4-6-3 3H2"/><path d="M16 3l4 4-4 4"/></svg>, slug: "digital-marketing" },
     ],
   },
 ];
@@ -55,10 +54,11 @@ export default function NavBar() {
   const [menuOpen,       setMenuOpen]       = useState(false);
   const [megaOpen,       setMegaOpen]       = useState(false);
   const [activeCategory, setActiveCategory] = useState("Healthcare");
-  const navigate = useNavigate();
-  const location = useLocation();
-  const megaRef  = useRef(null);
-  const btnRef   = useRef(null);
+  const [coursesOpen,    setCoursesOpen]    = useState(false); // mobile courses accordion
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const megaRef   = useRef(null);
+  const btnRef    = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
@@ -82,6 +82,7 @@ export default function NavBar() {
   useEffect(() => {
     setMenuOpen(false);
     setMegaOpen(false);
+    setCoursesOpen(false);
   }, [location.pathname]);
 
   const goTo = (e, path) => {
@@ -89,6 +90,7 @@ export default function NavBar() {
     navigate(path);
     setMenuOpen(false);
     setMegaOpen(false);
+    setCoursesOpen(false);
   };
 
   const activeMega    = MEGA_MENU.find((m) => m.category === activeCategory);
@@ -133,6 +135,7 @@ export default function NavBar() {
         }
         .skl-chevron.up { transform: rotate(180deg); }
 
+        /* ── Mega Menu ── */
         .skl-mega {
           position: fixed;
           top: 84px;
@@ -221,9 +224,10 @@ export default function NavBar() {
           font-size: 17px;
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .skl-course-name { font-size: 12px; font-weight: 700; color: #1e1b4b; line-height: 1.3; }
+        .skl-course-name  { font-size: 12px; font-weight: 700; color: #1e1b4b; line-height: 1.3; }
         .skl-course-count { font-size: 10.5px; font-weight: 500; color: #9ca3af; margin-top: 2px; }
 
+        /* ── Logo ── */
         .skl-logo {
           cursor: pointer;
           user-select: none;
@@ -240,6 +244,7 @@ export default function NavBar() {
         .skl-logo:hover .skl-logo-icon { transform: rotate(-8deg) scale(1.1); }
         .skl-logo-icon { transition: transform 0.25s; }
 
+        /* ── Burger ── */
         .skl-burger {
           display: none;
           flex-direction: column;
@@ -261,6 +266,7 @@ export default function NavBar() {
         .skl-burger.open span:nth-child(2) { opacity: 0; }
         .skl-burger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
+        /* ── Mobile Drawer ── */
         .skl-drawer {
           display: none;
           position: fixed;
@@ -278,8 +284,10 @@ export default function NavBar() {
           border-radius: 20px;
           box-shadow: 0 14px 44px rgba(72,16,165,0.45);
           transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
         }
-        .skl-drawer.open { max-height: 700px; }
+        .skl-drawer.open { max-height: 80vh; }
 
         .skl-drawer-link {
           display: flex;
@@ -312,6 +320,100 @@ export default function NavBar() {
         }
         .skl-drawer-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 6px 24px; }
 
+        /* Courses accordion toggle row */
+        .skl-courses-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 15px 28px;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          color: rgba(255,255,255,0.85);
+          font-family: 'Outfit', sans-serif;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          background: none;
+          border-top: none;
+          border-left: none;
+          border-right: none;
+          box-sizing: border-box;
+          transition: background 0.2s, color 0.2s;
+          text-align: left;
+        }
+        .skl-courses-toggle:hover {
+          background: rgba(255,255,255,0.07);
+          color: #fff;
+        }
+        .skl-courses-toggle.active-route {
+          background: rgba(167,139,250,0.12);
+          color: #fff;
+          border-left: 3px solid #a78bfa;
+          padding-left: 25px;
+          font-weight: 700;
+        }
+        .skl-toggle-chevron {
+          font-size: 11px;
+          transition: transform 0.25s;
+          opacity: 0.7;
+        }
+        .skl-toggle-chevron.open { transform: rotate(180deg); }
+
+        /* Courses accordion body */
+        .skl-courses-body {
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+          background: rgba(0,0,0,0.15);
+        }
+        .skl-courses-body.open { max-height: 1000px; }
+
+        /* Category label inside drawer */
+        .skl-drawer-cat-label {
+          padding: 10px 28px 4px 20px;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          font-family: 'Outfit', sans-serif;
+          border-left-width: 3px;
+          border-left-style: solid;
+          margin-left: 16px;
+          padding-left: 10px;
+          margin-top: 6px;
+        }
+
+        /* Course item inside drawer */
+        .skl-drawer-course {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          padding: 10px 24px 10px 28px;
+          border-bottom: 1px solid rgba(255,255,255,0.04);
+          color: rgba(255,255,255,0.78);
+          font-family: 'Outfit', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          text-align: left;
+          cursor: pointer;
+          transition: background 0.15s, color 0.15s, padding-left 0.2s;
+          text-decoration: none;
+          box-sizing: border-box;
+        }
+        .skl-drawer-course:hover {
+          background: rgba(255,255,255,0.06);
+          color: #fff;
+          padding-left: 36px;
+        }
+        .skl-drawer-course-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          flex-shrink: 0;
+          margin-left: auto;
+        }
+
         .skl-enroll-btn {
           display: flex;
           align-items: center;
@@ -343,7 +445,7 @@ export default function NavBar() {
         }
       `}</style>
 
-      {/* Floating Pill Navbar */}
+      {/* ── Floating Pill Navbar ── */}
       <div
         style={{
           position: "fixed",
@@ -374,11 +476,7 @@ export default function NavBar() {
           }}
         >
           {/* Logo */}
-          <a
-            href="/"
-            className="skl-logo"
-            onClick={(e) => goTo(e, "/")}
-          >
+          <a href="/" className="skl-logo" onClick={(e) => goTo(e, "/")}>
             <div
               className="skl-logo-icon"
               style={{
@@ -394,22 +492,15 @@ export default function NavBar() {
               }}
             >
               <img
-                src={`${process.env.PUBLIC_URL}/logo.png`}
-                alt="Skillra logo"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+  src="/logo.png"
+  alt="Skillra logo"
+  style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
             SKILLRA
           </a>
 
-          <div
-            style={{
-              width: "1px",
-              height: "24px",
-              background: "rgba(255,255,255,0.2)",
-              flexShrink: 0,
-            }}
-          />
+          <div style={{ width: "1px", height: "24px", background: "rgba(255,255,255,0.2)", flexShrink: 0 }} />
 
           {/* Desktop links */}
           <ul
@@ -444,7 +535,7 @@ export default function NavBar() {
                     }}
                     style={{
                       color: active ? "#fff" : "rgba(255,255,255,.78)",
-                      fontSize: "13px",
+                      fontSize: "15px",
                       fontWeight: active ? 700 : 600,
                       letterSpacing: ".2px",
                       whiteSpace: "nowrap",
@@ -452,9 +543,7 @@ export default function NavBar() {
                   >
                     {label}
                     {hasMega && (
-                      <span className={`skl-chevron${megaOpen ? " up" : ""}`}>
-                        ▾
-                      </span>
+                      <span className={`skl-chevron${megaOpen ? " up" : ""}`}>▾</span>
                     )}
                   </a>
                 </li>
@@ -468,14 +557,12 @@ export default function NavBar() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Toggle menu"
           >
-            <span />
-            <span />
-            <span />
+            <span /><span /><span />
           </button>
         </nav>
       </div>
 
-      {/* Mega Menu */}
+      {/* ── Desktop Mega Menu ── */}
       <div ref={megaRef} className={`skl-mega${megaOpen ? " open" : ""}`}>
         <div className="skl-mega-inner">
           {/* Left categories */}
@@ -505,17 +592,14 @@ export default function NavBar() {
                 href={`/courses/${course.slug}`}
                 className="skl-course-card"
                 onClick={(e) => goTo(e, `/courses/${course.slug}`)}
-                style={{
-                  background: `${activeColor}10`,
-                  borderColor: `${activeColor}20`,
-                }}
+                style={{ background: `${activeColor}10`, borderColor: `${activeColor}20` }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = `${activeColor}20`;
-                  e.currentTarget.style.borderColor = `${activeColor}44`;
+                  e.currentTarget.style.background    = `${activeColor}20`;
+                  e.currentTarget.style.borderColor   = `${activeColor}44`;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = `${activeColor}10`;
-                  e.currentTarget.style.borderColor = `${activeColor}20`;
+                  e.currentTarget.style.background    = `${activeColor}10`;
+                  e.currentTarget.style.borderColor   = `${activeColor}20`;
                 }}
               >
                 <div className="skl-course-icon">{course.icon}</div>
@@ -529,9 +613,67 @@ export default function NavBar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* ── Mobile Drawer ── */}
       <div className={`skl-drawer${menuOpen ? " open" : ""}`}>
-        {NAV_LINKS.map(({ label, path }) => {
+
+        {/* Regular nav links (skip "Course Offered" — handled separately) */}
+        {NAV_LINKS.map(({ label, path, hasMega }) => {
+          if (hasMega) {
+            // Courses accordion toggle
+            const courseActive = location.pathname.startsWith("/courses");
+            return (
+              <div key={label}>
+                <button
+                  className={`skl-courses-toggle${courseActive ? " active-route" : ""}`}
+                  onClick={() => setCoursesOpen((v) => !v)}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    {courseActive && (
+                      <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#a78bfa", flexShrink: 0 }} />
+                    )}
+                    {label}
+                  </span>
+                  <span className={`skl-toggle-chevron${coursesOpen ? " open" : ""}`}>▾</span>
+                </button>
+
+                {/* Courses accordion body — grouped by category */}
+                <div className={`skl-courses-body${coursesOpen ? " open" : ""}`}>
+                  {MEGA_MENU.map(({ category, color, courses }) => (
+                    <div key={category}>
+                      {/* Category label */}
+                      <div
+                        className="skl-drawer-cat-label"
+                        style={{ color, borderLeftColor: color }}
+                      >
+                        {category}
+                      </div>
+
+                      {/* Course items */}
+                      {courses.map((c) => (
+                        <a
+                          key={c.slug}
+                          href={`/courses/${c.slug}`}
+                          className="skl-drawer-course"
+                          onClick={(e) => goTo(e, `/courses/${c.slug}`)}
+                        >
+                          <span style={{ fontSize: "15px" }}>{c.icon}</span>
+                          <span style={{ flex: 1 }}>{c.name}</span>
+                          <span
+                            className="skl-drawer-course-dot"
+                            style={{ background: color }}
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+
+                  <div style={{ height: "8px" }} />
+                </div>
+              </div>
+            );
+          }
+
+          // Normal nav link
           const active = location.pathname === path;
           return (
             <a
@@ -541,15 +683,7 @@ export default function NavBar() {
               onClick={(e) => goTo(e, path)}
             >
               {active && (
-                <span
-                  style={{
-                    width: "7px",
-                    height: "7px",
-                    borderRadius: "50%",
-                    background: "#a78bfa",
-                    flexShrink: 0,
-                  }}
-                />
+                <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#a78bfa", flexShrink: 0 }} />
               )}
               {label}
             </a>
@@ -558,52 +692,7 @@ export default function NavBar() {
 
         <div className="skl-drawer-divider" />
 
-        <div
-          style={{
-            padding: "8px 28px 4px",
-            fontSize: "11px",
-            fontWeight: 700,
-            color: "rgba(255,255,255,0.4)",
-            letterSpacing: "0.08em",
-            fontFamily: "'Outfit', sans-serif",
-          }}
-        >
-          COURSES
-        </div>
-
-        {MEGA_MENU.map(({ color, courses }) =>
-          courses.map((c) => (
-            <a
-              key={c.slug}
-              href={`/courses/${c.slug}`}
-              className="skl-drawer-link"
-              onClick={(e) => goTo(e, `/courses/${c.slug}`)}
-              style={{ fontSize: "13px", padding: "11px 28px" }}
-            >
-              <span style={{ fontSize: "14px" }}>{c.icon}</span>
-              <span style={{ flex: 1 }}>{c.name}</span>
-              <span
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  background: color,
-                  flexShrink: 0,
-                }}
-              />
-            </a>
-          ))
-        )}
-
-        <div className="skl-drawer-divider" />
-
-        <a
-          href="/"
-          className="skl-enroll-btn"
-          onClick={(e) => goTo(e, "/")}
-        >
-          🎓 Enroll Now
-        </a>
+        
       </div>
 
       <div style={{ height: "1px" }} />

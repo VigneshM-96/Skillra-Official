@@ -6,7 +6,7 @@ export const COURSES = {
      HEALTHCARE
   ══════════════════════════════════════════════════ */
   "ai-medical-coding": {
-    title: "AI Medical Coding Course",
+    title: "AI Medical Coding Course with Internship",
     category: "AI Medical Coding Course",
     rating: 4.8,
     timing: "Online / Offline",
@@ -26,19 +26,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-relevant curriculum with AI integration. Internship included for real-world exposure. Hands-on training with live medical records. Designed for beginners & non-medical students. Focus on CPC certification preparation. High-demand career opportunity in healthcare.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand the fundamentals of medical coding and healthcare systems. Master ICD-10-CM diagnosis coding guidelines. Learn CPT coding for procedures and services. Gain knowledge of HCPCS Level II coding. Work with AI-based medical coding tools. Interpret clinical documentation accurately. Improve coding speed and accuracy using automation. Prepare for CPC certification exams. Gain real-time experience through internship.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN:",
             paras: [
               "This course is perfect for: Students (Any Degree), Life science & medical graduates, Job seekers looking for stable careers, Career switchers, and Anyone interested in healthcare & AI. No prior medical background is required.",
             ],
@@ -85,17 +85,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from certified professionals with 10+ years of experience in medical coding, healthcare documentation, and insurance processes.",
-              "Certified CPC Trainer. Industry expert in AI-based coding tools. Proven track record of student success.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -127,7 +117,7 @@ export const COURSES = {
   },
 
   "ai-medical-billing": {
-    title: "AI Medical Billing Course",
+    title: "AI Medical Billing Course with Internship",
     category: "AI Medical Billing Course",
     rating: 4.8,
     timing: "Online / Offline",
@@ -147,19 +137,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-focused curriculum with AI integration. Hands-on training with real billing scenarios. Internship included for practical experience. Beginner-friendly course structure. High-demand job opportunities in healthcare. Covers end-to-end Revenue Cycle Management (RCM).",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand the fundamentals of medical billing and healthcare revenue cycle. Learn patient registration and insurance verification. Master medical billing processes and claim submission. Work with EHR & billing software systems. Handle denials and claim rejections effectively. Learn AI tools used in billing automation. Improve billing accuracy and efficiency. Gain real-time experience through internship.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN:",
             paras: [
               "This course is ideal for: Students (Any Degree), Healthcare & life science graduates, Job seekers, Career changers, and Anyone interested in healthcare administration. No prior experience is required.",
             ],
@@ -206,17 +196,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced professionals with 10+ years of expertise in medical billing, insurance processing, and healthcare operations.",
-              "Industry-certified trainers. Real-time project exposure. Proven student success rate.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -247,7 +227,7 @@ export const COURSES = {
   },
 
   "ai-medical-scribing": {
-    title: "AI Medical Scribing Course",
+    title: "AI Medical Scribing Course with Internship",
     category: "AI Medical Scribing Course",
     rating: 4.8,
     timing: "Online / Offline",
@@ -267,13 +247,13 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-focused curriculum with AI integration. Real-time clinical documentation training. Internship included for hands-on experience. Beginner-friendly (no medical background required). High-demand career in healthcare. Exposure to live doctor-patient scenarios.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand the role of a medical scribe in healthcare. Learn medical terminology and clinical concepts. Master real-time patient documentation. Work with Electronic Health Records (EHR). Learn AI tools used in medical scribing. Improve listening, typing, and documentation skills. Understand SOAP notes and clinical workflows. Gain real-time experience through internship.",
             ],
@@ -326,17 +306,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced professionals with 10+ years of experience in medical documentation, scribing, and healthcare workflows.",
-              "Industry-certified trainers. Real-time clinical exposure. Proven student success.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -370,134 +340,15 @@ export const COURSES = {
   /* ══════════════════════════════════════════════════
      INFORMATION TECHNOLOGY
   ══════════════════════════════════════════════════ */
-  "ui-ux-design": {
-    title: "UI/UX Designing Course",
-    category: "Information Technology",
-    rating: 4.8,
-    timing: "Online / Offline",
-    students: "300+",
-    duration: "3–4 Months",
-    color: "#f97316",
-    heroImage: "courseuiux.avif",
-    tabs: {
-      Overview: {
-        sections: [
-          {
-            heading: "COURSE DESCRIPTION",
-            paras: [
-              "The UI/UX Designing Course is a comprehensive program that teaches you how to design visually appealing and user-friendly interfaces for websites and mobile applications.",
-              "This course covers user interface design (UI), user experience design (UX), wireframing, prototyping, usability testing, and design tools used by industry professionals.",
-              "With hands-on projects, real-time case studies, and internship support, this UI/UX Designing Course prepares you for high-demand roles in tech companies, startups, and design agencies.",
-            ],
-          },
-          {
-            heading: "WHY CHOOSE THIS COURSE?",
-            paras: [
-              "Industry-focused design curriculum. Hands-on training with real-time projects. Internship included for practical exposure. Beginner-friendly learning approach. Portfolio development support. High-demand career opportunities.",
-            ],
-          },
-          {
-            heading: "WHAT WILL YOU LEARN?",
-            paras: [
-              "Understand the fundamentals of UI and UX design. Learn design principles, color theory, and typography. Create wireframes and prototypes. Conduct user research and usability testing. Design responsive web and mobile interfaces. Work with industry tools like Figma and Adobe XD. Build a strong design portfolio. Gain real-time experience through projects and internship.",
-            ],
-          },
-          {
-            heading: "WHO CAN JOIN?",
-            paras: [
-              "This course is ideal for: Students (Any Degree), Creative individuals, Developers who want design skills, Career switchers, and Anyone interested in design & user experience. No prior design experience is required.",
-            ],
-          },
-          {
-            heading: "CAREER OPPORTUNITIES",
-            paras: [
-              "After completing this course, you can apply for roles such as: UI Designer, UX Designer, Product Designer, Web Designer, and Mobile App Designer.",
-            ],
-          },
-          {
-            heading: "CERTIFICATION & INTERNSHIP",
-            paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
-          },
-          {
-            heading: "TOOLS & TECHNOLOGIES COVERED",
-            paras: [
-              "Figma, Adobe XD, Photoshop, and Wireframing & prototyping tools.",
-            ],
-          },
-          {
-            heading: "COURSE HIGHLIGHTS",
-            paras: [
-              "100% Practical Training | Updated Design Curriculum | Hands-on Project Learning | Portfolio-Focused Approach | Placement Assistance Support.",
-            ],
-          },
-        ],
-      },
-      Curriculum: {
-        sections: [
-          {
-            heading: "COURSE MODULES",
-            paras: [
-              "Module 1: Introduction to UI/UX Design — What is UI/UX design, importance of user experience, UI vs UX concepts, design thinking process.",
-              "Module 2: Design Fundamentals — Color theory and typography, layout and composition, visual hierarchy, design principles.",
-              "Module 3: Wireframing & Prototyping — Low-fidelity wireframes, high-fidelity designs, prototyping tools (Figma, Adobe XD), interactive design.",
-              "Module 4: User Research & UX Process — User personas, user journey mapping, usability testing, feedback analysis.",
-              "Module 5: UI Design for Web & Mobile — Responsive design, mobile-first approach, design systems, accessibility basics.",
-              "Module 6: Tools & Software Training — Figma, Adobe XD, Photoshop basics, design collaboration tools.",
-              "Module 7: Projects & Internship — Real-time design projects, case studies, portfolio creation, internship exposure.",
-            ],
-          },
-        ],
-      },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced designers with 8+ years of experience in UI/UX design, product design, web & mobile applications, and real-time project delivery.",
-            ],
-          },
-        ],
-      },
-      Reviews: {
-        sections: [
-          {
-            heading: "STUDENT REVIEWS",
-            paras: [
-              "⭐⭐⭐⭐⭐ — \"I had zero design experience but landed a junior UI designer role within 2 months of completing this course. The portfolio guidance was invaluable!\" — Divya M.",
-              "⭐⭐⭐⭐ — \"The Figma modules are incredibly detailed and the instructor explains design decisions really well. Worth every rupee.\" — Karthik S.",
-              "⭐⭐⭐⭐⭐ — \"Best design course in Coimbatore. Small batches, real projects, and honest feedback made all the difference.\" — Ananya P.",
-            ],
-          },
-        ],
-      },
-      FAQs: {
-        sections: [
-          {
-            heading: "FREQUENTLY ASKED QUESTIONS",
-            paras: [
-              "Q: What is the Skillra UI/UX Designing Course? — A: It is a job-oriented program that teaches interface design, user experience, and modern design tools.",
-              "Q: Who can join? — A: Anyone can join, including beginners, students, and professionals. No prior design experience is required.",
-              "Q: Does Skillra provide internship? — A: Yes, Skillra offers a hands-on internship program for real-time design experience.",
-              "Q: Is this course beginner-friendly? — A: Yes, the course is designed for both beginners and advanced learners.",
-              "Q: What are the job opportunities? — A: UI Designer, UX Designer, and Product Designer.",
-              "Q: Does Skillra provide placement support? — A: Yes, Skillra provides placement assistance and career guidance.",
-            ],
-          },
-        ],
-      },
-    },
-    otherCourses: ["full-stack-development", "data-analytics", "sap-development"],
-  },
+  
 
   "full-stack-development": {
-    title: "MERN / MEAN Stack Course",
+    title: "Full Stack Course with Internship",
     category: "Information Technology",
     rating: 4.8,
     timing: "Online / Offline",
     students: "350+",
-    duration: "3–5 Months",
+    duration: "3.5 Months",
     color: "#f97316",
     heroImage: "coursetechnology.jpg",
     tabs: {
@@ -512,19 +363,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-relevant full stack curriculum. Covers both MERN & MEAN technologies. Hands-on projects & real-time development. Internship included for practical exposure. Beginner-friendly coding approach. High-demand IT career opportunities.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand web development fundamentals. Build responsive frontend applications. Develop backend APIs using Node.js & Express. Work with MongoDB database. Use React.js and Angular frameworks. Implement authentication & security features. Deploy applications to live servers. Gain real-time experience through projects and internship.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN:",
             paras: [
               "This course is ideal for: Students (IT / Non-IT), Beginners in programming, Career switchers into IT, Job seekers in web development, and Anyone interested in full stack development. No prior coding experience is required.",
             ],
@@ -571,16 +422,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced developers with 8+ years of experience in full stack web development, JavaScript frameworks (React & Angular), API development & backend systems, and real-time project delivery.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -614,12 +456,12 @@ export const COURSES = {
   },
 
   "data-analytics": {
-    title: "Data Analytics Course",
+    title: "Data Analytics Course with Internship",
     category: "Information Technology",
     rating: 4.8,
     timing: "Online / Offline",
     students: "300+",
-    duration: "3–4 Months",
+    duration: "3.5 Months",
     color: "#f97316",
     heroImage: "coursetechnology.jpg",
     tabs: {
@@ -634,19 +476,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-focused curriculum with real-time projects. Hands-on training with tools like Excel, SQL, Python. Internship included for practical exposure. Beginner-friendly learning path. High-demand career opportunities. Focus on real-world business insights.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand the fundamentals of data analytics. Learn data cleaning and preprocessing techniques. Work with Excel for data analysis. Write SQL queries for data extraction. Use Python for data manipulation and analysis. Create interactive dashboards using Power BI/Tableau. Perform basic statistical analysis. Gain real-time experience through projects and internship.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN",
             paras: [
               "This course is ideal for: Students (Any Degree), IT & non-IT graduates, Job seekers, Career switchers, and Anyone interested in data & analytics. No prior experience is required.",
             ],
@@ -693,16 +535,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced data professionals with 8+ years of experience in data analytics & visualization, business intelligence tools, Python & SQL development, and real-time project implementation.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -735,7 +568,7 @@ export const COURSES = {
   },
 
   "ai-machine-learning": {
-    title: "AI & Machine Learning",
+    title: "AI & Machine Learning with Internship",
     category: "Information Technology",
     rating: 4.9,
     timing: "Online / Offline",
@@ -755,14 +588,14 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-relevant AI & ML curriculum with hands-on training using real-world datasets. Internship included for practical exposure with a beginner-friendly learning path.",
               "High-demand career opportunities with a focus on real-time project development. 100% practical training with an updated AI curriculum and placement assistance support.",
             ],
           },
           {
-            heading: "WHAT YOU WILL LEARN",
+            heading: "WHAT YOU WILL LEARN:",
             paras: [
               "Understand the fundamentals of Artificial Intelligence and Machine Learning. Learn Python programming for data science and perform data preprocessing and analysis.",
               "Build machine learning models including supervised and unsupervised learning. Understand deep learning basics and work with libraries like Pandas, NumPy, and Scikit-learn.",
@@ -770,7 +603,7 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHO CAN JOIN THIS COURSE?",
+            heading: "WHO CAN JOIN THIS COURSE:",
             paras: [
               "This course is ideal for students of any degree, IT & non-IT graduates, career switchers, job seekers in tech, and anyone interested in AI & data science. No prior experience is required.",
             ],
@@ -823,45 +656,21 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced AI professionals with 8+ years of experience in machine learning & AI development, data science & analytics, and Python programming.",
-              "Their teaching approach focuses on real-time project implementation, ensuring students gain practical skills alongside theoretical knowledge for industry readiness.",
-            ],
-          },
-        ],
-      },
-      "Tools & Technologies": {
-        sections: [
-          {
-            heading: "TOOLS & TECHNOLOGIES COVERED",
-            paras: [
-              "Python — the primary programming language for AI and ML development. NumPy & Pandas for data manipulation and analysis.",
-              "Scikit-learn for building and evaluating machine learning models. Data visualization tools for interpreting results. ML frameworks for building and deploying models.",
-            ],
-          },
-        ],
-      },
-      "Certification & Career": {
-        sections: [
-          {
-            heading: "CERTIFICATION & INTERNSHIP",
-            paras: [
-              "Receive a Course Completion Certificate and an Internship Certificate upon successful completion. Gain real-time project experience with job-oriented training.",
-            ],
-          },
-          {
-            heading: "CAREER OPPORTUNITIES",
-            paras: [
-              "After completing this course, you can apply for roles such as Machine Learning Engineer, Data Scientist (Entry-Level), AI Engineer, Data Analyst, and Python Developer.",
-              "AI & Machine Learning is one of the fastest-growing and highest-paying domains in tech with opportunities across IT, healthcare, finance, and e-commerce industries.",
-            ],
-          },
-        ],
-      },
+
+      Reviews: {
+  sections: [
+    {
+      heading: "STUDENT REVIEWS",
+      paras: [
+        "⭐⭐⭐⭐⭐ — \"The ML projects were incredibly hands-on. Built a real prediction model that I showcased in my interview!\" — Vikram R.",
+        "⭐⭐⭐⭐⭐ — \"Went from zero Python knowledge to building AI models in 4 months. The instructors are patient and thorough.\" — Sneha M.",
+        "⭐⭐⭐⭐ — \"Great foundation course for AI and ML. The deep learning intro was a nice bonus.\" — Aravind K.",
+      ],
+    },
+  ],
+},
+      
+      
       FAQs: {
         sections: [
           {
@@ -886,12 +695,12 @@ export const COURSES = {
      FINANCE
   ══════════════════════════════════════════════════ */
   "tally-gst": {
-    title: "Tally & GST Course",
+    title: "Tally & GST Course with Internship",
     category: "Tally & GST Course",
     rating: 4.8,
     timing: "Online / Offline",
     students: "300+",
-    duration: "2–3 Months",
+    duration: "2.5 Months",
     color: "#10b981",
     heroImage: "coursefinance.jpg",
     tabs: {
@@ -906,19 +715,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-relevant accounting & GST curriculum. Hands-on training with Tally software. Real-time practical examples & projects. Beginner-friendly (no commerce background required). Covers GST filing and compliance. High-demand career opportunities.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand basic to advanced accounting concepts. Learn Tally ERP / Tally Prime software usage. Manage company accounts and ledgers. Record day-to-day business transactions. Learn GST registration and return filing. Handle purchase, sales, and inventory management. Prepare financial statements and reports. Gain real-time experience through practical training.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN:",
             paras: [
               "This course is ideal for: Students (Any Degree / Commerce / Non-Commerce), Job seekers in the accounting field, Career switchers, Small business owners, and Anyone interested in accounting & taxation. No prior accounting knowledge is required.",
             ],
@@ -965,16 +774,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from accounting professionals with 8+ years of industry experience in financial accounting, GST filing & compliance, Tally software training, and corporate accounting practices.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -1006,13 +806,13 @@ export const COURSES = {
   },
 
   "sap-development": {
-    title: "SAP Development Course",
+    title: "SAP Development Course with Internship",
     category: "SAP Development Course",
     rating: 4.8,
     timing: "Online / Offline",
     students: "250+",
-    duration: "3–4 Months",
-    color: "#f97316",
+    duration: "3.5 Months",
+    color: "#10b981",
     heroImage: "coursefinance.jpg",
     tabs: {
       Overview: {
@@ -1026,19 +826,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-relevant SAP development curriculum. Hands-on training with real-time projects. Internship included for practical exposure. Beginner-friendly programming concepts. High-demand IT career opportunities. Focus on real-world SAP implementation.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Understand SAP architecture and system landscape. Learn ABAP programming fundamentals. Develop reports, forms, and interfaces. Work with data dictionary and database tables. Customize SAP applications. Debug and optimize SAP programs. Gain hands-on experience through real-time projects. Prepare for SAP developer roles.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN:",
             paras: [
               "This course is ideal for: Students (IT / Non-IT background), Software developers & programmers, Career switchers into IT, Job seekers in software development, and Anyone interested in SAP careers. Basic programming knowledge is helpful but not mandatory.",
             ],
@@ -1085,16 +885,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced SAP professionals with 10+ years of experience in SAP ABAP development, ERP implementation projects, corporate SAP consulting, and real-time project delivery.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -1129,13 +920,125 @@ export const COURSES = {
   /* ══════════════════════════════════════════════════
      SELF DEVELOPMENT
   ══════════════════════════════════════════════════ */
+  "ui-ux-design": {
+    title: "UI/UX Designing Course with Internship",
+    category: "Information Technology",
+    rating: 4.8,
+    timing: "Online / Offline",
+    students: "300+",
+    duration: "3.5 Months",
+    color: "#f97316",
+    heroImage: "courseothers.jpg",
+    tabs: {
+      Overview: {
+        sections: [
+          {
+            heading: "COURSE DESCRIPTION",
+            paras: [
+              "The UI/UX Designing Course is a comprehensive program that teaches you how to design visually appealing and user-friendly interfaces for websites and mobile applications.",
+              "This course covers user interface design (UI), user experience design (UX), wireframing, prototyping, usability testing, and design tools used by industry professionals.",
+              "With hands-on projects, real-time case studies, and internship support, this UI/UX Designing Course prepares you for high-demand roles in tech companies, startups, and design agencies.",
+            ],
+          },
+          {
+            heading: "WHY CHOOSE THIS COURSE:",
+            paras: [
+              "Industry-focused design curriculum. Hands-on training with real-time projects. Internship included for practical exposure. Beginner-friendly learning approach. Portfolio development support. High-demand career opportunities.",
+            ],
+          },
+          {
+            heading: "WHAT WILL YOU LEARN:",
+            paras: [
+              "Understand the fundamentals of UI and UX design. Learn design principles, color theory, and typography. Create wireframes and prototypes. Conduct user research and usability testing. Design responsive web and mobile interfaces. Work with industry tools like Figma and Adobe XD. Build a strong design portfolio. Gain real-time experience through projects and internship.",
+            ],
+          },
+          {
+            heading: "WHO CAN JOIN:",
+            paras: [
+              "This course is ideal for: Students (Any Degree), Creative individuals, Developers who want design skills, Career switchers, and Anyone interested in design & user experience. No prior design experience is required.",
+            ],
+          },
+          {
+            heading: "CAREER OPPORTUNITIES",
+            paras: [
+              "After completing this course, you can apply for roles such as: UI Designer, UX Designer, Product Designer, Web Designer, and Mobile App Designer.",
+            ],
+          },
+          {
+            heading: "CERTIFICATION & INTERNSHIP",
+            paras: [
+              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
+            ],
+          },
+          {
+            heading: "TOOLS & TECHNOLOGIES COVERED",
+            paras: [
+              "Figma, Adobe XD, Photoshop, and Wireframing & prototyping tools.",
+            ],
+          },
+          {
+            heading: "COURSE HIGHLIGHTS",
+            paras: [
+              "100% Practical Training | Updated Design Curriculum | Hands-on Project Learning | Portfolio-Focused Approach | Placement Assistance Support.",
+            ],
+          },
+        ],
+      },
+      Curriculum: {
+        sections: [
+          {
+            heading: "COURSE MODULES",
+            paras: [
+              "Module 1: Introduction to UI/UX Design — What is UI/UX design, importance of user experience, UI vs UX concepts, design thinking process.",
+              "Module 2: Design Fundamentals — Color theory and typography, layout and composition, visual hierarchy, design principles.",
+              "Module 3: Wireframing & Prototyping — Low-fidelity wireframes, high-fidelity designs, prototyping tools (Figma, Adobe XD), interactive design.",
+              "Module 4: User Research & UX Process — User personas, user journey mapping, usability testing, feedback analysis.",
+              "Module 5: UI Design for Web & Mobile — Responsive design, mobile-first approach, design systems, accessibility basics.",
+              "Module 6: Tools & Software Training — Figma, Adobe XD, Photoshop basics, design collaboration tools.",
+              "Module 7: Projects & Internship — Real-time design projects, case studies, portfolio creation, internship exposure.",
+            ],
+          },
+        ],
+      },
+      
+      Reviews: {
+        sections: [
+          {
+            heading: "STUDENT REVIEWS",
+            paras: [
+              "⭐⭐⭐⭐⭐ — \"I had zero design experience but landed a junior UI designer role within 2 months of completing this course. The portfolio guidance was invaluable!\" — Divya M.",
+              "⭐⭐⭐⭐ — \"The Figma modules are incredibly detailed and the instructor explains design decisions really well. Worth every rupee.\" — Karthik S.",
+              "⭐⭐⭐⭐⭐ — \"Best design course in Coimbatore. Small batches, real projects, and honest feedback made all the difference.\" — Ananya P.",
+            ],
+          },
+        ],
+      },
+      FAQs: {
+        sections: [
+          {
+            heading: "FREQUENTLY ASKED QUESTIONS",
+            paras: [
+              "Q: What is the Skillra UI/UX Designing Course? — A: It is a job-oriented program that teaches interface design, user experience, and modern design tools.",
+              "Q: Who can join? — A: Anyone can join, including beginners, students, and professionals. No prior design experience is required.",
+              "Q: Does Skillra provide internship? — A: Yes, Skillra offers a hands-on internship program for real-time design experience.",
+              "Q: Is this course beginner-friendly? — A: Yes, the course is designed for both beginners and advanced learners.",
+              "Q: What are the job opportunities? — A: UI Designer, UX Designer, and Product Designer.",
+              "Q: Does Skillra provide placement support? — A: Yes, Skillra provides placement assistance and career guidance.",
+            ],
+          },
+        ],
+      },
+    },
+    otherCourses: ["full-stack-development", "data-analytics", "sap-development"],
+  },
+
   "personality-development": {
-    title: "Personality Development Course",
+    title: "Personality Development Course with Internship",
     category: "Self Development",
     rating: 4.9,
     timing: "Online / Offline",
     students: "400+",
-    duration: "1–2 Months",
+    duration: "1.5 Months",
     color: "#e11d48",
     heroImage: "courseothers.jpg",
     tabs: {
@@ -1150,19 +1053,19 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Focus on confidence building & communication skills. Interactive sessions with real-time activities. Practical training for interviews & workplace skills. Beginner-friendly for all backgrounds. Improves English speaking & presentation skills. Career and personal growth focused.",
             ],
           },
           {
-            heading: "WHAT WILL YOU LEARN?",
+            heading: "WHAT WILL YOU LEARN:",
             paras: [
               "Improve spoken English and communication skills. Build self-confidence and positive mindset. Learn public speaking and presentation techniques. Understand body language and professional etiquette. Develop interview skills and resume communication. Enhance listening and interpersonal skills. Manage stress and improve personal grooming. Gain practical experience through activities and sessions.",
             ],
           },
           {
-            heading: "WHO CAN JOIN?",
+            heading: "WHO CAN JOIN:",
             paras: [
               "This course is ideal for: Students (School / College), Job seekers, Career switchers, Working professionals, and Anyone who wants to improve communication & confidence.",
             ],
@@ -1209,16 +1112,7 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced trainers with 8+ years of expertise in soft skills & communication training, corporate personality development, interview coaching, and student mentoring.",
-            ],
-          },
-        ],
-      },
+      
       Reviews: {
         sections: [
           {
@@ -1226,7 +1120,7 @@ export const COURSES = {
             paras: [
               "⭐⭐⭐⭐⭐ — \"I was terrified of public speaking. After this course I presented at a college fest in front of 500 people. Life changing!\" — Nisha P.",
               "⭐⭐⭐⭐⭐ — \"The mock interviews alone are worth the entire course fee. My confidence in interviews went from 2 to 9 out of 10.\" — Sanjay M.",
-              "⭐⭐⭐⭐⭐ — \"Every student should take this alongside their technical course. It makes you a complete professional.\" — Divya K.",
+              
             ],
           },
         ],
@@ -1253,7 +1147,7 @@ export const COURSES = {
   },
 
   "digital-marketing": {
-    title: "Digital Marketing",
+    title: "Digital Marketing with Internship",
     category: "Digital Marketing",
     rating: 4.8,
     timing: "Online / Offline",
@@ -1273,14 +1167,14 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHY CHOOSE THIS COURSE?",
+            heading: "WHY CHOOSE THIS COURSE:",
             paras: [
               "Industry-relevant marketing curriculum with hands-on training using live campaigns. Internship included for real-time exposure with a beginner-friendly learning path — no technical background required.",
               "Covers all major digital marketing channels with freelancing and business opportunities. 100% practical training with an updated marketing curriculum and placement assistance support.",
             ],
           },
           {
-            heading: "WHAT YOU WILL LEARN",
+            heading: "WHAT YOU WILL LEARN:",
             paras: [
               "Understand the fundamentals of digital marketing. Learn Search Engine Optimization (SEO) techniques and run Google Ads and paid campaigns.",
               "Manage social media marketing (SMM) across platforms and create content marketing strategies. Execute email marketing campaigns and analyze performance using analytics tools.",
@@ -1288,7 +1182,7 @@ export const COURSES = {
             ],
           },
           {
-            heading: "WHO CAN JOIN THIS COURSE?",
+            heading: "WHO CAN JOIN THIS COURSE:",
             paras: [
               "This course is ideal for students of any degree, job seekers, career switchers, business owners & entrepreneurs, and freelancers. No prior experience is required.",
             ],
@@ -1347,46 +1241,22 @@ export const COURSES = {
           },
         ],
       },
-      Instructor: {
-        sections: [
-          {
-            heading: "ABOUT YOUR INSTRUCTOR",
-            paras: [
-              "Learn from experienced marketers with 8+ years of experience in SEO & paid marketing, social media growth strategies, and campaign management.",
-              "Their teaching approach focuses on real-time client projects, ensuring students gain practical skills alongside theoretical knowledge for industry readiness.",
-            ],
-          },
-        ],
-      },
-      "Tools & Platforms": {
-        sections: [
-          {
-            heading: "TOOLS & PLATFORMS COVERED",
-            paras: [
-              "Google Ads for running paid search and display campaigns. Google Analytics for tracking website traffic and campaign performance.",
-              "SEO tools including Ahrefs and SEMrush basics for keyword research and competitor analysis. Social media platforms for content management and engagement.",
-              "Email marketing tools for creating automated campaigns and tracking subscriber engagement.",
-            ],
-          },
-        ],
-      },
-      "Certification & Career": {
-        sections: [
-          {
-            heading: "CERTIFICATION & INTERNSHIP",
-            paras: [
-              "Receive a Course Completion Certificate and an Internship Certificate upon successful completion. Gain real-time campaign experience with job-oriented training.",
-            ],
-          },
-          {
-            heading: "CAREER OPPORTUNITIES",
-            paras: [
-              "After completing this course, you can apply for roles such as Digital Marketing Executive, SEO Analyst, Social Media Manager, PPC Specialist, and Content Marketer.",
-              "Digital marketing offers unlimited career and business opportunities across agencies, startups, corporate companies, and freelancing.",
-            ],
-          },
-        ],
-      },
+
+      Reviews: {
+  sections: [
+    {
+      heading: "STUDENT REVIEWS",
+      paras: [
+        "⭐⭐⭐⭐⭐ — \"This course completely changed how I think about marketing. The live campaign practice was incredible!\" — Priya R.",
+        "⭐⭐⭐⭐⭐ — \"I landed a digital marketing internship within a month of completing this course. The SEO and Google Ads modules were top-notch.\" — Arjun K.",
+        "⭐⭐⭐⭐⭐ — \"Best investment I made for my career. Started freelancing with clients after just 2 months of training.\" — Meena S.",
+        "⭐⭐⭐⭐⭐ — \"The hands-on projects made all the difference. I could build a real portfolio to show employers.\" — Rahul T.",
+      ],
+    },
+  ],
+},
+      
+      
       FAQs: {
         sections: [
           {

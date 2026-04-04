@@ -5,6 +5,85 @@ import SocialSidebar from "../components/SocialSideBar";
 // ── Replace with your deployed Apps Script Web App URL ──
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
+const META = {
+  title:       "Contact Us | Skillra – Get in Touch for Training & Consultancy",
+  description: "Reach out to Skillra Health Innovations Pvt Ltd for enquiries about AI Medical Coding, IT, Finance courses, corporate tie-ups, and placements. Available Monday to Saturday, 9 AM – 7 PM IST.",
+  canonical:   "https://www.skillra.com/contact",
+  keywords:    "Skillra contact, medical coding training enquiry, IT course enquiry, Skillra phone, Skillra email, training institute contact, corporate tie-ups",
+};
+
+function setMeta(attr, value, content) {
+  let el = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
+  el.setAttribute("content", content);
+}
+
+function setLink(rel, href) {
+  let el = document.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
+
+function setJsonLd(data) {
+  const id = "skillra-contact-jsonld";
+  let el = document.getElementById(id);
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+}
+
+function PageMeta() {
+  useEffect(() => {
+    document.title = META.title;
+    setMeta("name", "description",  META.description);
+    setMeta("name", "keywords",     META.keywords);
+    setMeta("name", "robots",       "index, follow");
+    setMeta("name", "author",       "Skillra");
+    setLink("canonical",            META.canonical);
+    setMeta("property", "og:type",        "website");
+    setMeta("property", "og:url",         META.canonical);
+    setMeta("property", "og:title",       META.title);
+    setMeta("property", "og:description", META.description);
+    setMeta("property", "og:image",       META.ogImage);
+    setMeta("property", "og:image:alt",   "Contact Skillra training institute");
+    setMeta("property", "og:site_name",   "Skillra");
+    setMeta("property", "og:locale",      "en_IN");
+    setMeta("name", "twitter:card",        "summary_large_image");
+    setMeta("name", "twitter:title",       META.title);
+    setMeta("name", "twitter:description", META.description);
+    setMeta("name", "twitter:image",       META.ogImage);
+    setMeta("name", "twitter:image:alt",   "Contact Skillra training institute");
+    setJsonLd({
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact Skillra",
+      "description": META.description,
+      "url": META.canonical,
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Skillra Health Innovations Pvt Ltd",
+        "logo": "/logo.png",
+        "url": "https://www.skillra.com",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "Tamil"],
+          "hoursAvailable": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "09:00",
+            "closes": "19:00"
+          }
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "Tamil Nadu",
+          "addressCountry": "IN"
+        }
+      }
+    });
+  }, []);
+  return null;
+}
 /* ═══════════════════════════════════════════════════
    useInView hook
 ═══════════════════════════════════════════════════ */
@@ -535,6 +614,7 @@ export default function SkillraContactPage() {
       <ContactSection />
       <ContactInfoSection />
       <Footer />
+      <PageMeta />
     </div>
   );
 }

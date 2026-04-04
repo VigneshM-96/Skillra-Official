@@ -13,7 +13,6 @@ const META = {
   title:       "About Us | Skillra – AI Medical Coding, IT & Finance Training Institute",
   description: "Learn about Skillra, a leading training and upskilling institute in Tamil Nadu offering industry-aligned programs in AI Medical Coding, IT, Finance, and Professional Development. Meet our founder and co-founder.",
   canonical:   "https://www.skillra.com/about",
-  ogImage:     `${PUB}/aboutusimg.png`,
   keywords:    "Skillra, medical coding training, AI medical coding, IT training institute, finance courses, career development, professional training",
 };
 
@@ -62,7 +61,7 @@ function PageMeta() {
       "@type": "EducationalOrganization",
       "name": "Skillra",
       "url": "https://www.skillra.com",
-      "logo": `${PUB}/logo.png`,
+      "logo": '/logo.png',
       "description": META.description,
       "address": { "@type": "PostalAddress", "addressRegion": "Tamil Nadu", "addressCountry": "IN" },
       "sameAs": ["https://www.linkedin.com/company/skillra", "https://www.instagram.com/skillra"]
@@ -287,7 +286,7 @@ function FounderSection() {
               borderRadius: "20px", overflow: "hidden",
               position: "relative", zIndex: 1, flexShrink: 0,
             }}>
-              <img src={`${PUB}/bhuvaneshwari.png`} alt="Founder" className="founder-img"
+              <img src={`${PUB}/Founders/bhuvaneshwari.png`} alt="Founder" className="founder-img"
                 style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))" }}
               />
             </div>
@@ -382,7 +381,7 @@ function CoFounderSection() {
               borderRadius: "20px", overflow: "hidden",
               position: "relative", zIndex: 1, flexShrink: 0,
             }}>
-              <img src={`${PUB}/premchandar.png`} alt="Co-founder" className="cofounder-img"
+              <img src={`${PUB}/Founders/premchandar.png`} alt="Co-founder" className="cofounder-img"
                 style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))" }}
               />
             </div>
@@ -394,8 +393,10 @@ function CoFounderSection() {
 }
 
 /* ═══════════════════════════════════════════
-   NEWSLETTER
+   NEWSLETTER — STRICT INPUT VALIDATION
 ═══════════════════════════════════════════ */
+
+/* Disposable / throwaway email domains to reject */
 const BLOCKED_DOMAINS = new Set([
   "mailinator.com","guerrillamail.com","tempmail.com","throwam.com",
   "yopmail.com","sharklasers.com","guerrillamailblock.com","grr.la",
@@ -405,17 +406,23 @@ const BLOCKED_DOMAINS = new Set([
   "tempinbox.com","33mail.com","spamgourmet.net","spamgourmet.org",
 ]);
 
+/* Strict RFC-5321-aligned regex — no consecutive dots, no leading/trailing dot in local */
 const EMAIL_REGEX = /^(?![.\-])(?!.*[.\-]{2})[a-zA-Z0-9._%+\-]{1,64}(?<![.\-])@[a-zA-Z0-9\-]{1,63}(?:\.[a-zA-Z0-9\-]{1,63})*\.[a-zA-Z]{2,}$/;
 
+/* Strip any HTML / script injection attempts from the value */
 function sanitise(raw) {
-  return raw.replace(/[<>"'`]/g, "").replace(/javascript:/gi, "").trim().slice(0, 254);
+  return raw
+    .replace(/[<>"'`]/g, "")
+    .replace(/javascript:/gi, "")
+    .trim()
+    .slice(0, 254);
 }
 
 function validateEmail(raw) {
   const val = sanitise(raw);
-  if (!val) return "Email address is required.";
-  if (val.length > 254) return "Email address is too long (max 254 characters).";
-  if (!EMAIL_REGEX.test(val)) return "Please enter a valid email address (e.g. name@example.com).";
+  if (!val)                        return "Email address is required.";
+  if (val.length > 254)            return "Email address is too long (max 254 characters).";
+  if (!EMAIL_REGEX.test(val))      return "Please enter a valid email address (e.g. name@example.com).";
   const domain = val.split("@")[1].toLowerCase();
   if (BLOCKED_DOMAINS.has(domain)) return "Disposable email addresses are not accepted. Please use a real email.";
   if (domain.split(".").pop().length < 2) return "Email domain extension is invalid.";
@@ -425,21 +432,28 @@ function validateEmail(raw) {
 const MAX_ATTEMPTS = 3;
 
 function NewsletterSection() {
-  const [ref, inView] = useInView(0.3);
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [touched, setTouched] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
+  const [ref, inView]                 = useInView(0.3);
+  const [email, setEmail]             = useState("");
+  const [error, setError]             = useState("");
+  const [touched, setTouched]         = useState(false);
+  const [subscribed, setSubscribed]   = useState(false);
   const [subscribing, setSubscribing] = useState(false);
-  const [attempts, setAttempts] = useState(0);
-  const [locked, setLocked] = useState(false);
+  const [attempts, setAttempts]       = useState(0);
+  const [locked, setLocked]           = useState(false);
 
   useEffect(() => {
     if (touched) setError(validateEmail(email) || "");
   }, [email, touched]);
 
-  const handleChange = (e) => setEmail(sanitise(e.target.value));
-  const handleBlur = () => { setTouched(true); setError(validateEmail(email) || ""); };
+  const handleChange = (e) => {
+    const clean = sanitise(e.target.value);
+    setEmail(clean);
+  };
+
+  const handleBlur = () => {
+    setTouched(true);
+    setError(validateEmail(email) || "");
+  };
 
   const handleSubscribe = async () => {
     if (locked || subscribing) return;
@@ -449,14 +463,19 @@ function NewsletterSection() {
       setError(err);
       const next = attempts + 1;
       setAttempts(next);
-      if (next >= MAX_ATTEMPTS) { setLocked(true); setError("Too many invalid attempts. Please refresh the page to try again."); }
+      if (next >= MAX_ATTEMPTS) {
+        setLocked(true);
+        setError("Too many invalid attempts. Please refresh the page to try again.");
+      }
       return;
     }
     setError("");
     setSubscribing(true);
+
     try {
       await fetch(SHEETS_URL, {
-        method: "POST", mode: "no-cors",
+        method: "POST",
+        mode: "no-cors",
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ type: "subscriber", email: email.trim() }),
       });
@@ -469,12 +488,51 @@ function NewsletterSection() {
     }
   };
 
-  const inputBorderColor = !touched ? "rgba(255,255,255,0.7)" : error ? "#f87171" : "#4ade80";
+  const inputBorderColor = !touched
+    ? "rgba(255,255,255,0.7)"
+    : error
+      ? "#f87171"
+      : "#4ade80";
 
   return (
     <div ref={ref} style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position: "relative", overflow: "hidden" }}>
-      <style>{`@keyframes spinRingAnim { to { transform:rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spinRingAnim { to { transform: rotate(360deg); } }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── Newsletter form row ── */
+        .nl-form-row {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          flex-wrap: nowrap;
+          align-items: flex-start;
+        }
+
+        /* On mobile: stack input above button, both full width */
+        @media (max-width: 600px) {
+          .nl-form-row {
+            flex-direction: column !important;
+            width: 100%;
+          }
+          .nl-input-wrap {
+            width: 100% !important;
+          }
+          .nl-input-wrap input {
+            width: 100% !important;
+          }
+          .nl-submit-btn {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+      `}</style>
+
+      {/* Dot grid background */}
       <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
+
+      {/* Bottom shimmer bar */}
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite" }} />
 
       <div style={{
@@ -483,10 +541,12 @@ function NewsletterSection() {
         gap: "36px", flexWrap: "wrap", position: "relative", zIndex: 1,
         opacity: inView ? 1 : 0, transition: "opacity 0.8s ease",
       }}>
+
+        {/* ── Left — branding ── */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px", paddingTop: "6px" }}>
           <div style={{ width: "46px", height: "46px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", animation: "spinRingAnim 6s linear infinite" }}>
             <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
-              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round" />
             </svg>
           </div>
           <div>
@@ -499,60 +559,123 @@ function NewsletterSection() {
           </div>
         </div>
 
+        {/* ── Right — form / success ── */}
         {subscribed ? (
           <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "12px", padding: "12px 20px" }}>
             <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
             </div>
             <span style={{ color: "#fff", fontWeight: 700, fontSize: "14px", fontFamily: "'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: "0 0 auto" }}>
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <input type="email" inputMode="email" autoComplete="email" aria-label="Email address"
-                  aria-describedby={error ? "nl-error" : undefined} aria-invalid={touched && !!error}
-                  value={email} disabled={locked} onChange={handleChange} onBlur={handleBlur}
-                  onKeyDown={e => e.key === "Enter" && handleSubscribe()}
-                  placeholder="Enter your email" maxLength={254}
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: "0 0 auto", width: "100%", maxWidth: "460px" }}>
+
+            {/* Input + Button row */}
+            <div className="nl-form-row">
+
+              {/* Email input wrapper */}
+              <div className="nl-input-wrap" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  aria-label="Email address"
+                  aria-describedby={error ? "nl-error" : undefined}
+                  aria-invalid={touched && !!error}
+                  value={email}
+                  disabled={locked}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
+                  placeholder="Enter your email"
+                  maxLength={254}
                   style={{
-                    height: "48px", width: "clamp(200px,26vw,300px)", padding: "0 16px",
-                    fontSize: "14px", fontFamily: "'Outfit',sans-serif", fontWeight: 500,
+                    height: "48px",
+                    width: "clamp(200px,26vw,300px)",
+                    padding: "0 16px",
+                    fontSize: "14px",
+                    fontFamily: "'Outfit',sans-serif",
+                    fontWeight: 500,
                     color: locked ? "#999" : "#1a0640",
                     background: locked ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.96)",
-                    border: `2px solid ${inputBorderColor}`, borderRadius: "12px", outline: "none",
-                    cursor: locked ? "not-allowed" : "text", transition: "border-color 0.2s",
+                    border: `2px solid ${inputBorderColor}`,
+                    borderRadius: "12px",
+                    outline: "none",
+                    cursor: locked ? "not-allowed" : "text",
+                    transition: "border-color 0.2s",
+                    boxSizing: "border-box",
                   }}
                 />
               </div>
-              <button onClick={handleSubscribe} disabled={subscribing || locked}
-                style={{
-                  height: "48px", background: locked ? "#555" : "#111", color: "#fff", border: "none",
-                  borderRadius: "12px", padding: "0 24px", fontSize: "14px", fontWeight: 700,
-                  fontFamily: "'Outfit',sans-serif", cursor: (subscribing || locked) ? "not-allowed" : "pointer",
-                  whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: "8px",
-                  transition: "all 0.22s", opacity: locked ? 0.6 : 1, alignSelf: "flex-start",
-                }}
-                onMouseEnter={e => { if (!locked && !subscribing) { e.currentTarget.style.background = "#2d1b69"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
-                onMouseLeave={e => { e.currentTarget.style.background = locked ? "#555" : "#111"; e.currentTarget.style.transform = "translateY(0)"; }}
-              >
-                {subscribing ? "Subscribing…" : "Subscribe Now"}
-                {!subscribing && !locked && (
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-              </button>
+
+              {/* Submit button */}
+              <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+                <button
+                  className="nl-submit-btn"
+                  onClick={handleSubscribe}
+                  disabled={subscribing || locked}
+                  aria-disabled={subscribing || locked}
+                  style={{
+                    height: "48px",
+                    background: locked ? "#555" : "#111",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "12px",
+                    padding: "0 24px",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    fontFamily: "'Outfit',sans-serif",
+                    cursor: (subscribing || locked) ? "not-allowed" : "pointer",
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    transition: "all 0.22s",
+                    opacity: locked ? 0.6 : 1,
+                    alignSelf: "flex-start",
+                    boxSizing: "border-box",
+                  }}
+                  onMouseEnter={(e) => { if (!locked && !subscribing) { e.currentTarget.style.background = "#2d1b69"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = locked ? "#555" : "#111"; e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  {subscribing ? "Subscribing…" : "Subscribe Now"}
+                  {!subscribing && !locked && (
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </button>
+              </a>
             </div>
+
+            {/* Inline error message */}
             {touched && error && (
-              <p id="nl-error" role="alert" style={{ margin: 0, fontSize: "12px", fontWeight: 600, fontFamily: "'Outfit',sans-serif", color: "#fca5a5", display: "flex", alignItems: "center", gap: "5px", animation: "fadeIn 0.2s ease" }}>
+              <p
+                id="nl-error"
+                role="alert"
+                style={{
+                  margin: 0,
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  fontFamily: "'Outfit',sans-serif",
+                  color: "#fca5a5",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  animation: "fadeIn 0.2s ease",
+                }}
+              >
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8"/>
-                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/>
+                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8" />
+                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round" />
                 </svg>
                 {error}
               </p>
             )}
+
+            {/* Attempt counter hint */}
             {touched && error && !locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
               <p style={{ margin: 0, fontSize: "11px", color: "rgba(255,255,255,0.5)", fontFamily: "'Outfit',sans-serif" }}>
                 {MAX_ATTEMPTS - attempts} attempt{MAX_ATTEMPTS - attempts !== 1 ? "s" : ""} remaining.
@@ -564,7 +687,6 @@ function NewsletterSection() {
     </div>
   );
 }
-
 /* ═══════════════════════════════════════════
    MAIN EXPORT
 ═══════════════════════════════════════════ */

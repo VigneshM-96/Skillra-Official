@@ -9,6 +9,92 @@ const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_Vyy
 const currentYear = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: currentYear - 2019 }, (_, i) => 2020 + i);
 
+const META = {
+  title:       "Placements | Skillra – 250+ Students Placed in Top Companies",
+  description: "Discover Skillra's placement success with 250+ students placed in top companies like Cognizant, Optum, Sutherland, CorroHealth, R1, and more. Explore our corporate tie-ups and placement support.",
+  canonical:   "https://www.skillra.com/placements",
+  keywords:    "Skillra placements, medical coding jobs, IT placements, Cognizant hiring, Optum careers, Sutherland jobs, campus placements, corporate tie-ups, placement support, healthcare jobs",
+};
+
+function setMeta(attr, value, content) {
+  let el = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
+  el.setAttribute("content", content);
+}
+
+function setLink(rel, href) {
+  let el = document.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
+
+function setJsonLd(data) {
+  const id = "skillra-placements-jsonld";
+  let el = document.getElementById(id);
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+}
+
+function PageMeta() {
+  useEffect(() => {
+    document.title = META.title;
+    setMeta("name", "description",  META.description);
+    setMeta("name", "keywords",     META.keywords);
+    setMeta("name", "robots",       "index, follow");
+    setMeta("name", "author",       "Skillra");
+    setLink("canonical",            META.canonical);
+    setMeta("property", "og:type",        "website");
+    setMeta("property", "og:url",         META.canonical);
+    setMeta("property", "og:title",       META.title);
+    setMeta("property", "og:description", META.description);
+    setMeta("property", "og:image",       META.ogImage);
+    setMeta("property", "og:image:alt",   "Skillra placement success and hiring partners");
+    setMeta("property", "og:site_name",   "Skillra");
+    setMeta("property", "og:locale",      "en_IN");
+    setMeta("name", "twitter:card",        "summary_large_image");
+    setMeta("name", "twitter:title",       META.title);
+    setMeta("name", "twitter:description", META.description);
+    setMeta("name", "twitter:image",       META.ogImage);
+    setMeta("name", "twitter:image:alt",   "Skillra placement success and hiring partners");
+    setJsonLd({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Skillra Placements",
+      "description": META.description,
+      "url": META.canonical,
+      "mainEntity": {
+        "@type": "EducationalOrganization",
+        "name": "Skillra Health Innovations Pvt Ltd",
+        "logo": "/logo.png",
+        "url": "https://www.skillra.com",
+        "alumni": {
+          "@type": "QuantitativeValue",
+          "value": 250,
+          "unitText": "students placed"
+        },
+        "member": [
+          { "@type": "Organization", "name": "Cognizant" },
+          { "@type": "Organization", "name": "Reveleer" },
+          { "@type": "Organization", "name": "Sutherland" },
+          { "@type": "Organization", "name": "Huron" },
+          { "@type": "Organization", "name": "CorroHealth" },
+          { "@type": "Organization", "name": "R1" },
+          { "@type": "Organization", "name": "FirstSource" },
+          { "@type": "Organization", "name": "Clarus" },
+          { "@type": "Organization", "name": "Savista" },
+          { "@type": "Organization", "name": "S10 Health" },
+          { "@type": "Organization", "name": "Vee Healthtek" },
+          { "@type": "Organization", "name": "Medcode Services" },
+          { "@type": "Organization", "name": "Optum" },
+          { "@type": "Organization", "name": "Aaneel" }
+        ]
+      }
+    });
+  }, []);
+  return null;
+}
+
+
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -324,8 +410,8 @@ function ActiveStudentsBadge({ style, delay = 0 }) {
         </svg>
       </div>
       <div>
-        <div style={{ fontSize: "clamp(11px,1.4vw,14px)", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit',sans-serif" }}>1k</div>
-        <div style={{ fontSize: "clamp(8px,1vw,10px)", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>Active Students</div>
+        <div style={{ fontSize: "clamp(11px,1.4vw,14px)", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit',sans-serif" }}>200+</div>
+        <div style={{ fontSize: "clamp(8px,1vw,10px)", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>Active Learners</div>
       </div>
     </div>
   );
@@ -462,7 +548,7 @@ function AboutHero({ onCtaClick }) {
           <PlacedBadge style={{ bottom: "32%", right: "5%" }} delay={700} />
           <FloatingBadge
             icon={<svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>}
-            label="4+ offers" style={{ bottom: "18%", left: "4%" }} delay={1000}
+            label="10+ Courses" style={{ bottom: "18%", left: "4%" }} delay={1000}
           />
         </div>
       </div>
@@ -619,7 +705,7 @@ function WhyTrustSection() {
   return (
     <section ref={ref} style={{ background: "#fff", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden", padding: "clamp(40px,7vw,80px) 0 clamp(40px,7vw,90px)" }}>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.035) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
-      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+      <div className="sec-wrap" style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", marginBottom: "clamp(32px,5vw,52px)", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
           <h2 style={{ fontSize: "clamp(1.4rem,3.2vw,2.5rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: "14px" }}>Why Students Trust Skillra</h2>
           <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", fontWeight: 400 }}>We focus on career outcomes, not just courses.</p>
@@ -675,26 +761,26 @@ function StepNode({ step, index, inView }) {
         transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s`
       }}>
 
-      {/* TOP LABEL — fixed 100px height always */}
+      {/* TOP LABEL — increased to 130px, bigger text */}
       <div style={{
-        height: "100px",
+        height: "130px",                          // ← was 100px
         display: "flex", flexDirection: "column",
         justifyContent: "flex-end", alignItems: "center",
         paddingBottom: "14px", textAlign: "center",
         visibility: isTop ? "visible" : "hidden",
       }}>
-        <p style={{ fontSize: "clamp(10px,1.1vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px", lineHeight: 1.3, maxWidth: "110px" }}>{step.title}</p>
-        <p style={{ fontSize: "clamp(9px,0.9vw,11px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.5, maxWidth: "100px" }}>{step.desc}</p>
+        <p style={{ fontSize: "clamp(12px,1.3vw,15px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "6px", lineHeight: 1.35, maxWidth: "130px" }}>{step.title}</p>
+        <p style={{ fontSize: "clamp(11px,1.1vw,13px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, maxWidth: "120px" }}>{step.desc}</p>
       </div>
 
       {/* STEP NUMBER BADGE */}
       <div style={{
         position: "absolute",
-        top: "100px", // exactly at top of circle
+        top: "130px",                             // ← was 100px
         left: "50%", transform: "translateX(-50%) translateY(-8px)",
-        width: "18px", height: "18px", borderRadius: "50%",
+        width: "20px", height: "20px", borderRadius: "50%",
         background: "#7c3aed", color: "#fff",
-        fontSize: "10px", fontWeight: 800,
+        fontSize: "11px", fontWeight: 800,
         display: "flex", alignItems: "center", justifyContent: "center",
         fontFamily: "'Outfit',sans-serif",
         zIndex: 4, boxShadow: "0 2px 8px rgba(124,58,237,0.4)",
@@ -702,7 +788,7 @@ function StepNode({ step, index, inView }) {
 
       {/* CIRCLE NODE */}
       <div style={{
-        width: "clamp(52px,5.5vw,66px)", height: "clamp(52px,5.5vw,66px)",
+        width: "clamp(54px,5.5vw,68px)", height: "clamp(54px,5.5vw,68px)",
         borderRadius: "50%",
         background: hovered
           ? "linear-gradient(135deg,#4c1d95,#6d28d9)"
@@ -719,16 +805,16 @@ function StepNode({ step, index, inView }) {
         {step.icon}
       </div>
 
-      {/* BOTTOM LABEL — fixed 100px height always */}
+      {/* BOTTOM LABEL — increased to 130px, bigger text */}
       <div style={{
-        height: "100px",
+        height: "130px",                          // ← was 100px
         display: "flex", flexDirection: "column",
         justifyContent: "flex-start", alignItems: "center",
         paddingTop: "14px", textAlign: "center",
         visibility: isTop ? "hidden" : "visible",
       }}>
-        <p style={{ fontSize: "clamp(10px,1.1vw,13px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "4px", lineHeight: 1.3, maxWidth: "110px" }}>{step.title}</p>
-        <p style={{ fontSize: "clamp(9px,0.9vw,11px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.5, maxWidth: "100px" }}>{step.desc}</p>
+        <p style={{ fontSize: "clamp(12px,1.3vw,15px)", fontWeight: 700, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", marginBottom: "6px", lineHeight: 1.35, maxWidth: "130px" }}>{step.title}</p>
+        <p style={{ fontSize: "clamp(11px,1.1vw,13px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", lineHeight: 1.6, maxWidth: "120px" }}>{step.desc}</p>
       </div>
 
     </div>
@@ -755,7 +841,7 @@ function HowWeHelpSection() {
       }} />
 
       <div className="sec-wrap" style={{
-        maxWidth: "1100px", margin: "0 auto",
+        maxWidth: "1500px", margin: "0 auto",
         padding: "0 clamp(16px,4%,40px)",
         position: "relative", zIndex: 1,
       }}>
@@ -780,7 +866,7 @@ function HowWeHelpSection() {
 
           {/* SVG Roadmap — sits behind nodes, top offset = topLabel height = 100px, circle center = 100 + 33 = 133px */}
           <svg
-            viewBox="0 0 1000 266"
+            viewBox="0 0 1000 328"
             preserveAspectRatio="none"
             style={{
               position: "absolute",
@@ -815,7 +901,8 @@ function HowWeHelpSection() {
 
             {/* Shadow/glow path */}
             <path
-              d="M 100 133 C 150 133, 200 133, 250 133 C 300 133, 350 133, 400 133 C 450 133, 500 133, 550 133 C 600 133, 650 133, 700 133 C 750 133, 800 133, 900 133"
+              d="M 100 164 C 150 164, 200 164, 250 164 C 300 164, 350 164, 400 164 C 450 164, 500 164, 550 164 C 600 164, 650 164, 700 164 C 750 164, 800 164, 900 164"
+
               fill="none"
               stroke="url(#pathGrad2)"
               strokeWidth="12"
@@ -824,7 +911,7 @@ function HowWeHelpSection() {
 
             {/* Main zigzag dashed path */}
             <path
-              d="M 100 170 C 160 170, 190 96, 250 96 C 310 96, 340 170, 400 170 C 460 170, 490 96, 550 96 C 610 96, 640 170, 700 170 C 760 170, 830 170, 900 170"
+              d="M 100 200 C 160 200, 190 128, 250 128 C 310 128, 340 200, 400 200 C 460 200, 490 128, 550 128 C 610 128, 640 200, 700 200 C 760 200, 830 200, 900 200"
               fill="none"
               stroke="url(#pathGrad)"
               strokeWidth="2.5"
@@ -833,9 +920,9 @@ function HowWeHelpSection() {
             />
 
             {/* Arrow heads at each transition */}
-            {[[250,96],[400,170],[550,96],[700,170]].map(([x,y], i) => (
-              <circle key={i} cx={x} cy={y} r="4" fill="#7c3aed" opacity="0.6" />
-            ))}
+            {[[250,128],[400,200],[550,128],[700,200]].map(([x,y], i) => (
+    <circle key={i} cx={x} cy={y} r="4" fill="#7c3aed" opacity="0.6" />
+  ))}
           </svg>
 
           {/* Nodes */}
@@ -916,10 +1003,10 @@ function HowWeHelpSection() {
    STUDENTS PLACED
 ═══════════════════════════════════════════════════ */
 const PLACED_STUDENTS = [
-  { name: "Ezhil N", company: "cognizant", companyColor: "#1a77d4", img: "student1.png" },
-  { name: "Ezhil N", company: "Optum", companyColor: "#ff6600", img: "student2.png" },
-  { name: "Ezhil N", company: "Optum", companyColor: "#ff6600", img: "student3.png" },
-  { name: "Ezhil N", company: "Optum", companyColor: "#ff6600", img: "student4.png" },
+  { name: "Kishore M", company: "Unitic", companyColor: "#037946", img: "/PlacedStudents/kishoreunitic.jpeg" },
+  { name: "Deepak", company: "Cognizant", companyColor: "#0099ff", img: "/PlacedStudents/deepakcognizant.jpeg" },
+  { name: "Manikandan SP", company: "TCS", companyColor: "#000000", img: "/PlacedStudents/manitcs.jpeg" },
+  { name: "Mary", company: "Shai Health", companyColor: "#ff009d", img: "student4.png" },
 ];
 
 function StudentCard({ student, index, inView }) {
@@ -928,8 +1015,20 @@ function StudentCard({ student, index, inView }) {
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(36px)", transition: `opacity 0.6s ease ${0.1 + index * 0.12}s, transform 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + index * 0.12}s`, cursor: "default" }}>
       <div style={{ width: "clamp(100px,14vw,180px)", height: "clamp(130px,17vw,220px)", borderRadius: "90px 90px 12px 12px", background: hovered ? "linear-gradient(180deg,#c4b5fd 0%,#ddd6fe 100%)" : "linear-gradient(180deg,#e9e3ff 0%,#f3f0ff 100%)", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center", boxShadow: hovered ? "0 20px 48px rgba(109,40,217,0.22)" : "0 8px 32px rgba(109,40,217,0.10)", transition: "all 0.30s cubic-bezier(0.34,1.56,0.64,1)", transform: hovered ? "translateY(-8px) scale(1.03)" : "translateY(0) scale(1)", position: "relative" }}>
-        <img src={`${PUB}/${student.img}`} alt={student.name} style={{ width: "85%", height: "95%", objectFit: "cover", objectPosition: "top center", display: "block" }}
-          onError={e => { e.target.style.display = "none"; }} />
+        <img
+  src={`${PUB}/${student.img}`}
+  alt={student.name}
+  style={{
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "top center",
+    display: "block",
+    transition: "transform 0.4s ease",           // ← add
+    transform: hovered ? "scale(1.2)" : "scale(1)", // ← add
+  }}
+  onError={e => { e.target.style.display = "none"; }}
+/>
       </div>
       <p style={{ marginTop: "12px", fontSize: "clamp(11px,1.3vw,14px)", fontWeight: 600, color: "#111827", fontFamily: "'Outfit',sans-serif" }}>{student.name}</p>
       <p style={{ marginTop: "3px", fontSize: "clamp(12px,1.4vw,16px)", fontWeight: 900, color: student.companyColor, fontFamily: "'Outfit',sans-serif" }}>{student.company}</p>
@@ -942,10 +1041,10 @@ function StudentsPlacedSection() {
   return (
     <section ref={ref} style={{ background: "#fff", padding: "clamp(40px,7vw,88px) 0 clamp(48px,8vw,96px)", borderTop: "1px solid #f0ebff", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px)`, backgroundSize: "40px 40px" }} />
-      <div className="sec-wrap" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
+      <div className="sec-wrap" style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 clamp(16px,4%,24px)", position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", marginBottom: "clamp(32px,5vw,60px)", opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.65s ease" }}>
           <h2 style={{ fontSize: "clamp(1.4rem,3.5vw,2.6rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "14px" }}>Students Placed</h2>
-          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "500px", margin: "0 auto", lineHeight: 1.7 }}>Our students have been placed in top companies across India.</p>
+          <p style={{ fontSize: "clamp(13px,1.4vw,14.5px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "900px", margin: "0 auto", lineHeight: 1.7 }}>Our students have been placed in top companies across India, proving that the right skills, the right guidance, and the right support system can open doors that once felt out of reach.</p>
         </div>
         <div className="students-grid">
           {PLACED_STUDENTS.map((student, i) => <StudentCard key={i} student={student} index={i} inView={inView} />)}
@@ -1133,6 +1232,7 @@ export default function PlacementPage() {
       <WhyTrustSection />
       <HowWeHelpSection />
       <StudentsPlacedSection />
+      <PageMeta />
       <Footer />
     </div>
   );

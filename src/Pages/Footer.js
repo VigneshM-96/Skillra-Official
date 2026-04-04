@@ -6,12 +6,12 @@ const PUB = process.env.PUBLIC_URL || "";
 /* ═══════════════════════════════════════════
    ICON COMPONENTS
 ═══════════════════════════════════════════ */
-const IcoFacebook  = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>);
-const IcoInstagram = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>);
-const IcoLinkedIn  = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>);
-const IcoTwitterX  = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>);
-const IcoYouTube   = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>);
-const IcoChevron   = () => (<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>);
+const IcoFacebook  = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>);
+const IcoInstagram = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>);
+const IcoLinkedIn  = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>);
+const IcoTwitterX  = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>);
+const IcoYouTube   = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>);
+const IcoChevron   = () => (<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>);
 
 /* ═══════════════════════════════════════════
    DATA
@@ -35,7 +35,7 @@ const COURSES_COL1 = [
 
 const COURSES_COL2 = [
   { label: "Personality Development Course", path: "/courses/personality-development" },
-  { label: "MERN / MEAN Stack Course",       path: "/courses/full-stack-development"  },
+  { label: "Full Stack Course",       path: "/courses/full-stack-development"  },
   { label: "UI/UX Designing Course",         path: "/courses/ui-ux-design"         },
   { label: "AI & Machine Learning Course",   path: "/courses/ai-machine-learning"     },
 ];
@@ -65,7 +65,7 @@ function SocialBtn({ Icon, color, label, url }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        width: 34, height: 34, borderRadius: "50%",
+        width: 38, height: 38, borderRadius: "50%",
         background: hov ? color : "rgba(255,255,255,0.10)",
         border: `1.5px solid ${hov ? color : "rgba(255,255,255,0.15)"}`,
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -87,7 +87,7 @@ function SocialBtn({ Icon, color, label, url }) {
 function FooterLink({ label, href, onClick }) {
   const [hov, setHov] = useState(false);
   return (
-    <li style={{ listStyle: "none", marginBottom: "10px" }}>
+    <li style={{ listStyle: "none", marginBottom: "12px" }}>
       <a
         href={href}
         onClick={onClick}
@@ -95,7 +95,7 @@ function FooterLink({ label, href, onClick }) {
         onMouseLeave={() => setHov(false)}
         style={{
           display: "flex", alignItems: "center", gap: "8px",
-          fontSize: "13px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
+          fontSize: "15px", fontFamily: "'Outfit', sans-serif", fontWeight: 500,
           color: hov ? "#a78bfa" : "rgba(255,255,255,0.68)",
           cursor: "pointer",
           transform: hov ? "translateX(4px)" : "translateX(0)",
@@ -152,20 +152,20 @@ export default function Footer() {
         .ft-main {
           max-width: 1400px; margin: 0 auto;
           padding: 52px clamp(16px,3%,40px) 36px;
-          display: flex; gap: 200px; flex-wrap: wrap;
+          display: flex; gap: 150px; flex-wrap: wrap;
           position: relative; z-index: 1;
           align-items: flex-start;
         }
-        .ft-brand { flex: 0 0 260px; min-width: 200px; }
+        .ft-brand { flex: 0 0 280px; min-width: 220px; }
         .ft-courses-wrap {
           flex: 0 0 auto;
           display: flex;
           gap: 30px;
         }
-        .ft-col { flex: 0 0 auto; min-width: 190px; }
+        .ft-col { flex: 0 0 auto; min-width: 200px; }
         .ft-bottom {
           border-top: 1px solid rgba(255,255,255,0.07);
-          padding: 18px clamp(16px,4%,48px);
+          padding: 20px clamp(16px,4%,48px);
           display: flex; align-items: center; justify-content: center;
           position: relative; z-index: 1;
         }
@@ -175,7 +175,7 @@ export default function Footer() {
         }
         @media (max-width: 700px) {
           .ft-courses-wrap { gap: 16px; }
-          .ft-col { min-width: 140px; }
+          .ft-col { min-width: 150px; }
           .ft-main { gap: 24px; padding: 36px 16px 28px !important; }
         }
         @media (max-width: 420px) {
@@ -193,10 +193,10 @@ export default function Footer() {
           <a
             href="/"
             onClick={(e) => goTo(e, "/")}
-            style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px", cursor: "pointer", textDecoration: "none" }}
+            style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "18px", cursor: "pointer", textDecoration: "none" }}
           >
             <div style={{
-              width: 36, height: 36, borderRadius: "10px",
+              width: 40, height: 40, borderRadius: "10px",
               background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
               display: "flex", alignItems: "center", justifyContent: "center",
               boxShadow: "0 4px 14px rgba(124,58,237,0.45)",
@@ -204,7 +204,7 @@ export default function Footer() {
             }}>
               {logoErr
                 ? (
-                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M15 6.5C15 4.57 13.43 3 11.5 3H8C5.79 3 4 4.79 4 7c0 1.86 1.28 3.41 3 3.87V11C5.12 11.46 4 12.84 4 14.5 4 16.43 5.57 18 7.5 18H11c2.21 0 4-1.79 4-4 0-1.86-1.28-3.41-3-3.87V10c1.88-.46 3-1.84 3-3.5z" fill="white" fillOpacity="0.9" />
                   </svg>
                 )
@@ -218,13 +218,13 @@ export default function Footer() {
                 )
               }
             </div>
-            <span style={{ fontSize: "18px", fontWeight: 900, color: "#fff", letterSpacing: "0.06em", fontFamily: "'Outfit', sans-serif" }}>
+            <span style={{ fontSize: "22px", fontWeight: 900, color: "#fff", letterSpacing: "0.06em", fontFamily: "'Outfit', sans-serif" }}>
               SKILLRA
             </span>
           </a>
 
           <p style={{
-            fontSize: "13px",
+            fontSize: "15px",
             color: "rgba(255,255,255,0.55)",
             lineHeight: 1.75,
             fontWeight: 400,
@@ -244,7 +244,7 @@ export default function Footer() {
         {/* ── Courses — two sub-columns ── */}
         <div className="ft-courses-wrap">
           <div className="ft-col">
-            <h4 style={{ fontSize: "14px", fontWeight: 800, color: "#fff", marginBottom: "18px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
+            <h4 style={{ fontSize: "16px", fontWeight: 800, color: "#fff", marginBottom: "18px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
               Our Courses
             </h4>
             <ul style={{ padding: 0, margin: 0 }}>
@@ -259,7 +259,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="ft-col" style={{ paddingTop: "38px" }}>
+          <div className="ft-col" style={{ paddingTop: "40px" }}>
             <ul style={{ padding: 0, margin: 0 }}>
               {COURSES_COL2.map((c, i) => (
                 <FooterLink
@@ -275,7 +275,7 @@ export default function Footer() {
 
         {/* ── Quick Links ── */}
         <div className="ft-col">
-          <h4 style={{ fontSize: "14px", fontWeight: 800, color: "#fff", marginBottom: "18px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
+          <h4 style={{ fontSize: "16px", fontWeight: 800, color: "#fff", marginBottom: "18px", letterSpacing: "-0.01em", fontFamily: "'Outfit', sans-serif" }}>
             Quick Links
           </h4>
           <ul style={{ padding: 0, margin: 0 }}>
@@ -295,7 +295,7 @@ export default function Footer() {
       {/* ── Bottom bar ── */}
       <div className="ft-bottom">
         <p style={{
-          fontSize: "13px", color: "rgba(255,255,255,0.45)",
+          fontSize: "15px", color: "rgba(255,255,255,0.45)",
           fontFamily: "'Outfit', sans-serif", fontWeight: 500, textAlign: "center",
         }}>
           Copyright © {new Date().getFullYear()}{" "}

@@ -5,6 +5,88 @@ import SocialSidebar from "../components/SocialSideBar";
 
 const PUB = process.env.PUBLIC_URL || "";
 
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
+
+const META = {
+  title:       "Campus | Skillra – Our Training Facility & Learning Environment",
+  description: "Take a virtual tour of Skillra's campus. Experience our modern training facility equipped with the latest technology for AI Medical Coding, IT, and Finance courses in Tamil Nadu.",
+  canonical:   "https://www.skillra.com/campus",
+  keywords:    "Skillra campus, training facility, learning environment, Skillra infrastructure, medical coding lab, IT training center, classroom, Tamil Nadu training institute",
+};
+
+function setMeta(attr, value, content) {
+  let el = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
+  el.setAttribute("content", content);
+}
+
+function setLink(rel, href) {
+  let el = document.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
+
+function setJsonLd(data) {
+  const id = "skillra-campus-jsonld";
+  let el = document.getElementById(id);
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+}
+
+function PageMeta() {
+  useEffect(() => {
+    document.title = META.title;
+    setMeta("name", "description",  META.description);
+    setMeta("name", "keywords",     META.keywords);
+    setMeta("name", "robots",       "index, follow");
+    setMeta("name", "author",       "Skillra");
+    setLink("canonical",            META.canonical);
+    setMeta("property", "og:type",        "website");
+    setMeta("property", "og:url",         META.canonical);
+    setMeta("property", "og:title",       META.title);
+    setMeta("property", "og:description", META.description);
+    setMeta("property", "og:image",       META.ogImage);
+    setMeta("property", "og:image:alt",   "Skillra campus and training facility");
+    setMeta("property", "og:site_name",   "Skillra");
+    setMeta("property", "og:locale",      "en_IN");
+    setMeta("name", "twitter:card",        "summary_large_image");
+    setMeta("name", "twitter:title",       META.title);
+    setMeta("name", "twitter:description", META.description);
+    setMeta("name", "twitter:image",       META.ogImage);
+    setMeta("name", "twitter:image:alt",   "Skillra campus and training facility");
+    setJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Place",
+      "name": "Skillra Campus",
+      "description": META.description,
+      "url": META.canonical,
+      "image": "/logo.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Tamil Nadu",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "addressCountry": "IN"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:00",
+        "closes": "19:00"
+      },
+      "parentOrganization": {
+        "@type": "EducationalOrganization",
+        "name": "Skillra Health Innovations Pvt Ltd",
+        "logo": "/logo.png",
+        "url": "https://www.skillra.com"
+      }
+    });
+  }, []);
+  return null;
+}
+
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -74,8 +156,8 @@ function ActiveStudentsBadge({ style, delay = 0, className = ""}) {
         </svg>
       </div>
       <div>
-        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>1000+</div>
-        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit', sans-serif" }}>Active Students</div>
+        <div style={{ fontSize: "14px", fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>250+</div>
+        <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", marginTop: "2px", fontWeight: 500, fontFamily: "'Outfit', sans-serif" }}>Assited Students</div>
       </div>
     </div>
   );
@@ -164,8 +246,8 @@ function CampusHero({ onJoinClick }) {
     filter: "drop-shadow(0 20px 50px rgba(109,40,217,0.20))" 
   }}
 />
-          <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="50+ Workshops" style={{ top: "12%", right: "2%" }} delay={600} />
-          <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="20+ Colleges" style={{ bottom: "24%", right: "2%" }} delay={800} />
+          <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#7c3aed" strokeWidth="1.8" /><path d="M7 10l2 2 4-4" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>} label="25+ Hiring Partners" style={{ top: "12%", right: "2%" }} delay={600} />
+          <FloatingBadge className="hero-badge" icon={<svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2.5" stroke="#7c3aed" strokeWidth="1.8" /><path d="M2 8h16" stroke="#7c3aed" strokeWidth="1.5" /><circle cx="6" cy="12.5" r="1" fill="#7c3aed" /><circle cx="10" cy="12.5" r="1" fill="#7c3aed" /></svg>} label="5+ Colleges" style={{ bottom: "24%", right: "2%" }} delay={800} />
           <ActiveStudentsBadge className="hero-badge" style={{ bottom: "40%", left: "2%" }} delay={1000} />
         </div>
 
@@ -298,7 +380,8 @@ function OpportunitiesSection() {
       { title: "Internship & Project Exposure", desc: "Skillra connects campus students with live internship projects from partner companies. Working on real briefs with deadlines gives students a head start in understanding professional work culture and deliverables." },
     ],
     [
-      { title: "Certification & Career Placement", desc: "Upon completing Skillra's campus programs, students receive industry-recognized certifications and gain access to our dedicated placement cell. With 100+ hiring partners, we actively connect graduates to job opportunities that match their newly acquired skills." },
+      { title: "Certification & Career Placement", desc: "Upon completing Skillra's campus programs, students receive industry-recognized certifications and gain access to our dedicated placement cell. With 25+ hiring partners, we actively connect graduates to job opportunities that match their newly acquired skills." },
+      { title: "Hands-On Internship Opportunities", desc: "Skillra connects students with real internship placements at partnered companies, giving them practical exposure before entering the job market. With guided project work and supervisor feedback, students build a professional portfolio that stands out to recruiters." },
     ],
   ];
 
@@ -463,314 +546,452 @@ function OpportunitiesSection() {
    SECTION 4 — TESTIMONIALS + CONTACT FORM
 ═══════════════════════════════════════════════════ */
 const TESTIMONIALS = [
-  { name: "Aria Zinario", text: "I am very helped by this E-wallet application , my days are very easy to use this application and its very helpful in my life , even I can pay a short time 😊", avatar: "AZ", image: "https://randomuser.me/api/portraits/women/44.jpg", },
-  { name: "Rahul Sharma", text: "Skillra Campus transformed my career path completely. The placement support was exceptional and I got 3 offers within a month of completing the course.", avatar: "RS", image: "https://randomuser.me/api/portraits/men/32.jpg", },
-  { name: "Priya Nair",   text: "The mentors at Skillra are incredibly supportive. Real industry experience combined with structured learning made all the difference for me.", avatar: "PN", image: "https://randomuser.me/api/portraits/women/67.jpg", },
-  { name: "Karthik V",    text: "Best decision I ever made. The hands-on projects gave me the confidence to clear technical interviews at top product companies.", avatar: "KV", image: "https://randomuser.me/api/portraits/men/44.jpg", },
+  {
+    text: "Working with this team transformed our product completely. Their attention to detail and commitment to quality is unmatched — we saw a 3x improvement in user engagement within weeks.",
+    name: "Sandeep. Product Assoc. Manager",
+    color: "#7c3aed",
+    avatar: "SM",
+    image: `${PUB}/TestimonialsChars/sandeep.jpeg`,
+    // Professional woman, warm smile — fits "Product Lead"
+  },
+  {
+    text: "I was skeptical at first, but the results exceeded every expectation. The support team is incredibly responsive and the platform itself is intuitive and powerful.",
+    name: "Kishore. Digital Marketer",
+    color: "#a855f7",
+    avatar: "JK",
+    image: `${PUB}/TestimonialsChars/Kishore.jpeg`,
+    // Young professional man — fits "Startup Founder"
+  },
+  {
+    text: "From onboarding to delivery, everything was seamless. Our clients noticed the difference immediately. Highly recommend to anyone serious about growth.",
+    name: "Ezhilarasi. Marketing Director",
+    color: "#6d28d9",
+    avatar: "PR",
+    image: `${PUB}/TestimonialsChars/Ezhilarasi.jpeg`,
+    // South Asian professional woman — fits "Priya, Marketing Director"
+  },
+  {
+    text: "The best investment we made this year. Our workflows are faster, our team is happier, and we're delivering better results than ever before.",
+    name: "Varalakshmi. Jr. UI/UX Designer",
+    color: "#8b5cf6",
+    avatar: "TB",
+    image: `${PUB}/TestimonialsChars/varalakshmi.jpeg`,
+    // Professional man in suit — fits "Operations Manager"
+  },
 ];
-const AVATAR_COLORS = ["#7c3aed", "#059669", "#dc2626", "#d97706"];
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
+
+const styles = `
+  .testi-inner {
+    display: flex;
+    gap: clamp(24px, 5%, 64px);
+    align-items: flex-start;
+  }
+  .testi-form-card {
+    flex: 0 0 clamp(280px, 38%, 400px);
+  }
+  .testi-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Mobile: stack vertically ── */
+  @media (max-width: 700px) {
+    .testi-inner {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .testi-form-card {
+      flex: none;
+      width: 100%;
+    }
+  }
+`;
 
 function TestimonialsContactSection() {
   const [ref, inView] = useInView(0.06);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "", email: "", phone: "", source: "", purpose: ""
-  });
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", desc: "" });
+  const [formErrors, setFormErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [sending, setSending] = useState(false); // 👈 sending state
   const autoRef = useRef(null);
 
-  const goNext = () => setActiveIdx(prev => (prev + 1) % TESTIMONIALS.length);
+  const goNext = () => setActiveIdx(p => (p + 1) % TESTIMONIALS.length);
+
+  const startAuto = () => {
+    clearInterval(autoRef.current);
+    autoRef.current = setInterval(goNext, 5000);
+    setIsPlaying(true);
+  };
+
   const handlePlay = () => {
-    if (isPlaying) { clearInterval(autoRef.current); setIsPlaying(false); }
-    else { goNext(); autoRef.current = setInterval(goNext, 3000); setIsPlaying(true); }
-  };
-  const handleAvatarClick = (i) => {
-    clearInterval(autoRef.current); setIsPlaying(false); setActiveIdx(i);
-  };
-  useEffect(() => () => clearInterval(autoRef.current), []);
-
-  const validators = {
-    name: (v) => {
-      if (!v.trim()) return "Name is required";
-      if (v.trim().length < 3) return "Minimum 3 characters";
-      if (!/^[a-zA-Z\s'\-]+$/.test(v.trim())) return "Letters only";
-      return "";
-    },
-    email: (v) => {
-      if (!v.trim()) return "Email is required";
-      if (!/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v.trim()))
-        return "Enter a valid email";
-      return "";
-    },
-    phone: (v) => {
-      const d = v.replace(/\D/g, "");
-      if (!d) return "Phone number is required";
-      if (d.length !== 10) return "Must be exactly 10 digits";
-      if (!/^[6-9]/.test(d)) return "Must start with 6, 7, 8 or 9";
-      if (/^(\d)\1{9}$/.test(d)) return "Invalid number";
-      return "";
-    },
-    source: (v) => (!v ? "Please select where you heard about us" : ""),
-    purpose: (v) => (!v.trim() ? "Purpose of joining is required" : v.trim().length < 10 ? "Minimum 10 characters" : ""),
-  };
-
-  const validate = (field, value) => {
-    const err = validators[field](value);
-    setErrors(prev => ({ ...prev, [field]: err }));
-    return err;
-  };
-
-  const handleChange = (field, value) => {
-    if (field === "phone") value = value.replace(/\D/g, "").slice(0, 10);
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field] !== undefined) validate(field, value);
-  };
-
-  const handleSubmit = async () => {
-    const newErrors = {};
-    let hasError = false;
-    Object.keys(validators).forEach(f => {
-      const err = validators[f](formData[f]);
-      newErrors[f] = err;
-      if (err) hasError = true;
-    });
-    setErrors(newErrors);
-    if (hasError) return;
-
-    setSubmitting(true);
-    try {
-      const now = new Date();
-      const date = now.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
-      const time = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
-
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({
-          type: "campus",
-          date,
-          time,
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone,
-          source: formData.source,
-          purpose: formData.purpose.trim(),
-        }),
-      });
-      setSubmitted(true);
-    } catch {
-      setErrors(prev => ({ ...prev, _form: "Something went wrong. Please try again." }));
-    } finally {
-      setSubmitting(false);
+    if (isPlaying) {
+      clearInterval(autoRef.current);
+      setIsPlaying(false);
+    } else {
+      goNext();
+      startAuto();
     }
   };
 
-  const inputStyle = (field) => ({
-    width: "100%", padding: "13px 16px",
-    border: `1.5px solid ${errors[field] ? "#ef4444" : errors[field] === "" ? "#22c55e" : "#e5e7eb"}`,
-    borderRadius: "12px", fontSize: "13.5px",
-    fontFamily: "'Outfit', sans-serif", color: "#374151",
-    outline: "none", background: "#fafafa",
-    transition: "border-color 0.2s, background 0.2s",
-    boxSizing: "border-box",
-  });
+  const handleAvatar = (i) => {
+    clearInterval(autoRef.current);
+    setActiveIdx(i);
+    autoRef.current = setInterval(goNext, 5000);
+    setIsPlaying(true);
+  };
 
-  const ErrorMsg = ({ field }) => errors[field] ? (
-    <p style={{ fontSize: "11.5px", color: "#ef4444", marginTop: "4px", display: "flex", alignItems: "center", gap: "4px", fontFamily: "'Outfit', sans-serif" }}>
-      <svg width="11" height="11" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="9" stroke="#ef4444" strokeWidth="1.8"/>
-        <path d="M10 6v4M10 14h.01" stroke="#ef4444" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-      {errors[field]}
-    </p>
-  ) : null;
+  useEffect(() => {
+    autoRef.current = setInterval(goNext, 5000);
+    setIsPlaying(true);
+    return () => clearInterval(autoRef.current);
+  }, []);
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px 14px",
+    border: "1.5px solid #e5e7eb",
+    borderRadius: "10px",
+    fontSize: "13.5px",
+    fontFamily: "'Outfit', sans-serif",
+    color: "#374151",
+    outline: "none",
+    background: "#fafafa",
+    transition: "border-color 0.2s",
+    boxSizing: "border-box",
+    display: "block",
+  };
+
+  const validateForm = () => {
+  const errs = {};
+  const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const phoneRegex = /^[6-9]\d{9}$/; // Indian mobile number
+
+  if (!formData.name.trim())               errs.name  = "Name is required.";
+  else if (!nameRegex.test(formData.name)) errs.name  = "Enter a valid name (letters only).";
+
+  if (!formData.email.trim())                errs.email = "Email is required.";
+  else if (!emailRegex.test(formData.email)) errs.email = "Enter a valid email address.";
+
+  if (!formData.phone.trim())                errs.phone = "Phone number is required.";
+  else if (!phoneRegex.test(formData.phone)) errs.phone = "Enter a valid 10-digit mobile number.";
+
+  if (!formData.desc.trim())                errs.desc  = "Description is required.";
+  else if (formData.desc.trim().length < 10) errs.desc  = "Description must be at least 10 characters.";
+
+  return errs;
+};
 
   return (
-    <section ref={ref} id="contact" style={{ background: "#f8f7ff", borderTop: "1px solid #f0ebff", padding: "clamp(48px,8vw,88px) 0", position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", backgroundImage: `radial-gradient(rgba(124,58,237,0.05) 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,48px)", position: "relative", zIndex: 1 }}>
-        <div className="tc-inner" style={{ display: "flex", gap: "clamp(24px,5%,64px)", alignItems: "flex-start" }}>
+    <>
+      <style>{styles}</style>
+      <section
+        id="testimonials"
+        ref={ref}
+        style={{
+          background: "#ede9ff",
+          padding: "clamp(48px,8vw,88px) 0 clamp(56px,10vw,96px)",
+          fontFamily: "'Outfit', sans-serif",
+        }}
+      >
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 clamp(16px,4%,40px)" }}>
+          <div className="testi-inner">
 
-          {/* LEFT — Testimonials */}
-          <div style={{ flex: 1, minWidth: 0, opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-24px)", transition: "all 0.7s ease 0.1s" }}>
-            <h2 style={{ fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", letterSpacing: "-0.03em", marginBottom: "8px" }}>Testimonials</h2>
-            <p style={{ fontSize: "14px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "40px", fontStyle: "italic" }}>Every Story Matters. Every Success Counts.</p>
-            <div style={{ marginBottom: "20px" }}>
-              <svg width="52" height="38" viewBox="0 0 52 38" fill="none">
-                <path d="M0 38V23C0 15.3 2.8 9.6 8.4 5.8 14 2 20.7 0.2 28.5 0.2V7.4C25 7.4 22 8.3 19.4 10 16.8 11.6 15.5 14 15.3 17.2H24V38H0ZM28 38V23C28 15.3 30.8 9.6 36.4 5.8 42 2 48.7 0.2 56.5 0.2V7.4C53 7.4 50 8.3 47.4 10 44.8 11.6 43.5 14 43.3 17.2H52V38H28Z" fill="#7c3aed" opacity="0.13"/>
-              </svg>
-            </div>
-            <div key={activeIdx} className="testi-slide" style={{ minHeight: "120px", marginBottom: "36px" }}>
-              <p style={{ fontSize: "clamp(13px,1.4vw,15px)", color: "#374151", fontFamily: "'Outfit',sans-serif", lineHeight: 1.85, fontWeight: 400 }}>
-                {TESTIMONIALS[activeIdx].text}
+            {/* ── LEFT: testimonial carousel ── */}
+            <div
+              style={{
+                flex: 1,
+                minWidth: 0,
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateX(0)" : "translateX(-24px)",
+                transition: "all 0.7s ease 0.1s",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "clamp(1.8rem,4vw,3rem)",
+                  fontWeight: 900,
+                  color: "#7c3aed",
+                  fontFamily: "'Outfit', sans-serif",
+                  margin: "0 0 8px",
+                }}
+              >
+                Testimonials
+              </h2>
+              <p
+                style={{
+                  fontSize: "14px",
+                  color: "#5c4a80",
+                  fontFamily: "'Outfit', sans-serif",
+                  margin: "0 0 32px",
+                  fontStyle: "italic",
+                }}
+              >
+                Every Story Matters. Every Success Counts.
               </p>
-              <p style={{ fontSize: "13px", color: "#7c3aed", fontFamily: "'Outfit',sans-serif", fontWeight: 700, marginTop: "18px" }}>
-                — {TESTIMONIALS[activeIdx].name}
-              </p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-              {TESTIMONIALS.map((t, i) => (
-                <div
-                  key={i}
-                  onClick={() => handleAvatarClick(i)}
+
+              <div style={{ marginBottom: "18px" }}>
+                <svg width="48" height="36" viewBox="0 0 52 38" fill="none">
+                  <path
+                    d="M0 38V23C0 15.3 2.8 9.6 8.4 5.8 14 2 20.7 0.2 28.5 0.2V7.4C25 7.4 22 8.3 19.4 10 16.8 11.6 15.5 14 15.3 17.2H24V38H0ZM28 38V23C28 15.3 30.8 9.6 36.4 5.8 42 2 48.7 0.2 56.5 0.2V7.4C53 7.4 50 8.3 47.4 10 44.8 11.6 43.5 14 43.3 17.2H52V38H28Z"
+                    fill="#7c3aed"
+                    opacity="0.18"
+                  />
+                </svg>
+              </div>
+
+              {/* Slide text */}
+              <div key={activeIdx} style={{ minHeight: "110px", marginBottom: "28px" }}>
+                <p
                   style={{
-                    width: "44px", height: "44px", borderRadius: "50%",
-                    overflow: "hidden", cursor: "pointer", flexShrink: 0,
-                    border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
-                    boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
-                    transition: "all 0.22s",
-                    transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
+                    fontSize: "clamp(13px,1.4vw,15px)",
+                    color: "#374151",
+                    fontFamily: "'Outfit', sans-serif",
+                    lineHeight: 1.85,
+                    margin: 0,
                   }}
                 >
-                  <img
-                    src={t.image}
-                    alt={t.name}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    onError={e => {
-                      e.currentTarget.style.display = "none";
-                      e.currentTarget.parentElement.style.background = AVATAR_COLORS[i];
-                      e.currentTarget.parentElement.innerHTML = `<span style="color:#fff;font-size:13px;font-weight:700;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;width:100%;height:100%">${t.avatar}</span>`;
-                    }}
-                  />
+                  {TESTIMONIALS[activeIdx].text}
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#7c3aed",
+                    fontFamily: "'Outfit', sans-serif",
+                    fontWeight: 700,
+                    marginTop: "14px",
+                    marginBottom: 0,
+                  }}
+                >
+                  — {TESTIMONIALS[activeIdx].name}
+                </p>
+              </div>
+
+              {/* Avatar dots + play/pause */}
+              <div className="testi-avatar-row">
+                {TESTIMONIALS.map((t, i) => (
+                  <div
+  key={i}
+  onClick={() => handleAvatar(i)}
+  style={{
+    width: "42px",
+    height: "42px",
+    borderRadius: "50%",
+    background: t.color,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "12px",
+    fontWeight: 700,
+    color: "#fff",
+    fontFamily: "'Outfit', sans-serif",
+    cursor: "pointer",
+    flexShrink: 0,
+    border: activeIdx === i ? "3px solid #7c3aed" : "3px solid transparent",
+    boxShadow: activeIdx === i ? "0 0 0 2px #fff, 0 0 0 4px #7c3aed" : "none",
+    transform: activeIdx === i ? "scale(1.12)" : "scale(1)",
+    transition: "all 0.22s",
+    overflow: "hidden", // 👈 add this so image respects border-radius
+  }}
+>
+  <img
+    src={t.image}
+    alt={t.name}
+    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    onError={e => { e.target.style.display = "none"; }}
+  />
+</div>
+                ))}
+
+                {/* Play / Pause button */}
+                <div
+                  onClick={handlePlay}
+                  style={{
+                    width: "42px",
+                    height: "42px",
+                    borderRadius: "50%",
+                    border: `2px solid ${isPlaying ? "#7c3aed" : "#c4b5fd"}`,
+                    background: isPlaying ? "#f3f0ff" : "transparent",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    marginLeft: "4px",
+                    transition: "all 0.22s",
+                    flexShrink: 0,
+                  }}
+                >
+                  {isPlaying ? (
+                    <svg width="11" height="13" viewBox="0 0 12 14" fill="none">
+                      <rect x="1" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" />
+                      <rect x="7.5" y="1" width="3.5" height="12" rx="1" fill="#7c3aed" />
+                    </svg>
+                  ) : (
+                    <svg width="12" height="14" viewBox="0 0 14 16" fill="none">
+                      <path d="M1 1l12 7-12 7V1z" fill="#9ca3af" />
+                    </svg>
+                  )}
                 </div>
-              ))}
-              <div onClick={handlePlay} style={{
-                width: "44px", height: "44px", borderRadius: "50%",
-                border: `2px solid ${isPlaying ? "#7c3aed" : "#d1d5db"}`,
-                background: isPlaying ? "#f3f0ff" : "transparent",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                cursor: "pointer", marginLeft: "4px", transition: "all 0.22s", flexShrink: 0,
-              }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = "#7c3aed"; e.currentTarget.style.background = "#f3f0ff"; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = isPlaying ? "#7c3aed" : "#d1d5db"; e.currentTarget.style.background = isPlaying ? "#f3f0ff" : "transparent"; }}
-              >
-                {isPlaying
-                  ? <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><rect x="1" y="1" width="3.5" height="12" rx="1" fill="#7c3aed"/><rect x="7.5" y="1" width="3.5" height="12" rx="1" fill="#7c3aed"/></svg>
-                  : <svg width="13" height="15" viewBox="0 0 14 16" fill="none"><path d="M1 1l12 7-12 7V1z" fill="#9ca3af"/></svg>
-                }
               </div>
             </div>
-          </div>
 
-          {/* RIGHT — Contact Form */}
-          <div className="tc-form" style={{ flex: "0 0 clamp(280px,38%,400px)", background: "#fff", borderRadius: "24px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: "0 8px 48px rgba(124,58,237,0.10)", border: "1.5px solid #e9e4ff", opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(24px)", transition: "all 0.7s ease 0.2s" }}>
-            {submitted ? (
-              <div style={{ textAlign: "center", padding: "40px 0" }}>
-                <div style={{ fontSize: "48px", marginBottom: "16px" }}>🎉</div>
-                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "10px" }}>Message Sent!</h3>
-                <p style={{ fontSize: "14px", color: "#6b7280", fontFamily: "'Outfit',sans-serif" }}>We'll get back to you shortly.</p>
-                <button onClick={() => { setSubmitted(false); setFormData({ name:"", email:"", phone:"", source:"", purpose:"" }); setErrors({}); }}
-                  style={{ marginTop: "24px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 28px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit',sans-serif" }}>
-                  Send another
-                </button>
-              </div>
-            ) : (
-              <>
-                <h3 style={{ fontSize: "clamp(16px,2vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit',sans-serif", marginBottom: "6px" }}>We're here to help!</h3>
-                <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit',sans-serif", marginBottom: "24px" }}>Please contact us in case of any query.</p>
+            {/* ── RIGHT: contact form ── */}
+            <div
+              className="testi-form-card"
+              style={{
+                background: "#fff",
+                borderRadius: "20px",
+                padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)",
+                boxShadow: "0 8px 40px rgba(109,40,217,0.10)",
+                border: "1.5px solid rgba(124,58,237,0.08)",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateX(0)" : "translateX(24px)",
+                transition: "all 0.7s ease 0.2s",
+                boxSizing: "border-box",
+              }}
+            >
+              {submitted ? (
+  <div style={{ textAlign: "center", padding: "32px 0" }}>
+    <div style={{ fontSize: "44px", marginBottom: "14px" }}>🎉</div>
+    <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", margin: "0 0 8px" }}>
+      Message Sent!
+    </h3>
+    <p style={{ fontSize: "13px", color: "#6b7280", fontFamily: "'Outfit', sans-serif", margin: 0 }}>
+      We'll get back to you shortly.
+    </p>
+    <button
+      onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", phone: "", desc: "" }); setFormErrors({}); }}
+      style={{ marginTop: "20px", background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px", padding: "10px 24px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: "'Outfit', sans-serif" }}
+    >
+      Send another
+    </button>
+  </div>
+) : (
+  <>
+    <h3 style={{ fontSize: "clamp(16px,2vw,20px)", fontWeight: 900, color: "#111827", fontFamily: "'Outfit', sans-serif", margin: "0 0 6px" }}>
+      We're here to help!
+    </h3>
+    <p style={{ fontSize: "13px", color: "#9ca3af", fontFamily: "'Outfit', sans-serif", margin: "0 0 24px" }}>
+      Please contact us in case of any query.
+    </p>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  <div>
-                    <input type="text" placeholder="Your name" value={formData.name}
-                      onChange={e => handleChange("name", e.target.value)}
-                      onBlur={() => validate("name", formData.name)}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      style={inputStyle("name")} />
-                    <ErrorMsg field="name" />
-                  </div>
-                  <div>
-                    <input type="email" placeholder="Your email address" value={formData.email}
-                      onChange={e => handleChange("email", e.target.value)}
-                      onBlur={() => validate("email", formData.email)}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      style={inputStyle("email")} />
-                    <ErrorMsg field="email" />
-                  </div>
-                  <div>
-                    <input type="tel" placeholder="Your phone number (10 digits)" value={formData.phone}
-                      onChange={e => handleChange("phone", e.target.value)}
-                      onBlur={() => validate("phone", formData.phone)}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      style={inputStyle("phone")} />
-                    <ErrorMsg field="phone" />
-                  </div>
-                  <div>
-                    <div style={{ position: "relative" }}>
-                      <select value={formData.source}
-                        onChange={e => handleChange("source", e.target.value)}
-                        onBlur={() => validate("source", formData.source)}
-                        style={{ ...inputStyle("source"), appearance: "none", WebkitAppearance: "none", cursor: "pointer", color: formData.source ? "#374151" : "#9ca3af" }}>
-                        <option value="">Where did you hear about us?</option>
-                        <option value="Instagram">Instagram</option>
-                        <option value="Facebook">Facebook</option>
-                        <option value="Twitter / X">Twitter / X</option>
-                        <option value="LinkedIn">LinkedIn</option>
-                        <option value="YouTube">YouTube</option>
-                        <option value="Telegram">Telegram</option>
-                        <option value="WhatsApp">WhatsApp</option>
-                        <option value="Friend / Referral">Friend / Referral</option>
-                        <option value="College / Campus">College / Campus</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      <svg style={{ position: "absolute", right: "14px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} width="14" height="14" viewBox="0 0 20 20" fill="none">
-                        <path d="M5 8l5 5 5-5" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <ErrorMsg field="source" />
-                  </div>
-                  <div>
-                    <textarea placeholder="Purpose of joining (min 10 characters)" value={formData.purpose}
-                      onChange={e => handleChange("purpose", e.target.value)}
-                      onBlur={() => validate("purpose", formData.purpose)}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#a78bfa"; e.currentTarget.style.background = "#fff"; }}
-                      rows={3}
-                      style={{ ...inputStyle("purpose"), resize: "none", lineHeight: 1.6 }} />
-                    <ErrorMsg field="purpose" />
-                  </div>
-                  {errors._form && (
-                    <p style={{ fontSize: "12px", color: "#ef4444", fontFamily: "'Outfit',sans-serif", textAlign: "center" }}>{errors._form}</p>
-                  )}
-                  <button onClick={handleSubmit} disabled={submitting}
-                    style={{
-                      background: submitting ? "#a78bfa" : "linear-gradient(135deg,#7c3aed,#5b21b6)",
-                      color: "#fff", border: "none", borderRadius: "50px",
-                      padding: "14px 28px", fontSize: "14px", fontWeight: 700,
-                      cursor: submitting ? "not-allowed" : "pointer",
-                      fontFamily: "'Outfit',sans-serif",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                      boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
-                      transition: "all 0.22s", marginTop: "4px",
-                    }}
-                    onMouseEnter={e => { if (!submitting) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.48)"; }}}
-                    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)"; }}>
-                    {submitting ? (
-                      <>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ animation: "spin 1s linear infinite" }}>
-                          <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3"/>
-                          <path d="M12 2a10 10 0 0 1 10 10" stroke="white" strokeWidth="3" strokeLinecap="round"/>
-                        </svg>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Get in Touch
-                        <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      {[
+        { key: "name",  placeholder: "Your name",         type: "text",  maxLength: 50  },
+        { key: "email", placeholder: "Your email address", type: "email", maxLength: 254 },
+        { key: "phone", placeholder: "Your phone number",  type: "tel",   maxLength: 10  },
+        { key: "desc",  placeholder: "Description",        type: "text",  maxLength: 300 },
+      ].map(field => (
+        <div key={field.key} style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+          <input
+            type={field.type}
+            placeholder={field.placeholder}
+            value={formData[field.key]}
+            maxLength={field.maxLength}
+            onChange={e => {
+              setFormData(p => ({ ...p, [field.key]: e.target.value }));
+              if (formErrors[field.key]) setFormErrors(p => ({ ...p, [field.key]: "" }));
+            }}
+            style={{
+              ...inputStyle,
+              borderColor: formErrors[field.key] ? "#ef4444" : "#e5e7eb",
+              background: formErrors[field.key] ? "#fff5f5" : "#fafafa",
+            }}
+            onFocus={e => {
+              e.currentTarget.style.borderColor = formErrors[field.key] ? "#ef4444" : "#a78bfa";
+              e.currentTarget.style.background = "#fff";
+            }}
+            onBlur={e => {
+              e.currentTarget.style.borderColor = formErrors[field.key] ? "#ef4444" : "#e5e7eb";
+              e.currentTarget.style.background = formErrors[field.key] ? "#fff5f5" : "#fafafa";
+            }}
+          />
+          {/* Inline error */}
+          {formErrors[field.key] && (
+            <span style={{ fontSize: "11px", color: "#ef4444", fontFamily: "'Outfit',sans-serif", fontWeight: 600, paddingLeft: "4px" }}>
+              ⚠ {formErrors[field.key]}
+            </span>
+          )}
         </div>
-      </div>
-    </section>
+      ))}
+
+      <button
+        disabled={sending} // 👈 disables after first click
+        onClick={async () => {
+          if (sending) return; // 👈 extra guard
+          const errs = validateForm();
+          if (Object.keys(errs).length) { setFormErrors(errs); return; }
+          setSending(true);
+          try {
+            await fetch(SHEETS_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain" },
+              body: JSON.stringify({
+                type:  "enquiry",
+                name:  formData.name.trim(),
+                email: formData.email.trim(),
+                phone: formData.phone.trim(),
+                desc:  formData.desc.trim(),
+              }),
+            });
+          } catch (err) {
+            console.error("Sheet error:", err);
+          } finally {
+            setSending(false);
+            setSubmitted(true);
+          }
+        }}
+        style={{
+          background: sending
+            ? "linear-gradient(135deg,#a78bfa,#7c3aed)"  // 👈 dimmed while sending
+            : "linear-gradient(135deg,#7c3aed,#5b21b6)",
+          color: "#fff", border: "none", borderRadius: "50px",
+          padding: "13px 24px", fontSize: "14px", fontWeight: 700,
+          cursor: sending ? "not-allowed" : "pointer",
+          fontFamily: "'Outfit', sans-serif",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: "8px",
+          boxShadow: "0 6px 18px rgba(124,58,237,0.32)",
+          transition: "all 0.22s", marginTop: "4px", width: "100%",
+          opacity: sending ? 0.8 : 1,
+        }}
+        onMouseEnter={e => { if (!sending) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(124,58,237,0.46)"; } }}
+        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 18px rgba(124,58,237,0.32)"; }}
+      >
+        {/* 👇 Spinner shown while sending */}
+        {sending ? (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              style={{ animation: "spin 0.8s linear infinite" }}>
+              <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+            </svg>
+            Sending...
+          </>
+        ) : (
+          <>
+            Get in Touch
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+              <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </>
+        )}
+      </button>
+    </div>
+  </>
+)}
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -942,6 +1163,7 @@ export default function CampusPage() {
       <AboutCampusSection />
       <OpportunitiesSection />
       <TestimonialsContactSection />
+      <PageMeta />
       <Footer />
     </div>
   );

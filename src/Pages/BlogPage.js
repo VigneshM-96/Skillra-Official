@@ -1,8 +1,79 @@
 import { useState, useEffect, useRef } from "react";
-import { BLOG_POSTS } from "./data"; // ← adjust path if your file is elsewhere
+import { BLOG_POSTS } from "./BlogDatas";
 
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+
+const META = {
+  title:       "Blogs | Skillra – Insights on Medical Coding, IT & Career Growth",
+  description: "Read Skillra's latest blogs on AI Medical Coding, IT trends, career tips, industry insights, and professional development. Stay updated with expert knowledge from 15+ years experienced trainers.",
+  canonical:   "https://www.skillra.com/blogs",
+  keywords:    "Skillra blogs, medical coding blog, AI medical coding insights, IT career tips, healthcare industry trends, coding certification tips, professional development articles",
+};
+
+function setMeta(attr, value, content) {
+  let el = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
+  el.setAttribute("content", content);
+}
+
+function setLink(rel, href) {
+  let el = document.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
+
+function setJsonLd(data) {
+  const id = "skillra-blogs-jsonld";
+  let el = document.getElementById(id);
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+}
+
+function PageMeta() {
+  useEffect(() => {
+    document.title = META.title;
+    setMeta("name", "description",  META.description);
+    setMeta("name", "keywords",     META.keywords);
+    setMeta("name", "robots",       "index, follow");
+    setMeta("name", "author",       "Skillra");
+    setLink("canonical",            META.canonical);
+    setMeta("property", "og:type",        "website");
+    setMeta("property", "og:url",         META.canonical);
+    setMeta("property", "og:title",       META.title);
+    setMeta("property", "og:description", META.description);
+    setMeta("property", "og:image",       META.ogImage);
+    setMeta("property", "og:image:alt",   "Skillra blog articles and insights");
+    setMeta("property", "og:site_name",   "Skillra");
+    setMeta("property", "og:locale",      "en_IN");
+    setMeta("name", "twitter:card",        "summary_large_image");
+    setMeta("name", "twitter:title",       META.title);
+    setMeta("name", "twitter:description", META.description);
+    setMeta("name", "twitter:image",       META.ogImage);
+    setMeta("name", "twitter:image:alt",   "Skillra blog articles and insights");
+    setJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Skillra Blog",
+      "description": META.description,
+      "url": META.canonical,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Skillra Health Innovations Pvt Ltd",
+        "logo": "/logo.png",
+        "url": "https://www.skillra.com"
+      },
+      "inLanguage": "en",
+      "about": [
+        { "@type": "Thing", "name": "AI Medical Coding" },
+        { "@type": "Thing", "name": "Information Technology" },
+        { "@type": "Thing", "name": "Career Development" },
+        { "@type": "Thing", "name": "Healthcare Industry" }
+      ]
+    });
+  }, []);
+  return null;
+}
 
 function useInView(threshold = 0.1) {
   const ref = useRef(null);
@@ -16,6 +87,58 @@ function useInView(threshold = 0.1) {
     return () => observer.disconnect();
   }, []);
   return [ref, inView];
+}
+
+// ── INLINE BOLD RENDERER ──────────────────────────────────────────────────────
+function renderInline(text) {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} style={{ fontWeight: 800, color: "#111827" }}>
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  );
+}
+
+// ── CONTENT RENDERER ──────────────────────────────────────────────────────────
+function RenderContent({ content }) {
+  return (
+    <div>
+      {content.split("\n").map((line, i) => {
+        const subtitleMatch = line.trim().match(/^\*\*(.+)\*\*$/);
+        if (subtitleMatch) {
+          return (
+            <p key={i} style={{
+              fontWeight: 800,
+              color: "#111827",
+              fontSize: "clamp(14px,1.4vw,16px)",
+              fontFamily: "'Outfit', sans-serif",
+              marginTop: "22px",
+              marginBottom: "6px",
+              lineHeight: 1.4,
+            }}>
+              {subtitleMatch[1]}
+            </p>
+          );
+        }
+        if (!line.trim()) return <div key={i} style={{ height: "8px" }} />;
+        return (
+          <p key={i} style={{
+            fontSize: "clamp(13px,1.3vw,15px)",
+            color: "#4b5563",
+            fontFamily: "'Outfit', sans-serif",
+            lineHeight: 1.85,
+            marginBottom: "10px",
+          }}>
+            {renderInline(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
 }
 
 // ── BLOG DETAIL PAGE ──────────────────────────────────────────────────────────
@@ -45,7 +168,7 @@ function BlogDetail({ blog, onBack }) {
           position: "absolute", bottom: 0, left: 0, right: 0,
           padding: "0 clamp(20px, 6vw, 80px) 40px",
         }}>
-          <div >
+          <div>
             <span style={{
               display: "inline-block",
               background: blog.tagColor, color: "#fff",
@@ -118,11 +241,8 @@ function BlogDetail({ blog, onBack }) {
           paddingLeft: 20, marginBottom: 32, fontStyle: "italic",
         }}>{blog.excerpt}</p>
 
-        <div style={{ fontSize: 16, color: "#333", lineHeight: 1.85 }}>
-          {blog.content.split("\n\n").filter(p => p.trim()).map((para, i) => (
-            <p key={i} style={{ marginBottom: 20 }}>{para.trim()}</p>
-          ))}
-        </div>
+        {/* ✅ Fixed: uses RenderContent with bold support */}
+        <RenderContent content={blog.content} />
 
         {/* CTA */}
         <div style={{
@@ -142,7 +262,7 @@ function BlogDetail({ blog, onBack }) {
             </p>
           </div>
           <a
-            href="/contact"
+            href="/contact us"
             style={{
               textDecoration: "none",
               background: blog.tagColor, color: "#fff",
@@ -346,7 +466,7 @@ export default function BlogPage({ setPage }) {
       <div
         ref={heroRef}
         className="page-hero"
-        style={{ textAlign: "center", padding: "60px 48px 32px", maxWidth: 680, margin: "0 auto", marginTop: "clamp(80px, 8vw, 80px)"}}
+        style={{ textAlign: "center", padding: "60px 48px 32px", maxWidth: 680, margin: "0 auto", marginTop: "clamp(80px, 8vw, 80px)" }}
       >
         <p style={{
           fontSize: 11, fontWeight: 700, color: "#a78bfa",
@@ -424,6 +544,7 @@ export default function BlogPage({ setPage }) {
       </div>
       <SocialSidebar />
       <Footer />
+      <PageMeta />
     </div>
   );
 }

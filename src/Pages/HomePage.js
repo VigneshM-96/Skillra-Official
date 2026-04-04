@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
-import { BLOG_POSTS } from "./data";
+import { BLOG_POSTS } from "./BlogDatas";
 
 // ─── Update this with your Google Apps Script URL for newsletter ───────────────
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
@@ -99,7 +99,7 @@ const COURSES_DATA = {
     courses: [
       {
         id: "full-stack",
-        title: "MERN / MEAN Stack Course",
+        title: "Full Stack Course",
         description: "Become a full-stack web developer with our MERN and MEAN Stack Course.",
         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop",
         // Developer coding on laptop with multiple screens
@@ -118,13 +118,7 @@ const COURSES_DATA = {
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
         // Data charts and analytics dashboard
       },
-      {
-        id: "ui-ux-design",
-        title: "UI/UX Design Course",
-        description: "Join our UI/UX Designing Course to build professional websites.",
-        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop",
-        // Designer working on UI wireframes / design mockups
-      },
+      
       
     ],
   },
@@ -157,6 +151,13 @@ const COURSES_DATA = {
   cardBg: "linear-gradient(145deg,#fffbeb 0%,#fef3c7 100%)",
   courses: [
     {
+        id: "ui-ux-design",
+        title: "UI/UX Design Course",
+        description: "Join our UI/UX Designing Course to build professional websites.",
+        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop",
+        // Designer working on UI wireframes / design mockups
+      },
+    {
       id: "personality-development",
       title: "Personality Development Course",
       description: "Build confidence, communication skills, and a winning mindset for personal and professional growth.",
@@ -170,6 +171,7 @@ const COURSES_DATA = {
   image: "https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=600&auto=format&fit=crop",
   // Digital marketing professionals analyzing campaign metrics and strategy
 },
+
   ],
 },
 };
@@ -748,8 +750,8 @@ function AboutSection() {
             Skillra is a leading training institute specializing in <strong style={{ color:"#1e3a8a" }}>AI Medical Coding</strong> &amp; <strong style={{ color:"#1e3a8a" }}>Medical Billing</strong>, <strong style={{ color:"#c2410c" }}>IT development</strong>, <strong style={{ color:"#14532d" }}>Finance training</strong>, and Career oriented programs.
              We focus on bridging the gap between academic learning and industry expectations through practical, real-world training. Our expert mentors guide students with hands-on experience, industry projects, and job-ready skill development. With structured learning pathways, live mentor interactions, and outcome-driven practical training, Skillra empowers learners to outperform industry expectations with confidence and credibility. As a trusted upskilling institute, we prepare students for high-growth job roles in top companies. Our commitment is to ensure every learner moves from classroom to career with ease. Skillra, you learn faster, grow smarter, and succeed with industry-recognized skills.
           </p>
-          <a href="/Skillra/about" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-          <button onClick={() => navigate("/about")} style={{ display:"flex", alignItems:"center", gap:"10px", background:"#f05a00", color:"#fff", border:"none", borderRadius:"50px", padding:"13px 30px", fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:"1rem", cursor:"pointer", boxShadow:"0 4px 18px rgba(240,90,0,0.28)", transition:"all 0.25s" }}
+          <a href="/about us" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+          <button onClick={() => navigate("/about-us")} style={{ display:"flex", alignItems:"center", gap:"10px", background:"#f05a00", color:"#fff", border:"none", borderRadius:"50px", padding:"13px 30px", fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:"1rem", cursor:"pointer", boxShadow:"0 4px 18px rgba(240,90,0,0.28)", transition:"all 0.25s" }}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(240,90,0,0.38)";}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 18px rgba(240,90,0,0.28)";}}>
             Learn More
@@ -1164,7 +1166,7 @@ function CoursesSection() {
                 <div
                   key={course.id}
                   className="c-card"
-                  onClick={() => navigate(`/courses?course=${course.id}`)}
+                  onClick={() => navigate(`/courses/${course.id}`)}
                   style={{
                     background: "#fff",
                     borderRadius: "18px",
@@ -1277,34 +1279,36 @@ function CoursesSection() {
                       {course.description}
                     </p>
 
-                    <a href={`/courses/${course.id}`} style={{ textDecoration: "none" }}>
+                      <a href={`/courses/${course.id}`} style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
                       <button
-                        className="know-more-btn"
-                        style={{
-                          width: "100%",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "50px",
-                          padding: isMobile ? "7px 10px" : "clamp(8px,1vw,10px) 16px",
-                          fontSize: isMobile ? "9.5px" : "clamp(10.5px,1vw,12px)",
-                          fontWeight: 800,
-                          fontFamily: "'Outfit',sans-serif",
-                          cursor: "pointer",
-                          letterSpacing: "0.07em",
-                          background: cat.activeColor,
-                          boxShadow: `0 3px 12px ${cat.activeColor}44`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "5px",
-                        }}
-                      >
-                        KNOW MORE
-                        <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
-                          <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </button>
-                    </a>
+  className="know-more-btn"
+  onClick={() => navigate(`/courses/${course.id}`)}
+  style={{
+    width: "100%",
+    color: "#fff",
+    border: "none",
+    borderRadius: "50px",
+    padding: isMobile ? "7px 10px" : "clamp(8px,1vw,10px) 16px",
+    fontSize: isMobile ? "9.5px" : "clamp(10.5px,1vw,12px)",
+    fontWeight: 800,
+    fontFamily: "'Outfit',sans-serif",
+    cursor: "pointer",
+    letterSpacing: "0.07em",
+    background: cat.activeColor,
+    boxShadow: `0 3px 12px ${cat.activeColor}44`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "5px",
+  }}
+>
+  KNOW MORE
+  <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+</button>
+</a>
+                    
 
                   </div>
                 </div>
@@ -1326,7 +1330,7 @@ const COLLEGES = [
   { name: "Agurchand Manmull Jain College",                          logo: `${PUB}/CollegePartners/AMJcollege.webp` },
   { name: "GRT College of Engineering",                     logo: `${PUB}/CollegePartners/GRTcollege.jpg` },
   { name: "GRD College",                      logo: `${PUB}/CollegePartners/GRDcollege.png` },
-  { name: "KP College",              logo: `${PUB}/CollegePartners/KPNcollege.png` },
+  { name: "KP College",              logo: `${PUB}/CollegePartners/KPcollege.jpg` },
   { name: "Apollo college of Pharmacy",              logo: `${PUB}/CollegePartners/APOLLOcollege.jpg` },
   
 ];
@@ -1653,9 +1657,8 @@ function BlogCard({ post, inView, delay }) {
         </p>
  
         {/* Read more — navigates to BlogPage */}
-        <a href="/blog" style={{ textDecoration: "none" }}>
+        
         <button
-          onClick={() => navigate(`/blog`)}
           style={{
             marginTop: "auto",
             display: "flex",
@@ -1698,7 +1701,6 @@ function BlogCard({ post, inView, delay }) {
             </svg>
           </div>
         </button>
-        </a>
       </div>
     </div>
   );
@@ -1962,9 +1964,9 @@ function ServiceCard({ card, delay, inView }) {
 
         {/* Learn More button */}
         
-        <a href={`/Skillra${ROUTES[card.id]}`} style={{ textDecoration: "none" }}>
+        <a href={`${ROUTES[card.id]}`} style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
   <div
-    onClick={e => { e.stopPropagation(); navigate(ROUTES[card.id]); }}
+    onClick={() => navigate(ROUTES[card.id])}
     style={{
       marginTop: "auto",
       display: "inline-flex",
@@ -2076,34 +2078,34 @@ function ServicesSection() {
 const TESTIMONIALS = [
   {
     text: "Working with this team transformed our product completely. Their attention to detail and commitment to quality is unmatched — we saw a 3x improvement in user engagement within weeks.",
-    name: "Sarah M., Product Lead",
+    name: "Sandeep. Product Assoc. Manager",
     color: "#7c3aed",
     avatar: "SM",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&auto=format&fit=crop&crop=face",
+    image: `${PUB}/TestimonialsChars/sandeep.jpeg`,
     // Professional woman, warm smile — fits "Product Lead"
   },
   {
     text: "I was skeptical at first, but the results exceeded every expectation. The support team is incredibly responsive and the platform itself is intuitive and powerful.",
-    name: "James K., Startup Founder",
+    name: "Kishore. Digital Marketer",
     color: "#a855f7",
     avatar: "JK",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&auto=format&fit=crop&crop=face",
+    image: `${PUB}/TestimonialsChars/Kishore.jpeg`,
     // Young professional man — fits "Startup Founder"
   },
   {
     text: "From onboarding to delivery, everything was seamless. Our clients noticed the difference immediately. Highly recommend to anyone serious about growth.",
-    name: "Priya R., Marketing Director",
+    name: "Ezhilarasi. Marketing Director",
     color: "#6d28d9",
     avatar: "PR",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&auto=format&fit=crop&crop=face",
+    image: `${PUB}/TestimonialsChars/Ezhilarasi.jpeg`,
     // South Asian professional woman — fits "Priya, Marketing Director"
   },
   {
     text: "The best investment we made this year. Our workflows are faster, our team is happier, and we're delivering better results than ever before.",
-    name: "Tom B., Operations Manager",
+    name: "Varalakshmi. Jr. UI/UX Designer",
     color: "#8b5cf6",
     avatar: "TB",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&auto=format&fit=crop&crop=face",
+    image: `${PUB}/TestimonialsChars/varalakshmi.jpeg`,
     // Professional man in suit — fits "Operations Manager"
   },
 ];
@@ -2614,10 +2616,10 @@ const EMAIL_REGEX = /^(?![.\-])(?!.*[.\-]{2})[a-zA-Z0-9._%+\-]{1,64}(?<![.\-])@[
 /* Strip any HTML / script injection attempts from the value */
 function sanitise(raw) {
   return raw
-    .replace(/[<>"'`]/g, "")   // remove tag/attribute chars
-    .replace(/javascript:/gi, "") // kill JS protocol
+    .replace(/[<>"'`]/g, "")
+    .replace(/javascript:/gi, "")
     .trim()
-    .slice(0, 254);             // hard cap at RFC max length
+    .slice(0, 254);
 }
 
 function validateEmail(raw) {
@@ -2628,22 +2630,21 @@ function validateEmail(raw) {
   const domain = val.split("@")[1].toLowerCase();
   if (BLOCKED_DOMAINS.has(domain)) return "Disposable email addresses are not accepted. Please use a real email.";
   if (domain.split(".").pop().length < 2) return "Email domain extension is invalid.";
-  return null; // valid
+  return null;
 }
 
-const MAX_ATTEMPTS = 3; // rate-limit: 3 failed attempts → locked for session
+const MAX_ATTEMPTS = 3;
 
 function NewsletterSection() {
-  const [ref, inView]           = useInView(0.3);
-  const [email, setEmail]       = useState("");
-  const [error, setError]       = useState("");        // inline validation message
-  const [touched, setTouched]   = useState(false);     // only show error after first blur/submit
+  const [ref, inView]                 = useInView(0.3);
+  const [email, setEmail]             = useState("");
+  const [error, setError]             = useState("");
+  const [touched, setTouched]         = useState(false);
   const [subscribed, setSubscribed]   = useState(false);
   const [subscribing, setSubscribing] = useState(false);
-  const [attempts, setAttempts] = useState(0);         // failed-submit counter
-  const [locked, setLocked]     = useState(false);     // too many bad attempts
+  const [attempts, setAttempts]       = useState(0);
+  const [locked, setLocked]           = useState(false);
 
-  /* Live-validate once the field has been touched */
   useEffect(() => {
     if (touched) setError(validateEmail(email) || "");
   }, [email, touched]);
@@ -2659,40 +2660,37 @@ function NewsletterSection() {
   };
 
   const handleSubscribe = async () => {
-  if (locked || subscribing) return;
-  setTouched(true);
-  const err = validateEmail(email);
-  if (err) {
-    setError(err);
-    const next = attempts + 1;
-    setAttempts(next);
-    if (next >= MAX_ATTEMPTS) {
-      setLocked(true);
-      setError("Too many invalid attempts. Please refresh the page to try again.");
-    }
-    return;
-  }
-  setError("");
-  setSubscribing(true);
-
-  try {
-    await fetch(SHEETS_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ type: "subscriber", email: email.trim() }),
-    });
-
-    // ✅ no-cors = can't read response, if no error thrown = success
-    setSubscribed(true);
-
-  } catch (err) {
-    setError("Something went wrong. Please try again.");
+    if (locked || subscribing) return;
     setTouched(true);
-  } finally {
-    setSubscribing(false);
-  }
-};
+    const err = validateEmail(email);
+    if (err) {
+      setError(err);
+      const next = attempts + 1;
+      setAttempts(next);
+      if (next >= MAX_ATTEMPTS) {
+        setLocked(true);
+        setError("Too many invalid attempts. Please refresh the page to try again.");
+      }
+      return;
+    }
+    setError("");
+    setSubscribing(true);
+
+    try {
+      await fetch(SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ type: "subscriber", email: email.trim() }),
+      });
+      setSubscribed(true);
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      setTouched(true);
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   const inputBorderColor = !touched
     ? "rgba(255,255,255,0.7)"
@@ -2701,48 +2699,88 @@ function NewsletterSection() {
       : "#4ade80";
 
   return (
-    <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
-      <style>{`@keyframes spinRingAnim { to { transform:rotate(360deg); } }`}</style>
+    <div ref={ref} style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position: "relative", overflow: "hidden" }}>
+      <style>{`
+        @keyframes spinRingAnim { to { transform: rotate(360deg); } }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
-      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
+        /* ── Newsletter form row ── */
+        .nl-form-row {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          flex-wrap: nowrap;
+          align-items: flex-start;
+        }
+
+        /* On mobile: stack input above button, both full width */
+        @media (max-width: 600px) {
+          .nl-form-row {
+            flex-direction: column !important;
+            width: 100%;
+          }
+          .nl-input-wrap {
+            width: 100% !important;
+          }
+          .nl-input-wrap input {
+            width: 100% !important;
+          }
+          .nl-submit-btn {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+      `}</style>
+
+      {/* Dot grid background */}
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
+
+      {/* Bottom shimmer bar */}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite" }} />
 
       <div style={{
-        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
-        display:"flex", alignItems:"flex-start", justifyContent:"space-between",
-        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
-        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
+        maxWidth: "1200px", margin: "0 auto", padding: "36px 24px",
+        display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+        gap: "36px", flexWrap: "wrap", position: "relative", zIndex: 1,
+        opacity: inView ? 1 : 0, transition: "opacity 0.8s ease",
       }}>
-        {/* Left — branding */}
-        <div style={{ display:"flex", alignItems:"center", gap:"20px", paddingTop:"6px" }}>
-          <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
+
+        {/* ── Left — branding ── */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", paddingTop: "6px" }}>
+          <div style={{ width: "46px", height: "46px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", animation: "spinRingAnim 6s linear infinite" }}>
             <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
-              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round" />
             </svg>
           </div>
           <div>
-            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
+            <h2 style={{ fontSize: "clamp(1.2rem,2.2vw,1.6rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "5px", fontFamily: "'Outfit',sans-serif" }}>
               Join Our Newsletter
             </h2>
-            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
+            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.75)", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>
               Subscribe to get our latest updates &amp; news.
             </p>
           </div>
         </div>
 
-        {/* Right — form / success */}
+        {/* ── Right — form / success ── */}
         {subscribed ? (
-          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
-            <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "12px", padding: "12px 20px" }}>
+            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
             </div>
-            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: "14px", fontFamily: "'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{ display:"flex", flexDirection:"column", gap:"6px", flex:"0 0 auto" }}>
-            <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-              {/* Email input */}
-              <div style={{ display:"flex", flexDirection:"column", gap:"4px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: "0 0 auto", width: "100%", maxWidth: "460px" }}>
+
+            {/* Input + Button row */}
+            <div className="nl-form-row">
+
+              {/* Email input wrapper */}
+              <div className="nl-input-wrap" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <input
                   type="email"
                   inputMode="email"
@@ -2754,62 +2792,65 @@ function NewsletterSection() {
                   disabled={locked}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  onKeyDown={e => e.key === "Enter" && handleSubscribe()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
                   placeholder="Enter your email"
                   maxLength={254}
                   style={{
-                    height:"48px",
-                    width:"clamp(200px,26vw,300px)",
-                    padding:"0 16px",
-                    fontSize:"14px",
-                    fontFamily:"'Outfit',sans-serif",
-                    fontWeight:500,
+                    height: "48px",
+                    width: "clamp(200px,26vw,300px)",
+                    padding: "0 16px",
+                    fontSize: "14px",
+                    fontFamily: "'Outfit',sans-serif",
+                    fontWeight: 500,
                     color: locked ? "#999" : "#1a0640",
                     background: locked ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.96)",
-                    border:`2px solid ${inputBorderColor}`,
-                    borderRadius:"12px",
-                    outline:"none",
+                    border: `2px solid ${inputBorderColor}`,
+                    borderRadius: "12px",
+                    outline: "none",
                     cursor: locked ? "not-allowed" : "text",
-                    transition:"border-color 0.2s",
+                    transition: "border-color 0.2s",
+                    boxSizing: "border-box",
                   }}
                 />
               </div>
 
               {/* Submit button */}
               <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-              <button
-                onClick={handleSubscribe}
-                disabled={subscribing || locked}
-                aria-disabled={subscribing || locked}
-                style={{
-                  height:"48px",
-                  background: locked ? "#555" : "#111",
-                  color:"#fff",
-                  border:"none",
-                  borderRadius:"12px",
-                  padding:"0 24px",
-                  fontSize:"14px",
-                  fontWeight:700,
-                  fontFamily:"'Outfit',sans-serif",
-                  cursor: (subscribing || locked) ? "not-allowed" : "pointer",
-                  whiteSpace:"nowrap",
-                  display:"flex",
-                  alignItems:"center",
-                  gap:"8px",
-                  transition:"all 0.22s",
-                  opacity: locked ? 0.6 : 1,
-                  alignSelf:"flex-start",
-                }}
-                onMouseEnter={e => { if (!locked && !subscribing) { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; } }}
-                onMouseLeave={e => { e.currentTarget.style.background= locked ? "#555" : "#111"; e.currentTarget.style.transform="translateY(0)"; }}
-              >
-                {subscribing ? "Subscribing…" : "Subscribe Now"}
-                {!subscribing && !locked && (
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-              </button>
+                <button
+                  className="nl-submit-btn"
+                  onClick={handleSubscribe}
+                  disabled={subscribing || locked}
+                  aria-disabled={subscribing || locked}
+                  style={{
+                    height: "48px",
+                    background: locked ? "#555" : "#111",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "12px",
+                    padding: "0 24px",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    fontFamily: "'Outfit',sans-serif",
+                    cursor: (subscribing || locked) ? "not-allowed" : "pointer",
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    transition: "all 0.22s",
+                    opacity: locked ? 0.6 : 1,
+                    alignSelf: "flex-start",
+                    boxSizing: "border-box",
+                  }}
+                  onMouseEnter={(e) => { if (!locked && !subscribing) { e.currentTarget.style.background = "#2d1b69"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = locked ? "#555" : "#111"; e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  {subscribing ? "Subscribing…" : "Subscribe Now"}
+                  {!subscribing && !locked && (
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </button>
               </a>
             </div>
 
@@ -2819,20 +2860,20 @@ function NewsletterSection() {
                 id="nl-error"
                 role="alert"
                 style={{
-                  margin:0,
-                  fontSize:"12px",
-                  fontWeight:600,
-                  fontFamily:"'Outfit',sans-serif",
-                  color:"#fca5a5",
-                  display:"flex",
-                  alignItems:"center",
-                  gap:"5px",
-                  animation:"fadeIn 0.2s ease",
+                  margin: 0,
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  fontFamily: "'Outfit',sans-serif",
+                  color: "#fca5a5",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  animation: "fadeIn 0.2s ease",
                 }}
               >
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
-                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8"/>
-                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/>
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8" />
+                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round" />
                 </svg>
                 {error}
               </p>
@@ -2840,7 +2881,7 @@ function NewsletterSection() {
 
             {/* Attempt counter hint */}
             {touched && error && !locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
-              <p style={{ margin:0, fontSize:"11px", color:"rgba(255,255,255,0.5)", fontFamily:"'Outfit',sans-serif" }}>
+              <p style={{ margin: 0, fontSize: "11px", color: "rgba(255,255,255,0.5)", fontFamily: "'Outfit',sans-serif" }}>
                 {MAX_ATTEMPTS - attempts} attempt{MAX_ATTEMPTS - attempts !== 1 ? "s" : ""} remaining.
               </p>
             )}
@@ -2865,9 +2906,8 @@ function PromoBanner({ onClose }) {
   const [submitting, setSubmitting] = useState(false);
 
   const BANNER_IMAGES = [
-    `${PUB}/skillraoffer.png`,
-    `${PUB}/Skillraoffer1.png`,
-    `${PUB}/Skillraoffer2.png`,
+    `${PUB}/CurrentOffers/skillraoffer1.png`,
+    `${PUB}/CurrentOffers/skillraoffer2.jpeg`,
   ];
 
   const [bannerIdx, setBannerIdx] = useState(0);
@@ -3142,23 +3182,27 @@ function PromoBanner({ onClose }) {
             animation: "pulse 2s ease-in-out infinite",
           }}>LIMITED OFFER</div>
 
-          {/* images */}
           {BANNER_IMAGES.map((src, idx) => (
-            <img
-              key={idx}
-              src={src}
-              alt={`Offer ${idx + 1}`}
-              style={{
-                position: "absolute", inset: 0,
-                width: "100%", height: "100%",
-                objectFit: "cover",
-                objectPosition: "center center",
-                display: "block",
-                opacity: idx === bannerIdx ? 1 : 0,
-                transition: "opacity 0.6s ease",
-              }}
-            />
-          ))}
+  <img
+    key={idx}
+    src={src}
+    alt={`Offer ${idx + 1}`}
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: "80%",        /* ← control image width here */
+      height: "70%",       /* ← control image height here */
+      objectFit: "contain", /* ← contain keeps full image visible */
+      objectPosition: "center center",
+      display: "block",
+      opacity: idx === bannerIdx ? 1 : 0,
+      transition: "opacity 0.6s ease",
+      borderRadius: "12px", /* ← optional: rounded corners on image */
+    }}
+  />
+))}
 
           {/* left arrow */}
           <button
@@ -3214,7 +3258,7 @@ function PromoBanner({ onClose }) {
             <div style={{ fontSize: "26px", fontWeight: 900, color: "#fff", fontFamily: "'Outfit',sans-serif", letterSpacing: "-1px", lineHeight: 1 }}>FREE</div>
             <div style={{ fontSize: "12.5px", fontWeight: 700, color: "rgba(255,255,255,0.92)", fontFamily: "'Outfit',sans-serif", marginTop: "3px" }}>Counseling Session</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", justifyContent: "center", marginTop: "9px" }}>
-              {["✓ 100% Placement", "✓ Expert Mentors", "✓ Live Projects"].map((b, i) => (
+              {["✓ 100% Placement", "✓ Expert Mentors", "✓ Live Projects", "Internships"].map((b, i) => (
                 <span key={i} style={{
                   background: "rgba(255,255,255,0.18)",
                   border: "1px solid rgba(255,255,255,0.30)",
@@ -3447,7 +3491,7 @@ export default function HomePage() {
     <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, overflowX:"hidden", background:"#F3F4F4" }}>
       {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
       <title>Skillra — AI Medical Coding, IT &amp; Finance Training with 100% Placement</title>
-      <meta name="description" content="Skillra offers industry-aligned training in AI Medical Coding, Medical Billing, Full Stack Development, Data Analytics, SAP, Tally & GST with 100% placement assistance."/>
+      <meta name="description" content="Skillra offers industry-aligned training and internships in AI Medical Coding, Medical Billing, Full Stack Development, Data Analytics, SAP, Tally & GST with 100% placement assistance."/>
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');

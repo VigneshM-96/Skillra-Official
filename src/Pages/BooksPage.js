@@ -7,6 +7,72 @@ const PUB = process.env.PUBLIC_URL || "";
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
+
+const META = {
+  title:       "Books | Skillra – CPC Exam Training Book Bundle",
+  description: "Explore Skillra's own CPC Exam Training Book Bundle (3 Volumes) – comprehensive study material for medical coding certification by experienced trainers with 15+ years of expertise.",
+  canonical:   "https://www.skillra.com/books",
+  keywords:    "CPC exam books, medical coding books, CPC training material, Skillra books, medical coding study guide, CPC certification prep",
+};
+
+function setMeta(attr, value, content) {
+  let el = document.querySelector(`meta[${attr}="${value}"]`);
+  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
+  el.setAttribute("content", content);
+}
+
+function setLink(rel, href) {
+  let el = document.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
+
+function setJsonLd(data) {
+  const id = "skillra-books-jsonld";
+  let el = document.getElementById(id);
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+}
+
+function PageMeta() {
+  useEffect(() => {
+    document.title = META.title;
+    setMeta("name", "description",  META.description);
+    setMeta("name", "keywords",     META.keywords);
+    setMeta("name", "robots",       "index, follow");
+    setMeta("name", "author",       "Skillra");
+    setLink("canonical",            META.canonical);
+    setMeta("property", "og:type",        "website");
+    setMeta("property", "og:url",         META.canonical);
+    setMeta("property", "og:title",       META.title);
+    setMeta("property", "og:description", META.description);
+    setMeta("property", "og:image",       META.ogImage);
+    setMeta("property", "og:image:alt",   "Skillra CPC Exam Training Book Bundle");
+    setMeta("property", "og:site_name",   "Skillra");
+    setMeta("property", "og:locale",      "en_IN");
+    setMeta("name", "twitter:card",        "summary_large_image");
+    setMeta("name", "twitter:title",       META.title);
+    setMeta("name", "twitter:description", META.description);
+    setMeta("name", "twitter:image",       META.ogImage);
+    setMeta("name", "twitter:image:alt",   "Skillra CPC Exam Training Book Bundle");
+    setJsonLd({
+      "@context": "https://schema.org",
+      "@type": "Book",
+      "name": "CPC Exam Training Book Bundle",
+      "author": { "@type": "Organization", "name": "Skillra" },
+      "publisher": { "@type": "Organization", "name": "Skillra Health Innovations Pvt Ltd", "logo": { "@type": "ImageObject", "url": "/logo.png" } },
+      "description": META.description,
+      "numberOfPages": 3,
+      "bookFormat": "https://schema.org/Hardcover",
+      "url": META.canonical,
+      "inLanguage": "en",
+      "about": { "@type": "Thing", "name": "CPC Medical Coding Certification" }
+    });
+  }, []);
+  return null;
+}
+
+
 /* ══════════════════════════════════════════════════════
    GOOGLE SHEETS SUBMIT HELPER
 ══════════════════════════════════════════════════════ */
@@ -354,7 +420,7 @@ function BooksHero({ onBuyClick }) {
       }}>
         <div className="books-left" style={{flex:"0 0 auto",width:"480px",maxWidth:"100%",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
           <h1 className="bk-v1 books-title" style={{fontSize:"clamp(2rem,4.5vw,3.6rem)",fontWeight:900,lineHeight:1.18,color:"#fff",letterSpacing:"-1.5px",marginBottom:"10px",whiteSpace:"nowrap"}}>
-            Skillra CPC Exam<br/>Preparation<br/>Combo Kit.
+            Skillra CPC® Exam<br/>Preparation<br/>Combo Kit.
           </h1>
           <div className="bk-v2" style={{marginBottom:"30px"}}>
             <svg viewBox="0 0 340 18" style={{width:"min(340px,90vw)",height:"12px",overflow:"visible",display:"block"}} preserveAspectRatio="none">
@@ -458,7 +524,7 @@ function ChallengesSection() {
     >
       <div
         style={{
-          maxWidth: "860px",
+          maxWidth: "1400px",
           margin: "0 auto",
           padding: "0 clamp(16px,4%,40px)",
         }}
@@ -675,7 +741,7 @@ function AboutSection() {
     >
       <div
         style={{
-          maxWidth: "860px",
+          maxWidth: "1400px",
           margin: "0 auto",
           padding: "0 clamp(16px,4%,40px)",
         }}
@@ -885,7 +951,7 @@ function ReviewsSection() {
     >
       <div
         style={{
-          maxWidth: "860px",
+          maxWidth: "1400px",
           margin: "0 auto",
           padding: "0 clamp(16px,4%,40px)",
         }}
@@ -1100,6 +1166,7 @@ function ReviewRow({ review, index, inView }) {
   );
 }
 
+
 /* ══════════════════════════════════════════════════════
    SECTION 4 — BUNDLE
 ══════════════════════════════════════════════════════ */
@@ -1113,57 +1180,268 @@ const BUNDLE_ITEMS = [
 ];
 
 function BundleSection({ onBuyClick }) {
+  const [showDownloadForm, setShowDownloadForm] = useState(false);
+  const [downloadFormData, setDownloadFormData] = useState({
+    name: "", email: "", phone: "", expectation: ""
+  });
+  const [downloadFormErrors, setDownloadFormErrors] = useState({});
+  const [downloadFormLoading, setDownloadFormLoading] = useState(false);
+
+  const validateDownloadForm = () => {
+    const errors = {};
+    const { name, email, phone, expectation } = downloadFormData;
+
+    if (!name.trim() || name.trim().length < 2) errors.name = "Enter a valid name (min 2 chars)";
+    if (!/^[a-zA-Z\s.]+$/.test(name.trim())) errors.name = "Name should only contain letters";
+
+    if (!email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = "Enter a valid email";
+
+    if (!phone.trim()) errors.phone = "Phone number is required";
+    else if (!/^[6-9]\d{9}$/.test(phone.trim())) errors.phone = "Enter a valid 10-digit Indian number";
+
+    if (!expectation) errors.expectation = "Please select an option";
+
+    setDownloadFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleDownloadFormSubmit = async () => {
+    if (!validateDownloadForm()) return;
+    setDownloadFormLoading(true);
+
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({
+            type: "download-sample",
+            name: downloadFormData.name.trim(),
+            email: downloadFormData.email.trim(),
+            phone: downloadFormData.phone.trim(),
+            expectation: downloadFormData.expectation,
+          }),
+        }
+      );
+
+      const link = document.createElement("a");
+      link.href = "/DownloadablePDF/CPC QUESTION BANK BOOK SAMPLE.pdf";
+      link.download = "CPC QUESTION BANK BOOK SAMPLE.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setShowDownloadForm(false);
+      setDownloadFormData({ name: "", email: "", phone: "", expectation: "" });
+      setDownloadFormErrors({});
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please try again.");
+    } finally {
+      setDownloadFormLoading(false);
+    }
+  };
+
   const [ref, inView] = useInView(0.08);
+
   return (
-    <section className="bundle-section" ref={ref} style={{background:"#f3f0ff",padding:"clamp(32px,5vw,80px) 0 clamp(36px,5vw,88px)",position:"relative",overflow:"hidden",fontFamily:"'Outfit',sans-serif"}}>
-      <div style={{textAlign:"center",marginBottom:"44px",padding:"0 clamp(16px,4%,40px)",position:"relative",zIndex:1,opacity:inView?1:0,transform:inView?"translateY(0)":"translateY(20px)",transition:"all 0.6s ease"}}>
-        <h2 style={{fontSize:"clamp(1.5rem,3vw,2.6rem)",fontWeight:900,color:"#111827",letterSpacing:"-0.03em",fontFamily:"'Outfit',sans-serif",marginBottom:"14px"}}>Try Our Sample Piece Now</h2>
-        <p style={{fontSize:"clamp(13px,1.3vw,14px)",color:"#6b7280",fontFamily:"'Outfit',sans-serif",maxWidth:"480px",margin:"0 auto",lineHeight:1.7}}>One package. Everything you need. Pass with confidence. Take Demo and check.</p>
-      </div>
-      <div style={{position:"relative",paddingBottom:"clamp(40px,8vw,80px)"}}>
-        <img src={`${PUB}/bgbooks.png`} alt="" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",transform:"scale(2.0)",transformOrigin:"center top",top:"-120px",objectPosition:"center top",opacity:0.18,pointerEvents:"none",zIndex:0}}/>
-        <div style={{maxWidth:"860px",margin:"0 auto",padding:"0 clamp(16px,4%,40px)",position:"relative",zIndex:1}}>
-          <div style={{background:"#fff",width:"min(400px,100%)",margin:"0 auto",borderRadius:"16px 16px 80px 80px",padding:"clamp(28px,5%,44px) clamp(24px,6%,52px) clamp(32px,6%,52px)",boxShadow:"0 12px 60px rgba(109,40,217,0.12),0 2px 8px rgba(0,0,0,0.06)",border:"1.5px solid rgba(124,58,237,0.10)",opacity:inView?1:0,transform:inView?"translateY(0) scale(1)":"translateY(30px) scale(0.97)",transition:"opacity 0.7s ease 0.15s,transform 0.7s ease 0.15s",position:"relative",zIndex:1}}>
-            <h3 style={{fontSize:"18px",fontWeight:800,color:"#7c3aed",fontFamily:"'Outfit',sans-serif",textAlign:"center",marginBottom:"28px"}}>CPC Question Bank Sample</h3>
-            <ul style={{listStyle:"none",padding:0,margin:"0 0 36px 0",display:"flex",flexDirection:"column",gap:"14px"}}>
-              {BUNDLE_ITEMS.map((item,i) => (
-                <li key={i} style={{display:"flex",alignItems:"center",gap:"12px",fontSize:"clamp(13px,1.3vw,14.5px)",color:"#374151",fontFamily:"'Outfit',sans-serif",lineHeight:1.5}}>
-                  <span style={{width:"7px",height:"7px",borderRadius:"50%",background:"#7c3aed",flexShrink:0}}/>{item}
-                </li>
-              ))}
-            </ul>
-            <div style={{textAlign:"center"}}>
-              <button
-  onClick={() => {
-    const link = document.createElement('a');
-    link.href = '/CPC QUESTION BANK BOOK SAMPLE.pdf';
-    link.download = 'CPC QUESTION BANK BOOK SAMPLE.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }}
-  style={{
-    background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px",
-    padding: "14px 36px", fontSize: "14.5px", fontWeight: 800, cursor: "pointer",
-    fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center",
-    gap: "10px", boxShadow: "0 6px 22px rgba(124,58,237,0.35)", transition: "all 0.22s",
-  }}
-  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.50)"; }}
-  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 22px rgba(124,58,237,0.35)"; }}
->
-  Download
-  <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-    <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-</button>
+    <>
+      <section className="bundle-section" ref={ref} style={{ background: "#f3f0ff", padding: "clamp(32px,5vw,80px) 0 clamp(36px,5vw,88px)", position: "relative", overflow: "hidden", fontFamily: "'Outfit',sans-serif" }}>
+        <div style={{ textAlign: "center", marginBottom: "44px", padding: "0 clamp(16px,4%,40px)", position: "relative", zIndex: 1, opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "all 0.6s ease" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem,3vw,2.6rem)", fontWeight: 900, color: "#111827", letterSpacing: "-0.03em", fontFamily: "'Outfit',sans-serif", marginBottom: "14px" }}>Try Our Sample Question Bank Now</h2>
+          <p style={{ fontSize: "clamp(13px,1.3vw,14px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "480px", margin: "0 auto", lineHeight: 1.7 }}>One package. Everything you need. Pass with confidence. Take Demo and check.</p>
+        </div>
+        <div style={{ position: "relative", paddingBottom: "clamp(40px,8vw,80px)" }}>
+          <img src={`${PUB}/bgbooks.png`} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", transform: "scale(2.0)", transformOrigin: "center top", top: "-120px", objectPosition: "center top", opacity: 0.18, pointerEvents: "none", zIndex: 0 }} />
+          <div style={{ maxWidth: "860px", margin: "0 auto", padding: "0 clamp(16px,4%,40px)", position: "relative", zIndex: 1 }}>
+            <div style={{ background: "#fff", width: "min(400px,100%)", margin: "0 auto", borderRadius: "16px 16px 80px 80px", padding: "clamp(28px,5%,44px) clamp(24px,6%,52px) clamp(32px,6%,52px)", boxShadow: "0 12px 60px rgba(109,40,217,0.12),0 2px 8px rgba(0,0,0,0.06)", border: "1.5px solid rgba(124,58,237,0.10)", opacity: inView ? 1 : 0, transform: inView ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)", transition: "opacity 0.7s ease 0.15s,transform 0.7s ease 0.15s", position: "relative", zIndex: 1 }}>
+              <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", textAlign: "center", marginBottom: "28px" }}>CPC Question Bank Sample</h3>
+              <ul style={{ listStyle: "none", padding: 0, margin: "0 0 36px 0", display: "flex", flexDirection: "column", gap: "14px" }}>
+                {BUNDLE_ITEMS.map((item, i) => (
+                  <li key={i} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "clamp(13px,1.3vw,14.5px)", color: "#374151", fontFamily: "'Outfit',sans-serif", lineHeight: 1.5 }}>
+                    <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#7c3aed", flexShrink: 0 }} />{item}
+                  </li>
+                ))}
+              </ul>
+              <div style={{ textAlign: "center" }}>
+                <button
+                  onClick={() => setShowDownloadForm(true)}
+                  style={{
+                    background: "#7c3aed", color: "#fff", border: "none", borderRadius: "50px",
+                    padding: "14px 36px", fontSize: "14.5px", fontWeight: 800, cursor: "pointer",
+                    fontFamily: "'Outfit',sans-serif", display: "inline-flex", alignItems: "center",
+                    gap: "10px", boxShadow: "0 6px 22px rgba(124,58,237,0.35)", transition: "all 0.22s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 36px rgba(124,58,237,0.50)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 22px rgba(124,58,237,0.35)"; }}
+                >
+                  Download
+                  <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+                    <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* MODAL — rendered outside <section> to avoid overflow/transform clipping */}
+      {showDownloadForm && (
+        <div
+          onClick={() => { setShowDownloadForm(false); setDownloadFormErrors({}); }}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.5)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: "16px",
+            boxSizing: "border-box",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff",
+              borderRadius: "16px",
+              padding: "clamp(20px, 4vw, 32px)",
+              width: "90%",
+              maxWidth: "420px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              fontFamily: "'Outfit',sans-serif",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+              position: "relative",
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => { setShowDownloadForm(false); setDownloadFormErrors({}); }}
+              style={{
+                position: "absolute", top: "12px", right: "16px", background: "none",
+                border: "none", fontSize: "22px", cursor: "pointer", color: "#888",
+              }}
+            >✕</button>
+
+            <h3 style={{ margin: "0 0 6px", fontSize: "20px", fontWeight: 700, color: "#1e1e2e" }}>
+              Download Sample
+            </h3>
+            <p style={{ margin: "0 0 20px", fontSize: "13.5px", color: "#666" }}>
+              Fill in your details to get the free sample PDF
+            </p>
+
+            {/* Name */}
+            <div style={{ marginBottom: "14px" }}>
+              <input
+                type="text" placeholder="Full Name"
+                value={downloadFormData.name}
+                onChange={e => setDownloadFormData({ ...downloadFormData, name: e.target.value })}
+                style={{
+                  width: "100%", padding: "12px 14px", borderRadius: "10px", fontSize: "14px",
+                  border: downloadFormErrors.name ? "1.5px solid #ef4444" : "1.5px solid #ddd",
+                  outline: "none", fontFamily: "'Outfit',sans-serif", boxSizing: "border-box",
+                }}
+              />
+              {downloadFormErrors.name && (
+                <p style={{ color: "#ef4444", fontSize: "12px", margin: "4px 0 0" }}>{downloadFormErrors.name}</p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div style={{ marginBottom: "14px" }}>
+              <input
+                type="email" placeholder="Email Address"
+                value={downloadFormData.email}
+                onChange={e => setDownloadFormData({ ...downloadFormData, email: e.target.value })}
+                style={{
+                  width: "100%", padding: "12px 14px", borderRadius: "10px", fontSize: "14px",
+                  border: downloadFormErrors.email ? "1.5px solid #ef4444" : "1.5px solid #ddd",
+                  outline: "none", fontFamily: "'Outfit',sans-serif", boxSizing: "border-box",
+                }}
+              />
+              {downloadFormErrors.email && (
+                <p style={{ color: "#ef4444", fontSize: "12px", margin: "4px 0 0" }}>{downloadFormErrors.email}</p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div style={{ marginBottom: "14px" }}>
+              <input
+                type="tel" placeholder="Phone Number"
+                value={downloadFormData.phone}
+                onChange={e => setDownloadFormData({ ...downloadFormData, phone: e.target.value })}
+                style={{
+                  width: "100%", padding: "12px 14px", borderRadius: "10px", fontSize: "14px",
+                  border: downloadFormErrors.phone ? "1.5px solid #ef4444" : "1.5px solid #ddd",
+                  outline: "none", fontFamily: "'Outfit',sans-serif", boxSizing: "border-box",
+                }}
+              />
+              {downloadFormErrors.phone && (
+                <p style={{ color: "#ef4444", fontSize: "12px", margin: "4px 0 0" }}>{downloadFormErrors.phone}</p>
+              )}
+            </div>
+
+            {/* Expectation Dropdown */}
+            <div style={{ marginBottom: "20px" }}>
+              <select
+                value={downloadFormData.expectation}
+                onChange={e => setDownloadFormData({ ...downloadFormData, expectation: e.target.value })}
+                style={{
+                  width: "100%", padding: "12px 14px", borderRadius: "10px", fontSize: "14px",
+                  border: downloadFormErrors.expectation ? "1.5px solid #ef4444" : "1.5px solid #ddd",
+                  outline: "none", fontFamily: "'Outfit',sans-serif", boxSizing: "border-box",
+                  color: downloadFormData.expectation ? "#1e1e2e" : "#999", background: "#fff",
+                }}
+              >
+                <option value="" disabled>How do you expect to read the sample?</option>
+                <option value="More excited">More excited</option>
+                <option value="Excited">Excited</option>
+                <option value="No idea">No idea</option>
+              </select>
+              {downloadFormErrors.expectation && (
+                <p style={{ color: "#ef4444", fontSize: "12px", margin: "4px 0 0" }}>{downloadFormErrors.expectation}</p>
+              )}
+            </div>
+
+            {/* Submit */}
+            <button
+              onClick={handleDownloadFormSubmit}
+              disabled={downloadFormLoading}
+              style={{
+                width: "100%", padding: "13px", borderRadius: "50px", border: "none",
+                background: downloadFormLoading ? "#a78bfa" : "#7c3aed", color: "#fff",
+                fontSize: "15px", fontWeight: 700, cursor: downloadFormLoading ? "not-allowed" : "pointer",
+                fontFamily: "'Outfit',sans-serif", display: "flex", alignItems: "center",
+                justifyContent: "center", gap: "8px", transition: "all 0.2s",
+              }}
+            >
+              {downloadFormLoading ? (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" style={{ animation: "spin 1s linear infinite" }}>
+                    <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="3" fill="none" strokeDasharray="31.4 31.4" strokeLinecap="round" />
+                  </svg>
+                  Submitting...
+                </>
+              ) : "Submit & Download"}
+            </button>
+
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
-
 
 
 /* ═══════════════════════════════════════════
@@ -1186,10 +1464,10 @@ const EMAIL_REGEX = /^(?![.\-])(?!.*[.\-]{2})[a-zA-Z0-9._%+\-]{1,64}(?<![.\-])@[
 /* Strip any HTML / script injection attempts from the value */
 function sanitise(raw) {
   return raw
-    .replace(/[<>"'`]/g, "")   // remove tag/attribute chars
-    .replace(/javascript:/gi, "") // kill JS protocol
+    .replace(/[<>"'`]/g, "")
+    .replace(/javascript:/gi, "")
     .trim()
-    .slice(0, 254);             // hard cap at RFC max length
+    .slice(0, 254);
 }
 
 function validateEmail(raw) {
@@ -1200,22 +1478,21 @@ function validateEmail(raw) {
   const domain = val.split("@")[1].toLowerCase();
   if (BLOCKED_DOMAINS.has(domain)) return "Disposable email addresses are not accepted. Please use a real email.";
   if (domain.split(".").pop().length < 2) return "Email domain extension is invalid.";
-  return null; // valid
+  return null;
 }
 
-const MAX_ATTEMPTS = 3; // rate-limit: 3 failed attempts → locked for session
+const MAX_ATTEMPTS = 3;
 
 function NewsletterSection() {
-  const [ref, inView]           = useInView(0.3);
-  const [email, setEmail]       = useState("");
-  const [error, setError]       = useState("");        // inline validation message
-  const [touched, setTouched]   = useState(false);     // only show error after first blur/submit
+  const [ref, inView]                 = useInView(0.3);
+  const [email, setEmail]             = useState("");
+  const [error, setError]             = useState("");
+  const [touched, setTouched]         = useState(false);
   const [subscribed, setSubscribed]   = useState(false);
   const [subscribing, setSubscribing] = useState(false);
-  const [attempts, setAttempts] = useState(0);         // failed-submit counter
-  const [locked, setLocked]     = useState(false);     // too many bad attempts
+  const [attempts, setAttempts]       = useState(0);
+  const [locked, setLocked]           = useState(false);
 
-  /* Live-validate once the field has been touched */
   useEffect(() => {
     if (touched) setError(validateEmail(email) || "");
   }, [email, touched]);
@@ -1231,40 +1508,37 @@ function NewsletterSection() {
   };
 
   const handleSubscribe = async () => {
-  if (locked || subscribing) return;
-  setTouched(true);
-  const err = validateEmail(email);
-  if (err) {
-    setError(err);
-    const next = attempts + 1;
-    setAttempts(next);
-    if (next >= MAX_ATTEMPTS) {
-      setLocked(true);
-      setError("Too many invalid attempts. Please refresh the page to try again.");
-    }
-    return;
-  }
-  setError("");
-  setSubscribing(true);
-
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ type: "subscriber", email: email.trim() }),
-    });
-
-    // ✅ no-cors = can't read response, if no error thrown = success
-    setSubscribed(true);
-
-  } catch (err) {
-    setError("Something went wrong. Please try again.");
+    if (locked || subscribing) return;
     setTouched(true);
-  } finally {
-    setSubscribing(false);
-  }
-};
+    const err = validateEmail(email);
+    if (err) {
+      setError(err);
+      const next = attempts + 1;
+      setAttempts(next);
+      if (next >= MAX_ATTEMPTS) {
+        setLocked(true);
+        setError("Too many invalid attempts. Please refresh the page to try again.");
+      }
+      return;
+    }
+    setError("");
+    setSubscribing(true);
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ type: "subscriber", email: email.trim() }),
+      });
+      setSubscribed(true);
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      setTouched(true);
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   const inputBorderColor = !touched
     ? "rgba(255,255,255,0.7)"
@@ -1273,48 +1547,88 @@ function NewsletterSection() {
       : "#4ade80";
 
   return (
-    <div ref={ref} style={{ background:"linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position:"relative", overflow:"hidden" }}>
-      <style>{`@keyframes spinRingAnim { to { transform:rotate(360deg); } }`}</style>
+    <div ref={ref} style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed,#6d28d9)", position: "relative", overflow: "hidden" }}>
+      <style>{`
+        @keyframes spinRingAnim { to { transform: rotate(360deg); } }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
-      <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize:"22px 22px", pointerEvents:"none" }} />
-      <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"3px", background:"linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize:"200% 100%", animation:"shimmer 3s linear infinite" }} />
+        /* ── Newsletter form row ── */
+        .nl-form-row {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          flex-wrap: nowrap;
+          align-items: flex-start;
+        }
+
+        /* On mobile: stack input above button, both full width */
+        @media (max-width: 600px) {
+          .nl-form-row {
+            flex-direction: column !important;
+            width: 100%;
+          }
+          .nl-input-wrap {
+            width: 100% !important;
+          }
+          .nl-input-wrap input {
+            width: 100% !important;
+          }
+          .nl-submit-btn {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+      `}</style>
+
+      {/* Dot grid background */}
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.10) 1px,transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none" }} />
+
+      {/* Bottom shimmer bar */}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg,#06b6d4,#22d3ee,#67e8f9,#22d3ee,#06b6d4)", backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite" }} />
 
       <div style={{
-        maxWidth:"1200px", margin:"0 auto", padding:"36px 24px",
-        display:"flex", alignItems:"flex-start", justifyContent:"space-between",
-        gap:"36px", flexWrap:"wrap", position:"relative", zIndex:1,
-        opacity: inView ? 1 : 0, transition:"opacity 0.8s ease",
+        maxWidth: "1200px", margin: "0 auto", padding: "36px 24px",
+        display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+        gap: "36px", flexWrap: "wrap", position: "relative", zIndex: 1,
+        opacity: inView ? 1 : 0, transition: "opacity 0.8s ease",
       }}>
-        {/* Left — branding */}
-        <div style={{ display:"flex", alignItems:"center", gap:"20px", paddingTop:"6px" }}>
-          <div style={{ width:"46px", height:"46px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", animation:"spinRingAnim 6s linear infinite" }}>
+
+        {/* ── Left — branding ── */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", paddingTop: "6px" }}>
+          <div style={{ width: "46px", height: "46px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", animation: "spinRingAnim 6s linear infinite" }}>
             <svg width="40" height="40" viewBox="0 0 46 46" fill="none">
-              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round"/>
+              <path d="M23 4v38M4 23h38M8 8l30 30M38 8L8 38" stroke="rgba(255,255,255,0.85)" strokeWidth="3.5" strokeLinecap="round" />
             </svg>
           </div>
           <div>
-            <h2 style={{ fontSize:"clamp(1.2rem,2.2vw,1.6rem)", fontWeight:900, color:"#fff", lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:"5px", fontFamily:"'Outfit',sans-serif" }}>
+            <h2 style={{ fontSize: "clamp(1.2rem,2.2vw,1.6rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: "5px", fontFamily: "'Outfit',sans-serif" }}>
               Join Our Newsletter
             </h2>
-            <p style={{ fontSize:"13px", color:"rgba(255,255,255,0.75)", fontWeight:500, fontFamily:"'Outfit',sans-serif" }}>
+            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.75)", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>
               Subscribe to get our latest updates &amp; news.
             </p>
           </div>
         </div>
 
-        {/* Right — form / success */}
+        {/* ── Right — form / success ── */}
         {subscribed ? (
-          <div style={{ display:"flex", alignItems:"center", gap:"10px", background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.4)", borderRadius:"12px", padding:"12px 20px" }}>
-            <div style={{ width:"28px", height:"28px", borderRadius:"50%", background:"#22c55e", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round"/></svg>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.4)", borderRadius: "12px", padding: "12px 20px" }}>
+            <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
             </div>
-            <span style={{ color:"#fff", fontWeight:700, fontSize:"14px", fontFamily:"'Outfit',sans-serif" }}>You're subscribed!</span>
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: "14px", fontFamily: "'Outfit',sans-serif" }}>You're subscribed!</span>
           </div>
         ) : (
-          <div style={{ display:"flex", flexDirection:"column", gap:"6px", flex:"0 0 auto" }}>
-            <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-              {/* Email input */}
-              <div style={{ display:"flex", flexDirection:"column", gap:"4px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: "0 0 auto", width: "100%", maxWidth: "460px" }}>
+
+            {/* Input + Button row */}
+            <div className="nl-form-row">
+
+              {/* Email input wrapper */}
+              <div className="nl-input-wrap" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <input
                   type="email"
                   inputMode="email"
@@ -1326,62 +1640,65 @@ function NewsletterSection() {
                   disabled={locked}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  onKeyDown={e => e.key === "Enter" && handleSubscribe()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
                   placeholder="Enter your email"
                   maxLength={254}
                   style={{
-                    height:"48px",
-                    width:"clamp(200px,26vw,300px)",
-                    padding:"0 16px",
-                    fontSize:"14px",
-                    fontFamily:"'Outfit',sans-serif",
-                    fontWeight:500,
+                    height: "48px",
+                    width: "clamp(200px,26vw,300px)",
+                    padding: "0 16px",
+                    fontSize: "14px",
+                    fontFamily: "'Outfit',sans-serif",
+                    fontWeight: 500,
                     color: locked ? "#999" : "#1a0640",
                     background: locked ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.96)",
-                    border:`2px solid ${inputBorderColor}`,
-                    borderRadius:"12px",
-                    outline:"none",
+                    border: `2px solid ${inputBorderColor}`,
+                    borderRadius: "12px",
+                    outline: "none",
                     cursor: locked ? "not-allowed" : "text",
-                    transition:"border-color 0.2s",
+                    transition: "border-color 0.2s",
+                    boxSizing: "border-box",
                   }}
                 />
               </div>
 
               {/* Submit button */}
-              <a href="/Skillra-Official" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-              <button
-                onClick={handleSubscribe}
-                disabled={subscribing || locked}
-                aria-disabled={subscribing || locked}
-                style={{
-                  height:"48px",
-                  background: locked ? "#555" : "#111",
-                  color:"#fff",
-                  border:"none",
-                  borderRadius:"12px",
-                  padding:"0 24px",
-                  fontSize:"14px",
-                  fontWeight:700,
-                  fontFamily:"'Outfit',sans-serif",
-                  cursor: (subscribing || locked) ? "not-allowed" : "pointer",
-                  whiteSpace:"nowrap",
-                  display:"flex",
-                  alignItems:"center",
-                  gap:"8px",
-                  transition:"all 0.22s",
-                  opacity: locked ? 0.6 : 1,
-                  alignSelf:"flex-start",
-                }}
-                onMouseEnter={e => { if (!locked && !subscribing) { e.currentTarget.style.background="#2d1b69"; e.currentTarget.style.transform="translateY(-2px)"; } }}
-                onMouseLeave={e => { e.currentTarget.style.background= locked ? "#555" : "#111"; e.currentTarget.style.transform="translateY(0)"; }}
-              >
-                {subscribing ? "Subscribing…" : "Subscribe Now"}
-                {!subscribing && !locked && (
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                    <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-              </button>
+              <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+                <button
+                  className="nl-submit-btn"
+                  onClick={handleSubscribe}
+                  disabled={subscribing || locked}
+                  aria-disabled={subscribing || locked}
+                  style={{
+                    height: "48px",
+                    background: locked ? "#555" : "#111",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "12px",
+                    padding: "0 24px",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    fontFamily: "'Outfit',sans-serif",
+                    cursor: (subscribing || locked) ? "not-allowed" : "pointer",
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    transition: "all 0.22s",
+                    opacity: locked ? 0.6 : 1,
+                    alignSelf: "flex-start",
+                    boxSizing: "border-box",
+                  }}
+                  onMouseEnter={(e) => { if (!locked && !subscribing) { e.currentTarget.style.background = "#2d1b69"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = locked ? "#555" : "#111"; e.currentTarget.style.transform = "translateY(0)"; }}
+                >
+                  {subscribing ? "Subscribing…" : "Subscribe Now"}
+                  {!subscribing && !locked && (
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </button>
               </a>
             </div>
 
@@ -1391,20 +1708,20 @@ function NewsletterSection() {
                 id="nl-error"
                 role="alert"
                 style={{
-                  margin:0,
-                  fontSize:"12px",
-                  fontWeight:600,
-                  fontFamily:"'Outfit',sans-serif",
-                  color:"#fca5a5",
-                  display:"flex",
-                  alignItems:"center",
-                  gap:"5px",
-                  animation:"fadeIn 0.2s ease",
+                  margin: 0,
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  fontFamily: "'Outfit',sans-serif",
+                  color: "#fca5a5",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  animation: "fadeIn 0.2s ease",
                 }}
               >
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink:0 }}>
-                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8"/>
-                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round"/>
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                  <circle cx="8" cy="8" r="7" stroke="#fca5a5" strokeWidth="1.8" />
+                  <path d="M8 4.5v4M8 10.5v1" stroke="#fca5a5" strokeWidth="1.8" strokeLinecap="round" />
                 </svg>
                 {error}
               </p>
@@ -1412,7 +1729,7 @@ function NewsletterSection() {
 
             {/* Attempt counter hint */}
             {touched && error && !locked && attempts > 0 && attempts < MAX_ATTEMPTS && (
-              <p style={{ margin:0, fontSize:"11px", color:"rgba(255,255,255,0.5)", fontFamily:"'Outfit',sans-serif" }}>
+              <p style={{ margin: 0, fontSize: "11px", color: "rgba(255,255,255,0.5)", fontFamily: "'Outfit',sans-serif" }}>
                 {MAX_ATTEMPTS - attempts} attempt{MAX_ATTEMPTS - attempts !== 1 ? "s" : ""} remaining.
               </p>
             )}
@@ -1550,7 +1867,7 @@ export default function BooksPage() {
       <BundleSection onBuyClick={() => setShowModal(true)}/>
       <NewsletterSection/>
       <Footer/>
-
+      <PageMeta />
       {showModal && <BuyBookModal onClose={() => setShowModal(false)}/>}
     </div>
   );

@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const OPENROUTER_API_KEY = process.env.REACT_APP_OPENROUTER_API_KEY;
 
 const BOT_CONTEXT = `
 You are Tyzon, a smart and friendly assistant for Skillra Health Innovations Pvt Ltd.
@@ -73,13 +72,10 @@ KEY HIGHLIGHTS (use these to impress users):
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function fetchBotReply(messages) {
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const res = await fetch("https://skillra-web-backend.onrender.com/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-      "HTTP-Referer": "http://localhost:3000",
-      "X-Title": "Skillra Chatbot",
     },
     body: JSON.stringify({
       model: "anthropic/claude-3-haiku",
