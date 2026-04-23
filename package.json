@@ -1,6 +1,6 @@
 {
   "name": "skillra-frontend",
-  "homepage": ".",
+  "homepage": "https://vigneshm-96.github.io/Skillra-Official/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,6 +11,7 @@
     "cra-template": "1.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-ga4": "^3.0.1",
     "react-helmet": "^6.1.0",
     "react-router-dom": "^7.13.1",
     "react-scripts": "5.0.1",

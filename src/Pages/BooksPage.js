@@ -381,8 +381,10 @@ function BooksHero({ onBuyClick }) {
   const PARA = "Prepare smarter with the Skillra CPC Exam Practice Book, designed to help medical coding students build strong fundamentals, practice extensively, and approach the CPC exam with confidence.";
 
   const BuyBtn = ({ style={} }) => (
-    <a href="/books" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-    <button onClick={onBuyClick} className="books-cta-btn" style={{
+    <a href="https://skillrabook.base44.app" style={{ textDecoration: "none" }}>
+  <button
+    className="books-cta-btn"
+    style={{
       background:"#fff",color:"#6d28d9",border:"none",
       borderRadius:"50px",padding:"14px 28px",fontSize:"clamp(13px,1.4vw,14.5px)",
       fontWeight:800,cursor:"pointer",fontFamily:"'Outfit',sans-serif",
@@ -390,13 +392,21 @@ function BooksHero({ onBuyClick }) {
       boxShadow:"0 8px 28px rgba(0,0,0,0.22)",letterSpacing:"0.2px",
       transition:"all 0.22s",position:"relative",overflow:"hidden",...style,
     }}
-      onMouseEnter={e => {e.currentTarget.style.transform="translateY(-3px) scale(1.03)";e.currentTarget.style.boxShadow="0 16px 40px rgba(0,0,0,0.30)";}}
-      onMouseLeave={e => {e.currentTarget.style.transform="translateY(0) scale(1)";e.currentTarget.style.boxShadow="0 8px 28px rgba(0,0,0,0.22)";}}
-    >
-      Buy Book
-      <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9h12M11 5l4 4-4 4" stroke="#6d28d9" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-    </button>
-    </a>
+    onMouseEnter={e => {
+      e.currentTarget.style.transform="translateY(-3px) scale(1.03)";
+      e.currentTarget.style.boxShadow="0 16px 40px rgba(0,0,0,0.30)";
+    }}
+    onMouseLeave={e => {
+      e.currentTarget.style.transform="translateY(0) scale(1)";
+      e.currentTarget.style.boxShadow="0 8px 28px rgba(0,0,0,0.22)";
+    }}
+  >
+    Buy Book
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+      <path d="M3 9h12M11 5l4 4-4 4" stroke="#6d28d9" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </button>
+</a>
   );
 
   return (

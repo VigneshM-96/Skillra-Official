@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { label: "Campus",          path: "/campus"    },
   { label: "Books",           path: "/books"     },
   { label: "Blogs",           path: "/blog"      },
+  // { label: "Gallery",         path: "/gallery"},
   { label: "Contact Us",      path: "/contact-us" },
 ];
 
@@ -17,35 +18,35 @@ const MEGA_MENU = [
     category: "Healthcare",
     color: "#7c3aed",
     courses: [
-      { name: "AI Medical Coding", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>, slug: "ai-medical-coding" },
-      { name: "AI Medical Billing", count: "100 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>, slug: "ai-medical-billing" },
-      { name: "AI Medical Scribing", count: "300 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>, slug: "ai-medical-scribing" },
+      { name: "AI Medical Coding", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>, slug: "ai-medical-coding-course" },
+      { name: "AI Medical Billing", count: "100 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>, slug: "ai-medical-billing-course" },
+      { name: "AI Medical Scribing", count: "300 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>, slug: "ai-medical-scribing-course" },
     ],
   },
   {
     category: "Information Technology",
     color: "#f97316",
     courses: [
-      { name: "Full Stack Development", count: "150 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>, slug: "full-stack-development" },
-      { name: "Data Analytics", count: "120 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>, slug: "data-analytics" },
-      { name: "AI & Machine Learning", count: "90 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>, slug: "ai-machine-learning" },
+      { name: "Full Stack Development", count: "150 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>, slug: "full-stack-development-course" },
+      { name: "Data Analytics", count: "120 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>, slug: "data-analytics-course" },
+      { name: "AI & Machine Learning", count: "90 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>, slug: "ai-machine-learning-course" },
     ],
   },
   {
     category: "Finance",
     color: "#10b981",
     courses: [
-      { name: "Tally & GST", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>, slug: "tally-gst" },
-      { name: "SAP ABAP", count: "60 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h4M7 11h2M13 8l2 3-2 3"/></svg>, slug: "sap-development" },
+      { name: "Tally & GST", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>, slug: "tally-gst-course" },
+      { name: "SAP ABAP", count: "60 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h4M7 11h2M13 8l2 3-2 3"/></svg>, slug: "sap-development-course" },
     ],
   },
   {
     category: "Others",
     color: "#f97316",
     courses: [
-      { name: "UI/UX Design", count: "80 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="9" cy="15" r="2"/><path d="M13 13h4M13 17h4"/></svg>, slug: "ui-ux-design" },
-      { name: "Personality Development", count: "250 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v4M10 13h4"/></svg>, slug: "personality-development" },
-      { name: "Digital Marketing", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 3-4-6-3 3H2"/><path d="M16 3l4 4-4 4"/></svg>, slug: "digital-marketing" },
+      { name: "UI/UX Design", count: "80 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="9" cy="15" r="2"/><path d="M13 13h4M13 17h4"/></svg>, slug: "ui-ux-design-course" },
+      { name: "Personality Development", count: "250 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v4M10 13h4"/></svg>, slug: "personality-development-course" },
+      { name: "Digital Marketing", count: "200 + Registered", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 3-4-6-3 3H2"/><path d="M16 3l4 4-4 4"/></svg>, slug: "digital-marketing-course" },
     ],
   },
 ];

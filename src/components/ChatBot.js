@@ -540,7 +540,7 @@ export default function ChatBot() {
             />
             <span className="cb-avatar-fallback" style={{ display: "none" }}>🤖</span>
             <div className="cb-header-text">
-              <p className="cb-header-name">Tyzon v1.1</p>
+              <p className="cb-header-name">Skillra AI</p>
               <span className="cb-header-status">
                 <span className="cb-status-dot" /> Online
               </span>

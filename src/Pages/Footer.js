@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -25,30 +26,31 @@ const SOCIALS = [
 ];
 
 const COURSES_COL1 = [
-  { label: "AI Medical Coding Course",   path: "/courses/ai-medical-coding"   },
-  { label: "AI Medical Billing Course",  path: "/courses/ai-medical-billing"  },
-  { label: "AI Medical Scribing Course", path: "/courses/ai-medical-scribing" },
-  { label: "Tally & GST Course",         path: "/courses/tally-gst"           },
-  { label: "SAP Development Course",     path: "/courses/sap-development"     },
-  { label: "Data Analytics Course",      path: "/courses/data-analytics"      },
+  { label: "AI Medical Coding Course",   path: "/courses/ai-medical-coding-course"   },
+  { label: "AI Medical Billing Course",  path: "/courses/ai-medical-billing-course"  },
+  { label: "AI Medical Scribing Course", path: "/courses/ai-medical-scribing-course" },
+  { label: "Tally & GST Course",         path: "/courses/tally-gst-course"           },
+  { label: "SAP Development Course",     path: "/courses/sap-development-course"     },
+  { label: "Data Analytics Course",      path: "/courses/data-analytics-course"      },
 ];
 
 const COURSES_COL2 = [
-  { label: "Personality Development Course", path: "/courses/personality-development" },
-  { label: "Full Stack Course",       path: "/courses/full-stack-development"  },
-  { label: "UI/UX Designing Course",         path: "/courses/ui-ux-design"         },
-  { label: "AI & Machine Learning Course",   path: "/courses/ai-machine-learning"     },
+  { label: "Personality Development Course", path: "/courses/personality-development-course" },
+  { label: "Full Stack Course",       path: "/courses/full-stack-development-course"  },
+  { label: "UI/UX Designing Course",         path: "/courses/ui-ux-design-course"         },
+  { label: "AI & Machine Learning Course",   path: "/courses/ai-machine-learning-course"     },
+  { label: "Digital Marketing Course",   path: "/courses/digital-marketing-course"     },
 ];
 
 const QUICK_LINKS = [
   { label: "Home",             path: "/"          },
-  { label: "About Us",         path: "/about"     },
+  { label: "About Us",         path: "/about-us"     },
   { label: "Campus",           path: "/campus"    },
   { label: "Placement",        path: "/placement" },
   { label: "Career Guidance",  path: "/career"    },
   { label: "Course Offered",   path: "/courses"   },
   { label: "Books",            path: "/books"     },
-  { label: "Contact Us",       path: "/contact"   },
+  { label: "Contact Us",       path: "/contact-us"   },
 ];
 
 /* ═══════════════════════════════════════════
@@ -304,7 +306,17 @@ export default function Footer() {
             background: "linear-gradient(90deg, #a78bfa, #7c3aed)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
           }}>
-            Skillra
+            <Link to="/" style={{ textDecoration: "none" }}>
+  <span style={{
+    fontWeight: 800,
+    background: "linear-gradient(90deg, #a78bfa, #7c3aed)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+  }}>
+    Skillra
+  </span>
+</Link>
           </span>
           {" "}|| All Rights Reserved
         </p>

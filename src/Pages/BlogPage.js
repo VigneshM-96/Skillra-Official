@@ -244,39 +244,7 @@ function BlogDetail({ blog, onBack }) {
         {/* ✅ Fixed: uses RenderContent with bold support */}
         <RenderContent content={blog.content} />
 
-        {/* CTA */}
-        <div style={{
-          marginTop: 48,
-          background: `linear-gradient(135deg, ${blog.tagColor}12, ${blog.tagColor}06)`,
-          border: `1.5px solid ${blog.tagColor}30`,
-          borderRadius: 16, padding: "28px 32px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          flexWrap: "wrap", gap: 16,
-        }}>
-          <div>
-            <p style={{ fontWeight: 700, fontSize: 16, color: "#111", marginBottom: 4 }}>
-              Ready to start your journey?
-            </p>
-            <p style={{ fontSize: 13, color: "#666" }}>
-              Explore our {blog.tag} courses with placement support.
-            </p>
-          </div>
-          <a
-            href="/contact us"
-            style={{
-              textDecoration: "none",
-              background: blog.tagColor, color: "#fff",
-              borderRadius: 50, padding: "12px 24px",
-              fontSize: 14, fontWeight: 600,
-              display: "inline-flex", alignItems: "center", gap: 6,
-              transition: "all 0.2s ease", flexShrink: 0,
-            }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 8px 24px ${blog.tagColor}55`; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-          >
-            Book a Free Demo &#8599;
-          </a>
-        </div>
+        
       </div>
     </div>
   );

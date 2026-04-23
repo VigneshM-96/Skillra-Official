@@ -5,7 +5,7 @@ export const COURSES = {
   /* ══════════════════════════════════════════════════
      HEALTHCARE
   ══════════════════════════════════════════════════ */
-  "ai-medical-coding": {
+  "ai-medical-coding-course": {
     title: "AI Medical Coding Course with Internship",
     category: "AI Medical Coding Course",
     rating: 4.8,
@@ -116,7 +116,7 @@ export const COURSES = {
     otherCourses: ["ai-medical-billing", "ai-medical-scribing", "ai-in-healthcare"],
   },
 
-  "ai-medical-billing": {
+  "ai-medical-billing-course": {
     title: "AI Medical Billing Course with Internship",
     category: "AI Medical Billing Course",
     rating: 4.8,
@@ -226,7 +226,7 @@ export const COURSES = {
     otherCourses: ["ai-medical-coding", "ai-medical-scribing", "ai-in-healthcare"],
   },
 
-  "ai-medical-scribing": {
+  "ai-medical-scribing-course": {
     title: "AI Medical Scribing Course with Internship",
     category: "AI Medical Scribing Course",
     rating: 4.8,
@@ -342,7 +342,7 @@ export const COURSES = {
   ══════════════════════════════════════════════════ */
   
 
-  "full-stack-development": {
+  "full-stack-development-course": {
     title: "Full Stack Course with Internship",
     category: "Information Technology",
     rating: 4.8,
@@ -455,7 +455,7 @@ export const COURSES = {
     otherCourses: ["data-analytics", "sap-development", "ai-machine-learning"],
   },
 
-  "data-analytics": {
+  "data-analytics-course": {
     title: "Data Analytics Course with Internship",
     category: "Information Technology",
     rating: 4.8,
@@ -567,7 +567,7 @@ export const COURSES = {
     otherCourses: ["full-stack-development", "sap-development", "ai-machine-learning"],
   },
 
-  "ai-machine-learning": {
+  "ai-machine-learning-course": {
     title: "AI & Machine Learning with Internship",
     category: "Information Technology",
     rating: 4.9,
@@ -694,7 +694,7 @@ export const COURSES = {
   /* ══════════════════════════════════════════════════
      FINANCE
   ══════════════════════════════════════════════════ */
-  "tally-gst": {
+  "tally-gst-course": {
     title: "Tally & GST Course with Internship",
     category: "Tally & GST Course",
     rating: 4.8,
@@ -805,7 +805,7 @@ export const COURSES = {
     otherCourses: ["financial-modeling", "full-stack-development", "data-analytics"],
   },
 
-  "sap-development": {
+  "sap-development-course": {
     title: "SAP Development Course with Internship",
     category: "SAP Development Course",
     rating: 4.8,
@@ -920,7 +920,7 @@ export const COURSES = {
   /* ══════════════════════════════════════════════════
      SELF DEVELOPMENT
   ══════════════════════════════════════════════════ */
-  "ui-ux-design": {
+  "ui-ux-design-course": {
     title: "UI/UX Designing Course with Internship",
     category: "Information Technology",
     rating: 4.8,
@@ -1032,7 +1032,7 @@ export const COURSES = {
     otherCourses: ["full-stack-development", "data-analytics", "sap-development"],
   },
 
-  "personality-development": {
+  "personality-development-course": {
     title: "Personality Development Course with Internship",
     category: "Self Development",
     rating: 4.9,
@@ -1146,7 +1146,7 @@ export const COURSES = {
     otherCourses: ["ai-medical-coding", "full-stack-development"],
   },
 
-  "digital-marketing": {
+  "digital-marketing-course": {
     title: "Digital Marketing with Internship",
     category: "Digital Marketing",
     rating: 4.8,

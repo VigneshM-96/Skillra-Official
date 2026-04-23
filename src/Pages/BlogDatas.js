@@ -1,6 +1,6 @@
 export const BLOG_POSTS = [
   {
-    id: 1,
+    id: "Career-Growth",
     tag: "Career Growth",
     tagColor: "#7c3aed",
     tagBg: "#ede9fe",
@@ -52,15 +52,15 @@ Your career is waiting. The question is just — which skill are you going to st
     authorColor: "#7c3aed",
   },
   {
-    id: 2,
+    id: "Healthcare-IT",
     tag: "Healthcare IT",
     tagColor: "#0891b2",
     tagBg: "#e0f2fe",
     date: "March 14, 2026",
     readTime: "6 min read",
-    title: "AI Medical Scribing Course: Skills, Career Opportunities & Industry Demand",
+    title: "AI Medical Scribing Course: Skills, Career Opportunities & Industry",
     excerpt:
-      "AI Medical Scribing is one of the fastest-growing healthcare roles — bridging patient care and digital documentation. Learn what skills you need, what employers are hiring for, and how to break into this future-ready field.",
+      "AI Medical Scribing is one of the fastest-growing healthcare roles — bridging patient care and digital documentation. how to break into this future-ready field.",
     content: `The healthcare industry is undergoing a massive transformation driven by digital innovation, automation, and artificial intelligence. Among the many emerging roles shaped by this shift, AI Medical Scribing stands out as one of the most promising and accessible career paths for aspiring healthcare and tech professionals.
 
 In today's fast-paced medical environment, doctors are expected to balance patient care with extensive documentation. This is where AI medical scribes play a crucial role — bridging the gap between healthcare delivery and efficient data management. If you're looking to build a stable, future-ready career without spending years in traditional medical education, an AI Medical Scribing course could be your ideal starting point.
@@ -100,7 +100,7 @@ Skillra's AI Medical Scribing course is built around current industry needs — 
     authorColor: "#0891b2",
   },
   {
-    id: 3,
+    id: "Data-Analytics",
     tag: "Data Analytics",
     tagColor: "#059669",
     tagBg: "#d1fae5",
@@ -108,7 +108,7 @@ Skillra's AI Medical Scribing course is built around current industry needs — 
     readTime: "7 min read",
     title: "Best Data Analytics Course in Chennai with Placement Support",
     excerpt:
-      "Choosing the best Data Analytics course in Chennai with placement support is one of the smartest career decisions you can make right now — whether you're a student, working professional, or planning a career switch.",
+      "Choosing the best Data Analytics course in Chennai with placement support is one of the smartest career decisions you can make right now — whether you're a student, working professional.",
     content: `In today's fast-moving digital world, data is not just a byproduct of business activities — it is the backbone of decision-making. Every organization, from startups to multinational corporations, depends on data to understand customers, improve operations, and predict future trends. This growing reliance on data has created enormous demand for skilled professionals who can interpret and transform raw information into meaningful insights.
 
 **Why Chennai is an Ideal Place to Learn Data Analytics**
@@ -144,7 +144,7 @@ Your journey into the world of data starts today.`,
     authorColor: "#059669",
   },
   {
-    id: 4,
+    id: "Medical-Coding",
     tag: "Medical Coding",
     tagColor: "#dc2626",
     tagBg: "#fee2e2",
@@ -197,7 +197,7 @@ Medical scribing is more than just a job. It is a career that plays a crucial ro
     authorColor: "#dc2626",
   },
   {
-    id: 5,
+    id: "AI-Future-Tech",
     tag: "AI & Future Tech",
     tagColor: "#d97706",
     tagBg: "#fef3c7",

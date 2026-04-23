@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
 import { BLOG_POSTS } from "./BlogDatas";
+import { Link } from "react-router-dom";
 
 // ─── Update this with your Google Apps Script URL for newsletter ───────────────
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
@@ -69,21 +70,21 @@ const COURSES_DATA = {
     cardBg: "linear-gradient(145deg,#eff6ff 0%,#dbeafe 100%)",
     courses: [
       {
-        id: "ai-medical-coding",
+        id: "ai-medical-coding-course",
         title: "AI Medical Coding Course",
         description: "Get certified and learn AI-powered coding skills with real case studies.",
         image: `${PUB}/coursemedicalcoding.jpg`,
         // Doctor reviewing digital patient records / medical data on screen
       },
       {
-        id: "ai-medical-billing",
+        id: "ai-medical-billing-course",
         title: "AI Medical Billing Course",
         description: "Become a certified AI Medical Billing professional with job guarantee.",
         image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format&fit=crop",
         // Medical billing / finance paperwork and calculator
       },
       {
-        id: "ai-medical-scribing",
+        id: "ai-medical-scribing-course",
         title: "AI Medical Scribing Course",
         description: "Learn AI-based medical scribing and clinical documentation.",
         image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=600&auto=format&fit=crop",
@@ -98,21 +99,21 @@ const COURSES_DATA = {
     cardBg: "linear-gradient(145deg,#fff7ed 0%,#ffedd5 100%)",
     courses: [
       {
-        id: "full-stack",
+        id: "full-stack-course",
         title: "Full Stack Course",
         description: "Become a full-stack web developer with our MERN and MEAN Stack Course.",
         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop",
         // Developer coding on laptop with multiple screens
       },
       {
-  id: "ai-machine-learning",
+  id: "ai-machine-learning-course",
   title: "AI & Machine Learning Course",
   description: "Master Python, ML algorithms, and deep learning to build intelligent real-world AI applications.",
   image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&auto=format&fit=crop",
   // AI neural network / machine learning concept with glowing tech background
 },
       {
-        id: "data-analytics",
+        id: "data-analytics-course",
         title: "Data Analytics Course",
         description: "Join our Data Analytics Course for high-demand data careers.",
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
@@ -129,14 +130,14 @@ const COURSES_DATA = {
     cardBg: "linear-gradient(145deg,#f0fdf4 0%,#dcfce7 100%)",
     courses: [
       {
-        id: "sap-development",
+        id: "sap-development-course",
         title: "SAP Development Course",
         description: "Master SAP ABAP and become a certified SAP developer.",
         image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&auto=format&fit=crop",
         // ERP / enterprise software dashboard on screen
       },
       {
-        id: "tally-gst",
+        id: "tally-gst-course",
         title: "Tally & GST Course",
         description: "Learn Tally with GST accounting and prepare for accounting careers.",
         image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&auto=format&fit=crop",
@@ -151,21 +152,21 @@ const COURSES_DATA = {
   cardBg: "linear-gradient(145deg,#fffbeb 0%,#fef3c7 100%)",
   courses: [
     {
-        id: "ui-ux-design",
+        id: "ui-ux-design-course",
         title: "UI/UX Design Course",
         description: "Join our UI/UX Designing Course to build professional websites.",
         image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop",
         // Designer working on UI wireframes / design mockups
       },
     {
-      id: "personality-development",
+      id: "personality-development-course",
       title: "Personality Development Course",
       description: "Build confidence, communication skills, and a winning mindset for personal and professional growth.",
       image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&auto=format&fit=crop",
       // Group of confident professionals in a training/workshop setting
     },
     {
-  id: "digital-marketing",
+  id: "digital-marketing-course",
   title: "Digital Marketing Course",
   description: "Master SEO, social media, content strategy, and paid advertising to grow brands and drive results in the digital world.",
   image: "https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=600&auto=format&fit=crop",
@@ -447,14 +448,14 @@ function SectionLabel({ text }) {
 
 /* ═══════════════ HERO ═══════════════ */
 const StarRating = ({ rating=4.9, max=5 }) => (
-  <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+  
   <span style={{ color:"#f5a623", fontSize:"15px", letterSpacing:"2px" }}>
     {Array.from({length:max},(_,i)=>{
       const filled=i+1<=Math.floor(rating), half=!filled&&i<rating;
       return <span key={i} style={{opacity:filled?1:half?0.65:0.25}}>★</span>;
     })}
   </span>
-  </a>
+  
 );
 
 const CalendarIcon = () => (
@@ -525,7 +526,7 @@ function ReviewAvatars({ centered = false, onViewAll }) {
         <StarRating rating={4.9} />
         <div style={{ fontSize: "11px", color: "#9270c0", marginTop: "2px" }}>
           ({TOTAL_COUNT} Reviews){" "}
-          <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+          <a href="/Reviews" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
           <span style={{ color: "#7c3aed", fontWeight: 700 }}>View all →</span>
           </a>
         </div>
@@ -563,17 +564,29 @@ function HeroSection({ scrollRef, pausedRef, onCounselorClick, onViewReviews }) 
             ))}
           </div>
           <div className="v4 hero-cta-desktop" style={{ display:"flex", alignItems:"center", gap:"20px", flexWrap:"wrap" }}>
-            <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+  <Link to="/contact-us" style={{ textDecoration: "none" }}>
   <button
-  className="cta-btn"
-  onClick={() => {
-    document.getElementById("testimonials")?.scrollIntoView({ behavior: "smooth" });
-  }}
-  style={{ background:"linear-gradient(135deg,#ff6b35 0%,#f03e00 100%)", color:"#fff", border:"none", borderRadius:"32px", padding:"15px 28px", fontSize:"13px", fontWeight:800, cursor:"pointer", letterSpacing:".5px", boxShadow:"0 6px 22px rgba(255,80,0,.38)", whiteSpace:"nowrap", position:"relative", overflow:"hidden" }}
->
-  TALK TO OUR COUNSELLORS
-</button>
-</a>
+    className="cta-btn"
+    style={{
+      background: "linear-gradient(135deg,#ff6b35 0%,#f03e00 100%)",
+      color: "#fff",
+      border: "none",
+      borderRadius: "32px",
+      padding: "16px 32px",
+      fontSize: "14px",
+      fontWeight: 800,
+      cursor: "pointer",
+      letterSpacing: ".5px",
+      boxShadow: "0 6px 22px rgba(255,80,0,.38)",
+      width: "100%",
+      maxWidth: "340px",
+      position: "relative",
+      overflow: "hidden",
+    }}
+  >
+    TALK TO OUR COUNSELLORS
+  </button>
+</Link>   
             <ReviewAvatars onViewAll={onViewReviews}/>
           </div>
         </div>
@@ -618,9 +631,29 @@ function HeroSection({ scrollRef, pausedRef, onCounselorClick, onViewReviews }) 
               <span key={i} style={{ color:"#7c3aed", fontSize:"12px", fontWeight:700, display:"flex", alignItems:"center", gap:"5px", background:"rgba(124,58,237,.07)", borderRadius:"20px", padding:"6px 12px", border:"1px solid rgba(124,58,237,.15)" }}>{b}</span>
             ))}
           </div>
-          <button className="cta-btn" onClick={onCounselorClick} style={{ background:"linear-gradient(135deg,#ff6b35 0%,#f03e00 100%)", color:"#fff", border:"none", borderRadius:"32px", padding:"16px 32px", fontSize:"14px", fontWeight:800, cursor:"pointer", letterSpacing:".5px", boxShadow:"0 6px 22px rgba(255,80,0,.38)", width:"100%", maxWidth:"360px", position:"relative", overflow:"hidden" }}>
-            TALK TO OUR COUNSELORS
-          </button>
+          <Link to="/contact-us" style={{ textDecoration: "none" }}>
+  <button
+    className="cta-btn"
+    style={{
+      background: "linear-gradient(135deg,#ff6b35 0%,#f03e00 100%)",
+      color: "#fff",
+      border: "none",
+      borderRadius: "32px",
+      padding: "16px 32px",
+      fontSize: "14px",
+      fontWeight: 800,
+      cursor: "pointer",
+      letterSpacing: ".5px",
+      boxShadow: "0 6px 22px rgba(255,80,0,.38)",
+      width: "100%",
+      maxWidth: "340px",
+      position: "relative",
+      overflow: "hidden",
+    }}
+  >
+    TALK TO OUR COUNSELLORS
+  </button>
+</Link>  
           <ReviewAvatars centered onViewAll={onViewReviews}/>
         </div>
       </div>
@@ -750,7 +783,7 @@ function AboutSection() {
             Skillra is a leading training institute specializing in <strong style={{ color:"#1e3a8a" }}>AI Medical Coding</strong> &amp; <strong style={{ color:"#1e3a8a" }}>Medical Billing</strong>, <strong style={{ color:"#c2410c" }}>IT development</strong>, <strong style={{ color:"#14532d" }}>Finance training</strong>, and Career oriented programs.
              We focus on bridging the gap between academic learning and industry expectations through practical, real-world training. Our expert mentors guide students with hands-on experience, industry projects, and job-ready skill development. With structured learning pathways, live mentor interactions, and outcome-driven practical training, Skillra empowers learners to outperform industry expectations with confidence and credibility. As a trusted upskilling institute, we prepare students for high-growth job roles in top companies. Our commitment is to ensure every learner moves from classroom to career with ease. Skillra, you learn faster, grow smarter, and succeed with industry-recognized skills.
           </p>
-          <a href="/about us" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+          <a href="/about-us" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
           <button onClick={() => navigate("/about-us")} style={{ display:"flex", alignItems:"center", gap:"10px", background:"#f05a00", color:"#fff", border:"none", borderRadius:"50px", padding:"13px 30px", fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:"1rem", cursor:"pointer", boxShadow:"0 4px 18px rgba(240,90,0,0.28)", transition:"all 0.25s" }}
             onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(240,90,0,0.38)";}}
             onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 18px rgba(240,90,0,0.28)";}}>
@@ -1658,49 +1691,51 @@ function BlogCard({ post, inView, delay }) {
  
         {/* Read more — navigates to BlogPage */}
         
-        <button
-          style={{
-            marginTop: "auto",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: "8px 0 0",
-            fontFamily: "'Outfit',sans-serif",
-            fontWeight: 700,
-            fontSize: "clamp(12px,1.2vw,13.5px)",
-            color: post.tagColor,
-            transition: "gap 0.2s",
-          }}
-          onMouseEnter={e => (e.currentTarget.style.gap = "10px")}
-          onMouseLeave={e => (e.currentTarget.style.gap = "6px")}
-        >
-          View more
-          <div
-            style={{
-              width: "24px",
-              height: "24px",
-              borderRadius: "50%",
-              background: `${post.tagColor}18`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-              <path
-                d="M2 4l4 4 4-4"
-                stroke={post.tagColor}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </button>
+        <a href="/blog" style={{ textDecoration: "none" }}>
+  <button
+    style={{
+      marginTop: "auto",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: "8px 0 0",
+      fontFamily: "'Outfit',sans-serif",
+      fontWeight: 700,
+      fontSize: "clamp(12px,1.2vw,13.5px)",
+      color: post.tagColor,
+      transition: "gap 0.2s",
+    }}
+    onMouseEnter={e => (e.currentTarget.style.gap = "10px")}
+    onMouseLeave={e => (e.currentTarget.style.gap = "6px")}
+  >
+    View more
+    <div
+      style={{
+        width: "24px",
+        height: "24px",
+        borderRadius: "50%",
+        background: `${post.tagColor}18`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+      }}
+    >
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+        <path
+          d="M2 4l4 4 4-4"
+          stroke={post.tagColor}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  </button>
+</a>
       </div>
     </div>
   );
@@ -2815,7 +2850,7 @@ function NewsletterSection() {
               </div>
 
               {/* Submit button */}
-              <a href="/Skillra" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+              <a href="/Newsletter" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
                 <button
                   className="nl-submit-btn"
                   onClick={handleSubscribe}
@@ -2893,580 +2928,6 @@ function NewsletterSection() {
 }
 
 
-/* ═══════════════ PROMO BANNER ═══════════════ */
-function PromoBanner({ onClose }) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
-  const [captchaInput, setCaptchaInput] = useState("");
-  const [captchaAnswer, setCaptchaAnswer] = useState(() => ({
-    a: Math.floor(Math.random() * 9) + 1,
-    b: Math.floor(Math.random() * 9) + 1,
-  }));
-  const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-
-  const BANNER_IMAGES = [
-    `${PUB}/CurrentOffers/skillraoffer1.png`,
-    `${PUB}/CurrentOffers/skillraoffer2.jpeg`,
-  ];
-
-  const [bannerIdx, setBannerIdx] = useState(0);
-  const captchaCanvasRef = useRef(null);
-  const touchStartX = useRef(null);
-
-  // Auto-slide
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Captcha canvas
-  useEffect(() => {
-    const canvas = captchaCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "#f0ebff";
-    ctx.fillRect(0, 0, W, H);
-    for (let i = 0; i < 80; i++) {
-      ctx.beginPath();
-      ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 2, 0, Math.PI * 2);
-      ctx.fillStyle = `hsl(${Math.random()*360},60%,70%)`;
-      ctx.fill();
-    }
-    for (let i = 0; i < 5; i++) {
-      ctx.beginPath();
-      ctx.moveTo(Math.random() * W, Math.random() * H);
-      ctx.lineTo(Math.random() * W, Math.random() * H);
-      ctx.strokeStyle = `hsl(${Math.random()*360},50%,60%)`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-    const text = `${captchaAnswer.a} + ${captchaAnswer.b} = ?`;
-    ctx.font = "bold 22px 'Courier New', monospace";
-    ctx.textBaseline = "middle";
-    let x = 10;
-    for (let i = 0; i < text.length; i++) {
-      ctx.save();
-      const offsetY = H / 2 + (Math.random() * 8 - 4);
-      ctx.translate(x, offsetY);
-      ctx.rotate((Math.random() * 0.4) - 0.2);
-      ctx.fillStyle = `hsl(${260 + Math.random()*40},60%,35%)`;
-      ctx.fillText(text[i], 0, 0);
-      ctx.restore();
-      x += ctx.measureText(text[i]).width + 2;
-    }
-  }, [captchaAnswer]);
-
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-
-  // Swipe handlers for image carousel
-  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-  const handleTouchEnd = (e) => {
-    if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) {
-      setBannerIdx(prev => diff > 0
-        ? (prev + 1) % BANNER_IMAGES.length
-        : (prev - 1 + BANNER_IMAGES.length) % BANNER_IMAGES.length
-      );
-    }
-    touchStartX.current = null;
-  };
-
-  const validate = () => {
-    const e = {};
-    if (!form.name.trim() || form.name.trim().length < 2) e.name = "Enter your full name";
-    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email";
-    if (!form.phone.trim() || !/^\d{10,}$/.test(form.phone.replace(/[\s\-+]/g, ""))) e.phone = "Enter a valid 10-digit number";
-    if (!form.message.trim()) e.message = "Please enter a message";
-    if (parseInt(captchaInput) !== captchaAnswer.a + captchaAnswer.b) e.captcha = `Wrong! ${captchaAnswer.a} + ${captchaAnswer.b} = ?`;
-    return e;
-  };
-
-  const handleSubmit = async () => {
-    const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
-    setSubmitting(true);
-    try {
-      await fetch(SHEETS_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "popup",
-          name: form.name.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          message: form.message.trim(),
-        }),
-      });
-    } catch (_) {}
-    setSubmitting(false);
-    setSubmitted(true);
-    setTimeout(() => onClose(), 3000);
-  };
-
-  const inputBase = (hasError) => ({
-    width: "100%",
-    padding: "11px 14px",
-    fontSize: "13.5px",
-    fontFamily: "'Outfit',sans-serif",
-    fontWeight: 500,
-    color: "#1a0640",
-    background: hasError ? "#fff5f5" : "#f8f5ff",
-    border: `1.5px solid ${hasError ? "#ef4444" : "#ddd6fe"}`,
-    borderRadius: "10px",
-    outline: "none",
-    boxSizing: "border-box",
-    transition: "border-color 0.2s, background 0.2s",
-    display: "block",
-  });
-
-  return (
-    <>
-      <style>{`
-        .pb-overlay {
-          position: fixed; inset: 0; z-index: 99997;
-          background: rgba(8,3,25,0.78);
-          backdrop-filter: blur(7px);
-        }
-        .pb-close {
-          position: absolute; z-index: 10;
-          top: 10px; right: 10px;
-          width: 32px; height: 32px;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.92);
-          border: 2px solid #7c3aed;
-          color: #7c3aed;
-          font-size: 15px;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-          font-family: 'Outfit',sans-serif;
-          line-height: 1;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-          transition: background 0.2s, color 0.2s;
-        }
-        .pb-close:hover { background: #7c3aed; color: #fff; }
-
-        .pb-wrap {
-          position: fixed; z-index: 99998;
-          top: 50%; left: 50%;
-          transform: translate(-50%,-50%);
-          display: flex;
-          background: #fff;
-          border-radius: 20px;
-          overflow: hidden;
-          box-shadow: 0 32px 90px rgba(109,40,217,0.38);
-        }
-        .pb-left {
-          position: relative; overflow: hidden; flex-shrink: 0;
-          cursor: grab;
-        }
-        .pb-left:active { cursor: grabbing; }
-        .pb-right {
-          flex: 1; background: #fff; position: relative;
-          display: flex; flex-direction: column;
-        }
-        .pb-shimmer {
-          position: absolute; top: 0; left: 0; right: 0; height: 4px;
-          background: linear-gradient(90deg,#7c3aed,#a78bfa,#ff6b35,#7c3aed);
-          background-size: 300% 100%;
-          animation: shimmer 3s linear infinite;
-        }
-        .pb-field-wrap { margin-bottom: 9px; }
-        .pb-err { font-size: 11px; color: #ef4444; margin-top: 3px; font-family:'Outfit',sans-serif; }
-        .pb-submit {
-          width: 100%;
-          background: linear-gradient(135deg,#ff6b35,#f03e00);
-          color: #fff; border: none;
-          border-radius: 50px;
-          padding: 13px 20px;
-          font-size: 14px; font-weight: 800;
-          font-family: 'Outfit',sans-serif;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          box-shadow: 0 6px 22px rgba(255,80,0,0.35);
-          transition: transform 0.2s, box-shadow 0.2s;
-          letter-spacing: 0.3px;
-          margin-top: 4px;
-        }
-        .pb-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,80,0,0.48); }
-        .pb-submit:disabled { background: #d1d5db; box-shadow: none; cursor: not-allowed; }
-
-        /* dots */
-        .pb-dots {
-          position: absolute; bottom: 10px; left: 50%;
-          transform: translateX(-50%); z-index: 5;
-          display: flex; gap: 6px;
-        }
-        .pb-dot {
-          width: 8px; height: 8px; border-radius: 50%;
-          border: none; padding: 0; cursor: pointer;
-          transition: all 0.3s;
-        }
-
-        /* arrow buttons */
-        .pb-arrow {
-          position: absolute; top: 50%; transform: translateY(-50%);
-          z-index: 5; width: 30px; height: 30px;
-          border-radius: 50%; border: none;
-          background: rgba(255,255,255,0.85);
-          color: #7c3aed; font-size: 14px;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-          transition: background 0.2s;
-          backdrop-filter: blur(4px);
-        }
-        .pb-arrow:hover { background: #fff; }
-        .pb-arrow-l { left: 8px; }
-        .pb-arrow-r { right: 8px; }
-
-        /* ── DESKTOP ── */
-        @media (min-width: 640px) {
-          .pb-wrap {
-            width: min(870px, calc(100vw - 40px));
-            height: min(510px, calc(100vh - 60px));
-            flex-direction: row;
-          }
-          .pb-left { width: 50%; height: 100%; }
-          .pb-right { padding: 30px 28px 26px; overflow-y: auto; }
-        }
-
-        /* ── MOBILE ── */
-        @media (max-width: 639px) {
-          .pb-wrap {
-            width: calc(100vw - 20px);
-            max-height: calc(100vh - 30px);
-            flex-direction: column;
-            border-radius: 16px;
-          }
-          .pb-left { width: 100%; aspect-ratio: 16/9; flex-shrink: 0; }
-          .pb-right { padding: 12px 14px 16px; overflow-y: auto; }
-          .pb-field-wrap { margin-bottom: 5px; }
-          .pb-mob-compact { padding: 8px 11px !important; font-size: 12.5px !important; }
-          .pb-mob-row { display: flex; gap: 6px; }
-          .pb-mob-row > .pb-field-wrap { flex: 1; min-width: 0; }
-          .pb-arrow { width: 26px; height: 26px; font-size: 12px; }
-          .pb-dot { width: 6px; height: 6px; }
-        }
-      `}</style>
-
-      <div className="pb-overlay" onClick={onClose} />
-
-      <div className="pb-wrap">
-        <button className="pb-close" onClick={onClose}>✕</button>
-
-        {/* ── LEFT — image carousel with swipe + arrows + dots ── */}
-        <div
-          className="pb-left"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* offer badge */}
-          <div style={{
-            position: "absolute", top: "14px", left: "14px", zIndex: 5,
-            background: "#ff6b35", color: "#fff",
-            fontSize: "10.5px", fontWeight: 800,
-            fontFamily: "'Outfit',sans-serif",
-            padding: "5px 11px", borderRadius: "20px",
-            letterSpacing: "0.06em",
-            boxShadow: "0 3px 12px rgba(255,80,0,0.45)",
-            animation: "pulse 2s ease-in-out infinite",
-          }}>LIMITED OFFER</div>
-
-          {BANNER_IMAGES.map((src, idx) => (
-  <img
-    key={idx}
-    src={src}
-    alt={`Offer ${idx + 1}`}
-    style={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: "80%",        /* ← control image width here */
-      height: "70%",       /* ← control image height here */
-      objectFit: "contain", /* ← contain keeps full image visible */
-      objectPosition: "center center",
-      display: "block",
-      opacity: idx === bannerIdx ? 1 : 0,
-      transition: "opacity 0.6s ease",
-      borderRadius: "12px", /* ← optional: rounded corners on image */
-    }}
-  />
-))}
-
-          {/* left arrow */}
-          <button
-            className="pb-arrow pb-arrow-l"
-            onClick={() => setBannerIdx(prev => (prev - 1 + BANNER_IMAGES.length) % BANNER_IMAGES.length)}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6"/>
-            </svg>
-          </button>
-
-          {/* right arrow */}
-          <button
-            className="pb-arrow pb-arrow-r"
-            onClick={() => setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length)}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18l6-6-6-6"/>
-            </svg>
-          </button>
-
-          {/* dots */}
-          <div className="pb-dots">
-            {BANNER_IMAGES.map((_, idx) => (
-              <button
-                key={idx}
-                className="pb-dot"
-                onClick={() => setBannerIdx(idx)}
-                style={{
-                  background: idx === bannerIdx ? "#fff" : "rgba(255,255,255,0.45)",
-                  transform: idx === bannerIdx ? "scale(1.25)" : "scale(1)",
-                  boxShadow: idx === bannerIdx ? "0 0 6px rgba(255,255,255,0.6)" : "none",
-                }}
-              />
-            ))}
-          </div>
-
-          {/* bottom gradient */}
-          <div style={{
-            position: "absolute", bottom: 0, left: 0, right: 0,
-            height: "55%",
-            background: "linear-gradient(to top, rgba(60,20,130,0.90) 0%, transparent 100%)",
-            zIndex: 2, pointerEvents: "none",
-          }} />
-
-          {/* bottom text */}
-          <div style={{
-            position: "absolute", bottom: "16px",
-            left: 0, right: 0,
-            zIndex: 3, textAlign: "center", padding: "0 12px",
-            pointerEvents: "none",
-          }}>
-            <div style={{ fontSize: "26px", fontWeight: 900, color: "#fff", fontFamily: "'Outfit',sans-serif", letterSpacing: "-1px", lineHeight: 1 }}>FREE</div>
-            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "rgba(255,255,255,0.92)", fontFamily: "'Outfit',sans-serif", marginTop: "3px" }}>Counseling Session</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", justifyContent: "center", marginTop: "9px" }}>
-              {["✓ 100% Placement", "✓ Expert Mentors", "✓ Live Projects", "Internships"].map((b, i) => (
-                <span key={i} style={{
-                  background: "rgba(255,255,255,0.18)",
-                  border: "1px solid rgba(255,255,255,0.30)",
-                  color: "#fff", fontSize: "9.5px", fontWeight: 700,
-                  fontFamily: "'Outfit',sans-serif",
-                  padding: "3px 8px", borderRadius: "20px",
-                }}>{b}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── RIGHT — form ── */}
-        <div className="pb-right">
-          <div className="pb-shimmer" />
-
-          {submitted ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, textAlign: "center", padding: "20px 0" }}>
-              <div style={{
-                width: "58px", height: "58px", borderRadius: "50%",
-                background: "linear-gradient(135deg,#7c3aed,#5b21b6)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 14px",
-                animation: "pulse 2s ease-in-out infinite",
-              }}>
-                <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
-                  <path d="M7 16l7 7 11-12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <h3 style={{ fontSize: "19px", fontWeight: 900, color: "#1a0640", marginBottom: "7px", fontFamily: "'Outfit',sans-serif" }}>We'll Call You Soon!</h3>
-              <p style={{ fontSize: "13px", color: "#6b5a9e", lineHeight: 1.7, fontFamily: "'Outfit',sans-serif" }}>Our counselors will reach you within 24 hours. 🚀</p>
-            </div>
-          ) : (
-            <>
-              {/* heading */}
-              <div style={{ marginBottom: "14px" }}>
-                <div style={{
-                  display: "inline-flex", alignItems: "center", gap: "6px",
-                  background: "#f3f0ff", border: "1.5px solid #e4d9ff",
-                  borderRadius: "8px", padding: "4px 11px",
-                  fontSize: "10.5px", color: "#7c3aed", fontWeight: 700,
-                  marginBottom: "8px", letterSpacing: "0.08em",
-                  fontFamily: "'Outfit',sans-serif",
-                }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#7c3aed">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                  BOOK FREE SESSION
-                </div>
-                <h3 style={{ fontSize: "clamp(16px,2.5vw,20px)", fontWeight: 900, color: "#1a0640", marginBottom: "3px", letterSpacing: "-0.3px", fontFamily: "'Outfit',sans-serif" }}>
-                  Get Expert Guidance
-                </h3>
-                <p style={{ fontSize: "12.5px", color: "#9270c0", fontWeight: 500, fontFamily: "'Outfit',sans-serif" }}>
-                  Fill the form — we'll call you within 24 hours.
-                </p>
-              </div>
-
-              {/* Name */}
-              <div className="pb-field-wrap">
-                <input
-                  className="pb-mob-compact"
-                  type="text" placeholder="Your full name"
-                  value={form.name}
-                  onChange={e => { setForm(p => ({ ...p, name: e.target.value })); setErrors(p => ({ ...p, name: "" })); }}
-                  style={inputBase(errors.name)}
-                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
-                  onBlur={e => { e.target.style.borderColor = errors.name ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.name ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
-                />
-                {errors.name && <div className="pb-err">{errors.name}</div>}
-              </div>
-
-              {/* Email */}
-              <div className="pb-field-wrap">
-                <input
-                  className="pb-mob-compact"
-                  type="email" placeholder="Email address"
-                  value={form.email}
-                  onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setErrors(p => ({ ...p, email: "" })); }}
-                  style={inputBase(errors.email)}
-                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
-                  onBlur={e => { e.target.style.borderColor = errors.email ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.email ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
-                />
-                {errors.email && <div className="pb-err">{errors.email}</div>}
-              </div>
-
-              {/* Phone */}
-              <div className="pb-field-wrap">
-                <input
-                  className="pb-mob-compact"
-                  type="tel" placeholder="Phone number (10 digits)"
-                  value={form.phone}
-                  onChange={e => { setForm(p => ({ ...p, phone: e.target.value })); setErrors(p => ({ ...p, phone: "" })); }}
-                  style={inputBase(errors.phone)}
-                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
-                  onBlur={e => { e.target.style.borderColor = errors.phone ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.phone ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
-                />
-                {errors.phone && <div className="pb-err">{errors.phone}</div>}
-              </div>
-
-              {/* Message */}
-              <div className="pb-field-wrap">
-                <textarea
-                  className="pb-mob-compact"
-                  placeholder="Message us…"
-                  value={form.message}
-                  rows={3}
-                  onChange={e => { setForm(p => ({ ...p, message: e.target.value })); setErrors(p => ({ ...p, message: "" })); }}
-                  style={{ ...inputBase(errors.message), resize: "none" }}
-                  onFocus={e => { e.target.style.borderColor = "#7c3aed"; e.target.style.background = "#fff"; e.target.style.boxShadow = "0 0 0 3px rgba(124,58,237,0.10)"; }}
-                  onBlur={e => { e.target.style.borderColor = errors.message ? "#ef4444" : "#ddd6fe"; e.target.style.background = errors.message ? "#fff5f5" : "#f8f5ff"; e.target.style.boxShadow = "none"; }}
-                />
-                {errors.message && <div className="pb-err">{errors.message}</div>}
-              </div>
-
-              {/* Captcha — compact single row */}
-              <div className="pb-field-wrap">
-                <div style={{
-                  display: "flex", alignItems: "center", gap: "8px",
-                  background: errors.captcha ? "#fff5f5" : "#f8f5ff",
-                  border: `1.5px solid ${errors.captcha ? "#ef4444" : "#ddd6fe"}`,
-                  borderRadius: "10px", padding: "6px 10px",
-                  transition: "border-color 0.2s",
-                }}>
-                  <canvas
-                    ref={captchaCanvasRef}
-                    width={160}
-                    height={36}
-                    style={{
-                      borderRadius: "6px",
-                      userSelect: "none",
-                      pointerEvents: "none",
-                      filter: "contrast(1.1)",
-                      flexShrink: 0,
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCaptchaAnswer({ a: Math.floor(Math.random()*9)+1, b: Math.floor(Math.random()*9)+1 });
-                      setCaptchaInput("");
-                      setErrors(p => ({ ...p, captcha: "" }));
-                    }}
-                    title="Refresh CAPTCHA"
-                    style={{
-                      flexShrink: 0,
-                      width: "28px", height: "28px",
-                      borderRadius: "50%",
-                      border: "1.5px solid #ddd6fe",
-                      background: "#fff",
-                      cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      transition: "all 0.2s",
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background = "#7c3aed";
-                      e.currentTarget.style.borderColor = "#7c3aed";
-                      e.currentTarget.querySelector("svg").style.stroke = "#fff";
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background = "#fff";
-                      e.currentTarget.style.borderColor = "#ddd6fe";
-                      e.currentTarget.querySelector("svg").style.stroke = "#7c3aed";
-                    }}
-                  >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ stroke: "#7c3aed", transition: "stroke 0.2s" }}>
-                      <path d="M1 4v6h6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M3.51 15a9 9 0 1 0 .49-3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <input
-                    type="number"
-                    placeholder="Answer"
-                    value={captchaInput}
-                    onChange={e => { setCaptchaInput(e.target.value); setErrors(p => ({ ...p, captcha: "" })); }}
-                    style={{
-                      border: "none",
-                      borderLeft: "1.5px solid #ede9fe",
-                      background: "transparent",
-                      fontSize: "13px",
-                      fontFamily: "'Outfit',sans-serif",
-                      fontWeight: 700,
-                      color: "#1a0640",
-                      outline: "none",
-                      padding: "4px 8px",
-                      width: "80px",
-                      flexShrink: 0,
-                    }}
-                  />
-                </div>
-                {errors.captcha && <div className="pb-err">{errors.captcha}</div>}
-              </div>
-
-              {/* Submit */}
-              <button className="pb-submit" onClick={handleSubmit} disabled={submitting}>
-                {submitting ? "Submitting…" : "Submit & Book My Session"}
-                {!submitting && (
-                  <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-                    <path d="M3 9h12M11 5l4 4-4 4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </>
-  );
-}
 
 /* ═══════════════ MAIN ═══════════════ */
 export default function HomePage() {
@@ -3474,9 +2935,18 @@ export default function HomePage() {
   const pausedRef = useRef(false);
   const [showModal,   setShowModal]   = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
+  const [showBanner, setShowBanner] = useState(false);
 
+  // Add this useEffect inside HomePage
+useEffect(() => {
+  if (sessionStorage.getItem("bannerSeen")) return;
 
+  const timer = setTimeout(() => {
+    setShowBanner(true);
+  }, 5000);
+
+  return () => clearTimeout(timer);
+}, []);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -3489,7 +2959,7 @@ export default function HomePage() {
 
   return (
     <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, overflowX:"hidden", background:"#F3F4F4" }}>
-      {showBanner && <PromoBanner onClose={() => setShowBanner(false)} />}
+      
       <title>Skillra — AI Medical Coding, IT &amp; Finance Training with 100% Placement</title>
       <meta name="description" content="Skillra offers industry-aligned training and internships in AI Medical Coding, Medical Billing, Full Stack Development, Data Analytics, SAP, Tally & GST with 100% placement assistance."/>
 
@@ -3582,7 +3052,7 @@ export default function HomePage() {
       <ServicesSection />
       <CollegesSection />        {/* ← new */}
       {/* <PlacementSection /> */}
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
       <BlogsSection />           {/* ← new */}
       <NewsletterSection />
       <Footer />

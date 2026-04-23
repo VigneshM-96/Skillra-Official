@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage      from "./Pages/HomePage";
 import AboutUsPage   from "./Pages/AboutUsPage";
 import CoursesPage   from "./Pages/CoursesPage";
@@ -8,19 +9,36 @@ import PlacementPage  from "./Pages/PlacementPage";
 import CareerPage     from "./Pages/CareerPage";
 import BooksPage     from "./Pages/BooksPage";
 import BlogPage     from "./Pages/BlogPage";
+import GalleryPage     from "./Pages/GalleryPage";
 import NavBar from "./Pages/NavBar";
 import ChatBot from "./components/ChatBot";
 import ScrollToTop from "./components/ScrollToTop";
-// Add more page imports here as you build them:
-
-// import ELearningsPage from "./ELearningsPage";
-
+import AnalyticsTracker from "./AnalyticsTracker";
+import PromoBanner from "./components/PromoBanner"; // ← adjust path to where PromoBanner lives
 
 export default function App() {
+  const [showPromo, setShowPromo] = useState(false);
+  const [hasShownFirst, setHasShownFirst] = useState(false);
+
+  useEffect(() => {
+    if (showPromo) return;
+
+    // First time = 7s, after that = 40s
+    const delay = hasShownFirst ? 40000 : 7000;
+
+    const timer = setTimeout(() => {
+      setShowPromo(true);
+      setHasShownFirst(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [showPromo, hasShownFirst]);
+
   return (
-    <BrowserRouter>
+    <HashRouter>
+      <AnalyticsTracker />
       <ScrollToTop />
-       <NavBar />
+      <NavBar />
       <Routes>
         <Route path="/"          element={<HomePage />} />
         <Route path="/about-us"     element={<AboutUsPage />} />
@@ -32,15 +50,13 @@ export default function App() {
         <Route path="/career"     element={<CareerPage />} />
         <Route path="/books"     element={<BooksPage />} />
         <Route path="/blog" element={<BlogPage />} />
-        {/* Uncomment each route as you build the page:
-        
-        <Route path="/elearnings" element={<ELearningsPage />} />
-        */}
-        {/*Hello*/}
-        {/* Catch-all — redirects unknown URLs back to Home */}
+        <Route path="/gallery" element={<GalleryPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
-       <ChatBot />
-    </BrowserRouter>
+      <ChatBot />
+
+      {/* Promo popup — shows on all pages */}
+      {showPromo && <PromoBanner onClose={() => setShowPromo(false)} />}
+    </HashRouter>
   );
 }

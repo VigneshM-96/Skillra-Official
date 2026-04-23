@@ -14,7 +14,7 @@ const META = {
   title:       "Courses Offered | Skillra – AI Medical Coding, IT & Finance Training",
   description: "Explore Skillra's industry-aligned courses in AI Medical Coding, AI Medical Billing, MERN/MEAN Stack, AI & ML, Data Analytics, UI/UX Design, SAP ABAP, Tally & GST, Digital Marketing, and Personality Development.",
   canonical:   "https://www.skillra.com/courses",
-  keywords:    "Skillra courses, AI medical coding course, MERN stack training, data analytics course, medical billing course, IT training Tamil Nadu, finance courses, digital marketing course",
+  keywords:    "Skillra courses, AI medical coding course, MERN stack training, data analytics course, medical billing course, IT training Tamil Nadu, finance courses, digital marketing course,",
 };
 
 function setMeta(attr, value, content) {
@@ -106,6 +106,55 @@ const IcoCheckCircle = ({ size = 40, color = "currentColor" }) => (<svg width={s
 const IcoGraduationCap = ({ size = 14, color = "currentColor" }) => (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>);
 
 const OV_ICON_COMPONENTS = [IcoClipboard, IcoTarget, IcoLightbulb, IcoUsers, IcoRocket, IcoAward, IcoWrench, IcoZap];
+
+/* ══════════════════════════════════════════════════════
+   BULLET POINT HELPERS
+══════════════════════════════════════════════════════ */
+
+const hasColonCommaList = (text) => {
+  const colonIdx = text.indexOf(":");
+  if (colonIdx === -1 || colonIdx > text.length * 0.6) return false;
+  const afterColon = text.slice(colonIdx + 1).trim();
+  const commaItems = afterColon.split(/,\s*(?:and\s+)?/).filter((s) => s.trim().length > 1);
+  return commaItems.length >= 3;
+};
+
+const hasPipeSeparated = (text) => {
+  const pipeItems = text.split(/\s*\|\s*/).filter((s) => s.trim().length > 1);
+  return pipeItems.length >= 3;
+};
+
+const hasPeriodSeparated = (text) => {
+  const sentences = text.split(/\.\s+(?=[A-Z])/).filter((s) => s.trim().length > 0);
+  return sentences.length > 1;
+};
+
+const isMultiPoint = (text) => {
+  return hasPeriodSeparated(text) || hasColonCommaList(text) || hasPipeSeparated(text);
+};
+
+const splitPoints = (text) => {
+  if (hasPipeSeparated(text)) {
+    return text
+      .split(/\s*\|\s*/)
+      .map((s) => s.trim().replace(/\.$/, ""))
+      .filter((s) => s.length > 0);
+  }
+  if (hasColonCommaList(text)) {
+    const colonIdx = text.indexOf(":");
+    const prefix = text.slice(0, colonIdx).trim();
+    const afterColon = text.slice(colonIdx + 1).trim().replace(/\.$/, "");
+    const items = afterColon
+      .split(/,\s*(?:and\s+)?/)
+      .map((s) => s.trim().replace(/^and\s+/i, ""))
+      .filter((s) => s.length > 1);
+    return [prefix, ...items];
+  }
+  return text
+    .split(/\.\s+(?=[A-Z])/)
+    .map((s) => s.trim().replace(/\.$/, ""))
+    .filter((s) => s.length > 0);
+};
 
 /* ══════════════════════════════════════════════════════
    INTERSECTION OBSERVER HOOK
@@ -279,7 +328,7 @@ function parseCurriculumModules(sections) {
 }
 
 /* ══════════════════════════════════════════════════════
-   OVERVIEW — info card grid with SVG icons
+   OVERVIEW — ALWAYS bullet points, never paragraphs
 ══════════════════════════════════════════════════════ */
 function OverviewRenderer({ sections, inView, accentColor }) {
   return (
@@ -292,6 +341,22 @@ function OverviewRenderer({ sections, inView, accentColor }) {
 function OverviewCard({ section, index, inView, accentColor }) {
   const [hov, setHov] = useState(false);
   const IconComp = OV_ICON_COMPONENTS[index % OV_ICON_COMPONENTS.length];
+
+  /* ── Helper: always split any text into bullet points ── */
+  const toBullets = (text) => {
+    // 1. Try structured splits first (pipe, colon-comma, period-separated)
+    if (isMultiPoint(text)) {
+      const isColonList = hasColonCommaList(text);
+      const points = splitPoints(text);
+      if (isColonList && points.length > 0) {
+        return { prefix: points[0], items: points.slice(1) };
+      }
+      return { prefix: null, items: points };
+    }
+    // 2. Single sentence / plain text → render as a single bullet
+    return { prefix: null, items: [text.trim().replace(/\.$/, "")] };
+  };
+
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ opacity: inView ? 1 : 0, transform: inView ? (hov ? "translateY(-3px)" : "translateY(0)") : "translateY(20px)", transition: `all 0.45s ease ${0.04 + index * 0.05}s`, background: "#fff", borderRadius: "14px", padding: "clamp(20px,2.5vw,28px)", border: `1px solid ${hov ? accentColor + "28" : "#eeeaf5"}`, boxShadow: hov ? `0 10px 32px ${accentColor}10` : "0 1px 6px rgba(0,0,0,0.03)", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg, ${accentColor}, ${accentColor}44)`, borderRadius: "14px 14px 0 0" }} />
@@ -301,7 +366,83 @@ function OverviewCard({ section, index, inView, accentColor }) {
         </div>
         <div style={{ flex: 1 }}>
           <h3 style={{ fontSize: "clamp(14px,1.5vw,16px)", fontWeight: 800, color: "#111827", fontFamily: "'Outfit', sans-serif", marginBottom: "10px", lineHeight: 1.35 }}>{section.heading}</h3>
-          {section.paras.map((p, pi) => (<p key={pi} style={{ fontSize: "clamp(13px,1.2vw,14.5px)", color: "#5b6478", fontFamily: "'Outfit', sans-serif", lineHeight: 1.8, marginBottom: pi < section.paras.length - 1 ? "8px" : 0 }}>{p}</p>))}
+
+          {section.paras.map((p, pi) => {
+            const { prefix, items } = toBullets(p);
+
+            return (
+              <div key={pi} style={{ marginBottom: pi < section.paras.length - 1 ? "8px" : 0 }}>
+                {/* If colon-list, show the prefix as a label above the bullets */}
+                {prefix && (
+                  <p
+                    style={{
+                      fontSize: "clamp(13px,1.2vw,14.5px)",
+                      color: "#5b6478",
+                      fontFamily: "'Outfit', sans-serif",
+                      lineHeight: 1.8,
+                      marginBottom: "6px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {prefix}:
+                  </p>
+                )}
+                <ul
+                  style={{
+                    paddingLeft: prefix ? "8px" : "18px",
+                    margin: 0,
+                    listStyle: "none",
+                  }}
+                >
+                  {items.map((point, bi) => (
+                    <li
+                      key={bi}
+                      style={{
+                        fontSize: "clamp(13px,1.2vw,14.5px)",
+                        color: "#5b6478",
+                        fontFamily: "'Outfit', sans-serif",
+                        lineHeight: 1.8,
+                        marginBottom: "5px",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "10px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "18px",
+                          height: "18px",
+                          borderRadius: "50%",
+                          background: `${accentColor}12`,
+                          flexShrink: 0,
+                          marginTop: "4px",
+                        }}
+                      >
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                        >
+                          <path
+                            d="M6 10l3 3 5-5"
+                            stroke={accentColor}
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
