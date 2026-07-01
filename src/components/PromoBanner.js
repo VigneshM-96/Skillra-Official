@@ -7,8 +7,78 @@ const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_Vyy
 // Key used in localStorage to track submission
 const SUBMITTED_KEY = "skillra_promo_submitted";
 
+/* ═══════════════ PROMO BANNER WRAPPER ═══════════════ */
+// This wrapper controls WHEN the banner is shown.
+// It shows the banner every 40 seconds if the user hasn't submitted.
+export function PromoBannerController() {
+  const [showBanner, setShowBanner] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const timerRef = useRef(null);
+
+  // On mount: check if already submitted
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(SUBMITTED_KEY) === "true") {
+        setHasSubmitted(true);
+        return;
+      }
+    } catch (_) {}
+
+    // Show banner on first load after 40 seconds
+    startTimer();
+
+    return () => clearTimer();
+  }, []);
+
+  const startTimer = () => {
+    clearTimer();
+    timerRef.current = setTimeout(() => {
+      setShowBanner(true);
+    }, 40000); // 40 seconds
+  };
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const handleClose = () => {
+    setShowBanner(false);
+    // User closed without submitting — show again after 40 seconds
+    if (!hasSubmitted) {
+      startTimer();
+    }
+  };
+
+  const handleSubmitted = () => {
+    setHasSubmitted(true);
+    clearTimer();
+    // Banner will auto-close after 3s (handled inside PromoBanner)
+    // After that, never show again
+  };
+
+  const handleCloseAfterSubmit = () => {
+    setShowBanner(false);
+    // Don't restart timer — form was submitted
+  };
+
+  // Never show if already submitted
+  if (hasSubmitted && !showBanner) return null;
+
+  if (!showBanner) return null;
+
+  return (
+    <PromoBanner
+      onClose={hasSubmitted ? handleCloseAfterSubmit : handleClose}
+      onSubmitted={handleSubmitted}
+    />
+  );
+}
+
 /* ═══════════════ PROMO BANNER ═══════════════ */
-function PromoBanner({ onClose }) {
+function PromoBanner({ onClose, onSubmitted }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [captchaInput, setCaptchaInput] = useState("");
   const [captchaAnswer, setCaptchaAnswer] = useState(() => ({
@@ -20,26 +90,17 @@ function PromoBanner({ onClose }) {
   const [submitting, setSubmitting] = useState(false);
 
   const BANNER_IMAGES = [
-    `${PUB}/CurrentOffers/skillraoffer2.png`,
-    `${PUB}/CurrentOffers/skillraoffer1.png`,
+    "/CurrentOffers/skillraoffer2.png",
+    "/CurrentOffers/skillraoffer1.png",
+    "/CurrentOffers/skillraoffer3.png",
+    "/CurrentOffers/skillraoffer4.png",
   ];
 
   const [bannerIdx, setBannerIdx] = useState(0);
   const captchaCanvasRef = useRef(null);
   const touchStartX = useRef(null);
 
-  // ── On mount: if already submitted before, close immediately ──
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(SUBMITTED_KEY) === "true") {
-        onClose();
-      }
-    } catch (_) {
-      // localStorage unavailable — allow banner to show
-    }
-  }, []);
-
-  // Auto-slide
+  // Auto-slide images
   useEffect(() => {
     const timer = setInterval(() => {
       setBannerIdx(prev => (prev + 1) % BANNER_IMAGES.length);
@@ -86,6 +147,7 @@ function PromoBanner({ onClose }) {
     }
   }, [captchaAnswer]);
 
+  // Lock body scroll when banner is open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
@@ -136,11 +198,15 @@ function PromoBanner({ onClose }) {
     setSubmitting(false);
     setSubmitted(true);
 
-    // ── Mark as submitted so banner never shows again ──
+    // Mark as submitted in localStorage so banner never shows again
     try {
       localStorage.setItem(SUBMITTED_KEY, "true");
     } catch (_) {}
 
+    // Notify the controller that form was submitted
+    if (onSubmitted) onSubmitted();
+
+    // Auto-close after showing success message
     setTimeout(() => onClose(), 3000);
   };
 

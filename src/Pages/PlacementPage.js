@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+import { useSanityMeta } from '../hooks/useSanityMeta';
 
 const PUB = process.env.PUBLIC_URL || "";
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
@@ -12,7 +13,7 @@ const YEAR_OPTIONS = Array.from({ length: currentYear - 2019 }, (_, i) => 2020 +
 const META = {
   title:       "Placements | Skillra – 250+ Students Placed in Top Companies",
   description: "Discover Skillra's placement success with 250+ students placed in top companies like Cognizant, Optum, Sutherland, CorroHealth, R1, and more. Explore our corporate tie-ups and placement support.",
-  canonical:   "https://www.skillra.com/placements",
+  canonical:   "https://www.skillra.com/placement",
   keywords:    "Skillra placements, medical coding jobs, IT placements, Cognizant hiring, Optum careers, Sutherland jobs, campus placements, corporate tie-ups, placement support, healthcare jobs",
 };
 
@@ -1060,6 +1061,13 @@ function StudentsPlacedSection() {
 export default function PlacementPage() {
   const [showPopup, setShowPopup] = useState(false);
   const handleCtaClick = () => setShowPopup(true);
+
+  useSanityMeta('placement', {
+  title:       'Placement | Skillra – 100% Placement Support',
+  description: 'Skillra offers dedicated placement assistance with top healthcare and IT companies. Check our placement records and success stories.',
+  canonicalUrl:'https://www.skillra.com/placement',
+})
+ 
 
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>

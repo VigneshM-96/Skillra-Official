@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
 import { BLOG_POSTS } from "./BlogDatas";
 import { Link } from "react-router-dom";
+import { useSanityMeta } from '../hooks/useSanityMeta'
 
 // ─── Update this with your Google Apps Script URL for newsletter ───────────────
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
@@ -33,14 +34,14 @@ const COMPANIES = [
 const SLIDES = [
   {
     img: `${PUB}/HomeImages/MedicalCodingHero.png` ,
-    // 👩‍⚕️ Female doctor/nurse in medical setting — white coat, slight purple-cool tone
+    //  Female doctor/nurse in medical setting — white coat, slight purple-cool tone
     bg: "linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)",
     shadow: "rgba(79,28,200,.55)",
     ring: "rgba(124,58,237,.30)"
   },
   {
     img: `${PUB}/HomeImages/TechHomeHero.png`,
-    // 👨‍💻 Male developer/tech professional with screens/code background — warm orange tone
+    //  Male developer/tech professional with screens/code background — warm orange tone
     bg: "linear-gradient(145deg,#c2410c,#ea580c,#9a3412)",
     shadow: "rgba(194,65,12,.55)",
     ring: "rgba(234,88,12,.30)",
@@ -52,7 +53,7 @@ const SLIDES = [
   },
   {
     img: `${PUB}/HomeImages/FinanceHero.png`,
-    // 👩‍💼 Female finance professional with charts/office background — green tone
+    //  Female finance professional with charts/office background — green tone
     bg: "linear-gradient(145deg,#14532d,#15803d,#166534)",
     shadow: "rgba(20,83,45,.55)",
     ring: "rgba(21,128,61,.30)",
@@ -99,7 +100,7 @@ const COURSES_DATA = {
     cardBg: "linear-gradient(145deg,#fff7ed 0%,#ffedd5 100%)",
     courses: [
       {
-        id: "full-stack-course",
+        id: "full-stack-development-course",
         title: "Full Stack Course",
         description: "Become a full-stack web developer with our MERN and MEAN Stack Course.",
         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop",
@@ -1691,8 +1692,9 @@ function BlogCard({ post, inView, delay }) {
  
         {/* Read more — navigates to BlogPage */}
         
-        <a href="/blog" style={{ textDecoration: "none" }}>
+        <a href="/blog" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
   <button
+  onClick={() => navigate("/blog")}
     style={{
       marginTop: "auto",
       display: "flex",
@@ -2956,6 +2958,12 @@ useEffect(() => {
     af=requestAnimationFrame(step);
     return ()=>cancelAnimationFrame(af);
   },[]);
+
+  useSanityMeta('home', {
+  title:       'Skillra – AI Medical Coding & IT Training in Chennai',
+  description: 'Skillra Health Innovations offers industry-leading training in AI Medical Coding, IT, Finance and more. Get placed with 15+ years experienced trainers.',
+  canonicalUrl:'https://www.skillra.com',
+})
 
   return (
     <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, overflowX:"hidden", background:"#F3F4F4" }}>

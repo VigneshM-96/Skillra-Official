@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+import { useSanityMeta } from "../hooks/useSanityMeta"; 
 
 // ── Replace with your deployed Apps Script Web App URL ──
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
@@ -608,13 +609,18 @@ Sunday : Closed</p>
    ROOT EXPORT
 ═══════════════════════════════════════════════════ */
 export default function SkillraContactPage() {
+   useSanityMeta("contact", {                                    
+    title:       "Contact Us | Skillra – Get in Touch for Training & Consultancy",
+    description: "Reach out to Skillra Health Innovations Pvt Ltd for enquiries about AI Medical Coding, IT, Finance courses, corporate tie-ups, and placements.",
+    keywords:    "Skillra contact, medical coding training enquiry, IT course enquiry, Skillra phone, Skillra email",
+    canonicalUrl:"https://www.skillra.com/contact",
+  });      
   return (
     <div style={{ fontFamily:"'Poppins', sans-serif" }}>
       <SocialSidebar />
       <ContactSection />
       <ContactInfoSection />
       <Footer />
-      <PageMeta />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+import { useSanityMeta } from '../hooks/useSanityMeta';
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -381,7 +382,7 @@ function BooksHero({ onBuyClick }) {
   const PARA = "Prepare smarter with the Skillra CPC Exam Practice Book, designed to help medical coding students build strong fundamentals, practice extensively, and approach the CPC exam with confidence.";
 
   const BuyBtn = ({ style={} }) => (
-    <a href="https://skillrabook.base44.app" style={{ textDecoration: "none" }}>
+    <a href="https://skillrabooks.base44.app" style={{ textDecoration: "none" }}>
   <button
     className="books-cta-btn"
     style={{
@@ -1755,6 +1756,12 @@ function NewsletterSection() {
 ══════════════════════════════════════════════════════ */
 export default function BooksPage() {
   const [showModal, setShowModal] = useState(false);
+
+  useSanityMeta('books', {
+  title:       'Books | Skillra – Medical Coding & Study Resources',
+  description: 'Access Skillra\'s curated book recommendations and study materials for Medical Coding, IT, and professional certification exams.',
+  canonicalUrl:'https://www.skillra.com/books',
+})
 
   return (
     <div style={{fontFamily:"'Outfit','Segoe UI',sans-serif",margin:0,padding:0,overflowX:"hidden",background:"#fff"}}>

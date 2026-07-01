@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
 import { Link } from "react-router-dom";
+import { useSanityMeta } from '../hooks/useSanityMeta';
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -1033,6 +1034,12 @@ export default function CampusPage() {
     const el = document.getElementById("contact");
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
+
+  useSanityMeta('campus', {
+  title:       'Campus | Skillra – Our Learning Environment',
+  description: 'Discover Skillra\'s state-of-the-art campus facilities designed to deliver the best learning experience in Chennai.',
+  canonicalUrl:'https://www.skillra.com/campus',
+})
 
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>

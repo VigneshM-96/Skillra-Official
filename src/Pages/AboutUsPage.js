@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+import { useSanityMeta } from '../hooks/useSanityMeta'
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -691,6 +692,11 @@ function NewsletterSection() {
    MAIN EXPORT
 ═══════════════════════════════════════════ */
 export default function AboutUsPage() {
+  useSanityMeta('about', {
+  title:       'About Us | Skillra – Our Story & Mission',
+  description: 'Learn about Skillra Health Innovations Pvt Ltd – our mission, team, and commitment to transforming careers in Medical Coding and IT.',
+  canonicalUrl:'https://www.skillra.com/about',
+})
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+const PUB = process.env.PUBLIC_URL || "";
+
 const NAV_LINKS = [
   { label: "About Us",        path: "/about-us"  },
   { label: "Course Offered",  path: "/courses",   hasMega: true },
@@ -9,7 +11,7 @@ const NAV_LINKS = [
   { label: "Campus",          path: "/campus"    },
   { label: "Books",           path: "/books"     },
   { label: "Blogs",           path: "/blog"      },
-  // { label: "Gallery",         path: "/gallery"},
+  { label: "Gallery",         path: "/gallery"},
   { label: "Contact Us",      path: "/contact-us" },
 ];
 
@@ -493,7 +495,7 @@ export default function NavBar() {
               }}
             >
               <img
-  src="/logo.png"
+  src={"/logo.png"}
   alt="Skillra logo"
   style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />

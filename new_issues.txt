@@ -1,0 +1,10 @@
+1./image
+2./Reviews and more like newsletters
+3.interlink
+4.sanity meta and description (not showing on google)
+5.h tags (h1 to h3)
+6. canonical tag 
+7. google not update meta tags
+8. courses atleast two interlinks
+9. need research on meta and description
+10.add alt text on images

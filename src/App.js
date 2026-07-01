@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage      from "./Pages/HomePage";
 import AboutUsPage   from "./Pages/AboutUsPage";
 import CoursesPage   from "./Pages/CoursesPage";
@@ -14,7 +14,8 @@ import NavBar from "./Pages/NavBar";
 import ChatBot from "./components/ChatBot";
 import ScrollToTop from "./components/ScrollToTop";
 import AnalyticsTracker from "./AnalyticsTracker";
-import PromoBanner from "./components/PromoBanner"; // ← adjust path to where PromoBanner lives
+import { PromoBannerController } from "./components/PromoBanner";
+import { HelmetProvider } from "react-helmet-async";
 
 export default function App() {
   const [showPromo, setShowPromo] = useState(false);
@@ -35,7 +36,8 @@ export default function App() {
   }, [showPromo, hasShownFirst]);
 
   return (
-    <HashRouter>
+    <HelmetProvider>
+    <BrowserRouter>
       <AnalyticsTracker />
       <ScrollToTop />
       <NavBar />
@@ -49,14 +51,15 @@ export default function App() {
         <Route path="/placement"  element={<PlacementPage />} />
         <Route path="/career"     element={<CareerPage />} />
         <Route path="/books"     element={<BooksPage />} />
-        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug?" element={<BlogPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
       <ChatBot />
 
       {/* Promo popup — shows on all pages */}
-      {showPromo && <PromoBanner onClose={() => setShowPromo(false)} />}
-    </HashRouter>
+      <PromoBannerController />
+    </BrowserRouter>
+    </HelmetProvider>
   );
 }

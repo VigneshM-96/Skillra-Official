@@ -4,88 +4,18 @@ import Navbar from "./NavBar";
 import Footer from "./Footer";
 import { COURSES, nameToSlug } from "../data/CoursesData";
 import SocialSidebar from "../components/SocialSideBar";
+import { useCourseMeta } from '../hooks/useSanityMeta';
+import { Helmet } from "react-helmet-async";
 
+const PUB = process.env.PUBLIC_URL || "";
 
 const SHEETS_URL =
   "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
 
-const META = {
-  title:       "Courses Offered | Skillra – AI Medical Coding, IT & Finance Training",
-  description: "Explore Skillra's industry-aligned courses in AI Medical Coding, AI Medical Billing, MERN/MEAN Stack, AI & ML, Data Analytics, UI/UX Design, SAP ABAP, Tally & GST, Digital Marketing, and Personality Development.",
-  canonical:   "https://www.skillra.com/courses",
-  keywords:    "Skillra courses, AI medical coding course, MERN stack training, data analytics course, medical billing course, IT training Tamil Nadu, finance courses, digital marketing course,",
-};
 
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
 
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function setJsonLd(data) {
-  const id = "skillra-courses-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra courses and training programs");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra courses and training programs");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "name": "Skillra Training Courses",
-      "description": META.description,
-      "url": META.canonical,
-      "provider": {
-        "@type": "EducationalOrganization",
-        "name": "Skillra Health Innovations Pvt Ltd",
-        "logo": "/logo.png",
-        "url": "https://www.skillra.com"
-      },
-      "itemListElement": [
-        { "@type": "Course", "position": 1, "name": "AI Medical Coding", "category": "Health" },
-        { "@type": "Course", "position": 2, "name": "AI Medical Billing", "category": "Health" },
-        { "@type": "Course", "position": 3, "name": "AI Medical Scribing", "category": "Health" },
-        { "@type": "Course", "position": 4, "name": "MEAN / MERN Stack", "category": "Technology" },
-        { "@type": "Course", "position": 5, "name": "AI & ML", "category": "Technology" },
-        { "@type": "Course", "position": 6, "name": "Data Analytics", "category": "Technology" },
-        { "@type": "Course", "position": 7, "name": "UI/UX Design", "category": "Technology" },
-        { "@type": "Course", "position": 8, "name": "SAP ABAP", "category": "Technology" },
-        { "@type": "Course", "position": 9, "name": "Tally & GST", "category": "Finance" },
-        { "@type": "Course", "position": 10, "name": "Digital Marketing", "category": "Marketing" },
-        { "@type": "Course", "position": 11, "name": "Personality Development", "category": "Personality" }
-      ]
-    });
-  }, []);
-  return null;
-}
+// keep your existing setMeta / setLink / setJsonLd helpers as-is
 
 /* ══════════════════════════════════════════════════════
    SVG ICON COMPONENTS
@@ -237,7 +167,7 @@ function CourseHero({ course }) {
 
       <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 clamp(16px,5%,60px)", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "clamp(24px,4%,60px)", position: "relative", zIndex: 1, marginTop: "80px" }} className="hero-flex">
         <div className="hero-img-wrap co-vR" style={{ flex: 1, display: "flex", alignItems: "flex-end", justifyContent: "flex-start", minHeight: "300px" }}>
-          <img src={`/${course.heroImage || "students.jpg"}`} alt={course.title} style={{ maxHeight: "clamp(240px,58vw,390px)", maxWidth: "150%", objectFit: "contain", marginBottom: "0px", objectPosition: "bottom center", display: "block", filter: `drop-shadow(0 16px 40px ${ac}33)`, borderRadius: "20px" }} />
+          <img src={`/${course.heroImage}`}alt={course.title} style={{ maxHeight: "clamp(240px,58vw,390px)", maxWidth: "150%", objectFit: "contain", marginBottom: "0px", objectPosition: "bottom center", display: "block", filter: `drop-shadow(0 16px 40px ${ac}33)`, borderRadius: "20px" }} />
         </div>
 
         <div className="hero-form-wrap co-v1" style={{ flex: "0 0 clamp(280px,38%,420px)", background: "#fff", borderRadius: "20px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: `0 8px 48px ${ac}22`, border: `1.5px solid ${ac}18`, marginBottom: "clamp(20px,4vw,48px)", alignSelf: "center" }}>
@@ -713,10 +643,61 @@ export default function CoursesPage() {
   const { courseId } = useParams();
   const resolvedId = courseId || "ai-medical-coding";
   const course = COURSES[resolvedId];
-  useEffect(() => { window.scrollTo(0, 0); }, [resolvedId]);
+  
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    if (window.fbq) {
+      window.fbq('track', 'PageView');        
+      window.fbq('track', 'ViewContent', {    
+        content_name: course?.title || resolvedId,
+        content_category: 'Course',
+        content_ids: [resolvedId],
+        content_type: 'product',
+      });
+    }
+  }, [resolvedId]);
+
+  const schemaData = {
+    "@context": "http://schema.org",
+    "@type": "EmploymentAgency",
+    "name": "Skillra",
+    "url": `https://skillra.com/courses/${resolvedId}`,
+    "logo": "https://skillra.com/logo.png",
+    "image": course?.image || "https://skillra.com/coursehealthcare.jpg",
+    "description": course?.description || "Join an industry-certified training course in Chennai with 100% placement support, dynamic layout templates, internship learning, and online job placement paths.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "FIRST FLOOR, 92/A19, PV Rajamannar Salai, Ayyavupuram, KK Nagar West, K. K. Nagar, Chennai, Tamil Nadu – 600078",
+      "addressLocality": "Chennai, Tamil Nadu, India",
+      "addressRegion": "Tamil Nadu",
+      "postalCode": "600078",
+      "addressCountry": "India"
+    },
+    "openingHours": "Mo, Tu, We, Th, Fr, Sa 09:00-19:30",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+918778487948"
+    }
+  };
+
+  useCourseMeta(resolvedId, {
+    title:       `${course?.title || "Course"} | Skillra`,
+    description: `Learn ${course?.title || "skills"} at Skillra with industry-certified training and placement support.`,
+    canonicalUrl:`https://www.skillra.com/courses/${resolvedId}`,
+  });
 
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#fff" }}>
+      
+      <Helmet>
+        <title>{course?.title ? `${course.title} Course in Chennai | Skillra` : "AI Medical Coding Course in Chennai | Skillra"}</title>
+        <script type="application/ld+json">
+          {JSON.stringify(schemaData)}
+        </script>
+      </Helmet>
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -746,7 +727,9 @@ export default function CoursesPage() {
           .hero-img-wrap img { max-height: 180px !important; }
         }
       `}</style>
+
       <Navbar />
+
       {course ? (
         <>
           <CourseHero course={course} />
@@ -756,8 +739,8 @@ export default function CoursesPage() {
       ) : (
         <CourseNotFound />
       )}
+
       <Footer />
-      <PageMeta />
       <SocialSidebar />
     </div>
   );

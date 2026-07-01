@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
 import SocialSidebar from "../components/SocialSideBar";
+import { useSanityMeta } from '../hooks/useSanityMeta';
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -1190,6 +1191,13 @@ function ServicesSection() {
    MAIN PAGE
 ══════════════════════════════════════════════════════ */
 export default function CareerPage() {
+
+  useSanityMeta('careerGuidance', {
+  title:       'Career Guidance | Skillra – Your Path to Success',
+  description: 'Get expert career guidance from Skillra\'s team of industry professionals. Resume building, interview prep, and career counselling for Medical Coding & IT.',
+  canonicalUrl:'https://www.skillra.com/career-guidance',
+})
+
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#fff" }}>
       <style>{`

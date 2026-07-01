@@ -1,221 +1,247 @@
-import { useState, useEffect, useRef } from "react";
-import { BLOG_POSTS } from "./BlogDatas";
+// src/Pages/BlogPage.js
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate, useParams }       from 'react-router-dom'
+import { PortableText }                 from '@portabletext/react'
 
-import Footer from "./Footer";
-import SocialSidebar from "../components/SocialSideBar";
+import Footer        from './Footer'
+import SocialSidebar from '../components/SocialSideBar'
 
-const META = {
-  title:       "Blogs | Skillra – Insights on Medical Coding, IT & Career Growth",
-  description: "Read Skillra's latest blogs on AI Medical Coding, IT trends, career tips, industry insights, and professional development. Stay updated with expert knowledge from 15+ years experienced trainers.",
-  canonical:   "https://www.skillra.com/blogs",
-  keywords:    "Skillra blogs, medical coding blog, AI medical coding insights, IT career tips, healthcare industry trends, coding certification tips, professional development articles",
-};
+import { fetchAllPosts, fetchPostBySlug } from '../sanityClient'
+import { useSanityMeta }                  from '../hooks/useSanityMeta'
+import { BLOG_POSTS }                     from './BlogDatas'
 
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
+// ─────────────────────────────────────────────────────────────────────────────
+// Normalise a local BLOG_POSTS entry to match Sanity shape
+// ─────────────────────────────────────────────────────────────────────────────
+function normaliseLocal(b) {
+  return {
+    ...b,
+    _id:         b.id,
+    slug:        b.slug,
+    publishedAt: b.date ? new Date(b.date).toISOString() : null,
+    body:        null,
+  }
 }
 
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
+// ─────────────────────────────────────────────────────────────────────────────
+// Local fallback meta
+// ─────────────────────────────────────────────────────────────────────────────
+const BLOGS_META_FALLBACK = {
+  title:       'Blogs | Skillra – Insights on Medical Coding, IT & Career Growth',
+  description: "Read Skillra's latest blogs on AI Medical Coding, IT trends, career tips, industry insights, and professional development.",
+  keywords:    'Skillra blogs, medical coding blog, AI medical coding insights, IT career tips',
+  canonicalUrl:'https://www.skillra.com/blog',
+  robots:      'index, follow',
 }
 
-function setJsonLd(data) {
-  const id = "skillra-blogs-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
+// ─────────────────────────────────────────────────────────────────────────────
+// useInView hook
+// ─────────────────────────────────────────────────────────────────────────────
+function useInView() {
+  const ref = useRef(null)
+  const [inView, setInView] = useState(false)
   useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra blog articles and insights");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra blog articles and insights");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "Blog",
-      "name": "Skillra Blog",
-      "description": META.description,
-      "url": META.canonical,
-      "publisher": {
-        "@type": "Organization",
-        "name": "Skillra Health Innovations Pvt Ltd",
-        "logo": "/logo.png",
-        "url": "https://www.skillra.com"
-      },
-      "inLanguage": "en",
-      "about": [
-        { "@type": "Thing", "name": "AI Medical Coding" },
-        { "@type": "Thing", "name": "Information Technology" },
-        { "@type": "Thing", "name": "Career Development" },
-        { "@type": "Thing", "name": "Healthcare Industry" }
-      ]
-    });
-  }, []);
-  return null;
-}
-
-function useInView(threshold = 0.1) {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
+    const el = ref.current
+    if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-  return [ref, inView];
-}
-
-// ── INLINE BOLD RENDERER ──────────────────────────────────────────────────────
-function renderInline(text) {
-  const parts = text.split(/\*\*(.+?)\*\*/g);
-  return parts.map((part, i) =>
-    i % 2 === 1 ? (
-      <strong key={i} style={{ fontWeight: 800, color: "#111827" }}>
-        {part}
-      </strong>
-    ) : (
-      part
+      ([entry]) => { if (entry.isIntersecting) setInView(true) },
+      { threshold: 0, rootMargin: '0px 0px -10px 0px' }
     )
-  );
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+  return [ref, inView]
 }
 
-// ── CONTENT RENDERER ──────────────────────────────────────────────────────────
-function RenderContent({ content }) {
+// ─────────────────────────────────────────────────────────────────────────────
+// Portable Text components
+// ─────────────────────────────────────────────────────────────────────────────
+const ptComponents = {
+  block: {
+    normal: ({ children }) => <p className="pt-normal">{children}</p>,
+    h2:     ({ children }) => <h2 className="pt-h2">{children}</h2>,
+    h3:     ({ children }) => <h3 className="pt-h3">{children}</h3>,
+  },
+  marks: {
+    strong: ({ children }) => <strong className="pt-strong">{children}</strong>,
+    em:     ({ children }) => <em>{children}</em>,
+  },
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Plain-text body renderer
+// ─────────────────────────────────────────────────────────────────────────────
+function PlainTextBody({ content }) {
+  if (!content) return null
   return (
-    <div>
-      {content.split("\n").map((line, i) => {
-        const subtitleMatch = line.trim().match(/^\*\*(.+)\*\*$/);
-        if (subtitleMatch) {
-          return (
-            <p key={i} style={{
-              fontWeight: 800,
-              color: "#111827",
-              fontSize: "clamp(14px,1.4vw,16px)",
-              fontFamily: "'Outfit', sans-serif",
-              marginTop: "22px",
-              marginBottom: "6px",
-              lineHeight: 1.4,
-            }}>
-              {subtitleMatch[1]}
-            </p>
-          );
-        }
-        if (!line.trim()) return <div key={i} style={{ height: "8px" }} />;
+    <>
+      {content.split('\n\n').map((para, i) => {
+        const trimmed = para.trim()
+        if (!trimmed) return null
+        if (trimmed.startsWith('**') && trimmed.endsWith('**'))
+          return <h2 key={i} className="pt-h2">{trimmed.replace(/\*\*/g, '')}</h2>
+        const parts = trimmed.split(/(\*\*[^*]+\*\*)/)
         return (
-          <p key={i} style={{
-            fontSize: "clamp(13px,1.3vw,15px)",
-            color: "#4b5563",
-            fontFamily: "'Outfit', sans-serif",
-            lineHeight: 1.85,
-            marginBottom: "10px",
-          }}>
-            {renderInline(line)}
+          <p key={i} className="pt-normal">
+            {parts.map((part, j) =>
+              part.startsWith('**') && part.endsWith('**')
+                ? <strong key={j} className="pt-strong">{part.replace(/\*\*/g, '')}</strong>
+                : part
+            )}
           </p>
-        );
+        )
       })}
-    </div>
-  );
+    </>
+  )
 }
 
-// ── BLOG DETAIL PAGE ──────────────────────────────────────────────────────────
-function BlogDetail({ blog, onBack }) {
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, []);
-  const [ref, inView] = useInView(0.05);
+// ─────────────────────────────────────────────────────────────────────────────
+// Loading Spinner
+// ─────────────────────────────────────────────────────────────────────────────
+function LoadingSpinner() {
+  return (
+    <div className="spinner-wrap">
+      <div className="spinner" />
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Related Post Card (fixed sidebar)
+// ─────────────────────────────────────────────────────────────────────────────
+function RelatedCard({ blog }) {
+  const navigate = useNavigate()
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      className={`related-card${hovered ? ' related-card--hovered' : ''}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => { navigate(`/blog/${blog.slug}`); window.scrollTo({ top: 0 }) }}
+    >
+      <div className="related-card__thumb">
+        <img
+          src={blog.image} alt={blog.title}
+          className={`related-card__img${hovered ? ' related-card__img--hovered' : ''}`}
+          onError={e => { e.target.style.display = 'none' }}
+        />
+        <span className="related-card__tag" style={{ background: blog.tagColor || '#6d28d9' }}>
+          {blog.tag}
+        </span>
+      </div>
+      <div className="related-card__body">
+        <h4 className="related-card__title">{blog.title}</h4>
+        <p className="related-card__excerpt">{blog.excerpt}</p>
+        <div className="related-card__footer">
+          <span className="related-card__readtime">{blog.readTime}</span>
+          <span className="related-card__read-link" style={{ color: blog.tagColor || '#6d28d9' }}>
+            Read
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke={blog.tagColor || '#6d28d9'} strokeWidth="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Blog Detail
+// ─────────────────────────────────────────────────────────────────────────────
+function BlogDetail({ slug, onBack, allPosts = [] }) {
+  const [blog,    setBlog]    = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [bodyRef] = useInView()
+
+  useEffect(() => {
+    setLoading(true)
+    fetchPostBySlug(slug)
+      .then(data => {
+        setBlog(data || (BLOG_POSTS.find(b => b.slug === slug) ? normaliseLocal(BLOG_POSTS.find(b => b.slug === slug)) : null))
+        setLoading(false)
+      })
+      .catch(() => {
+        const local = BLOG_POSTS.find(b => b.slug === slug)
+        setBlog(local ? normaliseLocal(local) : null)
+        setLoading(false)
+      })
+  }, [slug])
+
+  useEffect(() => {
+    if (!blog) return
+    const title = blog.metaTitle || `${blog.title} | Skillra Blog`
+    const desc  = blog.metaDescription || blog.excerpt || ''
+    document.title = title
+    const setM = (a, v, c) => {
+      let el = document.querySelector(`meta[${a}="${v}"]`)
+      if (!el) { el = document.createElement('meta'); el.setAttribute(a, v); document.head.appendChild(el) }
+      el.setAttribute('content', c)
+    }
+    const setL = (rel, href) => {
+      let el = document.querySelector(`link[rel="${rel}"]`)
+      if (!el) { el = document.createElement('link'); el.setAttribute('rel', rel); document.head.appendChild(el) }
+      el.setAttribute('href', href)
+    }
+    setM('name',     'description',    desc)
+    setL('canonical', `https://www.skillra.com/blog/${blog.slug}`)
+    setM('property', 'og:type',        'article')
+    setM('property', 'og:url',         `https://www.skillra.com/blog/${blog.slug}`)
+    setM('property', 'og:title',       title)
+    setM('property', 'og:description', desc)
+    setM('property', 'og:image',       blog.image || '')
+  }, [blog])
+
+  useEffect(() => { window.scrollTo({ top: 0 }) }, [slug])
+
+  if (loading) return <LoadingSpinner />
+  if (!blog)   return null
+
+  // Pick 2 related posts – prefer same tag, exclude current
+  const relatedPosts = allPosts
+    .filter(p => p.slug !== slug)
+    .sort((a, b) => (b.tag === blog.tag ? 1 : 0) - (a.tag === blog.tag ? 1 : 0))
+    .slice(0, 2)
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f7f7f5" }}>
-      <style>{`
-        .detail-back:hover { background: #7c3aed !important; color: #fff !important; border-color: #7c3aed !important; }
-      `}</style>
+    <div className="detail-page">
 
-      {/* Hero */}
-      <div style={{ position: "relative", height: "clamp(460px, 42vw, 600px)", overflow: "hidden" }}>
-        <img
-          src={blog.image}
-          alt={blog.title}
-          style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.42)" }}
-          onError={e => { e.target.style.background = "#1a1a3e"; e.target.style.display = "none"; }}
-        />
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(10,10,30,0.88) 40%, transparent)",
-        }} />
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0,
-          padding: "0 clamp(20px, 6vw, 80px) 40px",
-        }}>
-          <div>
-            <span style={{
-              display: "inline-block",
-              background: blog.tagColor, color: "#fff",
-              fontSize: 11, fontWeight: 700,
-              letterSpacing: "1px", textTransform: "uppercase",
-              padding: "4px 12px", borderRadius: 20, marginBottom: 14,
-            }}>{blog.tag}</span>
-            <h1 style={{
-              fontSize: "clamp(20px, 4vw, 34px)",
-              fontWeight: 800, color: "#fff",
-              lineHeight: 1.25, letterSpacing: "-0.4px", maxWidth: 700,
-            }}>{blog.title}</h1>
-            <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 16, flexWrap: "wrap" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{
-                  width: 30, height: 30, borderRadius: "50%",
-                  background: blog.authorColor || blog.tagColor,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 12, fontWeight: 700, color: "#fff",
-                }}>{blog.authorInitial || blog.title[0]}</div>
-                <span style={{ color: "#ddd", fontSize: 13 }}>{blog.author || "Skillra Team"}</span>
+      {/* ── Hero (full width, scrolls away normally) ── */}
+      <div className="detail-hero">
+        <img src={blog.image} alt={blog.title} className="detail-hero__img"
+          onError={e => { e.target.style.display = 'none' }} />
+        <div className="detail-hero__gradient" />
+        <div className="detail-hero__content">
+          <span className="detail-hero__tag" style={{ background: blog.tagColor || '#6d28d9' }}>
+            {blog.tag}
+          </span>
+          <h1 className="detail-hero__title">{blog.title}</h1>
+          <div className="detail-hero__meta">
+            <div className="detail-hero__author">
+              <div className="detail-hero__avatar"
+                style={{ background: blog.authorColor || blog.tagColor || '#6d28d9' }}>
+                {blog.authorInitial || 'S'}
               </div>
-              <span style={{ color: "#777", fontSize: 12 }}>•</span>
-              <span style={{ color: "#aaa", fontSize: 12 }}>{blog.date}</span>
-              <span style={{ color: "#777", fontSize: 12 }}>•</span>
-              <span style={{ color: "#aaa", fontSize: 12 }}>{blog.readTime}</span>
+              <span className="detail-hero__author-name">{blog.author || 'Skillra Team'}</span>
             </div>
+            <span className="detail-hero__dot">·</span>
+            <span className="detail-hero__date">
+              {blog.publishedAt
+                ? new Date(blog.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })
+                : ''}
+            </span>
+            <span className="detail-hero__dot">·</span>
+            <span className="detail-hero__readtime">{blog.readTime}</span>
           </div>
         </div>
       </div>
 
-      {/* Back Button */}
-      <div style={{ padding: "28px clamp(20px, 6vw, 80px) 0" }}>
-        <a
-          href="/blog"
-          className="detail-back"
-          onClick={(e) => { e.preventDefault(); onBack(); }}
-          style={{
-            textDecoration: "none",
-            display: "inline-flex", alignItems: "center", gap: 8,
-            background: "#fff", border: "1.5px solid #e5e5e5",
-            borderRadius: 50, padding: "8px 18px",
-            fontSize: 13, fontWeight: 600, color: "#555",
-            cursor: "pointer", fontFamily: "inherit",
-            transition: "all 0.2s ease",
-          }}
-        >
+      {/* ── Back Button ── */}
+      <div className="detail-back-wrap">
+        <a href="/blog" className="detail-back-btn"
+          onClick={e => { e.preventDefault(); onBack() }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <line x1="19" y1="12" x2="5" y2="12"/>
             <polyline points="12 19 5 12 12 5"/>
@@ -224,295 +250,571 @@ function BlogDetail({ blog, onBack }) {
         </a>
       </div>
 
-      {/* Article Body */}
-      <div
-        ref={ref}
-        style={{
-          maxWidth: 1820, margin: "0 auto",
-          padding: "32px clamp(20px, 6vw, 80px) 80px",
-          opacity: inView ? 1 : 0,
-          transform: inView ? "translateY(0)" : "translateY(30px)",
-          transition: "opacity 0.6s ease, transform 0.6s ease",
-        }}
-      >
-        <p style={{
-          fontSize: 17, color: "#555", lineHeight: 1.75,
-          fontWeight: 400, borderLeft: `4px solid ${blog.tagColor}`,
-          paddingLeft: 20, marginBottom: 32, fontStyle: "italic",
-        }}>{blog.excerpt}</p>
+      {/* ── Article — normal page scroll, right margin leaves room for sidebar ── */}
+      <article ref={bodyRef} className="detail-article">
+        <blockquote className="detail-excerpt" style={{ borderColor: blog.tagColor || '#6d28d9' }}>
+          {blog.excerpt}
+        </blockquote>
+        <div className="detail-body">
+          {blog.body && Array.isArray(blog.body) && blog.body.length > 0 && (
+            <PortableText
+              value={blog.body.map((block, i) => ({ ...block, _key: block._key || `block-${i}` }))}
+              components={ptComponents}
+            />
+          )}
+          {blog.body && typeof blog.body === 'string' && <PlainTextBody content={blog.body} />}
+          {!blog.body && blog.content && <PlainTextBody content={blog.content} />}
+        </div>
+      </article>
 
-        {/* ✅ Fixed: uses RenderContent with bold support */}
-        <RenderContent content={blog.content} />
+      {/* ── Sidebar — position:fixed, always visible, never scrolls ── */}
+      {relatedPosts.length > 0 && (
+        <aside className="detail-sidebar">
+          <div className="detail-sidebar__header">
+            <span className="detail-sidebar__eyebrow">Continue Reading</span>
+            <div className="detail-sidebar__line" />
+          </div>
+          <div className="detail-sidebar__cards">
+            {relatedPosts.map(related => (
+              <RelatedCard key={related.slug} blog={related} />
+            ))}
+          </div>
+        </aside>
+      )}
 
-        
-      </div>
     </div>
-  );
+  )
 }
 
-// ── BLOG CARD ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Blog Card (grid)
+// ─────────────────────────────────────────────────────────────────────────────
 function BlogCard({ blog, inView, delay, onClick }) {
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState(false)
   return (
     <div
+      className={`blog-card${inView ? ' blog-card--visible' : ''}${hovered ? ' blog-card--hovered' : ''}`}
+      style={{ transitionDelay: `${delay}ms` }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
-        background: "#fff",
-        borderRadius: 20,
-        overflow: "hidden",
-        opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(40px)",
-        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms, box-shadow 0.3s ease`,
-        boxShadow: hovered ? "0 24px 64px rgba(0,0,0,0.13)" : "0 2px 20px rgba(0,0,0,0.06)",
-        display: "flex",
-        flexDirection: "column",
-      }}
     >
-      {/* Thumbnail */}
-      <div style={{ position: "relative", height: 200, overflow: "hidden", flexShrink: 0 }}>
-        <img
-          src={blog.image}
-          alt={blog.title}
-          style={{
-            width: "100%", height: "100%", objectFit: "cover",
-            transition: "transform 0.5s ease",
-            transform: hovered ? "scale(1.06)" : "scale(1)",
-          }}
+      <div className="blog-card__thumb">
+        <img src={blog.image} alt={blog.title}
+          className={`blog-card__img${hovered ? ' blog-card__img--hovered' : ''}`}
           onError={e => {
-            e.target.style.display = "none";
-            e.target.parentNode.style.background = blog.tagColor + "22";
+            e.target.style.display = 'none'
+            e.target.parentNode.style.background = (blog.tagColor || '#6d28d9') + '22'
           }}
         />
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 60%)",
-        }} />
-        <span style={{
-          position: "absolute", top: 14, left: 14,
-          background: blog.tagColor, color: "#fff",
-          fontSize: 10, fontWeight: 700,
-          letterSpacing: "0.8px", textTransform: "uppercase",
-          padding: "4px 10px", borderRadius: 20,
-        }}>{blog.tag}</span>
-        <span style={{
-          position: "absolute", bottom: 12, right: 14,
-          background: "rgba(0,0,0,0.55)", color: "#fff",
-          fontSize: 11, padding: "3px 10px", borderRadius: 20,
-          backdropFilter: "blur(4px)",
-        }}>{blog.readTime}</span>
+        <div className="blog-card__thumb-overlay" />
+        <span className="blog-card__tag" style={{ background: blog.tagColor || '#6d28d9' }}>{blog.tag}</span>
+        <span className="blog-card__readtime">{blog.readTime}</span>
       </div>
-
-      {/* Content */}
-      <div style={{ padding: "22px 22px 24px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{
-            width: 26, height: 26, borderRadius: "50%",
-            background: blog.authorColor || blog.tagColor,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0,
-          }}>{blog.authorInitial || blog.title[0]}</div>
-          <span style={{ fontSize: 12, color: "#888" }}>{blog.author || "Skillra Team"}</span>
-          <span style={{ color: "#ccc", fontSize: 11 }}>•</span>
-          <span style={{ fontSize: 12, color: "#aaa" }}>{blog.date}</span>
+      <div className="blog-card__body">
+        <div className="blog-card__author-row">
+          <div className="blog-card__avatar" style={{ background: blog.authorColor || blog.tagColor || '#6d28d9' }}>
+            {blog.authorInitial || 'S'}
+          </div>
+          <span className="blog-card__author-name">{blog.author || 'Skillra Team'}</span>
+          <span className="blog-card__dot">·</span>
+          <span className="blog-card__date">
+            {blog.publishedAt
+              ? new Date(blog.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })
+              : blog.date || ''}
+          </span>
         </div>
-
-        <h3 style={{
-          fontSize: 16, fontWeight: 800, color: "#111",
-          lineHeight: 1.35, letterSpacing: "-0.3px", margin: 0,
-          display: "-webkit-box",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-        }}>{blog.title}</h3>
-
-        <p style={{
-          fontSize: 13, color: "#777", lineHeight: 1.65, margin: 0,
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-          flex: 1,
-        }}>{blog.excerpt}</p>
-
-        {/* Footer row */}
-        <div style={{
-          marginTop: 6, paddingTop: 14,
-          borderTop: "1px solid #f0f0f0",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          <a
-            href={`/blog/${blog.id}`}
-            onClick={(e) => { e.preventDefault(); onClick(); }}
-            style={{
-              textDecoration: "none",
-              fontSize: 13, fontWeight: 600, color: blog.tagColor,
-              display: "inline-flex", alignItems: "center",
-              gap: hovered ? 9 : 5,
-              transition: "gap 0.2s ease",
-            }}
-          >
+        <h3 className="blog-card__title">{blog.title}</h3>
+        <p className="blog-card__excerpt">{blog.excerpt}</p>
+        <div className="blog-card__footer">
+          <a href={`/blog/${blog.slug}`} className="blog-card__read-link"
+            style={{ color: blog.tagColor || '#6d28d9' }}
+            onClick={e => { e.preventDefault(); onClick() }}>
             Read article
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={blog.tagColor} strokeWidth="2.5">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+              stroke={blog.tagColor || '#6d28d9'} strokeWidth="2.5">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
             </svg>
           </a>
-          <span style={{
-            display: "inline-block",
-            background: blog.tagBg, color: blog.tagColor,
-            fontSize: 10, fontWeight: 600,
-            padding: "3px 9px", borderRadius: 12,
-          }}>{blog.tag}</span>
+          <span className="blog-card__badge"
+            style={{ background: blog.tagBg || '#ede9fe', color: blog.tagColor || '#6d28d9' }}>
+            {blog.tag}
+          </span>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-// ── MAIN BLOG PAGE ────────────────────────────────────────────────────────────
-export default function BlogPage({ setPage }) {
-  const [activeBlog, setActiveBlog] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("All");
+// ─────────────────────────────────────────────────────────────────────────────
+// Main Blog Page
+// ─────────────────────────────────────────────────────────────────────────────
+export default function BlogPage() {
+  const { slug }  = useParams()
+  const navigate  = useNavigate()
 
-  const [heroRef, heroInView] = useInView(0.1);
-  const [cardsRef, cardsInView] = useInView(0.05);
+  const [posts,        setPosts]        = useState([])
+  const [loading,      setLoading]      = useState(true)
+  const [activeFilter, setActiveFilter] = useState('All')
 
-  const categories = ["All", ...Array.from(new Set(BLOG_POSTS.map(b => b.tag)))];
-  const filtered = activeFilter === "All" ? BLOG_POSTS : BLOG_POSTS.filter(b => b.tag === activeFilter);
+  const [heroRef,  heroInView]  = useInView()
+  const [cardsRef, cardsInView] = useInView()
 
-  // ── DETAIL VIEW ──
-  if (activeBlog) {
+  useSanityMeta('blogs', BLOGS_META_FALLBACK)
+
+  useEffect(() => {
+    fetchAllPosts()
+      .then(data => {
+        const sanityPosts = data && data.length > 0 ? data : []
+        const localPosts  = BLOG_POSTS.map(normaliseLocal)
+        const sanitySlug  = new Set(sanityPosts.map(p => p.slug))
+        const uniqueLocal = localPosts.filter(p => !sanitySlug.has(p.slug))
+        setPosts([...sanityPosts, ...uniqueLocal])
+        setLoading(false)
+      })
+      .catch(() => {
+        setPosts(BLOG_POSTS.map(normaliseLocal))
+        setLoading(false)
+      })
+  }, [])
+
+  if (slug) {
     return (
-      <div style={{ minHeight: "100vh", backgroundColor: "#f7f7f5", fontFamily: "'Inter', -apple-system, sans-serif" }}>
-        <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
+      <div className="blog-root">
+        <BlogStyles />
         <BlogDetail
-          blog={activeBlog}
-          onBack={() => { setActiveBlog(null); window.scrollTo({ top: 0 }); }}
+          slug={slug}
+          allPosts={posts.length > 0 ? posts : BLOG_POSTS.map(normaliseLocal)}
+          onBack={() => { navigate('/blog'); window.scrollTo({ top: 0 }) }}
         />
       </div>
-    );
+    )
   }
 
-  // ── LIST VIEW ──
+  const categories = ['All', ...Array.from(new Set(posts.map(b => b.tag).filter(Boolean)))]
+  const filtered   = activeFilter === 'All' ? posts : posts.filter(b => b.tag === activeFilter)
+
   return (
-    <div style={{
-      minHeight: "100vh",
-      backgroundColor: "linear-gradient(135deg,#f3e8ff 0%,#ede9fe 50%,#e0d7ff 100%)",
-      fontFamily: "'Inter', -apple-system, sans-serif",
-      overflowX: "hidden",
-    }}>
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    <div className="blog-root blog-root--list">
+      <BlogStyles />
 
-        .filter-pill {
-          border: 1.5px solid #e5e5e5; background: #fff;
-          border-radius: 50px; padding: 7px 18px;
-          font-size: 13px; font-weight: 500;
-          cursor: pointer; font-family: inherit;
-          transition: all 0.2s ease; color: #555;
-        }
-        .filter-pill:hover { border-color: #7c3aed; color: #7c3aed; }
-        .filter-pill.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+      <header ref={heroRef} className={`blog-hero${heroInView ? ' blog-hero--visible' : ''}`}>
+        <div className="blog-hero__noise" />
+        <div className="blog-hero__glow blog-hero__glow--a" />
+        <div className="blog-hero__glow blog-hero__glow--b" />
+        <div className="blog-hero__inner">
+          <p className="blog-hero__eyebrow">Insights &amp; Updates</p>
+          <h1 className="blog-hero__title">
+            Learn. Grow.{' '}
+            <span className="blog-hero__title--accent">Get Placed.</span>
+          </h1>
+          <p className="blog-hero__sub">
+            Expert articles on career-boosting courses, industry trends, and placement strategies — straight from the Skillra team.
+          </p>
+        </div>
+      </header>
 
-        .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        @media (max-width: 1024px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 640px)  { .blog-grid { grid-template-columns: 1fr; } }
-
-        @media (max-width: 860px) {
-          .page-hero { padding: 40px 20px 24px !important; }
-          .filter-bar { padding: 0 20px 24px !important; }
-          .blogs-wrap { padding: 0 20px 60px !important; }
-        }
-        @media (max-width: 560px) {
-          .filter-pill { font-size: 12px; padding: 6px 14px; }
-        }
-      `}</style>
-
-      {/* ── HERO ── */}
-      <div
-        ref={heroRef}
-        className="page-hero"
-        style={{ textAlign: "center", padding: "60px 48px 32px", maxWidth: 680, margin: "0 auto", marginTop: "clamp(80px, 8vw, 80px)" }}
-      >
-        <p style={{
-          fontSize: 11, fontWeight: 700, color: "#a78bfa",
-          letterSpacing: "2.5px", textTransform: "uppercase", marginBottom: 12,
-          opacity: heroInView ? 1 : 0,
-          animation: heroInView ? "fadeUp 0.5s ease both" : "none",
-        }}>Insights & Updates</p>
-        <h1 style={{
-          fontSize: "clamp(26px, 5vw, 40px)",
-          fontWeight: 800, color: "#111", letterSpacing: "-0.8px",
-          lineHeight: 1.2, marginBottom: 16,
-          opacity: heroInView ? 1 : 0,
-          animation: heroInView ? "fadeUp 0.6s 0.1s ease both" : "none",
-        }}>
-          Learn. Grow.{" "}
-          <span style={{
-            background: "linear-gradient(135deg, #7c3aed, #a78bfa)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}>Get Placed.</span>
-        </h1>
-        <p style={{
-          fontSize: 15, color: "#888", lineHeight: 1.7,
-          maxWidth: 460, margin: "0 auto",
-          opacity: heroInView ? 1 : 0,
-          animation: heroInView ? "fadeUp 0.6s 0.2s ease both" : "none",
-        }}>
-          Expert articles on career-boosting courses, industry trends, and placement strategies — straight from the Skillra team.
-        </p>
-      </div>
-
-      {/* ── FILTER PILLS ── */}
-      <div
-        className="filter-bar"
-        style={{
-          display: "flex", gap: 10, justifyContent: "center",
-          padding: "0 48px 32px", flexWrap: "wrap",
-          opacity: heroInView ? 1 : 0,
-          animation: heroInView ? "fadeUp 0.6s 0.3s ease both" : "none",
-        }}
-      >
+      <div className={`filter-bar${heroInView ? ' filter-bar--visible' : ''}`}>
         {categories.map(cat => (
-          <button
-            key={cat}
-            className={`filter-pill ${activeFilter === cat ? "active" : ""}`}
-            onClick={() => setActiveFilter(cat)}
-          >
+          <button key={cat}
+            className={`filter-pill${activeFilter === cat ? ' filter-pill--active' : ''}`}
+            onClick={() => setActiveFilter(cat)}>
             {cat}
           </button>
         ))}
       </div>
 
-      {/* ── BLOG GRID ── */}
-      <div
-        ref={cardsRef}
-        className="blogs-wrap"
-        style={{ padding: "0 clamp(16px, 4vw, 48px) 80px", maxWidth: 1200, margin: "0 auto" }}
-      >
-        <div className="blog-grid">
-          {filtered.map((blog, i) => (
-            <BlogCard
-              key={blog.id}
-              blog={blog}
-              inView={cardsInView}
-              delay={i * 100}
-              onClick={() => setActiveBlog(blog)}
-            />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "#aaa", fontSize: 15 }}>
-            No articles found in this category.
+      <main ref={cardsRef} className="blog-grid-wrap">
+        {loading ? <LoadingSpinner /> : (
+          <div className="blog-grid">
+            {filtered.map((blog, i) => (
+              <BlogCard key={blog.slug} blog={blog} inView={cardsInView}
+                delay={i * 90} onClick={() => navigate(`/blog/${blog.slug}`)} />
+            ))}
           </div>
         )}
-      </div>
+        {!loading && filtered.length === 0 && (
+          <div className="blog-empty">No articles found in this category.</div>
+        )}
+      </main>
+
       <SocialSidebar />
       <Footer />
-      <PageMeta />
     </div>
-  );
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// All styles
+// ─────────────────────────────────────────────────────────────────────────────
+function BlogStyles() {
+  return (
+    <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --purple:       #6d28d9;
+        --purple-light: #8b5cf6;
+        --purple-pale:  #ede9fe;
+        --ink:          #0f0a1e;
+        --ink-mid:      #3b3553;
+        --ink-soft:     #7c7592;
+        --surface:      #faf9ff;
+        --white:        #ffffff;
+        --border:       #e8e4f4;
+        --font-display: 'Fraunces', Georgia, serif;
+        --font-body:    'DM Sans', system-ui, sans-serif;
+        --radius:       18px;
+        --shadow-sm:    0 2px 12px rgba(109,40,217,0.07);
+        --shadow-md:    0 8px 32px rgba(109,40,217,0.12);
+        --shadow-lg:    0 20px 60px rgba(109,40,217,0.16);
+        --sidebar-w:    300px;
+        --sidebar-gap:  32px;
+        --sidebar-right: 40px;
+      }
+
+      /* ── Root ── */
+      .blog-root {
+        min-height: 100vh;
+        font-family: var(--font-body);
+        background: var(--surface);
+        color: var(--ink);
+        overflow-x: hidden;
+      }
+      .blog-root--list {
+        background: linear-gradient(160deg, #f5f1ff 0%, #faf9ff 55%, #f0f7ff 100%);
+      }
+
+      /* ── Spinner ── */
+      .spinner-wrap {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .spinner {
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        border: 3px solid var(--purple-pale);
+        border-top-color: var(--purple);
+        animation: spin 0.75s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ══════════════════════════════════════════
+         DETAIL PAGE
+      ══════════════════════════════════════════ */
+      .detail-page {
+        min-height: 100vh;
+        background: var(--surface);
+      }
+
+      /* Hero */
+      .detail-hero {
+        position: relative;
+        height: clamp(440px, 42vw, 580px);
+        overflow: hidden;
+      }
+      .detail-hero__img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: brightness(0.4);
+      }
+      .detail-hero__gradient {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(10,5,25,0.92) 35%, rgba(10,5,25,0.2) 70%, transparent);
+      }
+      .detail-hero__content {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        padding: 0 clamp(20px, 6vw, 80px) 44px;
+      }
+      .detail-hero__tag {
+        display: inline-block; color: #fff;
+        font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+        text-transform: uppercase; padding: 4px 12px;
+        border-radius: 20px; margin-bottom: 16px;
+      }
+      .detail-hero__title {
+        font-family: var(--font-display);
+        font-size: clamp(22px, 4vw, 38px);
+        font-weight: 900; color: #fff;
+        line-height: 1.2; letter-spacing: -0.5px; max-width: 780px;
+      }
+      .detail-hero__meta {
+        display: flex; align-items: center; gap: 12px;
+        margin-top: 18px; flex-wrap: wrap;
+      }
+      .detail-hero__author { display: flex; align-items: center; gap: 8px; }
+      .detail-hero__avatar {
+        width: 28px; height: 28px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+      }
+      .detail-hero__author-name { color: #ddd; font-size: 13px; }
+      .detail-hero__dot         { color: #666; font-size: 12px; }
+      .detail-hero__date        { color: #aaa; font-size: 12px; }
+      .detail-hero__readtime    { color: #aaa; font-size: 12px; }
+
+      /* Back button */
+      .detail-back-wrap {
+        padding: 26px clamp(20px, 6vw, 80px) 0;
+      }
+      .detail-back-btn {
+        text-decoration: none;
+        display: inline-flex; align-items: center; gap: 8px;
+        background: var(--white); border: 1.5px solid var(--border);
+        border-radius: 50px; padding: 8px 18px;
+        font-size: 13px; font-weight: 600; color: var(--ink-mid);
+        font-family: var(--font-body); cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .detail-back-btn:hover {
+        background: var(--purple); color: #fff; border-color: var(--purple);
+      }
+
+      /* ── Article
+         Right padding = sidebar width + gap + right offset
+         so text never goes under the sidebar ── */
+      .detail-article {
+        padding: 32px clamp(20px, 6vw, 80px) 100px;
+        /* Reserve space on the right for the fixed sidebar */
+        padding-right: calc(var(--sidebar-w) + var(--sidebar-gap) + var(--sidebar-right) + 20px);
+        max-width: 1200px;
+      }
+      .detail-excerpt {
+        font-family: var(--font-display);
+        font-size: clamp(15px, 1.8vw, 18px);
+        font-style: italic; font-weight: 300;
+        color: var(--ink-mid); line-height: 1.75;
+        border-left: 4px solid var(--purple);
+        padding-left: 22px; margin-bottom: 32px;
+      }
+      .pt-normal {
+        font-size: clamp(13.5px, 1.4vw, 15.5px);
+        color: #4b5563; font-family: var(--font-body);
+        line-height: 1.85; margin-bottom: 12px;
+      }
+      .pt-h2 {
+        font-family: var(--font-display); font-weight: 700;
+        color: var(--ink); font-size: clamp(16px, 1.8vw, 19px);
+        margin-top: 28px; margin-bottom: 8px; line-height: 1.3;
+      }
+      .pt-h3 {
+        font-family: var(--font-display); font-weight: 700;
+        color: var(--ink-mid); font-size: clamp(14px, 1.5vw, 16px);
+        margin-top: 20px; margin-bottom: 6px; line-height: 1.35;
+      }
+      .pt-strong { font-weight: 700; color: var(--ink); }
+
+      /* ── Sidebar — position:fixed, stays put while page scrolls ── */
+      .detail-sidebar {
+        position: fixed;
+        top: 55%;
+        transform: translateY(-50%);
+        right: var(--sidebar-right);
+        width: var(--sidebar-w);
+        z-index: 100;
+      }
+      .detail-sidebar__header {
+        display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+      }
+      .detail-sidebar__eyebrow {
+        font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+        text-transform: uppercase; color: var(--purple-light); white-space: nowrap;
+      }
+      .detail-sidebar__line { flex: 1; height: 1px; background: var(--border); }
+      .detail-sidebar__cards { display: flex; flex-direction: column; gap: 18px; }
+
+      /* ── Related Card ── */
+      .related-card {
+        background: var(--white); border-radius: 14px; overflow: hidden;
+        border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+        cursor: pointer;
+        transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+      }
+      .related-card--hovered {
+        box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: transparent;
+      }
+      .related-card__thumb { position: relative; height: 130px; overflow: hidden; }
+      .related-card__img {
+        width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;
+      }
+      .related-card__img--hovered { transform: scale(1.07); }
+      .related-card__tag {
+        position: absolute; top: 9px; left: 9px; color: #fff;
+        font-size: 9px; font-weight: 700; letter-spacing: 0.8px;
+        text-transform: uppercase; padding: 3px 9px; border-radius: 20px;
+      }
+      .related-card__body { padding: 13px 14px 15px; }
+      .related-card__title {
+        font-family: var(--font-display); font-size: 13.5px; font-weight: 700;
+        color: var(--ink); line-height: 1.35; margin-bottom: 7px;
+        display: -webkit-box; -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .related-card__excerpt {
+        font-size: 11.5px; color: var(--ink-soft); line-height: 1.6;
+        display: -webkit-box; -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px;
+      }
+      .related-card__footer {
+        display: flex; align-items: center; justify-content: space-between;
+        padding-top: 10px; border-top: 1px solid var(--border);
+      }
+      .related-card__readtime { font-size: 11px; color: #bbb; }
+      .related-card__read-link {
+        font-size: 11px; font-weight: 700;
+        display: inline-flex; align-items: center; gap: 3px;
+      }
+
+      /* ── Hide fixed sidebar on narrow screens ── */
+      @media (max-width: 1100px) {
+        .detail-sidebar { display: none; }
+        .detail-article { padding-right: clamp(20px, 6vw, 80px); }
+      }
+
+      /* ══════════════════════════════════════════
+         LIST PAGE
+      ══════════════════════════════════════════ */
+
+      /* Hero */
+      .blog-hero {
+        position: relative; text-align: center;
+        padding: clamp(100px, 12vw, 140px) clamp(20px, 6vw, 80px) clamp(40px, 5vw, 60px);
+        overflow: hidden;
+      }
+      .blog-hero__noise {
+        position: absolute; inset: 0; pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      }
+      .blog-hero__glow {
+        position: absolute; border-radius: 50%; filter: blur(80px);
+        pointer-events: none; opacity: 0.18;
+      }
+      .blog-hero__glow--a { width: 400px; height: 400px; background: var(--purple-light); top: -100px; left: -80px; }
+      .blog-hero__glow--b { width: 300px; height: 300px; background: #a78bfa; bottom: -60px; right: -40px; }
+      .blog-hero__inner {
+        position: relative; max-width: 620px; margin: 0 auto;
+        opacity: 0; transform: translateY(28px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+      .blog-hero--visible .blog-hero__inner { opacity: 1; transform: translateY(0); }
+      .blog-hero__eyebrow {
+        font-size: 11px; font-weight: 600; letter-spacing: 3px;
+        text-transform: uppercase; color: var(--purple-light); margin-bottom: 14px;
+      }
+      .blog-hero__title {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: clamp(32px, 5.5vw, 52px);
+        font-weight: 900; color: var(--ink);
+        line-height: 1.1; letter-spacing: -1px; margin-bottom: 18px;
+      }
+      .blog-hero__title--accent {
+        font-style: italic;
+        background: linear-gradient(135deg, var(--purple), var(--purple-light));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      }
+      .blog-hero__sub {
+        font-size: clamp(14px, 1.6vw, 16px); color: var(--ink-soft);
+        line-height: 1.75; font-weight: 300; max-width: 460px; margin: 0 auto;
+      }
+
+      /* Filter bar */
+      .filter-bar {
+        display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+        padding: 0 clamp(20px, 6vw, 80px) clamp(28px, 4vw, 40px);
+        opacity: 0; transform: translateY(16px);
+        transition: opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s;
+      }
+      .filter-bar--visible { opacity: 1; transform: translateY(0); }
+      .filter-pill {
+        font-family: var(--font-body); font-size: 13px; font-weight: 500;
+        color: var(--ink-soft); background: var(--white); border: 1.5px solid var(--border);
+        border-radius: 50px; padding: 7px 18px; cursor: pointer; transition: all 0.2s ease;
+      }
+      .filter-pill:hover { border-color: var(--purple-light); color: var(--purple); background: var(--purple-pale); }
+      .filter-pill--active { background: var(--purple); color: var(--white); border-color: var(--purple); }
+
+      /* Grid */
+      .blog-grid-wrap {
+        padding: 0 clamp(16px, 4vw, 48px) 100px;
+        max-width: 1200px; margin: 0 auto;
+      }
+      .blog-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
+      }
+      @media (max-width: 1024px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 640px)  { .blog-grid { grid-template-columns: 1fr; } }
+      .blog-empty {
+        text-align: center; padding: 80px 0;
+        color: var(--ink-soft); font-size: 15px; font-style: italic;
+      }
+
+      /* Blog card */
+      .blog-card {
+        background: var(--white); border-radius: var(--radius); overflow: hidden;
+        display: flex; flex-direction: column;
+        box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+        opacity: 0; transform: translateY(36px);
+        transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .blog-card--visible  { opacity: 1; transform: translateY(0); }
+      .blog-card--hovered  { box-shadow: var(--shadow-lg); border-color: transparent; }
+      .blog-card__thumb    { position: relative; height: 200px; overflow: hidden; flex-shrink: 0; }
+      .blog-card__img      { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s ease; }
+      .blog-card__img--hovered { transform: scale(1.07); }
+      .blog-card__thumb-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(15,10,30,0.4) 0%, transparent 60%);
+      }
+      .blog-card__tag {
+        position: absolute; top: 12px; left: 12px; color: #fff;
+        font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+        text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+      }
+      .blog-card__readtime {
+        position: absolute; bottom: 10px; right: 12px;
+        background: rgba(0,0,0,0.5); color: #fff;
+        font-size: 10px; padding: 3px 9px; border-radius: 20px; backdrop-filter: blur(4px);
+      }
+      .blog-card__body {
+        padding: 20px 20px 22px; flex: 1;
+        display: flex; flex-direction: column; gap: 10px;
+      }
+      .blog-card__author-row { display: flex; align-items: center; gap: 8px; }
+      .blog-card__avatar {
+        width: 24px; height: 24px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
+      }
+      .blog-card__author-name { font-size: 12px; color: var(--ink-soft); }
+      .blog-card__dot  { color: #ccc; font-size: 10px; }
+      .blog-card__date { font-size: 12px; color: #aaa; }
+      .blog-card__title {
+        font-family: font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 17px; font-weight: 700;
+        color: var(--ink); line-height: 1.3; letter-spacing: -0.3px;
+        display: -webkit-box; -webkit-line-clamp: 2;f
+        -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .blog-card__excerpt {
+        font-size: 13px; color: var(--ink-soft); line-height: 1.65; flex: 1;
+        display: -webkit-box; -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .blog-card__footer {
+        margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .blog-card__read-link {
+        text-decoration: none; font-size: 13px; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 5px; transition: gap 0.2s ease;
+      }
+      .blog-card__read-link:hover { gap: 9px; }
+      .blog-card__badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+
+      @media (max-width: 860px) { .blog-grid-wrap { padding: 0 20px 60px; } }
+    `}</style>
+  )
 }

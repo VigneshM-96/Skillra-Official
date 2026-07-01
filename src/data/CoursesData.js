@@ -20,51 +20,58 @@ export const COURSES = {
           {
             heading: "COURSE DESCRIPTION",
             paras: [
-              "The AI Medical Coding Course is a career-oriented program that blends traditional medical coding knowledge with modern Artificial Intelligence tools used in hospitals and healthcare companies.",
-              "This course is designed to help you master ICD-10-CM, CPT, and HCPCS coding systems while also learning how AI-powered tools are transforming medical coding workflows.",
-              "With real-time case studies, hands-on training, and internship opportunities, this AI Medical Coding Course prepares you for high-demand roles in hospitals, insurance companies, and medical coding firms.",
+              "The AI Medical Coding Course combines traditional medical coding concepts with modern AI-powered healthcare technologies used in hospitals and insurance companies This training program helps learners build strong knowledge in ICD-10-CM, CPT, and HCPCS coding systems while understanding how Artificial Intelligence is improving coding accuracy, productivity, and healthcare documentation workflows.",
+              "This medical coding course in chennai with 100% placement provides practical learning through live case studies, hands-on assignments, and internship opportunities that help students prepare for real healthcare industry roles.",
+              "Whether you are starting your career or planning to switch to the healthcare industry, this medical coding course in chennai offers job-oriented training with practical exposure and industry-relevant skills."
             ],
           },
+          
+            {
+  heading: "WHY CHOOSE THIS COURSE:",
+  paras: [
+    "Industry-focused curriculum with AI-integrated learning. Internship support for practical industry exposure. Hands-on practice using real medical records. Beginner-friendly training structure. CPC certification preparation guidance. Growing career opportunities in healthcare. Placement support and interview preparation. Training by experienced healthcare professionals. Students looking for a trusted medical coding course with job placement choose this program because of its practical learning approach and career-focused training model."
+  ],
+},
           {
-            heading: "WHY CHOOSE THIS COURSE:",
-            paras: [
-              "Industry-relevant curriculum with AI integration. Internship included for real-world exposure. Hands-on training with live medical records. Designed for beginners & non-medical students. Focus on CPC certification preparation. High-demand career opportunity in healthcare.",
-            ],
-          },
+  heading: "WHAT WILL YOU LEARN:",
+  paras: [
+    "Understand healthcare systems and medical coding fundamentals. Master ICD-10-CM diagnosis coding guidelines. Learn CPT procedure coding concepts. Gain knowledge of HCPCS Level II coding. Work with AI-powered medical coding tools. Interpret clinical documentation correctly. Improve coding accuracy and productivity using automation. Prepare for CPC certification exams. Gain practical exposure through internship projects."
+  ],
+},
           {
-            heading: "WHAT WILL YOU LEARN:",
-            paras: [
-              "Understand the fundamentals of medical coding and healthcare systems. Master ICD-10-CM diagnosis coding guidelines. Learn CPT coding for procedures and services. Gain knowledge of HCPCS Level II coding. Work with AI-based medical coding tools. Interpret clinical documentation accurately. Improve coding speed and accuracy using automation. Prepare for CPC certification exams. Gain real-time experience through internship.",
-            ],
-          },
+  heading: "WHO CAN JOIN:",
+  paras: [
+    "This program is suitable for students from any educational background, life science and medical graduates, job seekers looking for stable career opportunities, career switchers entering the healthcare field, and anyone interested in healthcare technology and AI. If you are searching for a medical coding course in Chennai with placement support, this training program offers practical learning, internship exposure, and placement-focused guidance. No prior medical background is required."
+  ],
+},
           {
-            heading: "WHO CAN JOIN:",
-            paras: [
-              "This course is perfect for: Students (Any Degree), Life science & medical graduates, Job seekers looking for stable careers, Career switchers, and Anyone interested in healthcare & AI. No prior medical background is required.",
-            ],
-          },
-          {
-            heading: "CAREER OPPORTUNITIES",
-            paras: [
-              "After completing this course, you can apply for roles such as: Medical Coder, AI Medical Coding Specialist, Coding Analyst, Healthcare Documentation Specialist, and Insurance Claims Analyst.",
-            ],
-          },
+  heading: "CAREER OPPORTUNITIES",
+  paras: [
+    "After completing the course, students can apply for positions such as", "Medical Coder", "AI Medical Coding Specialist", "Coding Analyst", "Healthcare Documentation Executive", "Insurance Claims Analyst", "The demand for skilled coders is continuously increasing in the healthcare industry, making this medical coding course in Chennai with placement support an excellent career choice for freshers and graduates."
+  ],
+},
           {
             heading: "CERTIFICATION & INTERNSHIP",
             paras: [
-              "Course Completion Certificate, CPC Exam Preparation Support, Internship Certificate, and Real-time project experience.",
-            ],
+  "Course Completion Certificate",
+  "CPC Exam Preparation Support",
+  "Internship Certificate",
+  "Real-time project experience"
+],
           },
           {
             heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "AI-based coding platforms, Electronic Health Records (EHR), Medical billing software, and Coding automation tools.",
-            ],
+  "AI-based coding platforms",
+  "Electronic Health Records (EHR)",
+  "Medical billing software",
+  "Coding automation tools"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
             paras: [
-              "100% Practical Training | Updated Industry Curriculum | AI Integrated Learning | Career-Oriented Approach | Job Assistance Support.",
+              "100% Practical Training | Updated Industry Curriculum | AI Integrated Learning | Career-Oriented Approach | Job Assistance Support | Internship with Real-Time Projects | Students looking for flexible medical coding courses online can also attend live instructor-led online sessions with practical project training.",
             ],
           },
         ],
@@ -103,12 +110,18 @@ export const COURSES = {
           {
             heading: "FREQUENTLY ASKED QUESTIONS",
             paras: [
-              "Q: What is the Skillra AI Medical Coding Course? — A: It is a comprehensive training program designed to teach medical coding using ICD-10-CM, CPT, and HCPCS, along with modern AI tools used in the healthcare industry.",
-              "Q: Who can join? — A: Anyone can enroll, including students (any degree), life science graduates, job seekers, and career switchers. No prior medical background is required.",
-              "Q: Does Skillra provide internship? — A: Yes, Skillra offers a hands-on internship program as part of the course to give you real-time industry experience.",
-              "Q: Is the course beginner-friendly? — A: Absolutely! The course is designed from basic to advanced level, making it perfect for beginners.",
-              "Q: Will Skillra help me prepare for CPC certification? — A: Yes, Skillra provides CPC exam preparation support, including guidance, practice questions, and expert training.",
-            ],
+  "Q: Why choose this Medical Coding Course in Chennai with placement support? — A: This course offers practical training, internship opportunities, CPC preparation support, and placement-focused learning for students, freshers, and graduates.",
+  
+  "Q: Who can join this Medical Coding Course in Chennai? — A: Students, graduates, life science candidates, job seekers, and career changers can join this program. No prior medical background is required.",
+  
+  "Q: Does this Medical Coding Course include internship training? — A: Yes, students receive internship opportunities with practical healthcare coding experience and real-time project exposure.",
+  
+  "Q: What are the Medical Coding course details covered in this training? — A: The course includes ICD-10-CM, CPT, HCPCS, AI-powered coding tools, healthcare documentation, and practical case-study-based coding practice.",
+  
+  "Q: Are Medical Coding courses online available? — A: Yes, both classroom and live online training options are available with expert mentorship and practical learning sessions.",
+  
+  "Q: Will Skillra help me prepare for CPC certification? — A: Yes, Skillra provides CPC exam preparation support with guidance, practice sessions, mock tests, and expert mentoring."
+]
           },
         ],
       },
@@ -163,14 +176,20 @@ export const COURSES = {
           {
             heading: "CERTIFICATION & INTERNSHIP",
             paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
+  "Course Completion Certificate",
+  "Internship Certificate",
+  "Real-time project experience",
+  "Job-oriented training"
+],
           },
           {
             heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "Electronic Health Records (EHR), Medical billing software, Clearinghouse systems, and AI-based billing tools.",
-            ],
+  "Electronic Health Records (EHR)",
+  "Medical billing software",
+  "Clearinghouse systems",
+  "AI-based billing tools"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
@@ -273,14 +292,20 @@ export const COURSES = {
           {
             heading: "CERTIFICATION & INTERNSHIP",
             paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
+  "Course Completion Certificate",
+  "Internship Certificate",
+  "Real-time project experience",
+  "Job-oriented training"
+],
           },
           {
             heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "Electronic Health Records (EHR), AI transcription tools, Medical documentation software, and Voice recognition systems.",
-            ],
+  "Electronic Health Records (EHR)",
+  "AI transcription tools",
+  "Medical documentation software",
+  "Voice recognition systems"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
@@ -389,14 +414,23 @@ export const COURSES = {
           {
             heading: "CERTIFICATION & INTERNSHIP",
             paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
+  "Course Completion Certificate",
+  "Internship Certificate",
+  "Real-time project experience",
+  "Job-oriented training"
+],
           },
           {
             heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "HTML, CSS, JavaScript, React.js / Angular, Node.js & Express.js, MongoDB, and Git & GitHub.",
-            ],
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "React.js / Angular",
+  "Node.js & Express.js",
+  "MongoDB",
+  "Git & GitHub"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
@@ -470,15 +504,15 @@ export const COURSES = {
           {
             heading: "COURSE DESCRIPTION",
             paras: [
-              "The Data Analytics Course is a comprehensive program that teaches you how to collect, process, analyze, and visualize data to solve real-world business problems.",
-              "This course covers essential tools like Excel, SQL, Python, and Power BI/Tableau, along with data cleaning, data visualization, and statistical analysis. You will gain hands-on experience working with real datasets and business case studies.",
+              "The Data Analytics Course in Chennai with Certification is a comprehensive program that teaches you how to collect, process, analyze, and visualize data to solve real-world business problems.",
+              "This course covers essential tools like Excel, SQL, Python, and Power BI/Tableau, along with data cleaning, data visualization, and statistical analysis You will gain hands-on experience working with real datasets and business case studies.",
               "With practical training, projects, and internship support, this Data Analytics Course prepares you for high-demand roles in IT, finance, healthcare, e-commerce, and more.",
             ],
           },
           {
             heading: "WHY CHOOSE THIS COURSE:",
             paras: [
-              "Industry-focused curriculum with real-time projects. Hands-on training with tools like Excel, SQL, Python. Internship included for practical exposure. Beginner-friendly learning path. High-demand career opportunities. Focus on real-world business insights.",
+              "Industry-focused curriculum with real-time projects. Hands-on training with tools like Excel, SQL, Python. Internship included for practical exposure. Beginner-friendly learning path. High-demand career opportunities. Focus on real-world business insights. Recognized data analytics certification in Chennai.",
             ],
           },
           {
@@ -490,31 +524,38 @@ export const COURSES = {
           {
             heading: "WHO CAN JOIN",
             paras: [
-              "This course is ideal for: Students (Any Degree), IT & non-IT graduates, Job seekers, Career switchers, and Anyone interested in data & analytics. No prior experience is required.",
+              "This Data Analytics Course in Chennai is ideal for: Students (Any Degree), IT & non-IT graduates, Job seekers, Career switchers, and Anyone interested in data & analytics.",
             ],
           },
           {
             heading: "CAREER OPPORTUNITIES",
             paras: [
-              "After completing this course, you can apply for roles such as: Data Analyst, Business Analyst, Data Executive, Reporting Analyst, and Junior Data Scientist.",
+              "After completing the Data Analytics Course in Chennai with Certification, you can apply for roles such as: Data Analyst, Business Analyst, Data Executive, Reporting Analyst, and Junior Data Scientist.",
             ],
           },
           {
             heading: "CERTIFICATION & INTERNSHIP",
             paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
+  "Course Completion Certificate",
+  "Internship Certificate",
+  "Real-time project experience",
+  "Job-oriented training",
+  "Industry-recognized data analytics certification"
+],
           },
           {
             heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "Microsoft Excel, SQL (MySQL / PostgreSQL), Python (Pandas, NumPy), and Power BI / Tableau.",
-            ],
+  "Microsoft Excel",
+  "SQL (MySQL / PostgreSQL)",
+  "Python (Pandas, NumPy)",
+  "Power BI / Tableau"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
             paras: [
-              "100% Practical Training | Updated Industry Curriculum | Hands-on Project Learning | Career-Focused Approach | Placement Assistance Support.",
+              "100% Practical Training | Updated Industry Curriculum | Hands-on Project Learning | Career-Focused Approach | Placement Assistance Support |  Complete data analytics course details with practical exposure",
             ],
           },
         ],
@@ -553,13 +594,20 @@ export const COURSES = {
           {
             heading: "FREQUENTLY ASKED QUESTIONS",
             paras: [
-              "Q: What is the Skillra Data Analytics Course? — A: It is a job-oriented program that teaches data analysis, visualization, and tools like Excel, SQL, Python, and Power BI.",
-              "Q: Who can join? — A: Anyone can join, including students, graduates, and professionals. No prior experience is required.",
-              "Q: Does Skillra provide internship? — A: Yes, Skillra offers a hands-on internship program for real-time data analytics experience.",
-              "Q: Is this course beginner-friendly? — A: Yes, the course is designed for beginners as well as professionals.",
-              "Q: What are the job opportunities? — A: Data Analyst, Business Analyst, and Reporting Analyst.",
-              "Q: Does Skillra provide placement support? — A: Yes, Skillra provides placement assistance and career guidance.",
-            ],
+  "Q: What is the Skillra Data Analytics Course? — A: The Skillra Data Analytics Course in Chennai with Certification is a job-oriented program that teaches data analysis, visualization, and industry-standard tools such as Excel, SQL, Python, and Power BI.",
+
+  "Q: Who can join Skillra's Data Analytics Course? — A: Anyone can join, including students, graduates, freshers, and working professionals. No prior experience is required.",
+
+  "Q: Does Skillra provide internship in this course? — A: Yes, Skillra offers a hands-on internship program that provides real-time data analytics experience through practical projects and industry exposure.",
+
+  "Q: What will I learn in this course? — A: You will learn data analysis fundamentals, Excel, SQL, Python, data visualization tools, dashboard creation, reporting techniques, and real-time project implementation.",
+
+  "Q: Is this course beginner-friendly? — A: Yes, the Data Analytics Course in Chennai is designed for beginners as well as professionals looking to upgrade their analytical skills.",
+
+  "Q: What are the job opportunities after this course? — A: After completing the course, you can apply for roles such as Data Analyst, Business Analyst, Reporting Analyst, Data Visualization Analyst, and Junior Data Consultant.",
+
+  "Q: Does Skillra provide placement support? — A: Yes, Skillra provides placement assistance, resume preparation, interview guidance, internship opportunities, and career support."
+],
           },
         ],
       },
@@ -605,8 +653,13 @@ export const COURSES = {
           {
             heading: "WHO CAN JOIN THIS COURSE:",
             paras: [
-              "This course is ideal for students of any degree, IT & non-IT graduates, career switchers, job seekers in tech, and anyone interested in AI & data science. No prior experience is required.",
-            ],
+  "This course is ideal for students of any degree",
+  "IT & non-IT graduates",
+  "Career switchers",
+  "Job seekers in tech",
+  "Anyone interested in AI & data science",
+  "No prior experience is required"
+],
           },
         ],
       },
@@ -741,14 +794,20 @@ export const COURSES = {
           {
             heading: "CERTIFICATION & PRACTICAL EXPOSURE",
             paras: [
-              "Course Completion Certificate, Real-time project experience, Job-oriented practical training, and Placement assistance support.",
-            ],
+  "Course Completion Certificate",
+  "Real-time project experience",
+  "Job-oriented practical training",
+  "Placement assistance support"
+],
           },
           {
             heading: "TOOLS & SOFTWARE COVERED",
             paras: [
-              "Tally Prime / Tally ERP, GST Portal usage, Accounting & billing tools, and Excel for reporting.",
-            ],
+  "Tally Prime / Tally ERP",
+  "GST Portal usage",
+  "Accounting & billing tools",
+  "Excel for reporting"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
@@ -805,117 +864,131 @@ export const COURSES = {
     otherCourses: ["financial-modeling", "full-stack-development", "data-analytics"],
   },
 
-  "sap-development-course": {
-    title: "SAP Development Course with Internship",
-    category: "SAP Development Course",
-    rating: 4.8,
-    timing: "Online / Offline",
-    students: "250+",
-    duration: "3.5 Months",
-    color: "#10b981",
-    heroImage: "coursefinance.jpg",
-    tabs: {
-      Overview: {
-        sections: [
-          {
-            heading: "COURSE DESCRIPTION",
-            paras: [
-              "The SAP Development Course is a comprehensive training program that teaches you how to develop, customize, and manage applications within SAP systems.",
-              "This course focuses on ABAP (Advanced Business Application Programming), SAP modules, and real-time development practices used in global organizations. You will learn how to build reports, enhance SAP applications, and work with enterprise-level data.",
-              "With hands-on projects, expert guidance, and internship support, this SAP Development Course prepares you for roles in top IT companies, MNCs, and consulting firms.",
-            ],
-          },
-          {
-            heading: "WHY CHOOSE THIS COURSE:",
-            paras: [
-              "Industry-relevant SAP development curriculum. Hands-on training with real-time projects. Internship included for practical exposure. Beginner-friendly programming concepts. High-demand IT career opportunities. Focus on real-world SAP implementation.",
-            ],
-          },
-          {
-            heading: "WHAT WILL YOU LEARN:",
-            paras: [
-              "Understand SAP architecture and system landscape. Learn ABAP programming fundamentals. Develop reports, forms, and interfaces. Work with data dictionary and database tables. Customize SAP applications. Debug and optimize SAP programs. Gain hands-on experience through real-time projects. Prepare for SAP developer roles.",
-            ],
-          },
-          {
-            heading: "WHO CAN JOIN:",
-            paras: [
-              "This course is ideal for: Students (IT / Non-IT background), Software developers & programmers, Career switchers into IT, Job seekers in software development, and Anyone interested in SAP careers. Basic programming knowledge is helpful but not mandatory.",
-            ],
-          },
-          {
-            heading: "CAREER OPPORTUNITIES",
-            paras: [
-              "After completing this course, you can apply for roles such as: SAP ABAP Developer, SAP Technical Consultant, SAP Programmer, Junior SAP Developer, and ERP Developer.",
-            ],
-          },
-          {
-            heading: "CERTIFICATION & INTERNSHIP",
-            paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
-          },
-          {
-            heading: "TOOLS & TECHNOLOGIES COVERED",
-            paras: [
-              "SAP ERP system, ABAP Workbench, SAP GUI, Data Dictionary (DDIC), and Debugging tools.",
-            ],
-          },
-          {
-            heading: "COURSE HIGHLIGHTS",
-            paras: [
-              "100% Practical Training | Updated SAP Curriculum | Real-time Project Learning | Career-Focused Training | Placement Assistance Support.",
-            ],
-          },
-        ],
-      },
-      Curriculum: {
-        sections: [
-          {
-            heading: "COURSE MODULES",
-            paras: [
-              "Module 1: Introduction to SAP — Overview of SAP ERP, SAP system architecture, SAP modules and functionalities, introduction to SAP development.",
-              "Module 2: ABAP Programming Basics — Introduction to ABAP language, data types and variables, control statements, internal tables and structures.",
-              "Module 3: Data Dictionary (DDIC) — Tables and views, data elements and domains, search helps and lock objects.",
-              "Module 4: Reports Development — Classical reports, interactive reports, ALV reports, selection screens.",
-              "Module 5: Forms & Interfaces — Smart Forms & SAP Scripts, data transfer techniques, interfaces (IDocs & BAPIs basics).",
-              "Module 6: Enhancements & Debugging — User exits and enhancements, debugging techniques, performance optimization.",
-              "Module 7: Practical Training & Internship — Real-time SAP projects, case studies, industry exposure, performance evaluation.",
-            ],
-          },
-        ],
-      },
-      
-      Reviews: {
-        sections: [
-          {
-            heading: "STUDENT REVIEWS",
-            paras: [
-              "⭐⭐⭐⭐⭐ — \"SAP jobs pay very well. This course gave me the foundation to crack my first SAP consultant interview!\" — Venkat R.",
-              "⭐⭐⭐⭐ — \"The ABAP modules are thorough and the Fiori section is a great bonus. Highly recommended.\" — Preethi S.",
-              "⭐⭐⭐⭐⭐ — \"Best SAP training in the city. Small batch size means individual attention from the instructor.\" — Naveen K.",
-            ],
-          },
-        ],
-      },
-      FAQs: {
-        sections: [
-          {
-            heading: "FREQUENTLY ASKED QUESTIONS",
-            paras: [
-              "Q: What is the Skillra SAP Development Course? — A: It is a career-oriented program that teaches SAP ABAP programming, development, and customization.",
-              "Q: Who can join? — A: Anyone can join, including students, graduates, and professionals. Basic programming knowledge is helpful but not mandatory.",
-              "Q: Does Skillra provide internship? — A: Yes, Skillra offers a hands-on internship program for real-time SAP development experience.",
-              "Q: Is this course beginner-friendly? — A: Yes, the course starts from fundamentals and progresses to advanced topics.",
-              "Q: Will I get certification? — A: Yes, you will receive both course completion and internship certificates.",
-              "Q: Do I need coding knowledge? — A: Basic knowledge is helpful, but beginners can also learn easily with proper guidance.",
-            ],
-          },
-        ],
-      },
+
+"sap-development-course": {
+  title: "SAP Development Course with Internship & Placement Assistance",
+  category: "SAP Development Course",
+  rating: 4.8,
+  timing: "Online / Offline",
+  students: "250+",
+  duration: "3.5 Months",
+  color: "#10b981",
+  heroImage: "coursefinance.jpg",
+  tabs: {
+    Overview: {
+      sections: [
+        {
+          heading: "COURSE DESCRIPTION",
+          paras: [
+            "The SAP Development Course at Skillra is a complete industry-focused training program that helps students understand SAP systems, ABAP programming, and enterprise application development If you are searching for the best sap course in chennai with placement, this course gives you the perfect mix of technical skills, practical training, and internship exposure.",
+            "Through structured learning, real-time projects, and expert mentoring, students will learn how SAP applications are developed, customized, and maintained in global companies This program covers ABAP programming, SAP modules, reports, forms, interfaces, debugging, and database handling.",
+            "Whether you are a beginner or an IT professional looking for career growth, this sap course in chennai helps you gain practical expertise and job-ready skills required in leading IT companies and MNCs.",
+          ]
+        },
+        {
+          heading: "WHY CHOOSE THIS COURSE",
+          paras: [
+            "Industry-oriented SAP curriculum designed by experts. Hands-on practical training with live projects. Internship support for real-time industry exposure. Beginner-friendly learning approach. High-demand career opportunities in SAP development. Training focused on real-world implementation. Placement assistance and interview preparation. Learn from experienced SAP professionals. Skillra is widely preferred by students searching for the best sap course in chennai with placement because of its practical training model and career-focused approach."
+          ]
+        },
+        {
+          heading: "WHAT WILL YOU LEARN",
+          paras: [
+            "Understand SAP architecture and SAP landscapes. Learn ABAP programming concepts from basic to advanced levels. Develop reports, forms, and SAP interfaces. Work with SAP Data Dictionary and database tables. Customize SAP applications based on business requirements. Learn debugging and performance optimization techniques. Gain practical exposure through real-time projects. Prepare for SAP Developer and ERP-related roles."
+          ]
+        },
+        {
+          heading: "WHO CAN JOIN",
+          paras: [
+            "This training program is suitable for", "students from IT and Non-IT backgrounds", "software developers and programmers", "career switchers entering the IT industry", "job seekers looking for SAP opportunities", "professionals interested in ERP technologies", "If you are looking for a career-oriented sap course with placement, Skillra provides practical learning, internship opportunities, and placement support to help students become industry-ready."
+          ]
+        },
+        {
+          heading: "CAREER OPPORTUNITIES",
+          paras: [
+            "After completing the training, students can apply for roles such as", "SAP ABAP Developer", "SAP Technical Consultant", "SAP Programmer", "Junior SAP Developer", "ERP Developer","SAP Support Consultant", "As the demand for SAP professionals continues to grow, this course helps build a rewarding and stable IT career."
+          ]
+        },
+        {
+          heading: "CERTIFICATION & INTERNSHIP",
+          paras: [
+            "Course Completion Certificate",
+            "Internship Certificate",
+            "Real-Time Project Experience",
+            "Job-Oriented Practical Training",
+          ]
+        },
+        {
+          heading: "TOOLS & TECHNOLOGIES COVERED",
+          paras: [
+            "SAP ERP System",
+            "ABAP Workbench",
+            "SAP GUI",
+            "Data Dictionary (DDIC)",
+            "SAP Debugging Tools",
+            "SAP Reporting Tools"
+          ]
+        },
+        {
+          heading: "COURSE HIGHLIGHTS",
+          paras: [
+            "100% Practical Training | Updated Industry Curriculum | Internship with Real-Time Projects | Career-Focused Learning | Placement Assistance Support | Expert Mentorship | Flexible Learning Options"
+          ]
+        }
+      ]
     },
-    otherCourses: ["tally-gst", "data-analytics", "full-stack-development"],
+
+    Curriculum: {
+      sections: [
+        {
+          heading: "COURSE MODULES",
+          paras: [
+            "Module 1: Introduction to SAP — Overview of SAP ERP, SAP system architecture, SAP modules and functionalities, introduction to SAP development.",
+            "Module 2: ABAP Programming Basics — Introduction to ABAP language, data types and variables, control statements, internal tables and structures.",
+            "Module 3: Data Dictionary (DDIC) — Tables and views, data elements and domains, search helps and lock objects.",
+            "Module 4: Reports Development — Classical reports, interactive reports, ALV reports, selection screens.",
+            "Module 5: Forms & Interfaces — Smart Forms & SAP Scripts, data transfer techniques, interfaces (IDocs & BAPIs basics).",
+            "Module 6: Enhancements & Debugging — User exits and enhancements, debugging techniques, performance optimization.",
+            "Module 7: Practical Training & Internship — Real-time SAP projects, case studies, industry exposure, performance evaluation."
+          ]
+        }
+      ]
+    },
+
+    Reviews: {
+      sections: [
+        {
+          heading: "STUDENT REVIEWS",
+          paras: [
+            "⭐⭐⭐⭐⭐ — \"SAP jobs pay very well. This course gave me the foundation to crack my first SAP consultant interview!\" — Venkat R.",
+            "⭐⭐⭐⭐⭐ — \"The practical ABAP training and internship support helped me understand real-world SAP development.\" — Preethi S.",
+            "⭐⭐⭐⭐⭐ — \"Best SAP training experience. The trainer explained concepts clearly and provided excellent placement guidance.\" — Naveen K."
+          ]
+        }
+      ]
+    },
+
+    FAQs: {
+      sections: [
+        {
+          heading: "FREQUENTLY ASKED QUESTIONS",
+          paras: [
+            "Q: Why is Skillra considered one of the best SAP courses in Chennai with placement? — A: Skillra provides practical SAP ABAP training, internship support, live projects, and placement assistance, making it a preferred choice for SAP training.",
+            "Q: Who can join this SAP course in Chennai? — A: Students, freshers, graduates, software professionals, and career switchers can join. Basic programming knowledge is helpful but not mandatory.",
+            "Q: Does Skillra provide SAP course with placement support? — A: Yes, Skillra offers placement assistance including resume preparation, interview guidance, internship opportunities, and career support.",
+            "Q: What SAP course details are covered in this program? — A: The course covers SAP basics, ABAP programming, Data Dictionary, report development, forms, interfaces, debugging, enhancements, and real-time projects.",
+            "Q: Is this SAP course online available? — A: Yes, students can choose both classroom and live online SAP training with practical sessions and mentor guidance.",
+            "Q: Will I receive certification after completing the course? — A: Yes, students receive both course completion and internship certificates after successfully completing the training."
+          ]
+        }
+      ]
+    }
   },
+
+  otherCourses: ["tally-gst", "data-analytics", "full-stack-development"]
+},
+
+
 
   /* ══════════════════════════════════════════════════
      SELF DEVELOPMENT
@@ -967,14 +1040,20 @@ export const COURSES = {
           {
             heading: "CERTIFICATION & INTERNSHIP",
             paras: [
-              "Course Completion Certificate, Internship Certificate, Real-time project experience, and Job-oriented training.",
-            ],
+  "Course Completion Certificate",
+  "Internship Certificate",
+  "Real-time project experience",
+  "Job-oriented training"
+],
           },
           {
             heading: "TOOLS & TECHNOLOGIES COVERED",
             paras: [
-              "Figma, Adobe XD, Photoshop, and Wireframing & prototyping tools.",
-            ],
+  "Figma",
+  "Adobe XD",
+  "Photoshop",
+  "Wireframing & prototyping tools"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
@@ -1079,20 +1158,31 @@ export const COURSES = {
           {
             heading: "CERTIFICATION & PRACTICAL EXPOSURE",
             paras: [
-              "Course Completion Certificate, Practical skill-based training, Real-time activities & assessments, and Career guidance support.",
-            ],
+  "Course Completion Certificate",
+  "Practical skill-based training",
+  "Real-time activities & assessments",
+  "Career guidance support"
+],
           },
           {
             heading: "TOOLS & TRAINING METHODS",
             paras: [
-              "Interactive sessions, Group discussions, Role-play activities, Mock interviews, and Real-time feedback.",
-            ],
+  "Interactive sessions",
+  "Group discussions",
+  "Role-play activities",
+  "Mock interviews",
+  "Real-time feedback"
+],
           },
           {
             heading: "COURSE HIGHLIGHTS",
             paras: [
-              "100% Practical & Interactive Training | Structured Learning Approach | Confidence & Communication Focus | Career-Oriented Training | Interview Preparation Support.",
-            ],
+  "100% Practical & Interactive Training",
+  "Structured Learning Approach",
+  "Confidence & Communication Focus",
+  "Career-Oriented Training",
+  "Interview Preparation Support"
+],
           },
         ],
       },
@@ -1147,7 +1237,7 @@ export const COURSES = {
   },
 
   "digital-marketing-course": {
-    title: "Digital Marketing with Internship",
+    title: "Digital Marketing Course with Internship",
     category: "Digital Marketing",
     rating: 4.8,
     timing: "Online / Offline",
@@ -1161,33 +1251,66 @@ export const COURSES = {
           {
             heading: "COURSE DESCRIPTION",
             paras: [
-              "The Digital Marketing Course is a comprehensive program that teaches you how to promote brands, products, and services using online channels.",
-              "This course covers SEO, social media marketing (SMM), Google Ads, content marketing, email marketing, and analytics — along with real-time campaign management.",
-              "With hands-on training, live projects, and internship support, this course prepares you for roles in agencies, startups, corporate companies, or even freelance and business opportunities.",
+              "The Digital Marketing Course is a practical training program that teaches you how to promote businesses, brands, and services through online platforms and digital channels Our digital marketing course with placement combines practical learning, live projects, and internship exposure to help students gain real-world experience and job-ready skills.",
+              "Whether you are a beginner, job seeker, entrepreneur, or freelancer, this training program provides industry-relevant knowledge to build a successful career in online marketing Students looking for a flexible digital marketing course online can also attend live instructor-led sessions with practical assignments and project-based learning.",
+              
             ],
           },
           {
             heading: "WHY CHOOSE THIS COURSE:",
             paras: [
-              "Industry-relevant marketing curriculum with hands-on training using live campaigns. Internship included for real-time exposure with a beginner-friendly learning path — no technical background required.",
-              "Covers all major digital marketing channels with freelancing and business opportunities. 100% practical training with an updated marketing curriculum and placement assistance support.",
-            ],
+  "Industry-oriented digital marketing curriculum. Hands-on training with live campaigns. Internship support for practical exposure. Beginner-friendly learning approach. Covers all major digital marketing channels. Freelancing and business growth opportunities. Placement assistance and interview guidance. Training by experienced marketing professionals. This digital marketing course with placement is designed to help students understand real business marketing strategies through practical implementation and live campaign experience."
+],
           },
           {
             heading: "WHAT YOU WILL LEARN:",
             paras: [
-              "Understand the fundamentals of digital marketing. Learn Search Engine Optimization (SEO) techniques and run Google Ads and paid campaigns.",
-              "Manage social media marketing (SMM) across platforms and create content marketing strategies. Execute email marketing campaigns and analyze performance using analytics tools.",
-              "Gain real-time experience through live projects and internship exposure.",
-            ],
+  "Understand digital marketing fundamentals. Learn Search Engine Optimization (SEO) techniques. Run Google Ads and paid marketing campaigns. Manage social media marketing strategies across major platforms. Create effective content marketing plans. Execute email marketing campaigns. Analyze campaign performance using analytics tools. Gain real-time experience through live projects and internship training. Students interested in an advanced ai digital marketing course will also learn how AI tools are improving content creation, marketing automation, and campaign optimization."
+],
           },
           {
             heading: "WHO CAN JOIN THIS COURSE:",
             paras: [
-              "This course is ideal for students of any degree, job seekers, career switchers, business owners & entrepreneurs, and freelancers. No prior experience is required.",
-            ],
+  "This training program is ideal for", "students from any degree background", "job seekers and freshers", "career switchers", "business owners and entrepreneurs", "freelancers", "and content creators. If you are searching for a digital marketing course with placement, this program provides practical skills, internship opportunities, and career-focused learning. No prior experience is required."
+]
           },
-        ],
+          {
+  heading: "CAREER OPPORTUNITIES",
+  paras: [
+    "After completing the Digital Marketing Course, you can apply for roles such as", "Digital Marketing Executive", "SEO Analyst", "Social Media Manager", "PPC Specialist", "Content Marketing Executive", "Email Marketing Specialist", "The growing demand for online marketing professionals makes this digital marketing course with placement a valuable career choice for freshers and professionals."
+  ],
+},
+
+{
+  heading: "CERTIFICATION & INTERNSHIP",
+  paras: [
+    "Course Completion Certificate",
+    "Internship Certificate",
+    "Real-Time Campaign Experience",
+    "Job-Oriented Practical Training",
+    "This training program also includes a professional Digital Marketing Certificate that helps students showcase their marketing skills during interviews and job applications."
+  ],
+},
+
+{
+  heading: "TOOLS & TECHNOLOGIES COVERED",
+  paras: [
+    "Google Ads",
+    "Google Analytics",
+    "SEO Tools (Ahrefs / SEMrush Basics)",
+    "Social Media Platforms",
+    "Email Marketing Tools",
+    "AI-Powered Marketing Tools",
+    "Students looking for a professional Digital Marketing Certification Course will gain practical exposure to industry-standard marketing tools and strategies."
+  ],
+},
+{
+  heading: "COURSE HIGHLIGHTS",
+  paras: [
+    "100% Practical Training | Updated Marketing Curriculum | Live Campaign Learning | Career-Oriented Training | Internship with Real Projects | Placement Assistance Support | This Digital Marketing Course with Placement helps students build practical skills required for agencies, startups, corporate companies, and freelance careers."
+  ],
+}
+        ]
       },
       Curriculum: {
         sections: [
@@ -1262,15 +1385,22 @@ export const COURSES = {
           {
             heading: "FREQUENTLY ASKED QUESTIONS",
             paras: [
-              "Q: What is the Skillra Digital Marketing Course? A: It is a job-oriented program that teaches online marketing strategies, tools, and real-time campaign management.",
-              "Q: Who can join this course? A: Anyone can join, including students, professionals, and business owners. No prior experience is required.",
-              "Q: Does Skillra provide internship in this course? A: Yes, Skillra offers a hands-on internship program with real campaign experience.",
-              "Q: What will I learn? A: You will learn SEO, social media marketing, Google Ads, content marketing, and email marketing.",
-              "Q: Will I get certification? A: Yes, you will receive both course completion and internship certificates.",
-              "Q: Why choose Skillra for Digital Marketing? A: Skillra offers practical training, industry-relevant curriculum, real-time projects, internship opportunity, and job assistance.",
-              "Q: Can I start freelancing after this course? A: Yes, this course helps you start freelancing or even your own digital marketing business.",
-              "Q: How can I enroll? A: You can enroll through Skillra's official website or contact the support team.",
-            ],
+  "Q: What is this Digital Marketing Course with Placement? — A: This is a career-focused training program that teaches SEO, Google Ads, Social Media Marketing, Analytics, and real-time campaign management with internship support.",
+  
+  "Q: Who can join this Digital Marketing Course? — A: Anyone can join, including students, freshers, professionals, business owners, entrepreneurs, and freelancers. No prior experience is required.",
+  
+  "Q: Does this Digital Marketing Course include internship training? — A: Yes, students receive internship opportunities with practical exposure to live campaigns and real-world marketing projects.",
+  
+  "Q: What will I learn in this course? — A: You will learn SEO, Google Ads, Social Media Marketing, Content Marketing, Email Marketing, Analytics, and campaign management strategies.",
+  
+  "Q: Is this Digital Marketing Course online available? — A: Yes, students can choose both classroom and live online training with mentor guidance, practical assignments, and project-based learning.",
+  
+  "Q: Will I receive a Digital Marketing Certificate after completing the course? — A: Yes, students will receive both Course Completion and Internship Certificates after successfully completing the training.",
+  
+  "Q: Is this a Digital Marketing Certification Course for beginners? — A: Yes, the course starts with basic concepts and gradually covers advanced marketing strategies, making it suitable for beginners.",
+  
+  "Q: Can I start freelancing after completing this course? — A: Yes, this training helps students build practical skills required for freelancing, agency work, startup projects, and business marketing services."
+]
           },
         ],
       },

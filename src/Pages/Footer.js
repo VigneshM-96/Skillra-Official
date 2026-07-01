@@ -50,6 +50,7 @@ const QUICK_LINKS = [
   { label: "Career Guidance",  path: "/career"    },
   { label: "Course Offered",   path: "/courses"   },
   { label: "Books",            path: "/books"     },
+  { label: "Blogs",            path: "/blog"     },
   { label: "Contact Us",       path: "/contact-us"   },
 ];
 

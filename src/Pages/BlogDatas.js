@@ -1,6 +1,7 @@
 export const BLOG_POSTS = [
   {
-    id: "Career-Growth",
+    id: "the-best-career-focused-courses-to-help-you-get-a-job-faster",
+    slug: "best-career-focused-courses",
     tag: "Career Growth",
     tagColor: "#7c3aed",
     tagBg: "#ede9fe",
@@ -52,7 +53,8 @@ Your career is waiting. The question is just — which skill are you going to st
     authorColor: "#7c3aed",
   },
   {
-    id: "Healthcare-IT",
+    id: "best-ai-medical-scribing-course-chennai",
+    slug: "best-ai-medical-scribing-course-chennai",
     tag: "Healthcare IT",
     tagColor: "#0891b2",
     tagBg: "#e0f2fe",
@@ -100,7 +102,8 @@ Skillra's AI Medical Scribing course is built around current industry needs — 
     authorColor: "#0891b2",
   },
   {
-    id: "Data-Analytics",
+    id: "best-data-analytics-course-in-chennai-with-placement",
+    slug: "best-data-analytics-course-in-chennai-with-placement",
     tag: "Data Analytics",
     tagColor: "#059669",
     tagBg: "#d1fae5",
@@ -144,7 +147,8 @@ Your journey into the world of data starts today.`,
     authorColor: "#059669",
   },
   {
-    id: "Medical-Coding",
+    id: "best-ai-medical-coding-course-chennai",
+    slug: "best-medical-scribing-course-in-chennai",
     tag: "Medical Coding",
     tagColor: "#dc2626",
     tagBg: "#fee2e2",
@@ -197,7 +201,8 @@ Medical scribing is more than just a job. It is a career that plays a crucial ro
     authorColor: "#dc2626",
   },
   {
-    id: "AI-Future-Tech",
+    id: "why-ai-and-machine-learning-skills-need-2026",
+    slug: "why-ai-machine-learning-skills-matter-2026",
     tag: "AI & Future Tech",
     tagColor: "#d97706",
     tagBg: "#fef3c7",

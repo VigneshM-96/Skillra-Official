@@ -1,34 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemapschemas.org/sitemap/0.9">
-  <url>
-    <loc>https://www.skillra.com/</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://skillra.com/courses/ai-medical-coding-course</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://skillra.com/contact-us</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://skillra.com/about-us</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://skillra.com/books</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://skillra.com/blog</loc>
-    <lastmod>2026-04-22</lastmod>
-    <priority>0.5</priority>
-  </url>
-  <!-- add one <url> block for each page -->
+		<!--	created with www.mysitemapgenerator.com	-->
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://skillra.com/</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/about</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/contact</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/campus</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/placements</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/placement</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/career-guidance</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/books</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/blog</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+
+<url>
+	<loc>https://www.skillra.com/gallery</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+
+<url>
+	<loc>https://www.skillra.com/courses/ai-medical-coding-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/ai-medical-billing-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/ai-medical-scribing-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/tally-gst-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/sap-development-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/data-analytics-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/personality-development-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/full-stack-development-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/ui-ux-design-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/ai-machine-learning-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses/digital-marketing-course</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/about-us</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/career</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/courses</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://www.skillra.com/contact-us</loc>
+	<lastmod>2026-06-19T07:34:08+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+
 </urlset>
