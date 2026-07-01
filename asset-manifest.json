@@ -1,15 +1,19 @@
 {
   "files": {
-    "main.css": "/Skillra-Official/static/css/main.e6c13ad2.css",
-    "main.js": "/Skillra-Official/static/js/main.c4c1806f.js",
-    "static/js/453.0face2e6.chunk.js": "/Skillra-Official/static/js/453.0face2e6.chunk.js",
-    "index.html": "/Skillra-Official/index.html",
-    "main.e6c13ad2.css.map": "/Skillra-Official/static/css/main.e6c13ad2.css.map",
-    "main.c4c1806f.js.map": "/Skillra-Official/static/js/main.c4c1806f.js.map",
-    "453.0face2e6.chunk.js.map": "/Skillra-Official/static/js/453.0face2e6.chunk.js.map"
+    "main.css": "/static/css/main.e6c13ad2.css",
+    "main.js": "/static/js/main.b02af06b.js",
+    "static/js/796.78971b79.chunk.js": "/static/js/796.78971b79.chunk.js",
+    "static/js/165.88226ee5.chunk.js": "/static/js/165.88226ee5.chunk.js",
+    "static/js/453.0face2e6.chunk.js": "/static/js/453.0face2e6.chunk.js",
+    "index.html": "/index.html",
+    "main.e6c13ad2.css.map": "/static/css/main.e6c13ad2.css.map",
+    "main.b02af06b.js.map": "/static/js/main.b02af06b.js.map",
+    "796.78971b79.chunk.js.map": "/static/js/796.78971b79.chunk.js.map",
+    "165.88226ee5.chunk.js.map": "/static/js/165.88226ee5.chunk.js.map",
+    "453.0face2e6.chunk.js.map": "/static/js/453.0face2e6.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.c4c1806f.js"
+    "static/js/main.b02af06b.js"
   ]
 }
