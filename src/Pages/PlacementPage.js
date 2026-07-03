@@ -10,91 +10,6 @@ const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_Vyy
 const currentYear = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: currentYear - 2019 }, (_, i) => 2020 + i);
 
-const META = {
-  title:       "Placements | Skillra – 250+ Students Placed in Top Companies",
-  description: "Discover Skillra's placement success with 250+ students placed in top companies like Cognizant, Optum, Sutherland, CorroHealth, R1, and more. Explore our corporate tie-ups and placement support.",
-  canonical:   "https://www.skillra.com/placement",
-  keywords:    "Skillra placements, medical coding jobs, IT placements, Cognizant hiring, Optum careers, Sutherland jobs, campus placements, corporate tie-ups, placement support, healthcare jobs",
-};
-
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
-
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function setJsonLd(data) {
-  const id = "skillra-placements-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra placement success and hiring partners");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra placement success and hiring partners");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Skillra Placements",
-      "description": META.description,
-      "url": META.canonical,
-      "mainEntity": {
-        "@type": "EducationalOrganization",
-        "name": "Skillra Health Innovations Pvt Ltd",
-        "logo": "/logo.png",
-        "url": "https://www.skillra.com",
-        "alumni": {
-          "@type": "QuantitativeValue",
-          "value": 250,
-          "unitText": "students placed"
-        },
-        "member": [
-          { "@type": "Organization", "name": "Cognizant" },
-          { "@type": "Organization", "name": "Reveleer" },
-          { "@type": "Organization", "name": "Sutherland" },
-          { "@type": "Organization", "name": "Huron" },
-          { "@type": "Organization", "name": "CorroHealth" },
-          { "@type": "Organization", "name": "R1" },
-          { "@type": "Organization", "name": "FirstSource" },
-          { "@type": "Organization", "name": "Clarus" },
-          { "@type": "Organization", "name": "Savista" },
-          { "@type": "Organization", "name": "S10 Health" },
-          { "@type": "Organization", "name": "Vee Healthtek" },
-          { "@type": "Organization", "name": "Medcode Services" },
-          { "@type": "Organization", "name": "Optum" },
-          { "@type": "Organization", "name": "Aaneel" }
-        ]
-      }
-    });
-  }, []);
-  return null;
-}
-
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -1240,7 +1155,6 @@ export default function PlacementPage() {
       <WhyTrustSection />
       <HowWeHelpSection />
       {/* <StudentsPlacedSection /> */}
-      <PageMeta />
       <Footer />
     </div>
   );

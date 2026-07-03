@@ -9,70 +9,6 @@ const PUB = process.env.PUBLIC_URL || "";
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
 
-const META = {
-  title:       "Books | Skillra – CPC Exam Training Book Bundle",
-  description: "Explore Skillra's own CPC Exam Training Book Bundle (3 Volumes) – comprehensive study material for medical coding certification by experienced trainers with 15+ years of expertise.",
-  canonical:   "https://www.skillra.com/books",
-  keywords:    "CPC exam books, medical coding books, CPC training material, Skillra books, medical coding study guide, CPC certification prep",
-};
-
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
-
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function setJsonLd(data) {
-  const id = "skillra-books-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra CPC Exam Training Book Bundle");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra CPC Exam Training Book Bundle");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "Book",
-      "name": "CPC Exam Training Book Bundle",
-      "author": { "@type": "Organization", "name": "Skillra" },
-      "publisher": { "@type": "Organization", "name": "Skillra Health Innovations Pvt Ltd", "logo": { "@type": "ImageObject", "url": "/logo.png" } },
-      "description": META.description,
-      "numberOfPages": 3,
-      "bookFormat": "https://schema.org/Hardcover",
-      "url": META.canonical,
-      "inLanguage": "en",
-      "about": { "@type": "Thing", "name": "CPC Medical Coding Certification" }
-    });
-  }, []);
-  return null;
-}
-
 
 /* ══════════════════════════════════════════════════════
    GOOGLE SHEETS SUBMIT HELPER
@@ -1884,7 +1820,6 @@ export default function BooksPage() {
       <BundleSection onBuyClick={() => setShowModal(true)}/>
       <NewsletterSection/>
       <Footer/>
-      <PageMeta />
       {showModal && <BuyBookModal onClose={() => setShowModal(false)}/>}
     </div>
   );

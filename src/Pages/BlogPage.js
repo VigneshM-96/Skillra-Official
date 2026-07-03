@@ -360,7 +360,7 @@ export default function BlogPage() {
   const [heroRef,  heroInView]  = useInView()
   const [cardsRef, cardsInView] = useInView()
 
-  useSanityMeta('blogs', BLOGS_META_FALLBACK)
+  useSanityMeta(slug ? null : 'blogs', BLOGS_META_FALLBACK)
 
   useEffect(() => {
     fetchAllPosts()

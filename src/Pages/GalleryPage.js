@@ -4,40 +4,6 @@ import SocialSidebar from "../components/SocialSideBar";
 import { Link } from "react-router-dom";
 import { useSanityMeta } from '../hooks/useSanityMeta';
 
-const META = {
-  title:       "Gallery | Skillra – Events, Stalls & Student Engagement Moments",
-  description: "Explore Skillra's event gallery showcasing our recent stalls, career fairs, and campus outreach programs where we engaged with thousands of students and parents.",
-  canonical:   "https://www.skillra.com/gallery",
-  keywords:    "Skillra events, career fair stalls, student engagement, campus outreach, education events, Skillra gallery",
-};
-
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
-
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description", META.description);
-    setMeta("name", "keywords",    META.keywords);
-    setMeta("name", "robots",      "index, follow");
-    setMeta("name", "author",      "Skillra");
-    setLink("canonical",           META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-  }, []);
-  return null;
-}
 
 function useInView(threshold = 0.1) {
   const ref = useRef(null);
@@ -565,7 +531,6 @@ export default function GalleryPage() {
 
       {lightboxIdx === null && <SocialSidebar />}
       <Footer />
-      <PageMeta />
     </div>
   );
 }

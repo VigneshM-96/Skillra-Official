@@ -7,69 +7,7 @@ const PUB = process.env.PUBLIC_URL || "";
 
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
-/* ═══════════════════════════════════════════
-   PAGE META
-═══════════════════════════════════════════ */
-const META = {
-  title:       "About Us | Skillra – AI Medical Coding, IT & Finance Training Institute",
-  description: "Learn about Skillra, a leading training and upskilling institute in Tamil Nadu offering industry-aligned programs in AI Medical Coding, IT, Finance, and Professional Development. Meet our founder and co-founder.",
-  canonical:   "https://www.skillra.com/about",
-  keywords:    "Skillra, medical coding training, AI medical coding, IT training institute, finance courses, career development, professional training",
-};
 
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
-
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function setJsonLd(data) {
-  const id = "skillra-about-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra training institute team");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra training institute team");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "name": "Skillra",
-      "url": "https://www.skillra.com",
-      "logo": '/logo.png',
-      "description": META.description,
-      "address": { "@type": "PostalAddress", "addressRegion": "Tamil Nadu", "addressCountry": "IN" },
-      "sameAs": ["https://www.linkedin.com/company/skillra", "https://www.instagram.com/skillra"]
-    });
-  }, []);
-  return null;
-}
 
 function useInView(threshold = 0.08) {
   const ref = useRef(null);
@@ -695,7 +633,7 @@ export default function AboutUsPage() {
   useSanityMeta('about', {
   title:       'About Us | Skillra – Our Story & Mission',
   description: 'Learn about Skillra Health Innovations Pvt Ltd – our mission, team, and commitment to transforming careers in Medical Coding and IT.',
-  canonicalUrl:'https://www.skillra.com/about',
+  canonicalUrl:'https://www.skillra.com/about-us',
 })
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
@@ -861,7 +799,6 @@ export default function AboutUsPage() {
         }
       `}</style>
       <SocialSidebar />
-      <PageMeta />
       <AboutSection />
       <MissionSection />
       <FounderSection />

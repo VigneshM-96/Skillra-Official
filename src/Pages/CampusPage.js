@@ -9,85 +9,7 @@ const PUB = process.env.PUBLIC_URL || "";
 
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
-const META = {
-  title:       "Campus | Skillra – Our Training Facility & Learning Environment",
-  description: "Take a virtual tour of Skillra's campus. Experience our modern training facility equipped with the latest technology for AI Medical Coding, IT, and Finance courses in Tamil Nadu.",
-  canonical:   "https://www.skillra.com/campus",
-  keywords:    "Skillra campus, training facility, learning environment, Skillra infrastructure, medical coding lab, IT training center, classroom, Tamil Nadu training institute",
-};
 
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
-
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function setJsonLd(data) {
-  const id = "skillra-campus-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra campus and training facility");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra campus and training facility");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "Place",
-      "name": "Skillra Campus",
-      "description": META.description,
-      "url": META.canonical,
-      "image": "/logo.png",
-      "address": {
-        "@type": "PostalAddress",
-        "addressRegion": "Tamil Nadu",
-        "addressCountry": "IN"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "addressCountry": "IN"
-      },
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "opens": "09:00",
-        "closes": "19:00"
-      },
-      "parentOrganization": {
-        "@type": "EducationalOrganization",
-        "name": "Skillra Health Innovations Pvt Ltd",
-        "logo": "/logo.png",
-        "url": "https://www.skillra.com"
-      }
-    });
-  }, []);
-  return null;
-}
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -1200,7 +1122,6 @@ export default function CampusPage() {
       <AboutCampusSection />
       <OpportunitiesSection />
       {/* <TestimonialsContactSection /> */}
-      <PageMeta />
       <Footer />
     </div>
   );

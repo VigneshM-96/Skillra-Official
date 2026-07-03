@@ -8,90 +8,6 @@ const PUB = process.env.PUBLIC_URL || "";
 
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_VyyuQ56sdXZUYEgXb7qLagegYmmPfqI-5EoGJ6wXGrHuQIC-jTWA/exec";
 
-const META = {
-  title:       "Career Guidance | Skillra – Expert Career Counselling & Support",
-  description: "Get expert career guidance from Skillra's 15+ years experienced trainers. Explore career paths in AI Medical Coding, IT, Finance, and more with personalized counselling and industry insights.",
-  canonical:   "https://www.skillra.com/career-guidance",
-  keywords:    "Skillra career guidance, career counselling, medical coding career, IT career path, finance career, career support, job guidance, professional development, career planning",
-};
-
-function setMeta(attr, value, content) {
-  let el = document.querySelector(`meta[${attr}="${value}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, value); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-}
-
-function setLink(rel, href) {
-  let el = document.querySelector(`link[rel="${rel}"]`);
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-}
-
-function setJsonLd(data) {
-  const id = "skillra-career-guidance-jsonld";
-  let el = document.getElementById(id);
-  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = id; document.head.appendChild(el); }
-  el.textContent = JSON.stringify(data);
-}
-
-function PageMeta() {
-  useEffect(() => {
-    document.title = META.title;
-    setMeta("name", "description",  META.description);
-    setMeta("name", "keywords",     META.keywords);
-    setMeta("name", "robots",       "index, follow");
-    setMeta("name", "author",       "Skillra");
-    setLink("canonical",            META.canonical);
-    setMeta("property", "og:type",        "website");
-    setMeta("property", "og:url",         META.canonical);
-    setMeta("property", "og:title",       META.title);
-    setMeta("property", "og:description", META.description);
-    setMeta("property", "og:image",       META.ogImage);
-    setMeta("property", "og:image:alt",   "Skillra career guidance and counselling");
-    setMeta("property", "og:site_name",   "Skillra");
-    setMeta("property", "og:locale",      "en_IN");
-    setMeta("name", "twitter:card",        "summary_large_image");
-    setMeta("name", "twitter:title",       META.title);
-    setMeta("name", "twitter:description", META.description);
-    setMeta("name", "twitter:image",       META.ogImage);
-    setMeta("name", "twitter:image:alt",   "Skillra career guidance and counselling");
-    setJsonLd({
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "name": "Skillra Career Guidance",
-      "description": META.description,
-      "url": META.canonical,
-      "serviceType": "Career Counselling",
-      "provider": {
-        "@type": "EducationalOrganization",
-        "name": "Skillra Health Innovations Pvt Ltd",
-        "logo": "/logo.png",
-        "url": "https://www.skillra.com"
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "India"
-      },
-      "audience": {
-        "@type": "EducationalAudience",
-        "educationalRole": "student",
-        "audienceType": "Students and Job Seekers"
-      },
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Career Guidance Services",
-        "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Personalized Career Counselling" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Industry Insights & Mentoring" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Resume Building & Interview Prep" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Placement Assistance" } }
-        ]
-      }
-    });
-  }, []);
-  return null;
-}
-
 function useInView(threshold = 0.08) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -1195,7 +1111,7 @@ export default function CareerPage() {
   useSanityMeta('careerGuidance', {
   title:       'Career Guidance | Skillra – Your Path to Success',
   description: 'Get expert career guidance from Skillra\'s team of industry professionals. Resume building, interview prep, and career counselling for Medical Coding & IT.',
-  canonicalUrl:'https://www.skillra.com/career-guidance',
+  canonicalUrl:'https://www.skillra.com/career',
 })
 
   return (
@@ -1314,7 +1230,6 @@ export default function CareerPage() {
       <CareerHero />
       <ServicesSection />
       <ProcessSection />
-      <PageMeta />
       <Footer />
     </div>
   );

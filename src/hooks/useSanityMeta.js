@@ -36,6 +36,7 @@ function applyMeta(pageKey, data, fallback) {
   setMeta('name', 'keywords',          meta.keywords)
   setMeta('name', 'robots',            meta.robots)
   setMeta('name', 'author',            'Skillra')
+  setMeta('name', 'publisher',         'Skillra Health Innovations Pvt Ltd')
   setLink('canonical',                 meta.canonical)
   setMeta('property', 'og:type',       'website')
   setMeta('property', 'og:url',        meta.canonical)
@@ -63,6 +64,7 @@ function applyMeta(pageKey, data, fallback) {
 // ── for static pages (home, about, contact …) ──────────────────
 export function useSanityMeta(pageKey, fallback = {}) {
   useEffect(() => {
+    if (!pageKey) return   //  NEW LINE — skip fetch entirely when pageKey is null
     let cancelled = false
     fetchPageMeta(pageKey)
       .then((data) => { if (!cancelled) applyMeta(pageKey, data, fallback) })
