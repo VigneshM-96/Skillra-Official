@@ -19,6 +19,7 @@ const CareerPage    = lazy(() => import("./Pages/CareerPage"));
 const BooksPage     = lazy(() => import("./Pages/BooksPage"));
 const BlogPage      = lazy(() => import("./Pages/BlogPage"));
 const GalleryPage   = lazy(() => import("./Pages/GalleryPage"));
+const OurProductsPage = lazy(() => import("./Pages/OurProducts"));
 
 // Simple fallback shown while a page chunk is downloading.
 // Keep this lightweight — no heavy CSS/images — since it
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="/books"     element={<BooksPage />} />
           <Route path="/blog/:slug?" element={<BlogPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/our-products" element={<OurProductsPage />} /> 
           <Route path="*" element={<HomePage />} />
         </Routes>
       </Suspense>

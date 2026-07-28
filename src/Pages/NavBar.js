@@ -9,10 +9,13 @@ const NAV_LINKS = [
   { label: "Career Guidance", path: "/career"    },
   { label: "Placement",       path: "/placement" },
   { label: "Campus",          path: "/campus"    },
+  { label: "Our Products", path: "/our-products" },
   { label: "Books",           path: "/books"     },
   { label: "Blogs",           path: "/blog"      },
   { label: "Gallery",         path: "/gallery"},
   { label: "Contact Us",      path: "/contact-us" },
+  
+  
 ];
 
 const MEGA_MENU = [
@@ -475,7 +478,7 @@ export default function NavBar() {
             gap: "32px",
             boxShadow: "0 8px 32px rgba(72,16,165,0.35), 0 2px 8px rgba(0,0,0,0.12)",
             width: "90%",
-            maxWidth: "1100px",
+            maxWidth: "1300px",
           }}
         >
           {/* Logo */}
