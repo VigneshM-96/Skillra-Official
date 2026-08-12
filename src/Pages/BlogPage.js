@@ -58,13 +58,51 @@ function useInView() {
 // ─────────────────────────────────────────────────────────────────────────────
 const ptComponents = {
   block: {
-    normal: ({ children }) => <p className="pt-normal">{children}</p>,
-    h2:     ({ children }) => <h2 className="pt-h2">{children}</h2>,
-    h3:     ({ children }) => <h3 className="pt-h3">{children}</h3>,
+    normal: ({ children }) => (
+      <p className="pt-normal">{children}</p>
+    ),
+
+    h2: ({ children }) => (
+      <h2 className="pt-h2">{children}</h2>
+    ),
+
+    h3: ({ children }) => (
+      <h3 className="pt-h3">{children}</h3>
+    ),
   },
+
+  list: {
+    bullet: ({ children }) => (
+      <ul className="pt-list pt-list--bullet">
+        {children}
+      </ul>
+    ),
+
+    number: ({ children }) => (
+      <ol className="pt-list pt-list--number">
+        {children}
+      </ol>
+    ),
+  },
+
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="pt-list-item">{children}</li>
+    ),
+
+    number: ({ children }) => (
+      <li className="pt-list-item">{children}</li>
+    ),
+  },
+
   marks: {
-    strong: ({ children }) => <strong className="pt-strong">{children}</strong>,
-    em:     ({ children }) => <em>{children}</em>,
+    strong: ({ children }) => (
+      <strong className="pt-strong">{children}</strong>
+    ),
+
+    em: ({ children }) => (
+      <em>{children}</em>
+    ),
   },
 }
 
@@ -607,6 +645,35 @@ function BlogStyles() {
         margin-top: 20px; margin-bottom: 6px; line-height: 1.35;
       }
       .pt-strong { font-weight: 700; color: var(--ink); }
+
+      /* ── Portable Text Lists ── */
+
+.pt-list {
+  margin: 16px 0 22px;
+  padding-left: 28px;
+}
+
+.pt-list--bullet {
+  list-style-type: disc;
+}
+
+.pt-list--number {
+  list-style-type: decimal;
+}
+
+.pt-list-item {
+  font-size: clamp(13.5px, 1.4vw, 15.5px);
+  color: #4b5563;
+  font-family: var(--font-body);
+  line-height: 1.85;
+  margin-bottom: 7px;
+  padding-left: 6px;
+}
+
+.pt-list-item::marker {
+  color: var(--purple);
+  font-weight: 700;
+}
 
       /* ── Sidebar — position:fixed, stays put while page scrolls ── */
       .detail-sidebar {
