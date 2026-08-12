@@ -28,31 +28,62 @@ function useInView(threshold = 0.12) {
 ═══════════════════════════════════════════════════ */
 const PHONE_IMAGES = [
   `${PUB}/app-sc1.jpeg`, // splash / "Skillra AI - Your Learning Assistant"
-  `${PUB}/app-sc1.jpeg`, // lesson detail (e.g. skeleton system)
-  `${PUB}/app-sc1.jpeg`, // course list / dashboard
+  `${PUB}/app-sc2.jpeg`, // lesson detail (e.g. skeleton system)
+  `${PUB}/app-sc3.jpeg`, // course list / dashboard
 ];
 
 const ROTATE_INTERVAL_MS = 3500;
-const FADE_MS = 450;
+const FADE_MS = 700;
 
 function usePhoneRotation() {
   // order = [centerIdx, rightIdx, leftIdx] — indices into PHONE_IMAGES
   const [order, setOrder] = useState([0, 1, 2]);
-  const [fading, setFading] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => {
-      setFading(true);
-      const t = setTimeout(() => {
-        setOrder(([c, r, l]) => [r, l, c]); // rotate: right -> center, left -> right, center -> left
-        setFading(false);
-      }, FADE_MS);
-      return () => clearTimeout(t);
+      setOrder(([c, r, l]) => [r, l, c]); // rotate: right -> center, left -> right, center -> left
     }, ROTATE_INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
 
-  return { order, fading };
+  return { order };
+}
+
+/* Crossfades smoothly to a new `src` whenever it changes — two stacked
+   <img> layers swap opacity, so there's never a blank/blink frame like
+   there is with a key-based remount or an opacity-to-0-and-back toggle. */
+function RotatingImage({ src, alt, radius }) {
+  const [layers, setLayers] = useState([src, src]);
+  const [activeLayer, setActiveLayer] = useState(0);
+
+  useEffect(() => {
+    const currentSrc = layers[activeLayer];
+    if (currentSrc === src) return;
+    const nextLayer = activeLayer === 0 ? 1 : 0;
+    setLayers(prev => {
+      const updated = [...prev];
+      updated[nextLayer] = src;
+      return updated;
+    });
+    // wait a frame so the new image is painted at opacity 0 first, then crossfade
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setActiveLayer(nextLayer));
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [src]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const baseStyle = {
+    position: "absolute", inset: 0, width: "100%", height: "100%",
+    objectFit: "cover", borderRadius: radius, display: "block",
+    transition: `opacity ${FADE_MS}ms ease`,
+  };
+
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <img src={layers[0]} alt={alt} style={{ ...baseStyle, opacity: activeLayer === 0 ? 1 : 0 }} onError={e => { e.target.style.display = "none"; }} />
+      <img src={layers[1]} alt={alt} style={{ ...baseStyle, opacity: activeLayer === 1 ? 1 : 0 }} onError={e => { e.target.style.display = "none"; }} />
+    </div>
+  );
 }
 
 /* ═══════════════════════════════════════════════════
@@ -150,19 +181,23 @@ function DiamondPattern({ isMobile = false, anchor = "bottom" }) {
 
 /* ═══════════════════════════════════════════════════
    PHONE CLUSTER — renders the 3-phone rotating stack.
-   Same `order`/`fading` state is shared between the
-   desktop and mobile layouts so there's only one timer.
+   Same `order` state is shared between the desktop and
+   mobile layouts so there's only one timer. All three
+   phones sit at the same (upright) angle; only scale,
+   opacity, and stacking order tell them apart. Each
+   phone's screenshot crossfades smoothly on rotation —
+   no remount, no blink.
 ═══════════════════════════════════════════════════ */
-function PhoneCluster({ isMobile, order, fading }) {
+function PhoneCluster({ isMobile, order }) {
   const [centerIdx, rightIdx, leftIdx] = order;
 
   const sizing = isMobile
-    ? { side: "26%", center: "34%", sideRadius: "18px", centerRadius: "24px", sidePad: "5px", centerPad: "6px", innerSideRadius: "13px", innerCenterRadius: "18px" }
-    : { side: "clamp(120px,15vw,165px)", center: "clamp(190px,25vw,260px)", sideRadius: "28px", centerRadius: "36px", sidePad: "7px", centerPad: "9px", innerSideRadius: "21px", innerCenterRadius: "28px" };
+    ? { side: "26%", center: "37%", sideRadius: "18px", centerRadius: "24px", sidePad: "5px", centerPad: "6px", innerSideRadius: "13px", innerCenterRadius: "18px" }
+    : { side: "clamp(120px,15vw,165px)", center: "clamp(205px,27.5vw,286px)", sideRadius: "28px", centerRadius: "36px", sidePad: "7px", centerPad: "9px", innerSideRadius: "21px", innerCenterRadius: "28px" };
 
   return (
     <>
-      {/* Left phone — dimmed, behind */}
+      {/* Left phone — dimmed, behind, same upright angle as center */}
       <div style={{
         position: "absolute", zIndex: 2, top: "50%", left: isMobile ? "10%" : "6%",
         width: sizing.side, aspectRatio: "9/19.5",
@@ -170,21 +205,14 @@ function PhoneCluster({ isMobile, order, fading }) {
         background: "#1a1035",
         padding: sizing.sidePad,
         boxShadow: isMobile ? "0 12px 26px rgba(109,40,217,0.16)" : "0 18px 40px rgba(109,40,217,0.18)",
-        transform: `translateY(-50%) rotate(-8deg) scale(${fading ? 0.88 : 0.92})`,
-        opacity: fading ? 0 : 0.45,
+        transform: "translateY(-50%) scale(0.92)",
+        opacity: 0.45,
         filter: "blur(0.3px)",
-        transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
       }}>
-        <img
-          key={`left-${leftIdx}`}
-          src={PHONE_IMAGES[leftIdx]}
-          alt="Skillra app screenshot"
-          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: sizing.innerSideRadius, display: "block" }}
-          onError={e => { e.target.style.display = "none"; }}
-        />
+        <RotatingImage src={PHONE_IMAGES[leftIdx]} alt="Skillra app screenshot" radius={sizing.innerSideRadius} />
       </div>
 
-      {/* Right phone — dimmed, behind */}
+      {/* Right phone — dimmed, behind, same upright angle as center */}
       <div style={{
         position: "absolute", zIndex: 2, top: "50%", right: isMobile ? "10%" : "6%",
         width: sizing.side, aspectRatio: "9/19.5",
@@ -192,39 +220,23 @@ function PhoneCluster({ isMobile, order, fading }) {
         background: "#1a1035",
         padding: sizing.sidePad,
         boxShadow: isMobile ? "0 12px 26px rgba(109,40,217,0.16)" : "0 18px 40px rgba(109,40,217,0.18)",
-        transform: `translateY(-50%) rotate(-8deg) scale(${fading ? 0.88 : 0.92})`,
-        opacity: fading ? 0 : 0.45,
+        transform: "translateY(-50%) scale(0.92)",
+        opacity: 0.45,
         filter: "blur(0.3px)",
-        transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
       }}>
-        <img
-          key={`right-${rightIdx}`}
-          src={PHONE_IMAGES[rightIdx]}
-          alt="Skillra app screenshot"
-          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: sizing.innerSideRadius, display: "block" }}
-          onError={e => { e.target.style.display = "none"; }}
-        />
+        <RotatingImage src={PHONE_IMAGES[rightIdx]} alt="Skillra app screenshot" radius={sizing.innerSideRadius} />
       </div>
 
-      {/* Center phone — sharp, in front */}
+      {/* Center phone — sharp, in front, slightly wider */}
       <div style={{
         position: "relative", zIndex: 6,
-        width: sizing.center, aspectRatio: "9/19.5",
+        width: sizing.center, aspectRatio: "9/17.5",
         borderRadius: sizing.centerRadius,
         background: "#1a1035",
         padding: sizing.centerPad,
         boxShadow: isMobile ? "0 22px 44px rgba(109,40,217,0.32)" : "0 34px 70px rgba(109,40,217,0.36)",
-        opacity: fading ? 0.35 : 1,
-        transform: `scale(${fading ? 0.96 : 1})`,
-        transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
       }}>
-        <img
-          key={`center-${centerIdx}`}
-          src={PHONE_IMAGES[centerIdx]}
-          alt="Skillra app home screen"
-          style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: sizing.innerCenterRadius, display: "block" }}
-          onError={e => { e.target.style.display = "none"; }}
-        />
+        <RotatingImage src={PHONE_IMAGES[centerIdx]} alt="Skillra app home screen" radius={sizing.innerCenterRadius} />
       </div>
     </>
   );
@@ -234,7 +246,7 @@ function PhoneCluster({ isMobile, order, fading }) {
    HERO — Quote + Play Store CTA (left) / App screenshots (right)
 ═══════════════════════════════════════════════════ */
 function ProductsHero() {
-  const { order, fading } = usePhoneRotation();
+  const { order } = usePhoneRotation();
 
   return (
     <section id="products-home" style={{
@@ -319,14 +331,14 @@ function ProductsHero() {
           height: "clamp(420px, 56vw, 600px)",
           overflow: "visible",
         }}>
-          <DiamondPattern anchor="center" />
+          {/* <DiamondPattern anchor="center" /> */}
 
-          <PhoneCluster isMobile={false} order={order} fading={fading} />
+          <PhoneCluster isMobile={false} order={order} />
 
           {/* Badges — hugging the right side of the phone cluster */}
           <FloatingBadge
             icon={<svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 2l6.5 3.75v8.5L10 18l-6.5-3.75v-8.5z" stroke="#7c3aed" strokeWidth="1.6" strokeLinejoin="round" fill="none"/><path d="M10 2v16M3.5 5.75L10 10l6.5-4.25" stroke="#7c3aed" strokeWidth="1.6" strokeLinejoin="round"/></svg>}
-            label="AI Powered" style={{ top: "6%", right: "2%" }} delay={600}
+            label="AI Powered" style={{ top: "26%", right: "80%" }} delay={600}
           />
           <RatingBadge style={{ top: "44%", right: "-4%" }} delay={800} />
           <FloatingBadge
@@ -372,9 +384,9 @@ function ProductsHero() {
           display: "flex", justifyContent: "center", alignItems: "center",
           marginBottom: "26px",
         }}>
-          <DiamondPattern isMobile anchor="center" />
+          {/* <DiamondPattern isMobile anchor="center" /> */}
 
-          <PhoneCluster isMobile={true} order={order} fading={fading} />
+          <PhoneCluster isMobile={true} order={order} />
         </div>
 
         <a

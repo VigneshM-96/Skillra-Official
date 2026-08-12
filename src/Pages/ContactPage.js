@@ -53,7 +53,7 @@ const Field = ({ label, type = "text", value, onChange, textarea, error, touched
   const isOk   = touched && !error && value.length > 0;
 
   const borderColor = hasErr ? "#ef4444" : isOk ? "#22c55e" : focus ? "#7C3AED" : "#e2e8f0";
-  const shadowColor = hasErr ? "rgba(239,68,68,.13)" : isOk ? "rgba(34,197,94,.12)" : focus ? "rgba(124,58,237,.12)" : "none";
+  const shadowColor = hasErr ? "rgba(239,68,68,.13)" : isOk ? "rgba(34,197,94,.12)" : focus ? "rgba(93, 61, 149, 0.12)" : "none";
 
   const inputStyle = {
     width: "100%",
