@@ -3,16 +3,44 @@ import { fetchPageMeta, fetchCourseMeta } from '../sanityClient'  // ← ADD fet
 
 function setMeta(attr, value, content) {
   if (!content) return
-  let el = document.querySelector(`meta[${attr}="${value}"]`)
-  if (!el) { el = document.createElement('meta'); el.setAttribute(attr, value); document.head.appendChild(el) }
+
+  const selector = `meta[${attr}="${value}"]`
+  const elements = document.querySelectorAll(selector)
+
+  let el = elements[0]
+
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute(attr, value)
+    document.head.appendChild(el)
+  }
+
   el.setAttribute('content', content)
+
+  // Remove accidental duplicates
+  elements.forEach((item, index) => {
+    if (index > 0) item.remove()
+  })
 }
 
 function setLink(rel, href) {
   if (!href) return
-  let el = document.querySelector(`link[rel="${rel}"]`)
-  if (!el) { el = document.createElement('link'); el.setAttribute('rel', rel); document.head.appendChild(el) }
+
+  const elements = document.querySelectorAll(`link[rel="${rel}"]`)
+  let el = elements[0]
+
+  if (!el) {
+    el = document.createElement('link')
+    el.setAttribute('rel', rel)
+    document.head.appendChild(el)
+  }
+
   el.setAttribute('href', href)
+
+  // Remove accidental duplicates
+  elements.forEach((item, index) => {
+    if (index > 0) item.remove()
+  })
 }
 
 function setJsonLd(id, data) {
@@ -57,7 +85,7 @@ function applyMeta(pageKey, data, fallback) {
     name:        meta.title,
     description: meta.description,
     url:         meta.canonical,
-    publisher: { '@type': 'Organization', name: 'Skillra Health Innovations Pvt Ltd', logo: '/logo.png', url: 'https://www.skillra.com' },
+    publisher: { '@type': 'Organization', name: 'Skillra Health Innovations Pvt Ltd', logo: 'https://www.skillra.com/logo.png', url: 'https://www.skillra.com' },
   })
 }
 

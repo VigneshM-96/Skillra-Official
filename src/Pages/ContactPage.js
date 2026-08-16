@@ -211,8 +211,7 @@ const ContactSection = () => {
       position: "relative", overflow: "hidden",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Outfit:wght@400;500;700;900&display=swap');
-
+       
         @keyframes particleRise {
           0%   { transform:translateY(105vh) rotate(0deg); opacity:0; }
           8%   { opacity:.13; } 92% { opacity:.07; }

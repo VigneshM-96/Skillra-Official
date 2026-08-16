@@ -14,33 +14,33 @@ const SHEETS_URL = "https://script.google.com/macros/s/AKfycbws7QqEJT-y2F_6U_Vyy
 const PUB = process.env.PUBLIC_URL || "";
 
 const COMPANIES = [
-  { name: "Unsplash",   logo: `${PUB}/HiringPartners/CORRO.png`   },
-  { name: "Notion",     logo: `${PUB}/HiringPartners/R1.png`     },
-  { name: "Intercom",   logo: `${PUB}/HiringPartners/FIRSTSOURCE.png`   },
-  { name: "Descript",   logo: `${PUB}/HiringPartners/CLARUS.png`   },
-  { name: "Grammarly",  logo: `${PUB}/HiringPartners/SAVISTA.png`  },
-  { name: "Slack",      logo: `${PUB}/HiringPartners/S10.png`      },
-  { name: "Figma",      logo: `${PUB}/HiringPartners/VEE HEALTHTEK.png`      },
-  { name: "Linear",     logo: `${PUB}/HiringPartners/MEDCODE.png`     },
-  { name: "Vercel",     logo: `${PUB}/HiringPartners/OPTUM.png`     },
-  { name: "Stripe",     logo: `${PUB}/HiringPartners/AANEEL.png`     },
-  { name: "Stripe",     logo: `${PUB}/HiringPartners/ACCESSHEALTH.png`},
-  { name: "Stripe",     logo: `${PUB}/HiringPartners/REVEELER.png` },
-  { name: "Stripe",     logo: `${PUB}/HiringPartners/SUTHERLAND.png` },
-  { name: "Stripe",     logo: `${PUB}/HiringPartners/HURON.png` },
-  { name: "Stripe",     logo: `${PUB}/HiringPartners/COGNIZANT.png` },
+  { name: "Unsplash",   logo: `${PUB}/HiringPartners/CORRO.webp`   },
+  { name: "Notion",     logo: `${PUB}/HiringPartners/R1.webp`     },
+  { name: "Intercom",   logo: `${PUB}/HiringPartners/FIRSTSOURCE.webp`   },
+  { name: "Descript",   logo: `${PUB}/HiringPartners/CLARUS.webp`   },
+  { name: "Grammarly",  logo: `${PUB}/HiringPartners/SAVISTA.webp`  },
+  { name: "Slack",      logo: `${PUB}/HiringPartners/S10.webp`      },
+  { name: "Figma",      logo: `${PUB}/HiringPartners/VEE HEALTHTEK.webp`      },
+  { name: "Linear",     logo: `${PUB}/HiringPartners/MEDCODE.webp`     },
+  { name: "Vercel",     logo: `${PUB}/HiringPartners/OPTUM.webp`     },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/AANEEL.webp`     },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/ACCESSHEALTH.webp`},
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/REVEELER.webp` },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/SUTHERLAND.webp` },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/HURON.webp` },
+  { name: "Stripe",     logo: `${PUB}/HiringPartners/COGNIZANT.webp` },
 ];
 
 const SLIDES = [
   {
-    img: `${PUB}/HomeImages/MedicalCodingHero.png` ,
+    img: `${PUB}/HomeImages/MedicalCodingHero.webp` ,
     //  Female doctor/nurse in medical setting — white coat, slight purple-cool tone
     bg: "linear-gradient(145deg,#6d28d9,#7c3aed,#4c1d95)",
     shadow: "rgba(79,28,200,.55)",
     ring: "rgba(124,58,237,.30)"
   },
   {
-    img: `${PUB}/HomeImages/TechHomeHero.png`,
+    img: `${PUB}/HomeImages/TechHomeHero.webp`,
     //  Male developer/tech professional with screens/code background — warm orange tone
     bg: "linear-gradient(145deg,#c2410c,#ea580c,#9a3412)",
     shadow: "rgba(194,65,12,.55)",
@@ -52,7 +52,7 @@ const SLIDES = [
     }
   },
   {
-    img: `${PUB}/HomeImages/FinanceHero.png`,
+    img: `${PUB}/HomeImages/FinanceHero.webp`,
     //  Female finance professional with charts/office background — green tone
     bg: "linear-gradient(145deg,#14532d,#15803d,#166534)",
     shadow: "rgba(20,83,45,.55)",
@@ -74,21 +74,21 @@ const COURSES_DATA = {
         id: "ai-medical-coding-course",
         title: "AI Medical Coding Course",
         description: "Get certified and learn AI-powered coding skills with real case studies.",
-        image: `${PUB}/coursemedicalcoding.jpg`,
+        image: `${PUB}/coursemedicalcoding.webp`,
         // Doctor reviewing digital patient records / medical data on screen
       },
       {
         id: "ai-medical-billing-course",
         title: "AI Medical Billing Course",
         description: "Become a certified AI Medical Billing professional with job guarantee.",
-        image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format&fit=crop",
+        image: `${PUB}/coursemedicalbilling.avif`,
         // Medical billing / finance paperwork and calculator
       },
       {
         id: "ai-medical-scribing-course",
         title: "AI Medical Scribing Course",
         description: "Learn AI-based medical scribing and clinical documentation.",
-        image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?w=600&auto=format&fit=crop",
+        image: `${PUB}/coursemedicalscribing.avif`,
         // Medical professional writing/documenting clinical notes
       },
     ],
@@ -103,21 +103,21 @@ const COURSES_DATA = {
         id: "full-stack-development-course",
         title: "Full Stack Course",
         description: "Become a full-stack web developer with our MERN and MEAN Stack Course.",
-        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop",
+        image: `${PUB}/coursefullstack.avif`,
         // Developer coding on laptop with multiple screens
       },
       {
   id: "ai-machine-learning-course",
   title: "AI & Machine Learning Course",
   description: "Master Python, ML algorithms, and deep learning to build intelligent real-world AI applications.",
-  image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&auto=format&fit=crop",
+  image: `${PUB}/courseml.avif`,
   // AI neural network / machine learning concept with glowing tech background
 },
       {
         id: "data-analytics-course",
         title: "Data Analytics Course",
         description: "Join our Data Analytics Course for high-demand data careers.",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop",
+        image: `${PUB}/courseanalytics.avif`,
         // Data charts and analytics dashboard
       },
       
@@ -134,14 +134,14 @@ const COURSES_DATA = {
         id: "sap-development-course",
         title: "SAP Development Course",
         description: "Master SAP ABAP and become a certified SAP developer.",
-        image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&auto=format&fit=crop",
+        image: `${PUB}/coursesap.avif`,
         // ERP / enterprise software dashboard on screen
       },
       {
         id: "tally-gst-course",
         title: "Tally & GST Course",
         description: "Learn Tally with GST accounting and prepare for accounting careers.",
-        image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&auto=format&fit=crop",
+        image: `${PUB}/coursetally.avif`,
         // Accountant working with financial spreadsheets / calculator
       },
     ],
@@ -156,21 +156,21 @@ const COURSES_DATA = {
         id: "ui-ux-design-course",
         title: "UI/UX Design Course",
         description: "Join our UI/UX Designing Course to build professional websites.",
-        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop",
+        image: `${PUB}/courseui.avif`,
         // Designer working on UI wireframes / design mockups
       },
     {
       id: "personality-development-course",
       title: "Personality Development Course",
       description: "Build confidence, communication skills, and a winning mindset for personal and professional growth.",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&auto=format&fit=crop",
+      image: `${PUB}/coursepersonalitydev.avif`,
       // Group of confident professionals in a training/workshop setting
     },
     {
   id: "digital-marketing-course",
   title: "Digital Marketing Course",
   description: "Master SEO, social media, content strategy, and paid advertising to grow brands and drive results in the digital world.",
-  image: "https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=600&auto=format&fit=crop",
+  image: `${PUB}/coursemarketing.avif`,
   // Digital marketing professionals analyzing campaign metrics and strategy
 },
 
@@ -195,7 +195,7 @@ const STUDENT_REVIEWS = [
     name: "Klara Racheel",
     role: "Student",
     rating: 5,
-    avatar: `${PUB}/userreview7.png`,
+    avatar: `${PUB}/userreview7.webp`,
     text: "Good coaching with clear explanation and proper guidance.",
     time: "1 months ago",
   },
@@ -204,7 +204,7 @@ const STUDENT_REVIEWS = [
     name: "Jeffrey Sebastian",
     role: "Student",
     rating: 5,
-    avatar: `${PUB}/userreview2.png`,
+    avatar: `${PUB}/userreview2.webp`,
     text: "I studied SAP ABAB here and got placed as a Senior Consultant. Very thanks to Skillra as the teaching was good and supportive.",
     time: "4 months ago",
   },
@@ -212,7 +212,7 @@ const STUDENT_REVIEWS = [
     name: "SURIYA 11",
     role: "Student",
     rating: 5,
-    avatar: `${PUB}/userreview5.png`,
+    avatar: `${PUB}/userreview5.webp`,
     text: "Practical classes helped me understand concepts easily.",
     time: "3 weeks ago",
   },
@@ -412,6 +412,7 @@ function ReviewsModal({ onClose }) {
                   <img
                     src={r.avatar}
                     alt={r.name}
+                    loading="lazy" decoding="async"
                     style={{ width:"100%", height:"100%", objectFit:"cover" }}
                     onError={e => { e.target.style.display="none"; }}
                   />
@@ -487,7 +488,7 @@ function useSlideRotation() {
 }
 
 function ReviewAvatars({ centered = false, onViewAll }) {
-  const avatars = [`${PUB}/userreview1.png`, `${PUB}/userreview2.png`, `${PUB}/userreview3.png`];
+  const avatars = [`${PUB}/userreview1.png`, `${PUB}/userreview2.webp`, `${PUB}/userreview3.webp`];
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: centered ? "center" : "flex-start" }}>
@@ -509,6 +510,7 @@ function ReviewAvatars({ centered = false, onViewAll }) {
             <img
               src={src}
               alt={`reviewer ${i + 1}`}
+              loading="lazy" decoding="async"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               onError={(e) => {
                 // Fallback to colored circle if image fails to load
@@ -606,6 +608,7 @@ function HeroSection({ scrollRef, pausedRef, onCounselorClick, onViewReviews }) 
                   <img
   src={slide.img}
   alt={`slide-${i}`}
+  loading="lazy" decoding="async"
   style={{
     width: "100%",
     height: "100%",
@@ -669,6 +672,7 @@ function HeroSection({ scrollRef, pausedRef, onCounselorClick, onViewReviews }) 
     <img
       src={c.logo}
       alt={c.name}
+      loading="lazy" decoding="async"
       style={{ height:"90px", width:"auto", maxWidth:"120px", objectFit:"contain", opacity:0.65, filter:"grayscale(30%)", transition:"opacity 0.2s, filter 0.2s" }}
       onMouseEnter={e => { e.currentTarget.style.opacity="1"; e.currentTarget.style.filter="grayscale(0%)"; }}
       onMouseLeave={e => { e.currentTarget.style.opacity="0.65"; e.currentTarget.style.filter="grayscale(30%)"; }}
@@ -689,7 +693,7 @@ function ImageCard({ src, alt, style, delay=0 }) {
   return (
     <div onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}
       style={{ ...style, opacity:visible?1:0, transform:visible?(hovered?"scale(1.04) translateY(-4px)":"scale(1) translateY(0)"):"scale(0.93) translateY(18px)", transition:`opacity 0.7s ease ${delay}ms,transform 0.45s cubic-bezier(.4,0,.2,1)`, borderRadius:"18px", overflow:"hidden", boxShadow:hovered?"0 20px 50px rgba(108,43,217,0.22)":"0 8px 28px rgba(108,43,217,0.10)", cursor:"pointer", position:style.position||"relative" }}>
-      <img src={src} alt={alt} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", transform:hovered?"scale(1.08)":"scale(1)", transition:"transform 0.5s" }}/>
+      <img src={src} alt={alt} loading="lazy" decoding="async" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", transform:hovered?"scale(1.08)":"scale(1)", transition:"transform 0.5s" }}/>
     </div>
   );
 }
@@ -762,7 +766,7 @@ function AboutSection() {
     </div>
 
     <div data-abt="i2" style={{ position:"absolute", top:0, right:0, width:"41%", height:"170px", borderRadius:"12px", overflow:"hidden" }}>
-      <ImageCard src={`${PUB}/HomeImages/abtimg2.jpg`} alt="Campus" delay={250} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+      <ImageCard src={`${PUB}/HomeImages/abtimg2.webp`} alt="Campus" delay={250} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
     </div>
 
     <div data-abt="i3" style={{ position:"absolute", top:"182px", left:0, width:"100%", height:"210px", borderRadius:"12px", overflow:"hidden" }}>
@@ -784,14 +788,52 @@ function AboutSection() {
             Skillra is a leading training institute specializing in <strong style={{ color:"#1e3a8a" }}>AI Medical Coding</strong> &amp; <strong style={{ color:"#1e3a8a" }}>Medical Billing</strong>, <strong style={{ color:"#c2410c" }}>IT development</strong>, <strong style={{ color:"#14532d" }}>Finance training</strong>, and Career oriented programs.
              We focus on bridging the gap between academic learning and industry expectations through practical, real-world training. Our expert mentors guide students with hands-on experience, industry projects, and job-ready skill development. With structured learning pathways, live mentor interactions, and outcome-driven practical training, Skillra empowers learners to outperform industry expectations with confidence and credibility. As a trusted upskilling institute, we prepare students for high-growth job roles in top companies. Our commitment is to ensure every learner moves from classroom to career with ease. Skillra, you learn faster, grow smarter, and succeed with industry-recognized skills.
           </p>
-          <a href="/about-us" style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
-          <button onClick={() => navigate("/about-us")} style={{ display:"flex", alignItems:"center", gap:"10px", background:"#f05a00", color:"#fff", border:"none", borderRadius:"50px", padding:"13px 30px", fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:"1rem", cursor:"pointer", boxShadow:"0 4px 18px rgba(240,90,0,0.28)", transition:"all 0.25s" }}
-            onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(240,90,0,0.38)";}}
-            onMouseLeave={e=>{e.currentTarget.style.transform="translateY(0)";e.currentTarget.style.boxShadow="0 4px 18px rgba(240,90,0,0.28)";}}>
-            Learn More
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </button>
-          </a>
+          <a
+  href="/about-us"
+  style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "10px",
+    background: "#f05a00",
+    color: "#fff",
+    borderRadius: "50px",
+    padding: "13px 30px",
+    fontFamily: "'Outfit', sans-serif",
+    fontWeight: 600,
+    fontSize: "1rem",
+    textDecoration: "none",
+    cursor: "pointer",
+    boxShadow: "0 4px 18px rgba(240,90,0,0.28)",
+    transition: "transform 0.25s, box-shadow 0.25s",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "translateY(-2px)";
+    e.currentTarget.style.boxShadow =
+      "0 8px 24px rgba(240,90,0,0.38)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "translateY(0)";
+    e.currentTarget.style.boxShadow =
+      "0 4px 18px rgba(240,90,0,0.28)";
+  }}
+>
+  Explore Skillra
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 14 14"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M2 7h10M8 3l4 4-4 4"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+</a>
         </div>
       </div>
     </section>
@@ -1255,6 +1297,7 @@ function CoursesSection() {
                     <img
                       src={course.image}
                       alt={course.title}
+                      loading="lazy" decoding="async"
                       style={{
                         width: "100%", height: "100%",
                         objectFit: "cover",
@@ -1362,9 +1405,9 @@ function CoursesSection() {
 }
 const COLLEGES = [
   { name: "Agurchand Manmull Jain College",                          logo: `${PUB}/CollegePartners/AMJcollege.webp` },
-  { name: "GRT College of Engineering",                     logo: `${PUB}/CollegePartners/GRTcollege.jpg` },
-  { name: "GRD College",                      logo: `${PUB}/CollegePartners/GRDcollege.png` },
-  { name: "KP College",              logo: `${PUB}/CollegePartners/KPcollege.jpg` },
+  { name: "GRT College of Engineering",                     logo: `${PUB}/CollegePartners/GRTcollege.webp` },
+  { name: "GRD College",                      logo: `${PUB}/CollegePartners/GRDcollege.webp` },
+  { name: "KP College",              logo: `${PUB}/CollegePartners/KPcollege.webp` },
   { name: "Apollo college of Pharmacy",              logo: `${PUB}/CollegePartners/APOLLOcollege.jpg` },
   
 ];
@@ -1503,6 +1546,7 @@ function CollegesSection() {
                   <img
                     src={col.logo}
                     alt={col.name}
+                    loading="lazy" decoding="async"
                     style={{ width:"80%", height:"80%", objectFit:"contain" }}
                     onError={e => {
                       e.target.style.display = "none";
@@ -1617,6 +1661,7 @@ function BlogCard({ post, inView, delay }) {
         <img
           src={post.image}
           alt={post.title}
+          loading="lazy" decoding="async"
           style={{
             width: "100%",
             height: "clamp(160px,18vw,210px)",
@@ -2001,11 +2046,17 @@ function ServiceCard({ card, delay, inView }) {
 
         {/* Learn More button */}
         
-        <a href={`${ROUTES[card.id]}`} style={{ textDecoration: "none" }} onClick={(e) => e.preventDefault()}>
+        <a
+  href={ROUTES[card.id]}
+  aria-label={`Learn more about ${card.title}`}
+  style={{
+    textDecoration: "none",
+    display: "inline-block",
+    marginTop: "auto",
+  }}
+>
   <div
-    onClick={() => navigate(ROUTES[card.id])}
     style={{
-      marginTop: "auto",
       display: "inline-flex",
       alignItems: "center",
       gap: "8px",
@@ -2019,21 +2070,40 @@ function ServiceCard({ card, delay, inView }) {
       transition: "background 0.25s, transform 0.25s",
       transform: hovered ? "translateX(4px)" : "translateX(0)",
     }}
-    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
-    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.15)"}
+    onMouseEnter={(e) =>
+      (e.currentTarget.style.background = "rgba(255,255,255,0.25)")
+    }
+    onMouseLeave={(e) =>
+      (e.currentTarget.style.background = "rgba(255,255,255,0.15)")
+    }
   >
-    <span style={{
-      fontFamily: "'Outfit',sans-serif",
-      fontWeight: 700,
-      fontSize: "12px",
-      color: "#fff",
-      letterSpacing: "0.08em",
-      textTransform: "uppercase",
-    }}>
-      Learn More
+    <span
+      style={{
+        fontFamily: "'Outfit',sans-serif",
+        fontWeight: 700,
+        fontSize: "12px",
+        color: "#fff",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+      }}
+    >
+      Learn more about {card.title}
     </span>
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path d="M2 6h8M6 2l4 4-4 4" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M2 6h8M6 2l4 4-4 4"
+        stroke="white"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   </div>
 </a>
@@ -2370,6 +2440,7 @@ function TestimonialsSection() {
   <img
     src={t.image}
     alt={t.name}
+    loading="lazy" decoding="async"
     style={{ width: "100%", height: "100%", objectFit: "cover" }}
     onError={e => { e.target.style.display = "none"; }}
   />
@@ -2968,11 +3039,8 @@ useEffect(() => {
   return (
     <div style={{ fontFamily:"'Outfit','Segoe UI',sans-serif", margin:0, padding:0, overflowX:"hidden", background:"#F3F4F4" }}>
       
-      <title>Skillra — AI Medical Coding, IT &amp; Finance Training with 100% Placement</title>
-      <meta name="description" content="Skillra offers industry-aligned training and internships in AI Medical Coding, Medical Billing, Full Stack Development, Data Analytics, SAP, Tally & GST with 100% placement assistance."/>
-
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+        
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
         html,body{overflow-x:hidden;background:#F3F4F4;}
 

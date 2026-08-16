@@ -16,7 +16,8 @@ export function urlFor(source) {
 export async function fetchPageMeta(pageKey) {
   const query = `
     *[_type == "pageMeta" && page == $pageKey][0] {
-      metaTitle, metaDescription, keywords, canonicalUrl, ogImage, ogImageAlt, robots
+      metaTitle, metaDescription, keywords, canonicalUrl,
+      "ogImageUrl": ogImage.asset->url, ogImageAlt, robots
     }
   `
   return sanityClient.fetch(query, { pageKey })

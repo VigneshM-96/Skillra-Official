@@ -90,10 +90,7 @@ function PromoBanner({ onClose, onSubmitted }) {
   const [submitting, setSubmitting] = useState(false);
 
   const BANNER_IMAGES = [
-    "/CurrentOffers/skillraoffer2.png",
-    "/CurrentOffers/skillraoffer1.png",
-    "/CurrentOffers/skillraoffer3.png",
-    "/CurrentOffers/skillraoffer4.png",
+    "/CurrentOffers/skillraoffer1.webp",
   ];
 
   const [bannerIdx, setBannerIdx] = useState(0);
@@ -382,6 +379,7 @@ function PromoBanner({ onClose, onSubmitted }) {
               key={idx}
               src={src}
               alt={`Offer ${idx + 1}`}
+              loading="lazy" decoding="async"
               style={{
                 position: "absolute",
                 top: "50%",

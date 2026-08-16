@@ -167,7 +167,7 @@ function CourseHero({ course }) {
 
       <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 clamp(16px,5%,60px)", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "clamp(24px,4%,60px)", position: "relative", zIndex: 1, marginTop: "80px" }} className="hero-flex">
         <div className="hero-img-wrap co-vR" style={{ flex: 1, display: "flex", alignItems: "flex-end", justifyContent: "flex-start", minHeight: "300px" }}>
-          <img src={`/${course.heroImage}`}alt={course.title} style={{ maxHeight: "clamp(240px,58vw,390px)", maxWidth: "150%", objectFit: "contain", marginBottom: "0px", objectPosition: "bottom center", display: "block", filter: `drop-shadow(0 16px 40px ${ac}33)`, borderRadius: "20px" }} />
+          <img src={`/${course.heroImage}`} alt={course.title} fetchpriority="high" decoding="async" style={{ maxHeight: "clamp(240px,58vw,390px)", maxWidth: "150%", objectFit: "contain", marginBottom: "0px", objectPosition: "bottom center", display: "block", filter: `drop-shadow(0 16px 40px ${ac}33)`, borderRadius: "20px" }} />
         </div>
 
         <div className="hero-form-wrap co-v1" style={{ flex: "0 0 clamp(280px,38%,420px)", background: "#fff", borderRadius: "20px", padding: "clamp(24px,4%,36px) clamp(20px,4%,32px)", boxShadow: `0 8px 48px ${ac}22`, border: `1.5px solid ${ac}18`, marginBottom: "clamp(20px,4vw,48px)", alignSelf: "center" }}>
@@ -604,7 +604,7 @@ function OtherCourseCard({ course, inView, delay, onClick }) {
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onClick={onClick} style={{ background: "#fff", borderRadius: "16px", padding: 0, overflow: "hidden", flex: "0 0 clamp(240px,30vw,300px)", minWidth: "240px", display: "flex", flexDirection: "column", scrollSnapAlign: "start", opacity: inView ? 1 : 0, transform: inView ? (hovered ? "translateY(-6px) scale(1.02)" : "translateY(0)") : "translateY(24px)", transition: `opacity 0.6s ease ${delay}s, transform 0.3s ease`, boxShadow: hovered ? `0 16px 40px ${accent}22` : "0 2px 12px rgba(0,0,0,0.06)", cursor: "pointer", border: `1.5px solid ${hovered ? accent + "44" : "#f0edf7"}` }}>
       <div style={{ width: "100%", height: "150px", overflow: "hidden", position: "relative" }}>
-        <img src={`/${course.heroImage || "students.jpg"}`} alt={course.title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease", transform: hovered ? "scale(1.08)" : "scale(1)" }} />
+        <img src={`/${course.heroImage || "students.webp"}`} alt={course.title} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease", transform: hovered ? "scale(1.08)" : "scale(1)" }} />
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 40%, ${accent}30 100%)`, pointerEvents: "none" }} />
       </div>
       <div style={{ padding: "16px 18px 20px" }}>
@@ -660,27 +660,34 @@ export default function CoursesPage() {
   }, [resolvedId]);
 
   const schemaData = {
-    "@context": "http://schema.org",
-    "@type": "EmploymentAgency",
-    "name": "Skillra",
-    "url": `https://skillra.com/courses/${resolvedId}`,
-    "logo": "https://skillra.com/logo.png",
-    "image": course?.image || "https://skillra.com/coursehealthcare.jpg",
-    "description": course?.description || "Join an industry-certified training course in Chennai with 100% placement support, dynamic layout templates, internship learning, and online job placement paths.",
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": course?.title || "Course",
+  "description": course?.description || "Join an industry-certified training course in Chennai with 100% placement support, internship learning, and job placement assistance.",
+  "provider": {
+    "@type": "EducationalOrganization",
+    "name": "Skillra Health Innovations Pvt Ltd",
+    "sameAs": "https://www.skillra.com",
+    "url": "https://www.skillra.com",
+    "logo": "https://www.skillra.com/logo.png",
+    "image": course?.image || "https://www.skillra.com/coursehealthcare.webp",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "FIRST FLOOR, 92/A19, PV Rajamannar Salai, Ayyavupuram, KK Nagar West, K. K. Nagar, Chennai, Tamil Nadu – 600078",
-      "addressLocality": "Chennai, Tamil Nadu, India",
+      "streetAddress": "FIRST FLOOR, 92/A19, PV Rajamannar Salai, Ayyavupuram, KK Nagar West, K. K. Nagar",
+      "addressLocality": "Chennai",
       "addressRegion": "Tamil Nadu",
       "postalCode": "600078",
-      "addressCountry": "India"
+      "addressCountry": "IN"
     },
     "openingHours": "Mo, Tu, We, Th, Fr, Sa 09:00-19:30",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+918778487948"
+      "telephone": "+918778487948",
+      "contactType": "admissions"
     }
-  };
+  },
+  "url": `https://www.skillra.com/courses/${resolvedId}`,
+};
 
   useCourseMeta(resolvedId, {
     title:       `${course?.title || "Course"} | Skillra`,
@@ -692,14 +699,13 @@ export default function CoursesPage() {
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#fff" }}>
       
       <Helmet>
-        <title>{course?.title ? `${course.title} Course in Chennai | Skillra` : "AI Medical Coding Course in Chennai | Skillra"}</title>
-        <script type="application/ld+json">
-          {JSON.stringify(schemaData)}
-        </script>
-      </Helmet>
+  <script type="application/ld+json">
+    {JSON.stringify(schemaData)}
+  </script>
+</Helmet>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+        
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
         @keyframes coFadeRight { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }

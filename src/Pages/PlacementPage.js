@@ -445,8 +445,9 @@ function AboutHero({ onCtaClick }) {
         }}>
           <DiamondPattern />
           <img
-            src={`${PUB}/aboutusgirl.png`}
+            src={`${PUB}/aboutusgirl.webp`}
             alt="About Us"
+            fetchpriority="high" decoding="async"
             style={{
               position: "relative", zIndex: 5,
               height: "1300px",
@@ -523,9 +524,10 @@ function AboutHero({ onCtaClick }) {
   </div>
 
   {/* Bigger image */}
-  <img
-    src={`${PUB}/aboutusgirl.png`}
+ <img
+    src={`${PUB}/aboutusgirl.webp`}
     alt="About Us"
+    loading="lazy" decoding="async"
     style={{
       position: "relative", zIndex: 5,
       height: "55%", // ⬆️ overflows container to look bigger
@@ -934,6 +936,7 @@ function StudentCard({ student, index, inView }) {
         <img
   src={`${PUB}/${student.img}`}
   alt={student.name}
+  loading="lazy" decoding="async"
   style={{
     width: "100%",
     height: "100%",
@@ -987,7 +990,6 @@ export default function PlacementPage() {
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
 

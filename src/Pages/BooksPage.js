@@ -285,8 +285,7 @@ function FloatingBook() {
   return (
     <div style={{position:"relative",width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div style={{position:"absolute",width:"340px",height:"340px",borderRadius:"50%",background:"radial-gradient(circle,rgba(255,255,255,0.18) 0%,rgba(160,100,255,0.08) 60%,transparent 75%)",pointerEvents:"none",zIndex:0}}/>
-      <img src={`${PUB}/books.png`} alt="CPC Medical Coding Question Bank" style={{
-        position:"relative",zIndex:1,
+      <img src={`${PUB}/books.webp`} alt="CPC Medical Coding Question Bank" fetchpriority="high" decoding="async" style={{
         maxHeight:"clamp(400px,50vw,800px)",maxWidth:"100%",objectFit:"contain",
         marginTop:"clamp(20px,5vw,120px)",marginLeft:"clamp(20px,5vw,150px)",
         filter:"drop-shadow(-18px 24px 40px rgba(60,0,120,0.45)) drop-shadow(4px 8px 18px rgba(0,0,0,0.22))",
@@ -1202,7 +1201,7 @@ function BundleSection({ onBuyClick }) {
           <p style={{ fontSize: "clamp(13px,1.3vw,14px)", color: "#6b7280", fontFamily: "'Outfit',sans-serif", maxWidth: "480px", margin: "0 auto", lineHeight: 1.7 }}>One package. Everything you need. Pass with confidence. Take Demo and check.</p>
         </div>
         <div style={{ position: "relative", paddingBottom: "clamp(40px,8vw,80px)" }}>
-          <img src={`${PUB}/bgbooks.png`} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", transform: "scale(2.0)", transformOrigin: "center top", top: "-120px", objectPosition: "center top", opacity: 0.18, pointerEvents: "none", zIndex: 0 }} />
+          <img src={`${PUB}/bgbooks.png`} alt="" aria-hidden="true" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", transform: "scale(2.0)", transformOrigin: "center top", top: "-120px", objectPosition: "center top", opacity: 0.18, pointerEvents: "none", zIndex: 0 }} />
           <div style={{ maxWidth: "860px", margin: "0 auto", padding: "0 clamp(16px,4%,40px)", position: "relative", zIndex: 1 }}>
             <div style={{ background: "#fff", width: "min(400px,100%)", margin: "0 auto", borderRadius: "16px 16px 80px 80px", padding: "clamp(28px,5%,44px) clamp(24px,6%,52px) clamp(32px,6%,52px)", boxShadow: "0 12px 60px rgba(109,40,217,0.12),0 2px 8px rgba(0,0,0,0.06)", border: "1.5px solid rgba(124,58,237,0.10)", opacity: inView ? 1 : 0, transform: inView ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)", transition: "opacity 0.7s ease 0.15s,transform 0.7s ease 0.15s", position: "relative", zIndex: 1 }}>
               <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#7c3aed", fontFamily: "'Outfit',sans-serif", textAlign: "center", marginBottom: "28px" }}>CPC Question Bank Sample</h3>
@@ -1702,7 +1701,7 @@ export default function BooksPage() {
   return (
     <div style={{fontFamily:"'Outfit','Segoe UI',sans-serif",margin:0,padding:0,overflowX:"hidden",background:"#fff"}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+        
         *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
         html, body { overflow-x:hidden; }
 

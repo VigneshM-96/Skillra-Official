@@ -13,7 +13,7 @@ export const COURSES = {
     students: "200+",
     duration: "3 Months",
     color: "#7c3aed",
-    heroImage: "coursehealthcare.jpg",
+    heroImage: "coursehealthcare.webp",
     tabs: {
       Overview: {
         sections: [
@@ -137,7 +137,7 @@ export const COURSES = {
     students: "200+",
     duration: "3 Months",
     color: "#7c3aed",
-    heroImage: "coursehealthcare.jpg",
+    heroImage: "coursehealthcare.webp",
     tabs: {
       Overview: {
         sections: [
@@ -253,7 +253,7 @@ export const COURSES = {
     students: "200+",
     duration: "3 Months",
     color: "#7c3aed",
-    heroImage: "coursehealthcare.jpg",
+    heroImage: "coursehealthcare.webp",
     tabs: {
       Overview: {
         sections: [
@@ -375,7 +375,7 @@ export const COURSES = {
     students: "350+",
     duration: "3.5 Months",
     color: "#f97316",
-    heroImage: "coursetechnology.jpg",
+    heroImage: "coursetechnology.webp",
     tabs: {
       Overview: {
         sections: [
@@ -497,7 +497,7 @@ export const COURSES = {
     students: "300+",
     duration: "3.5 Months",
     color: "#f97316",
-    heroImage: "coursetechnology.jpg",
+    heroImage: "coursetechnology.webp",
     tabs: {
       Overview: {
         sections: [
@@ -623,7 +623,7 @@ export const COURSES = {
     students: "350+",
     duration: "4–6 Months",
     color: "#f97316",
-    heroImage: "coursetechnology.jpg",
+    heroImage: "coursetechnology.webp",
     tabs: {
       Overview: {
         sections: [
@@ -755,7 +755,7 @@ export const COURSES = {
     students: "300+",
     duration: "2.5 Months",
     color: "#10b981",
-    heroImage: "coursefinance.jpg",
+    heroImage: "coursefinance.webp",
     tabs: {
       Overview: {
         sections: [
@@ -873,7 +873,7 @@ export const COURSES = {
   students: "250+",
   duration: "3.5 Months",
   color: "#10b981",
-  heroImage: "coursefinance.jpg",
+  heroImage: "coursefinance.webp",
   tabs: {
     Overview: {
       sections: [
@@ -1001,7 +1001,7 @@ export const COURSES = {
     students: "300+",
     duration: "3.5 Months",
     color: "#f97316",
-    heroImage: "courseothers.jpg",
+    heroImage: "courseothers.webp",
     tabs: {
       Overview: {
         sections: [
@@ -1119,7 +1119,7 @@ export const COURSES = {
     students: "400+",
     duration: "1.5 Months",
     color: "#e11d48",
-    heroImage: "courseothers.jpg",
+    heroImage: "courseothers.webp",
     tabs: {
       Overview: {
         sections: [
@@ -1244,7 +1244,7 @@ export const COURSES = {
     students: "500+",
     duration: "2–4 Months",
     color: "#e11d48",
-    heroImage: "courseothers.jpg",
+    heroImage: "courseothers.webp",
     tabs: {
       Overview: {
         sections: [

@@ -456,7 +456,7 @@ const handleSubmit = async () => {
           </svg>
 
           <img
-            src={`${PUB}/career-hero.png`}
+            src={`${PUB}/career-hero.webp`}
             alt="Career Guidance"
             className="career-hero-img"
             style={{
@@ -1117,8 +1117,7 @@ export default function CareerPage() {
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#fff" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
-        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+       *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
         html, body { overflow-x:hidden; }
 
         /* Arc */

@@ -80,8 +80,8 @@ function RotatingImage({ src, alt, radius }) {
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      <img src={layers[0]} alt={alt} style={{ ...baseStyle, opacity: activeLayer === 0 ? 1 : 0 }} onError={e => { e.target.style.display = "none"; }} />
-      <img src={layers[1]} alt={alt} style={{ ...baseStyle, opacity: activeLayer === 1 ? 1 : 0 }} onError={e => { e.target.style.display = "none"; }} />
+      <img src={layers[0]} alt={alt} fetchpriority="high" decoding="async" style={{ ...baseStyle, opacity: activeLayer === 0 ? 1 : 0 }} onError={e => { e.target.style.display = "none"; }} />
+      <img src={layers[1]} alt={alt} decoding="async" style={{ ...baseStyle, opacity: activeLayer === 1 ? 1 : 0 }} onError={e => { e.target.style.display = "none"; }} />
     </div>
   );
 }
@@ -596,7 +596,6 @@ export default function OurProductsPage() {
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
 

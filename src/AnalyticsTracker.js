@@ -6,15 +6,20 @@ import ReactPixel from "react-facebook-pixel";
 const AnalyticsTracker = () => {
   const location = useLocation();
 
-  // 1. Initialize Meta Pixel once when the app starts
+  // 1. Initialize Meta Pixel once the browser is idle, not on first render
   useEffect(() => {
     const options = {
-      autoConfig: true, // Automatically track pixel configurations
-      debug: false,     // Set to true to see logs in the browser console
+      autoConfig: true,
+      debug: false,
     };
-    
-    // Initializes your specific Pixel ID
-    ReactPixel.init("979035701444404", null, options);
+    const init = () => ReactPixel.init("979035701444404", null, options);
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(init, { timeout: 3000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      const t = setTimeout(init, 2000);
+      return () => clearTimeout(t);
+    }
   }, []);
 
   // 2. Track page views for BOTH GA4 and Meta Pixel on every route change

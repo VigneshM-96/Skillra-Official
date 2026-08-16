@@ -161,6 +161,8 @@ function RelatedCard({ blog }) {
         <img
           src={blog.image} alt={blog.title}
           className={`related-card__img${hovered ? ' related-card__img--hovered' : ''}`}
+          loading="lazy" decoding="async"
+          style={{ aspectRatio: "16 / 9" }}
           onError={e => { e.target.style.display = 'none' }}
         />
         <span className="related-card__tag" style={{ background: blog.tagColor || '#6d28d9' }}>
@@ -249,6 +251,8 @@ function BlogDetail({ slug, onBack, allPosts = [] }) {
       {/* ── Hero (full width, scrolls away normally) ── */}
       <div className="detail-hero">
         <img src={blog.image} alt={blog.title} className="detail-hero__img"
+          fetchpriority="high" decoding="async"
+          style={{ aspectRatio: "21 / 9" }}
           onError={e => { e.target.style.display = 'none' }} />
         <div className="detail-hero__gradient" />
         <div className="detail-hero__content">
@@ -339,6 +343,8 @@ function BlogCard({ blog, inView, delay, onClick }) {
       <div className="blog-card__thumb">
         <img src={blog.image} alt={blog.title}
           className={`blog-card__img${hovered ? ' blog-card__img--hovered' : ''}`}
+          loading="lazy" decoding="async"
+          style={{ aspectRatio: "16 / 9" }}
           onError={e => {
             e.target.style.display = 'none'
             e.target.parentNode.style.background = (blog.tagColor || '#6d28d9') + '22'
@@ -488,8 +494,7 @@ export default function BlogPage() {
 function BlogStyles() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-
+      
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
       :root {

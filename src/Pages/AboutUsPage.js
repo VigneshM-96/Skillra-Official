@@ -57,7 +57,7 @@ function AboutSection() {
             opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(-28px)",
             transition: "opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s",
           }}>
-            <img src={`${PUB}/aboutusimg.png`} alt="About Skillra Team" className="about-img" />
+            <img src={`${PUB}/aboutusimg.webp`} alt="About Skillra Team" className="about-img" width={480} height={420} loading="lazy" decoding="async" />
           </div>
           <div className="about-text-col" style={{
             opacity: inView ? 1 : 0, transform: inView ? "translateX(0)" : "translateX(28px)",
@@ -225,8 +225,9 @@ function FounderSection() {
               borderRadius: "20px", overflow: "hidden",
               position: "relative", zIndex: 1, flexShrink: 0,
             }}>
-              <img src={`${PUB}/Founders/bhuvaneshwari.png`} alt="Founder" className="founder-img"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))" }}
+              <img src={`${PUB}/Founders/bhuvaneshwari.webp`} alt="Founder" className="founder-img"
+                loading="lazy" decoding="async"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))", aspectRatio: "340 / 420" }}
               />
             </div>
           </div>
@@ -320,8 +321,9 @@ function CoFounderSection() {
               borderRadius: "20px", overflow: "hidden",
               position: "relative", zIndex: 1, flexShrink: 0,
             }}>
-              <img src={`${PUB}/Founders/premchandar.png`} alt="Co-founder" className="cofounder-img"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))" }}
+              <img src={`${PUB}/Founders/premchandar.webp`} alt="Co-founder" className="cofounder-img"
+                loading="lazy" decoding="async"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", filter: "drop-shadow(0 8px 32px rgba(109,40,217,0.12))", aspectRatio: "340 / 420" }}
               />
             </div>
           </div>
@@ -638,7 +640,6 @@ export default function AboutUsPage() {
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
 

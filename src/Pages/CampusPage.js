@@ -185,7 +185,7 @@ function CampusHero({ onJoinClick }) {
               <rect x="0" y="0" width="580" height="630" fill="url(#chevInner)" />
             </svg>
           </div>
-          <img src={`${PUB}/campusboy.png`} alt="Campus Student"
+          <img src={`${PUB}/campusboy.webp`} alt="Campus Student"
   style={{ 
     position: "relative", 
     zIndex: 5, 
@@ -966,7 +966,6 @@ export default function CampusPage() {
   return (
     <div style={{ fontFamily: "'Outfit','Segoe UI',sans-serif", margin: 0, padding: 0, overflowX: "hidden", background: "#faf8ff" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; }
 

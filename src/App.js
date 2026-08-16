@@ -1,7 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./Pages/NavBar";
-import ChatBot from "./components/ChatBot";
 import ScrollToTop from "./components/ScrollToTop";
 import AnalyticsTracker from "./AnalyticsTracker";
 import { PromoBannerController } from "./components/PromoBanner";
@@ -20,6 +19,7 @@ const BooksPage     = lazy(() => import("./Pages/BooksPage"));
 const BlogPage      = lazy(() => import("./Pages/BlogPage"));
 const GalleryPage   = lazy(() => import("./Pages/GalleryPage"));
 const OurProductsPage = lazy(() => import("./Pages/OurProducts"));
+const ChatBot = lazy(() => import("./components/ChatBot"));
 
 // Simple fallback shown while a page chunk is downloading.
 // Keep this lightweight — no heavy CSS/images — since it
@@ -35,6 +35,7 @@ function PageLoader() {
 export default function App() {
   const [showPromo, setShowPromo] = useState(false);
   const [hasShownFirst, setHasShownFirst] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
     if (showPromo) return;
@@ -49,6 +50,11 @@ export default function App() {
 
     return () => clearTimeout(timer);
   }, [showPromo, hasShownFirst]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowChat(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <HelmetProvider>
@@ -73,7 +79,12 @@ export default function App() {
           <Route path="*" element={<HomePage />} />
         </Routes>
       </Suspense>
-      <ChatBot />
+
+      {showChat && (
+        <Suspense fallback={null}>
+          <ChatBot />
+        </Suspense>
+      )}
 
       {/* Promo popup — shows on all pages */}
       <PromoBannerController />

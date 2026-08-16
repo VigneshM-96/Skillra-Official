@@ -165,8 +165,7 @@ export default function ChatBot() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
-
+        
         .cb-root * {
           box-sizing: border-box;
           font-family: 'DM Sans', sans-serif;
@@ -533,6 +532,8 @@ export default function ChatBot() {
               src={process.env.PUBLIC_URL + "/botavatar.png"}
               alt="Bot"
               className="cb-avatar"
+              width={34}
+              height={34}
               onError={(e) => {
                 e.target.style.display = "none";
                 e.target.nextSibling.style.display = "flex";
@@ -557,6 +558,8 @@ export default function ChatBot() {
                     <img
                       src={process.env.PUBLIC_URL + "/botavatar.png"}
                       alt="Bot"
+                      width={34}
+                      height={34}
                       onError={(e) => { e.target.style.display = "none"; e.target.parentNode.textContent = "🤖"; }}
                     />
                   </div>

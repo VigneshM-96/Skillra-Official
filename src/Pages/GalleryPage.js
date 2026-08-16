@@ -32,7 +32,7 @@ const EVENT = {
   tag: "Career Fair",
   tagColor: "#7c3aed",
   tagBg: "#f3e8ff",
-  images: Array.from({ length: 30 }, (_, i) => `/GalleryImages/img-${i + 1}.jpg`),
+  images: Array.from({ length: 30 }, (_, i) => `/GalleryImages/img-${i + 1}.webp`),
 };
 
 // Unsplash fallbacks if local images are missing

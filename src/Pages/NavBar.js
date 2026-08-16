@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: "Career Guidance", path: "/career"    },
   { label: "Placement",       path: "/placement" },
   { label: "Campus",          path: "/campus"    },
-  { label: "Our Products", path: "/our-products" },
+  // { label: "Our Products", path: "/our-products" },
   { label: "Books",           path: "/books"     },
   { label: "Blogs",           path: "/blog"      },
   { label: "Gallery",         path: "/gallery"},
@@ -106,8 +106,7 @@ export default function NavBar() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
-
+        
         .skl-nav-link {
           position: relative;
           cursor: pointer;
@@ -500,8 +499,10 @@ export default function NavBar() {
               <img
   src={"/logo.png"}
   alt="Skillra logo"
+  width={30}
+  height={30}
   style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
+/>
             </div>
             SKILLRA
           </a>
